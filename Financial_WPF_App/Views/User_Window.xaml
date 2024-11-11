@@ -1,0 +1,136 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.User_Window"
+        mc:Ignorable="d"
+        Title="User_Window" Width="1280" Height="620" FontFamily="Myriad Arabic" FontSize="18" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ContextMenu>
+            <ContextMenu x:Name="cm">
+                <MenuItem Header="Refresh" Click = "Refresh_Click" >
+                    <MenuItem.Icon>
+                        <Image Source="/Cashing;component/Images/refresh32.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="750*"/>
+            <ColumnDefinition Width="250*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Margin="3,1,0,0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="10" />
+            </Grid.RowDefinitions>
+
+            <DataGrid  x:Name="myDataGrid"  Grid.Column="0" Grid.Row="0"
+                ColumnHeaderStyle="{DynamicResource DataGrid_header}" 
+                Style="{DynamicResource DataGrid_body}"
+                AlternatingRowBackground="{DynamicResource HopeBlue1}" 
+                RowBackground="{DynamicResource HopeGrey}" AlternationCount="2" 
+                IsReadOnly="True"  >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding user_id}" Header="#" Visibility="Hidden" />
+                    <DataGridTextColumn Header="Username"  Binding="{Binding username}"/>
+                    <DataGridTextColumn Header="Role" Binding="{Binding role}"/>
+                    <DataGridTemplateColumn Header="Edit" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource Edit_Style}" Click="EditButton_Click" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Delete" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource Delete_Style}" Click="DeleteButton_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0"/>
+                <ColumnDefinition Width="0"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
+                <RowDefinition/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="Subproject_Label" Style="{DynamicResource lableStyle}" Content="Center:" VerticalContentAlignment="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="2,2,2,2" Grid.Column="7" Grid.Row="2"/>
+            <syncfusion:CheckListBox x:Name="Subproject_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="6" Grid.Row="2" Margin="2,2,2,2" ItemChecked="Subproject_CheckListBox_ItemChecked" FontSize="12"/>
+            <Label x:Name="Account_Label" Style="{DynamicResource lableStyle}" Content="Account:" VerticalContentAlignment="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="2,2,2,2" Grid.Column="5" Grid.Row="2"/>
+            <syncfusion:CheckListBox x:Name="Account_CheckListBox"  DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="4" Grid.Row="2" Margin="2,2,2,2" ItemChecked="Account_CheckListBox_ItemChecked" FontSize="12"/>
+            <Label x:Name="CashAccount_Label" Style="{DynamicResource lableStyle}" Content="Cash:" VerticalContentAlignment="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="2,2,2,2" Grid.Column="7" Grid.Row="4"/>
+            <Label x:Name="PersonalAccount_Label" Style="{DynamicResource lableStyle}" Content="Personal:" VerticalContentAlignment="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="2,2,2,2" Grid.Column="5" Grid.Row="4"/>
+            <syncfusion:CheckListBox x:Name="PersonalAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="4" Grid.Row="4" Margin="2,2,2,2" ItemChecked="PersonalAccount_CheckListBox_ItemChecked" FontSize="12"/>
+            <Label x:Name="ExchangeAccountAccount_Label" Style="{DynamicResource lableStyle}" Content="Exchange:" VerticalContentAlignment="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="2,2,2,2" Grid.Column="3" Grid.Row="4"/>
+            <syncfusion:CheckListBox x:Name="ExchangeAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="2" Grid.Row="4" Margin="2,2,2,2" ItemChecked="ExchangeAccount_CheckListBox_ItemChecked" FontSize="12"/>
+            <Grid Grid.Column="6" Grid.Row="4" Margin="0,0,3,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <syncfusion:CheckListBox x:Name="CashAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="1" Margin="1,2,0,2" ItemChecked="CashAccount_CheckListBox_ItemChecked" FontSize="12"/>
+                <syncfusion:CheckListBox x:Name="IsCashier_CashAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Margin="0,2,1,2" FontSize="12" ItemChecked="IsCashier_CashAccount_CheckListBox_ItemChecked"/>
+            </Grid>
+            <Grid Grid.ColumnSpan="6" Grid.Row="1" Margin="10,0,10,1" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="119*"/>
+                    <ColumnDefinition Width="225*"/>
+                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="176*"/>
+                    <ColumnDefinition Width="97*"/>
+                    <ColumnDefinition Width="176*"/>
+                    <ColumnDefinition Width="97*"/>
+                </Grid.ColumnDefinitions>
+                <Label Style="{DynamicResource lableStyle}" Content="Username:" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="1,6,2,10" Grid.Column="6"/>
+                <TextBox x:Name="Username_txtBox" 
+                TabIndex="4" Style="{DynamicResource textBoxStyle}" RenderTransformOrigin="0.5,0.5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Right" Margin="0,9,4,0" Height="30" Grid.Column="5" VerticalAlignment="Top"/>
+                <TextBox x:Name="Password_txtBox" 
+                TabIndex="4" Style="{DynamicResource textBoxStyle}" RenderTransformOrigin="0.5,0.5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Right" Height="30" Margin="1,9,1,0" VerticalAlignment="Top" Grid.Column="3"/>
+                <Label Grid.Column="2" Style="{DynamicResource lableStyle}" Content="Role:" Margin="1,9,1,11" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+                <Grid Margin="2,6,2,6" Grid.Column="1" >
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25*"/>
+                        <ColumnDefinition Width="75*"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="Role_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" 
+                    FlowDirection="RightToLeft" TabIndex="1" FontSize="14" Grid.Column="1" VerticalContentAlignment="Center" SelectionChanged="Role_comboBox_SelectionChanged" />
+                    <Button x:Name="Role_clear_btn" Grid.Column="0" 
+                    FontSize="16" BorderBrush="{x:Null}" Margin="0" 
+                    Click="Role_clear_btn_Click"  Grid.Row="1" MaxWidth="20" MinHeight="20" MinWidth="15" MaxHeight="15" >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                </Grid>
+                <Label Style="{DynamicResource lableStyle}" Content="Password:" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="1,3,1,7" Grid.Column="4"/>
+                <Button x:Name="Save_btn" 
+                Style="{DynamicResource SaveButton_Style}" TabIndex="11" 
+                Click="Save_btn_Click" Margin="0,9,0,11" VerticalAlignment="Stretch" Width="98" HorizontalAlignment="Center"  />
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>

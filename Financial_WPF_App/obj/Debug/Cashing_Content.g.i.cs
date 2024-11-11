@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("close.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/buttons/97974_restore_system_icon.png")]
 
 

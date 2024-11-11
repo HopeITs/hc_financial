@@ -1,0 +1,146 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Views.CashBalances_Window"
+        mc:Ignorable="d"
+        Title="CashBalances_Window" Width="1280" Height="620"      
+        FontFamily="Myriad Arabic"
+        FontSize="18" WindowStartupLocation="CenterScreen">
+    <Grid>
+
+        <Grid.ContextMenu>
+            <ContextMenu Name="cm">
+                <MenuItem Header="Refresh Balances" Click = "Refresh_Click" >
+                    <MenuItem.Icon>
+                        <Image Source="/Cashing;component/Images/refresh32.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
+
+        <Grid Margin="10,0,10,0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="95*"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+
+
+            <Grid Margin="10,1,3,5" Grid.Row="2" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="45"/>
+                    <ColumnDefinition Width="Auto"/>
+
+                </Grid.ColumnDefinitions>
+                <Menu x:Name="ShowHideMenu" Margin="3,7,2,2" >
+                    <Menu.Background>
+                        <ImageBrush/>
+                    </Menu.Background>
+                </Menu>
+                <Button Style="{DynamicResource Export_Style}" x:Name="Export_btn"
+                    TabIndex="5"
+                    Command="Helper:Commands.ExportToExcel" Height="46" Width="37"
+                />
+            </Grid>
+            <StackPanel x:Name="Total_Panel" Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,2,0,2">
+                <StackPanel.Background>
+                    <ImageBrush ImageSource="/Images/MainForm/MainForm Tab Header.png"/>
+                </StackPanel.Background>
+                <Label x:Name="Income_Label" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909"  >
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="0.772"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+                </Label>
+                <Border BorderThickness="1" CornerRadius="7" Padding="0" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
+                    </Border.Background>
+                    <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                </Border>
+                <Label x:Name="Outcome_Label" Content="Net accounts:" Style="{DynamicResource statistic_lableStyle}" RenderTransformOrigin="0.5,0.5" >
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="0.953"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+
+                </Label>
+                <Border x:Name="Outcome_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
+                    </Border.Background>
+                    <TextBlock x:Name="AccountsNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
+                </Border>
+
+                <Label x:Name="Returned_Label" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
+                <Border x:Name="Returned_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
+                    </Border.Background>
+                    <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
+                </Border>
+            </StackPanel>
+            <syncfusion:SfDataGrid x:Name="myDataGrid"
+                Style="{DynamicResource SfDataGrid_body}"
+                HeaderStyle="{DynamicResource SfDataGrid_header}"
+                RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
+                TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
+                AutoGenerateColumns="True"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
+                Margin="1,3,1,4" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Loaded="myDataGrid_Loaded" Grid.Row="1" FilterChanged="myDataGrid_FilterChanged" SelectionMode="Extended" GridContextMenuOpening="myDataGrid_GridContextMenuOpening">
+                <syncfusion:SfDataGrid.TableSummaryRows>
+                    <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
+                        Title="Total:">
+                        <syncfusion:GridTableSummaryRow.SummaryColumns>
+                            <syncfusion:GridSummaryColumn Name="Total_I"                                                      
+                                Format="'{Sum:N2}'"
+                                MappingName="Income"
+                                SummaryType="DoubleAggregate" />
+                            <syncfusion:GridSummaryColumn Name="Total_E"                                                      
+                                Format="'{Sum:N2}'"
+                                MappingName="Outcome"
+                                SummaryType="DoubleAggregate" />
+                            <syncfusion:GridSummaryColumn Name="Total_Dif"                                                      
+                                Format="'{Sum:N2}'"
+                                MappingName="Difference"
+                                SummaryType="DoubleAggregate" />
+                        </syncfusion:GridTableSummaryRow.SummaryColumns>
+                    </syncfusion:GridTableSummaryRow>
+                </syncfusion:SfDataGrid.TableSummaryRows>
+
+                <syncfusion:SfDataGrid.RecordContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="Refresh_Balances" Header="Refresh Balances" Click="Refresh_Click" />
+                        <MenuItem x:Name="View_Acount" Header="View Acount" Click="View_Acount_Click"/>
+                    </ContextMenu>
+                </syncfusion:SfDataGrid.RecordContextMenu>
+                
+            </syncfusion:SfDataGrid>
+        </Grid>
+
+    </Grid>
+</Window>

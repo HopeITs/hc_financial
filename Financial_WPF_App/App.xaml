@@ -1,0 +1,911 @@
+﻿<Application x:Class="Financial_WPF_App.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"    
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"  
+             xmlns:converters="clr-namespace:Financial_WPF_App.Views"
+             xmlns:syncfusion="clr-namespace:Syncfusion.UI.Xaml.Grid;assembly=Syncfusion.SfGrid.WPF"
+             StartupUri="Main_Window2.xaml">
+    <Application.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+
+                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <!--
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                -->
+                <!-- Theme setting -->
+                <!--
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />-->
+
+                <!-- primary color -->
+                <ResourceDictionary>
+                    <!-- include your primary palette -->
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Indigo.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                    <!--  include three hues from the primary palette (and the associated forecolours).    
+                            Do not rename, keep in sequence; light to dark.  s -->
+                    <!--<SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary100}"/>
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary100Foreground}"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary500}"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary500Foreground}"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary700}"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary700Foreground}"/>-->
+
+                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF84ABCD"/>
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FF1C3144"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF84ABCD"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FF00416A"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FFFF3333"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFF3333"/>
+                </ResourceDictionary>
+
+                <!-- secondary colour -->
+                <ResourceDictionary>
+                    <!-- include your secondary pallette -->
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Yellow.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+
+                    <!-- include a single secondary accent color (and the associated forecolour) -->
+                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource Accent200}"/>
+                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Accent200Foreground}"/>
+                </ResourceDictionary>
+
+                <!-- Include the Dragablz Material Design style -->
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
+
+
+                <!-- Include the Fluent Library for RIBBON -->
+                <ResourceDictionary Source="/Fluent;component/Themes/Generic.xaml" />
+                <!--<ResourceDictionary Source="/Fluent;component/Themes/Office2010/Silver.xaml" />-->
+
+
+            </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>
+            <SolidColorBrush x:Key="HopeBlue2" Color="#FF4474A2"/>
+            <SolidColorBrush x:Key="HopeBlue3" Color="#FF21507C"/>
+            <SolidColorBrush x:Key="HopeBlue4" Color="#FF00416A"/>
+            <SolidColorBrush x:Key="HopeDarkBlue1" Color="#FF1C3144"/>
+            <SolidColorBrush x:Key="HopeDarkBlue2" Color="#FF141414"/>
+            <SolidColorBrush x:Key="HopeGrey" Color="#FFEAEAEC"/>
+            <SolidColorBrush x:Key="HopeYellow1" Color="#FFFFD147"/>
+            <SolidColorBrush x:Key="HopeYellow2" Color="#FFFFBA07"/>
+            <SolidColorBrush x:Key="HopeRed1" Color="#FFFF3333"/>
+            <SolidColorBrush x:Key="HopeRed2" Color="#FFCC0000"/>
+
+            <Color x:Key="Color_HopeBlue1">#FF84ABCD</Color>
+            <Color x:Key="Color_HopeBlue2">#FF4474A2</Color>
+            <Color x:Key="Color_HopeBlue3">#FF21507C</Color>
+            <Color x:Key="Color_HopeBlue4">#FF00416A</Color>
+            <Color x:Key="Color_HopeDarkBlue1">#FF1C3144</Color>
+            <Color x:Key="Color_HopeDarkBlue2">#FF141414</Color>
+            <Color x:Key="Color_HopeGrey">#FFEAEAEC</Color>
+            <Color x:Key="Color_HopeYellow1">#FFFFD147</Color>
+            <Color x:Key="Color_HopeYellow2">#FFFFBA07</Color>
+            <Color x:Key="Color_HopeRed1">#FFFF3333</Color>
+            <Color x:Key="Color_HopeRed2">#FFCC0000</Color>
+
+            <!-- tell Dragablz tab control to use the Material Design theme -->
+            <Style TargetType="{x:Type dragablz:TabablzControl}" 
+                   BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" >
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"></Setter>
+            </Style>
+
+            <ImageBrush x:Key="ButtonImage" 
+                    ImageSource="/Images/Buttons/save_btn.png" 
+                    Stretch="Uniform"></ImageBrush>
+            <ImageBrush x:Key="ButtonImage_H" 
+                    ImageSource="/Images/Buttons/save_btn_hover.png" 
+                    Stretch="Uniform"></ImageBrush>
+
+            <ImageBrush x:Key="ButtonImage_Restore" 
+                    ImageSource="/Images/Buttons/Restore.png" 
+                    Stretch="Uniform"></ImageBrush>
+            
+            <Style TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource ButtonImage}"></Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                              Margin="{TemplateBinding Padding}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                              RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Background" Value="{StaticResource ButtonImage_H}"></Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+
+            <Style x:Key="TableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl">
+                <Setter Property="Foreground" Value="{StaticResource HopeBlue4}" />
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="FontFamily" Value="Myriad Arabic Bold" />
+            </Style>
+
+            <Style x:Key="GroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl">
+                <Setter Property="Foreground" Value="{StaticResource HopeBlue4}" />
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="FontFamily" Value="Myriad Arabic Bold" />
+            </Style>
+
+
+            <!--MY STYLES -->
+            <Style x:Key="SaveButton_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="86" />
+                <Setter Property="Button.Height" Value="32" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Button.HorizontalAlignment" Value="Left" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.Margin" Value="7,0,0,0" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Background" Value="{StaticResource ButtonImage}"></Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                              Margin="{TemplateBinding Padding}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                              RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Background" Value="{StaticResource ButtonImage_H}"></Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <Style x:Key="RestoreButton_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="86" />
+                <Setter Property="Button.Height" Value="32" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Button.HorizontalAlignment" Value="Left" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.Margin" Value="7,0,0,0" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Background" Value="{StaticResource ButtonImage_Restore}"></Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                              Margin="{TemplateBinding Padding}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                              RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Background" Value="{StaticResource ButtonImage_Restore}"></Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <Style x:Key="lableStyle" TargetType="{x:Type Label}"  >
+                <Setter Property="Label.FontSize" Value="20" />
+                <Setter Property="Label.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Label.FlowDirection" Value="RightToLeft" />
+                <Setter Property="Label.HorizontalAlignment" Value="Left" />
+                <Setter Property="Label.VerticalAlignment" Value="Center" />
+                <Setter Property="Label.VerticalContentAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontFamily" Value="Myriad Arabic" />
+                <Setter Property="Foreground" Value="{StaticResource HopeBlue4}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RadioButton}">
+                            <Grid Background="Transparent" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Ellipse x:Name="OuterCircle" Stroke="{TemplateBinding BorderBrush}" Fill="Transparent" Width="20" Height="20" />
+                                <Ellipse x:Name="InnerCircle" Fill="{StaticResource HopeBlue4}" Width="10" Height="10" Visibility="Collapsed" Grid.Column="0" />
+
+                                <ContentPresenter Grid.Column="1" Margin="5,0,0,0" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="InnerCircle" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
+                <Setter Property="Label.FontSize" Value="15" />
+                <Setter Property="Label.FontFamily" Value="Arial" />
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Label.FlowDirection" Value="RightToLeft" />
+                <Setter Property="Label.HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Label.VerticalAlignment" Value="Center" />
+                <Setter Property="Label.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Label.Margin" Value="0,0,5,0" />
+            </Style>
+            <Style x:Key="title_lableStyle" TargetType="{x:Type Label}"  >
+                <Setter Property="Label.FontSize" Value="22" />
+                <Setter Property="Label.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Label.FlowDirection" Value="RightToLeft" />
+                <Setter Property="Label.HorizontalAlignment" Value="Center" />
+                <Setter Property="Label.HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Label.VerticalAlignment" Value="Center" />
+                <Setter Property="Label.VerticalContentAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="statistic_textBlockStyle" TargetType="{x:Type TextBlock}" >
+                <Setter Property="Label.FontSize" Value="19" />
+                <Setter Property="Label.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeRed1}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Left" />
+                <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
+                <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                <Setter Property="TextBlock.Margin" Value="3,3,3,3" />
+                <Setter Property="TextBlock.Padding" Value="5,0,5,0" />
+                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+            </Style>
+            <Style x:Key="textBoxStyle" TargetType="{x:Type TextBox}" 
+                   BasedOn="{StaticResource MaterialDesignTextBoxBase}" >
+                <Setter Property="TextBox.FontSize" Value="18" />
+                <Setter Property="TextBox.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="TextBox.Foreground" Value="{DynamicResource HopeDarkBlue2}" />
+                <Setter Property="TextBox.FlowDirection" Value="LeftToRight" />
+                <Setter Property="TextBox.HorizontalAlignment" Value="Stretch" />
+                <Setter Property="TextBox.HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="TextBox.Margin" Value="2" />
+                <Setter Property="TextBox.VerticalAlignment" Value="Center" />
+                <Setter Property="TextBox.VerticalContentAlignment" Value="Center" />
+                <Setter Property="TextBox.TextAlignment" Value="Right" />
+            </Style>
+            <Style x:Key="textBlockStyle" TargetType="{x:Type TextBlock}" >
+                <Setter Property="TextBlock.FontSize" Value="20" />
+                <Setter Property="TextBlock.FlowDirection" Value="RightToLeft" />
+                <Setter Property="TextBlock.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="TextBlock.Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeRed1}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Left" />
+                <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
+                <Setter Property="TextBlock.TextAlignment" Value="Left" />
+                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+            </Style>
+            <Style TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MaterialDesignDatePicker}"  >
+                <Setter Property="DatePicker.FontSize" Value="22" />
+                <Setter Property="DatePicker.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="DatePicker.FirstDayOfWeek" Value="Monday" />
+                <Setter Property="DatePicker.FlowDirection" Value="LeftToRight" />
+                <Setter Property="DatePicker.VerticalAlignment" Value="Center" />
+                <Setter Property="DatePicker.VerticalContentAlignment" Value="Center" />
+                <Setter Property="DatePicker.HorizontalAlignment" Value="Right" />
+                <Setter Property="DatePicker.HorizontalContentAlignment" Value="Right" />
+                <Setter Property="DatePicker.DisplayDateStart" Value="01/01/2018" />
+            </Style>
+
+
+
+            <Style x:Key="DataGrid_body" TargetType="{x:Type DataGrid}"  
+                   BasedOn="{StaticResource {x:Type DataGrid}}">
+                <Setter Property="DataGrid.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="DataGrid.FontSize" Value="18" />
+                <Setter Property="DataGrid.GridLinesVisibility" Value="All" />
+                <Setter Property="DataGrid.HorizontalGridLinesBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeBlue2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="DataGrid.VerticalGridLinesBrush" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeBlue2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" >
+                    <Setter.Value>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF84ABCD" Offset="1"/>
+                            <GradientStop Color="White" Offset="0.545"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HeadersVisibility" Value="All" />
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="IsTextSearchEnabled" Value="True" />
+                <Setter Property="AutoGenerateColumns" Value="False" />
+                <Setter Property="FlowDirection" Value="RightToLeft" />
+                <Setter Property="CanUserReorderColumns" Value="False" />
+                <!--<Setter Property="EnableRowVirtualization" Value="True" />-->
+                <!--<Setter Property="EnableColumnVirtualization" Value="True" />-->
+
+            </Style>
+            <Style x:Key="DataGrid_header" 
+                   BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" 
+                   TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="DataGrid.FontSize" Value="20" />
+                <Setter Property="DataGrid.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="Background" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeGrey}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+            <Style TargetType="{x:Type DataGridCell}" >
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" >
+                            <Setter.Value>
+                                <SolidColorBrush Color="{DynamicResource Color_HopeYellow2}"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Foreground" >
+                            <Setter.Value>
+                                <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="BorderBrush" >
+                            <Setter.Value>
+                                <SolidColorBrush Color="{DynamicResource Color_HopeYellow2}"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="FontFamily" Value="Myriad Arabic" />
+                        <Setter Property="FontSize" Value="18" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    </Trigger>
+                </Style.Triggers>
+
+            </Style>
+
+
+
+
+            <Style x:Key="SfDataGrid_body" TargetType="{x:Type syncfusion:SfDataGrid}">
+                <Setter Property="FontFamily" Value="Myriad Arabic" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="GridLinesVisibility" Value="Both" />
+                <Setter Property="Background" >
+                    <Setter.Value>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF84ABCD" Offset="1"/>
+                            <GradientStop Color="White" Offset="0.545"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="AutoGenerateColumns" Value="False" />
+                <Setter Property="FlowDirection" Value="RightToLeft" />
+                <Setter Property="AllowDraggingColumns" Value="False" />
+                <Setter Property ="SelectionMode" Value ="Extended" />
+                <Setter Property ="SelectionUnit" Value ="Row" />
+                <Setter Property ="NavigationMode" Value ="Row" />
+                <Setter Property ="SelectionForegroundBrush" Value ="{DynamicResource HopeDarkBlue2}" />
+                <Setter Property ="RowSelectionBrush" Value ="{DynamicResource HopeYellow2}" />
+                <Setter Property ="ItemsSource" Value ="{Binding}" />
+                <Setter Property ="AllowFiltering" Value ="True" />
+                <Setter Property ="ShowGroupDropArea" Value ="True" />
+                <Setter Property ="VerticalAlignment" Value ="Center" />
+                <Setter Property ="HorizontalAlignment" Value ="Center" />
+                <Setter Property ="HeaderRowHeight" Value ="40" />
+                <Setter Property ="AllowResizingColumns" Value ="True" />
+                <Setter Property ="FrozenRowsCount" Value ="0" />
+            </Style>
+
+            <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_alternatingRowStyle">
+                <Setter Property="Background" Value="{DynamicResource HopeBlue1}"/>
+            </Style>
+            
+            <Style x:Key="SfDataGrid_header"
+                    BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}"
+                    TargetType="{x:Type syncfusion:GridHeaderCellControl}">
+                <Setter Property="FontFamily" Value="Myriad Arabic" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeGrey}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+
+            <Style x:Key="SfDataGrid_StackedHeaderstyle" TargetType="syncfusion:GridStackedHeaderCellControl">
+                <Setter Property="FontFamily" Value="Myriad Arabic" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeGrey}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+            </Style>
+          
+            <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_RowStyle">
+                <Setter Property="Background" Value="{DynamicResource HopeGrey}"/>
+            </Style>
+
+            <Style x:Key="rowStyle1" TargetType="syncfusion:VirtualizingCellsControl">
+                <Setter Property="Background" Value="{DynamicResource HopeRed1}" />
+            </Style>
+            <Style x:Key="rowStyle2" TargetType="syncfusion:VirtualizingCellsControl">
+                <Setter Property="Background" Value="{DynamicResource HopeBlue1}" />
+            </Style>
+
+
+            <Style x:Key="redCellStyle" TargetType="syncfusion:GridCell">
+                <Setter Property="Foreground" Value="{DynamicResource HopeRed1}" />
+            </Style>
+
+
+
+            <Style x:Key="Add_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="25" />
+                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Button.HorizontalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Button.Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="Images/Buttons/add.png" Stretch="Uniform" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                    Margin="{TemplateBinding Padding}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Button.Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="Images/Buttons/add_hover.png" Stretch="Uniform" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="Edit_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="25" />
+                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Button.HorizontalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Button.Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="Images/Buttons/edit.png" Stretch="Uniform" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                    Margin="{TemplateBinding Padding}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Button.Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="Images/Buttons/edit_hover.png" Stretch="Uniform" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="Delete_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="25" />
+                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Button.HorizontalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Button.Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="Images/Buttons/delete.png" Stretch="Uniform" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                    Margin="{TemplateBinding Padding}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Button.Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="Images/Buttons/delete_hover.png" Stretch="Uniform" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="Attachment_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="25" />
+                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Button.HorizontalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Button.Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="Images/attachment_icon.png" Stretch="Uniform" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                    Margin="{TemplateBinding Padding}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Button.Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="Images/attachment_icon.png" Stretch="Uniform" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="AddCell_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="25" />
+                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Button.HorizontalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Button.Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="Images/Buttons/add.png" Stretch="Uniform" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                    Margin="{TemplateBinding Padding}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Button.Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="Images/Buttons/add.png" Stretch="Uniform" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            
+            <Style x:Key="View_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="25" />
+                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Button.HorizontalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Button.Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="Images/document_view_icon.png" Stretch="Uniform" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                    Margin="{TemplateBinding Padding}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Button.Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="Images/document_view_icon.png" Stretch="Uniform" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="Download_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="25" />
+                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Button.HorizontalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Button.Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="Images/document_download_icon.png" Stretch="Uniform" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                    Margin="{TemplateBinding Padding}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Button.Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="Images/document_download_icon.png" Stretch="Uniform" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="Export_Style" TargetType="{x:Type Button}">
+                <Setter Property="Button.Width" Value="25" />
+                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Button.HorizontalAlignment" Value="Center" />
+                <Setter Property="Button.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Button.VerticalAlignment" Value="Center" />
+                <Setter Property="Button.BorderThickness" Value="0" />
+                <Setter Property="Button.Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="Images/Buttons/excel.png" Stretch="Uniform" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                    Margin="{TemplateBinding Padding}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Blue" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                    <Setter Property="Button.Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="Images/Buttons/excel_hover.png" Stretch="Uniform" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="checkBoxStyle" TargetType="{x:Type CheckBox}" >
+                <Setter Property="CheckBox.FontSize" Value="18" />
+                <Setter Property="CheckBox.FlowDirection" Value="RightToLeft" />
+                <Setter Property="CheckBox.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="CheckBox.Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeDarkBlue1}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="CheckBox.HorizontalAlignment" Value="Right" />
+                <Setter Property="CheckBox.HorizontalContentAlignment" Value="Center" />
+                <Setter Property="CheckBox.VerticalAlignment" Value="Center" />
+                <Setter Property="CheckBox.VerticalContentAlignment" Value="Center" />
+                <Setter Property="CheckBox.Margin" Value="0,0,8,0" />
+
+            </Style>
+
+
+           
+
+
+        </ResourceDictionary>
+
+
+    </Application.Resources>
+
+</Application>
