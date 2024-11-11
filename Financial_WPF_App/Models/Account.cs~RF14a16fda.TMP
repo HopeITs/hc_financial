@@ -1,0 +1,204 @@
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.ComponentModel;
+using System.Data;
+using System.Runtime.CompilerServices;
+
+namespace Financial_WPF_App.Models
+{
+    public class Account : INotifyPropertyChanged
+    {
+        //private int _ID;
+        //private string _Name;
+        //private string projectNumber;
+        //private string beginDate;
+        //private string endDate;
+        //private float totalAmount;
+        //private string amountType;
+        //private int SubProject_ID;
+        //private int Donor_ID;
+
+        //public int ID { get => _ID; set => _ID = value; }
+        //public string Name { get => _Name; set => _Name = value; }
+
+        public DataTable Select(string SubProject_IDs, string Account_IDs, bool withPayments)
+        {
+            //check user from database
+            string query = @"select account.ID, account.Name, account.ProjectNumber, account.BeginDate, IFNULL(account.EndDate,0) as EndDate
+,account.TotalAmount, amounttype.Name AS 'AmountType' 
+, Case account.IsClosed when 0 then 'Open' when 1 then 'CLOSED' else 'N/A' end as 'IsClosed'
+,account.SubProject_ID ,account.Donor_ID
+,donor.Abb_Name as 'Donor' ,subproject.Project_ID as 'Project_ID'
+FROM account LEFT JOIN amounttype ON amounttype.ID = account.AmountType_ID LEFT JOIN donor ON account.Donor_ID = donor.id
+LEFT JOIN subproject ON subproject.ID = account.SubProject_ID";
+
+            string condition = " where 1 ";
+            if (withPayments == false)
+            {
+                condition += " and account.Name not like 'Payments'";
+            }
+            if (SubProject_IDs != "")
+            {
+                condition += " and subproject.ID in (@SubProject_IDs)";
+            }
+            if (Account_IDs != "")
+            {
+                condition += " and account.ID in (@Account_IDs)";
+            }
+            query += condition;
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@SubProject_IDs", SubProject_IDs);
+                sc.Parameters.AddWithValue("@Account_IDs", Account_IDs);
+
+                sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.MyConn.Close();
+            }
+            return dt;
+        }
+
+        public int Insert(string name, string projectNumber, string beginDate, string endDate, float totalAmount, int amountType_ID, int IsClosed, int SubProject_ID, int Donor_ID)
+        {
+            string query = "";
+
+            int Account_ID = -1;
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@name", name);
+                sc.Parameters.AddWithValue("@projectNumber", projectNumber);
+                sc.Parameters.AddWithValue("@beginDate", beginDate);
+                sc.Parameters.AddWithValue("@endDate", endDate);
+                sc.Parameters.AddWithValue("@totalAmount", totalAmount);
+                
+                if (amountType_ID == -1)
+                {
+                    sc.Parameters.AddWithValue("@amountType_ID", DBNull.Value);
+                }
+                else
+                {
+                    sc.Parameters.AddWithValue("@amountType_ID", amountType_ID);
+                }
+                sc.Parameters.AddWithValue("@IsClosed", IsClosed);
+                sc.Parameters.AddWithValue("@SubProject_ID", SubProject_ID);
+
+                if (Donor_ID == -1)
+                {
+                    sc.Parameters.AddWithValue("@Donor_ID", DBNull.Value);
+                }
+                else
+                {
+                    sc.Parameters.AddWithValue("@Donor_ID", Donor_ID);
+                }
+
+                query = "INSERT INTO account(Name, ProjectNumber, BeginDate, EndDate, TotalAmount, AmountType_ID,IsClosed, SubProject_ID,Donor_ID)" +
+                    " VALUES (@name, @projectNumber , @beginDate , @endDate, @totalAmount, @amountType_ID, @IsClosed, @SubProject_ID , @Donor_ID);";
+
+
+                sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+                Account_ID = Convert.ToInt32(sc.ExecuteScalar());
+
+                Login.MyConn.Close();
+            }
+
+            return Account_ID;
+        }
+
+        public void Update(int ID, string name, string projectNumber, string beginDate, string endDate, float totalAmount, string amountType, int IsClosed, int SubProject_ID, int Donor_ID)
+        {
+            if (Login.BuildConnection())
+            {
+                string query = "UPDATE account SET Name=N'" + name + "' " +
+                    " ,ProjectNumber= '" + projectNumber + "'" +
+                    " ,BeginDate= '" + beginDate + "'" +
+                    " ,EndDate= " + (endDate == "NULL" ? endDate : ("'" + endDate + "'")) +
+                    " ,TotalAmount= " + totalAmount +
+                    " ,AmountType= '" + amountType + "'" +
+                    " ,IsClosed = " + IsClosed +
+                    " ,SubProject_ID = " + SubProject_ID +
+                    " ,Donor_ID = " + Donor_ID +
+
+                    " WHERE ID = " + ID;
+                using (var sc = new MySqlCommand(query, Login.MyConn))
+                {
+                    sc.ExecuteNonQuery();
+                    Login.MyConn.Close();
+                }
+            }
+        }
+
+        public void Delete(int ID)
+        {
+            if (Login.BuildConnection())
+            {
+                string query = "DELETE FROM account WHERE ID = " + ID;
+                using (var sc = new MySqlCommand(query, Login.MyConn))
+                {
+                    sc.ExecuteNonQuery();
+                    Login.MyConn.Close();
+                }
+            }
+        }
+
+        public int Get_Last_ID()
+        {
+            if (Login.BuildConnection())
+            {
+                string query = "select MAX(ID) from account";
+                using (var sc = new MySqlCommand(query, Login.MyConn))
+                {
+                    var n = 0;
+                    int.TryParse(sc.ExecuteScalar().ToString(), out n);
+                    Login.MyConn.Close();
+                    return n;
+                }
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChange([CallerMemberName] string propertyname = null)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+        }
+
+        public DataTable Select_AmountType()
+        {
+            //check user from database
+            string query = @"SELECT ID , NAME FROM amounttype";
+
+            string condition = " where 1 ";
+
+            query += condition;
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.MyConn.Close();
+            }
+            return dt;
+        }
+    }
+}

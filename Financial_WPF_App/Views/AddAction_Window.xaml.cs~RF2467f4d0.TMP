@@ -1,0 +1,782 @@
+﻿using Financial_WPF_App.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace Financial_WPF_App
+{
+    /// <summary>
+    /// Interaction logic for AddAction_Window.xaml
+    /// </summary>
+    public partial class AddAction_Window : Window
+    {
+        public AddAction_Window(int Account_ID, string Account_Name, int Till_ID, string TillType, bool fromTill)
+        {
+            InitializeComponent();
+            this.Action_ID = -1;
+            this.Account_ID = Account_ID;
+            this.Account_Name = Account_Name;
+            this.Till_ID = Till_ID;
+            this.TillType = TillType;
+            this.fromTill = fromTill;
+            this.dataRowView = null;
+
+            Load_Form();
+        }
+
+        public AddAction_Window(int Account_ID, int Till_ID, string TillType, int Action_ID)
+        {
+            InitializeComponent();
+            this.Action_ID = Action_ID;
+            this.Account_ID = Account_ID;
+            this.Till_ID = Till_ID;
+            this.TillType = TillType;
+
+            AccountName_lable.Content = Account_ID.ToString();
+
+            //this.dataRowView = dataRowView;
+
+            Load_Form();
+        }
+
+        DataRowView dataRowView;
+        int Action_ID, Account_ID, Till_ID, SubProject_ID, MicroProject_ID, Rate_ID;
+        string Account_Name; bool fromTill;
+        Till t;
+        Models.Action a;
+        private Beneficiary b;
+        private Log l;
+        private Rate r;
+        Users u;
+        Double amount, expandature, exchanged, rate, USD_Value;
+        string type, TillType;
+        private DataTable rate_dt, b_dt, t_dt, dt, sum_dt;
+
+
+        private void Load_Form()
+        {
+            try
+            {
+                b = new Beneficiary();
+                t = new Till();
+                a = new Models.Action();
+                l = new Log();
+                r = new Rate();
+                u = new Users();
+
+                AccountName_lable.Content = Account_Name;
+                TillName_lable.Content = TillType;
+                Show_Hide_Components();
+
+
+                //Action_ID = -1;
+                Date_datepicker.SelectedDate = DateTime.Today;
+                CreatedAt_datepicker.SelectedDate = DateTime.Today;
+
+                Fill_Beneficiaries();
+                Fill_Tills();
+
+                //select the Till//
+                //Till_comboBox.SelectedValue = Till_ID;
+
+                //UPDATE MODE//
+                if (Action_ID > 0)
+                    Fill_Action();
+
+            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.Message); }
+        }
+
+        private void Show_Hide_Components()
+        {
+            int User_ID = Properties.Settings.Default.User_ID;
+            string UserRole = Properties.Settings.Default.Role;
+
+            Clear_Boxes();
+            Amount_txtBox.Visibility = //Placeholder2.Visibility =
+                CreatedAt_Label.Visibility = CreatedAt_datepicker.Visibility =
+                DestinationTill_lable.Visibility = DestinationTill_comboBox.Visibility = DestinationTill_clear_btn.Visibility =
+                MircoProject_ID_lable.Visibility = MircoProject_ID_autoSuggestionUserControl.Visibility = BeneficiaryName_lable.Visibility = BeneficiaryName_txtBox.Visibility =
+                IsReceipt_comboBox.Visibility = Receipt_txtBox.Visibility = /*Placeholder1.Visibility =*/ Date_Label.Visibility = Date_datepicker.Visibility =
+                Notes_Label.Visibility = Notes_txtBox.Visibility =
+                AvgRate_lable.Visibility = AvgRate_TxtBox.Visibility = USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+                Rate_lable.Visibility = Rate_txtBox.Visibility = Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Collapsed;
+
+            if (Type_comboBox.SelectedIndex != -1)
+            {
+                Amount_txtBox.Visibility = /*Placeholder2.Visibility =*/ Visibility.Visible;
+                Notes_Label.Visibility = Notes_txtBox.Visibility = Visibility.Visible;
+
+                if (fromTill)
+                {
+                    CreatedAt_Label.Visibility = CreatedAt_datepicker.Visibility = Visibility.Visible;
+                }
+
+
+                if (Type_ComboBox_Income_Item.IsSelected)
+                {
+                    DestinationTill_lable.Visibility = DestinationTill_comboBox.Visibility = DestinationTill_clear_btn.Visibility = Visibility.Visible;
+                }
+
+                else if (Type_ComboBox_Outcome_Item.IsSelected)
+                {
+                    MircoProject_ID_lable.Visibility = MircoProject_ID_autoSuggestionUserControl.Visibility = BeneficiaryName_lable.Visibility = BeneficiaryName_txtBox.Visibility = Visibility.Visible;
+                }
+                else if (Type_ComboBox_Returned_Item.IsSelected)
+                {
+                    MircoProject_ID_lable.Visibility = MircoProject_ID_autoSuggestionUserControl.Visibility = BeneficiaryName_lable.Visibility = BeneficiaryName_txtBox.Visibility = Visibility.Visible;
+                }
+
+                else if (Type_ComboBox_Expand_Item.IsSelected)
+                {
+                    DestinationTill_lable.Visibility = DestinationTill_comboBox.Visibility = DestinationTill_clear_btn.Visibility = Visibility.Visible;
+                    MircoProject_ID_lable.Visibility = MircoProject_ID_autoSuggestionUserControl.Visibility = BeneficiaryName_lable.Visibility = BeneficiaryName_txtBox.Visibility = Visibility.Visible;
+                    IsReceipt_comboBox.Visibility = Receipt_txtBox.Visibility =/* Placeholder1.Visibility =*/ Date_Label.Visibility = Date_datepicker.Visibility = Visibility.Visible;
+
+                    if (TillType == "syr")
+                    {
+                        AvgRate_lable.Visibility = AvgRate_TxtBox.Visibility = USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
+                        Rate_lable.Visibility = Rate_txtBox.Visibility = Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        AvgRate_lable.Visibility = AvgRate_TxtBox.Visibility = USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Collapsed;
+                        Rate_lable.Visibility = Rate_txtBox.Visibility = Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
+                    }
+                }
+
+            }
+            /*
+            if (UserRole == "1") //ADMIN
+            {
+                Rate_lable.Visibility = Rate_txtBox.Visibility
+                    = Exchanged_lable.Visibility = Exchanged_txtBox.Visibility
+                    = AvgRate_lable.Visibility = AvgRate_TxtBox.Visibility
+                    = USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility
+                    = DestinationTill_lable.Visibility = DestinationTill_panel.Visibility
+                    //= Till_lable.Visibility = Till_panel.Visibility
+                    = Visibility.Visible;
+            }
+            else
+            {
+                Rate_lable.Visibility = Rate_txtBox.Visibility
+                    = Exchanged_lable.Visibility = Exchanged_txtBox.Visibility
+                    = AvgRate_lable.Visibility = AvgRate_TxtBox.Visibility
+                    = USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility
+                    = DestinationTill_lable.Visibility = DestinationTill_panel.Visibility
+                    //= Till_lable.Visibility = Till_panel.Visibility
+                    = Visibility.Collapsed;
+
+                DataTable sub_dt = u.Get_User_Subprojects(User_ID.ToString());
+                if (sub_dt.Rows.Count == 0)
+                    throw new Exception("عذراً .. هذا المستخدم ليس له صلاحية على أي مركز من المراكز.");
+
+                SubProject_ID = sub_dt.Rows[0].Field<int>(0);
+            }*/
+        }
+
+        private void Till_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /*
+            if (Till_comboBox.SelectedIndex != -1)
+            {
+
+                TillType = Till_comboBox.Text;
+                if (TillType == "syr")
+                    Type_ComboBox_Outcome_Item.Content = "سلفة";
+                else //USD - EUR
+                    Type_ComboBox_Outcome_Item.Content = "تصريف";
+            }
+            */
+        }
+
+        private void Fill_Action()
+        {
+            try
+            {
+
+                DataTable dt = a.Select(Action_ID.ToString(), "", "", "", "", "", true);
+
+
+                if (dt.Rows[0]["Income"] != DBNull.Value)
+                    if (dt.Rows[0].Field<Double>("Income") != 0)
+                    {
+                        Type_comboBox.SelectedIndex = 0; //وارد
+                        Amount_txtBox.Text = string.Format("{0:N3}", dt.Rows[0].Field<Double>("Income"));
+                    }
+
+                if (dt.Rows[0]["Outcome"] != DBNull.Value)
+                    if (dt.Rows[0].Field<Double>("Outcome") != 0)
+                    {
+                        Type_comboBox.SelectedIndex = 1; //سلفة
+                        Amount_txtBox.Text = string.Format("{0:N3}", dt.Rows[0].Field<Double>("Outcome"));
+                    }
+
+                if (dt.Rows[0]["Returned"] != DBNull.Value)
+                    if (dt.Rows[0].Field<Double>("Returned") != 0)
+                    {
+                        Type_comboBox.SelectedIndex = 2; //مرتجع
+                        Amount_txtBox.Text = string.Format("{0:N3}", dt.Rows[0].Field<Double>("Returned"));
+                    }
+
+                if (dt.Rows[0]["Expand"] != DBNull.Value)
+                    if (dt.Rows[0].Field<Double>("Expand") != 0)
+                    {
+                        Type_comboBox.SelectedIndex = 3; //فاتورة
+                        Amount_txtBox.Text = string.Format("{0:N3}", dt.Rows[0].Field<Double>("Expand"));
+                    }
+
+                if (dt.Rows[0]["MicroProject_ID"] != DBNull.Value)
+                    MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = dt.Rows[0].Field<int>("MicroProject_ID").ToString();
+                else MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = "";
+
+                //Don't show the popup list//
+                MircoProject_ID_autoSuggestionUserControl.CloseAutoSuggestionBox();
+                //fill beneficiary name manually//
+                if (dt.Rows[0]["Name"] != DBNull.Value)
+                    BeneficiaryName_txtBox.Text = dt.Rows[0].Field<string>("Name").ToString();
+
+                Date_datepicker.SelectedDate = Convert.ToDateTime(dt.Rows[0].Field<DateTime>("Date").ToString());
+                Notes_txtBox.Text = dt.Rows[0].Field<string>("Note").ToString();
+
+                if (dt.Rows[0]["IsReceipt"] != DBNull.Value)
+                {
+                    if (dt.Rows[0].Field<string>("IsReceipt") == "إيصال") IsReceipt_comboBox.SelectedIndex = 1;
+                    else if (dt.Rows[0].Field<string>("IsReceipt") == "فاتورة") IsReceipt_comboBox.SelectedIndex = 0;
+                    else IsReceipt_comboBox.SelectedIndex = -1;
+                }
+
+                Receipt_txtBox.Text = dt.Rows[0].Field<string>("ReceiptNote");
+
+                if (dt.Rows[0]["AvgRate"] != DBNull.Value)
+                    AvgRate_TxtBox.Text = string.Format("{0:N3}", dt.Rows[0].Field<string>("AvgRate"));
+                //AvgRate_comboBox.SelectedValue = Convert.ToInt32(dataRow["AvgRate"].ToString());
+                /*
+                if (dt.Rows[0]["USD_Value"] != DBNull.Value)
+                    if (dt.Rows[0].Field<Double>("USD_Value").ToString() != "0")
+                    {
+                        USD_Value_TxtBox.Text = string.Format("{0:N3}", dt.Rows[0].Field<Double>("USD_Value"));
+                    }
+*/
+                if (dt.Rows[0]["Rate"] != DBNull.Value)
+                    Rate_txtBox.Text = string.Format("{0:N3}", dt.Rows[0].Field<Double>("Rate"));
+
+                // ObserveTill_ID //
+                if (dt.Rows[0]["ObserveTill_ID"] != DBNull.Value)
+                {
+                    DestinationTill_comboBox.SelectedValue = Convert.ToInt32(dt.Rows[0].Field<int>("ObserveTill_ID"));
+                }
+                else DestinationTill_comboBox.SelectedIndex = -1;
+
+                if (dt.Rows[0]["created_at"] == DBNull.Value)
+                    CreatedAt_datepicker.SelectedDate = null;
+                else
+                    Date_datepicker.SelectedDate = Convert.ToDateTime(dt.Rows[0].Field<DateTime>("created_at").ToString());
+            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.Message); }
+        }
+
+        private void Fill_Beneficiaries()
+        {
+            try
+            {
+                if (Login.BuildConnection())
+                {
+                    b_dt = b.Select("", Account_ID.ToString(), "");
+                    List<string> TestItems = new List<string>();
+                    if (b_dt.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < b_dt.Rows.Count; i++)
+                        {
+                            TestItems.Add(b_dt.Rows[i].Field<Int32>("MicroProject_ID").ToString());
+                        }
+                        MircoProject_ID_autoSuggestionUserControl.AutoSuggestionList = TestItems;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Fill_Tills()
+        {
+            /*
+            try
+            {
+                if (Login.BuildConnection())
+                {
+                    t_dt = t.Select(Account_ID.ToString(), "");
+                    if (t_dt.Rows.Count > 0)
+                    {
+                        Till_comboBox.ItemsSource = t_dt.DefaultView;
+                        DestinationTill_comboBox.ItemsSource = t_dt.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            */
+        }
+
+        private void Date_datepicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Select_AvgRate();
+        }
+
+        private void Select_AvgRate()
+        {
+            try
+            {
+                // If Amount Type is صادر-مصروف
+                // If IsReceipt is فاتورة
+                // If Date selected and Not Empty
+
+                // => find the Avg Rate in Account that : BeginDate >= Date & EndDate <= Date 
+                // => Calculate USD_Value
+
+                if (Type_comboBox.SelectedIndex == 3 && Amount_txtBox.Text != "") //فاتورة 
+                {
+                    string Date = Date_datepicker.DisplayDate.ToString("yyyy/MM/dd");
+                    if (Login.BuildConnection())
+                    {
+                        Rate_ID = -1;
+                        rate_dt = r.Select(Account_ID.ToString(), Date);
+                        if (rate_dt.Rows.Count == 0)
+                        {
+                            AvgRate_TxtBox.Text = USD_Value_TxtBox.Text = "";
+                            throw new Exception("لا يوجد قيمة مرتبطة بهذا الحساب وتضم تاريخ هذه العملية. الرجاء التأكد من وجود Avg Rate.");
+                        }
+
+                        Rate_ID = rate_dt.Rows[0].Field<int>("ID");
+                        double avgRate = rate_dt.Rows[0].Field<double>("Value");
+                        AvgRate_TxtBox.Text = avgRate.ToString("N3");
+
+                        //Calculate USD Value//
+                        if (Amount_txtBox.Text != "")
+                        {
+                            string expand = Amount_txtBox.Text.Replace(",", "");
+                            Double.TryParse(expand, out expandature);
+                            USD_Value = expandature / avgRate;
+                            USD_Value_TxtBox.Text = USD_Value.ToString("N3");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        #region clear btns
+        //private void Avg_clear_btn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    AvgRate_comboBox.SelectedIndex = -1;
+        //}
+
+        private void DestinationTill_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            DestinationTill_comboBox.SelectedIndex = -1;
+        }
+
+        private void Till_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            //Till_comboBox.SelectedIndex = -1;
+        }
+
+        #endregion
+
+        #region textbox functions
+        private void Amount_txtBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            string value = Amount_txtBox.Text;
+            if (value != "")
+            {
+                Amount_txtBox.Text = Login.ConvertToDouble(value);
+
+                // Calculate Exchanged //  
+                if (Type_comboBox.SelectedIndex == 1 && Rate_txtBox.Text != "") //outcome
+                {
+                    exchanged = Double.Parse(Amount_txtBox.Text.Replace(",", "")) * Double.Parse(Rate_txtBox.Text.Replace(",", ""));
+                    Exchanged_txtBox.Text = exchanged.ToString();
+                }
+
+                Select_AvgRate();
+            }
+        }
+
+        private void Rate_txtBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            string value = Rate_txtBox.Text;
+            if (value != "")
+            {
+                Rate_txtBox.Text = Login.ConvertToDouble(value);
+
+                // Calculate Exchanged //  
+                if (Type_comboBox.SelectedIndex == 1 && Amount_txtBox.Text != "") //outcome
+                {
+                    exchanged = Double.Parse(Amount_txtBox.Text.Replace(",", "")) * Double.Parse(Rate_txtBox.Text.Replace(",", ""));
+                    Exchanged_txtBox.Text = exchanged.ToString("N3");
+                }
+            }
+        }
+
+        private void MircoProject_ID_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                //if (MircoProject_ID_txtBox.Text == "") MircoProject_ID_txtBox.Text = BeneficiaryName_txtBox.Text = "";
+                //else
+                //{
+                //    string MircoProject_ID = MircoProject_ID_txtBox.Text;
+                //    DataRow[] rows = b_dt.Select("MicroProject_ID=" + MircoProject_ID);
+                //    if (rows.Length != 0)
+                //    {
+                //        BeneficiaryName_txtBox.Text = rows[0].Field<string>("Name");
+
+                //        // view the rows of this project in the grid //
+                //        DataRow[] My_rows = dt.Select("MicroProject_ID=" + MircoProject_ID_txtBox.Text);
+                //        if (My_rows.Length != 0)
+                //        {
+                //            DataTable selected_rows_dt = new DataTable();
+
+                //            selected_rows_dt = dt.Copy();
+                //            selected_rows_dt.Rows.Clear();
+                //            foreach (DataRow row in My_rows)
+                //                selected_rows_dt.ImportRow(row);
+
+                //            //myDataGrid.ItemsSource = selected_rows_dt.DefaultView;
+                //        }
+                //    }
+                //    else BeneficiaryName_txtBox.Text = "";
+                //}
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void MircoProject_ID_autoSuggestionUserControl_LostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text == "")
+                    BeneficiaryName_txtBox.Text = "";
+                else
+                {
+                    string MircoProject_ID = MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text;
+                    DataRow[] rows = b_dt.Select("MicroProject_ID=" + MircoProject_ID);
+                    if (rows.Length != 0)
+                    {
+                        BeneficiaryName_txtBox.Text = rows[0].Field<string>("Name");
+
+                        ////// view the rows of this project in the grid //
+                        ////DataRow[] My_rows = dt.Select("MicroProject_ID=" + MircoProject_ID_txtBox.Text);
+                        ////if (My_rows.Length != 0)
+                        ////{
+                        ////    DataTable selected_rows_dt = new DataTable();
+
+                        ////    selected_rows_dt = dt.Copy();
+                        ////    selected_rows_dt.Rows.Clear();
+                        ////    foreach (DataRow row in My_rows)
+                        ////        selected_rows_dt.ImportRow(row);
+
+                        ////    //myDataGrid.ItemsSource = selected_rows_dt.DefaultView;
+                        ////}
+                    }
+                    else BeneficiaryName_txtBox.Text = "";
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        #endregion
+
+        //private void Rate_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (AvgRate_comboBox.SelectedIndex == -1 || Amount_txtBox.Text == "")
+        //        {
+        //            USD_Value_TxtBox.Text = "";
+        //            Rate_ID = -1;
+        //        }
+        //        else
+        //        {
+        //            Calculate_USD_value();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //}
+
+        private void Save_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (Amount_txtBox.Text == "")
+                    throw new Exception("الرجاء التأكد من وجود قيمة صادرة أو واردة");
+                if (Type_comboBox.Text == "")
+                    throw new Exception("الرجاء التأكد من اختيار نوع العملية");
+
+
+                string amount_str, usdvalue_str, Date;
+                amount = exchanged = rate = 0;
+                string inserted_value = "", AType = "";
+                amount_str = Amount_txtBox.Text.Replace(",", "");
+                Double.TryParse(amount_str, out amount);
+
+                if (Type_comboBox.SelectedItem.ToString().Contains("وارد"))
+                {
+                    inserted_value = "Income";
+                }
+                else if (Type_comboBox.SelectedItem.ToString().Contains("سلفة") //syr
+                    || Type_comboBox.SelectedItem.ToString().Contains("تصريف")) //usd - eur
+                {
+                    inserted_value = "Outcome";
+                    if (Rate_txtBox.Text == "")
+                        throw new Exception("الرجاء التأكد من عدم وجود حجرات فارغة قبل عملية الحفظ");
+
+                    Double.TryParse(Rate_txtBox.Text, out rate);
+                }
+                else if (Type_comboBox.SelectedItem.ToString().Contains("مرتجع"))
+                {
+                    inserted_value = "Returned";
+                }
+                else if (Type_comboBox.SelectedItem.ToString().Contains("صادر/مصروف"))
+                {
+                    inserted_value = "Exchanged";
+                    if (Receipt_txtBox.Text == "")
+                        throw new Exception("الرجاء التأكد من إدخال رقم الايصال او الفاتورة قبل عملية الحفظ");
+                }
+
+                Date = Date_datepicker.DisplayDate.ToString("yyyy/MM/dd");
+
+                int IsReceipt = -1;
+                if (IsReceipt_comboBox.SelectedIndex == -1)
+                    IsReceipt = -1;
+                else if (IsReceipt_comboBox.SelectedItem.ToString().Contains("فاتورة"))
+                    IsReceipt = 1;
+                else if (IsReceipt_comboBox.SelectedItem.ToString().Contains("إيصال"))
+                    IsReceipt = 0;
+
+                //if (MircoProject_ID_txtBox.Text != "")
+                //    int.TryParse(MircoProject_ID_txtBox.Text, out MicroProject_ID);
+                if (MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text != "")
+                    int.TryParse(MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text, out MicroProject_ID);
+                else MicroProject_ID = -1;
+
+                /*
+                if (USD_Value_TxtBox.Text != "")
+                {
+                    usdvalue_str = USD_Value_TxtBox.Text.Replace(",", "");
+                    Double.TryParse(usdvalue_str, out USD_Value);
+                }
+                */
+                //if (AvgRate_comboBox.SelectedIndex != -1) Rate_ID = Convert.ToInt32(AvgRate_comboBox.SelectedValue);
+                //else Rate_ID = -1;
+
+                int DestinationTill_ID = -1;
+                string Destination_value = "";
+                if (DestinationTill_comboBox.SelectedIndex != -1)
+                    DestinationTill_ID = Convert.ToInt32(DestinationTill_comboBox.SelectedValue);
+
+                if (Login.BuildConnection())
+                {
+                    if (Action_ID != -1)//Edit
+                    {
+
+                        if (DestinationTill_comboBox.SelectedIndex != -1 && inserted_value == "Outcome")
+                        {
+                            a.Update(Action_ID, -1, DestinationTill_ID, true, inserted_value.Substring(0, 1), amount, rate
+           , Date, Notes_txtBox.Text, IsReceipt, Receipt_txtBox.Text
+           , Rate_ID, MicroProject_ID, -1, -1, -1);
+                        }
+                        else
+                        {
+                            a.Update(Action_ID, -1, DestinationTill_ID, false, inserted_value.Substring(0, 1), amount, rate
+           , Date, Notes_txtBox.Text, IsReceipt, Receipt_txtBox.Text
+           , Rate_ID, MicroProject_ID, -1, -1, -1);
+                        }
+
+                        /*
+                        a.Update(Action_ID, -1, DestinationTill_ID, "", inserted_value.Substring(0, 1), amount, rate
+                            , Date, Notes_txtBox.Text, IsReceipt, Receipt_txtBox.Text
+                            , Rate_ID, MicroProject_ID, -1, -1, -1);
+
+
+                        // If there is outcome & rate & exchanged values =>
+                        //      then update the row in destination till with the same ActionNumber //   
+                        if (DestinationTill_comboBox.SelectedIndex != -1 && inserted_value == "Outcome")
+                        {
+                            if (inserted_value == "Outcome")
+                                Destination_value = "I";
+
+                            a.Update(-1, DestinationTill_ID, Till_ID, ActionNumber, Destination_value, 0, 0
+                            , Date, Notes_txtBox.Text, -1, ""
+                            , -1, -1, -1, -1, -1);
+
+                        }
+                        //}
+                        */
+                    }
+                    else//Add new
+                    {
+                        if (DestinationTill_comboBox.SelectedIndex != -1 && inserted_value == "Outcome")
+                        {
+                            a.Insert(Till_ID, DestinationTill_ID, true, inserted_value.Substring(0, 1), amount, rate
+                           , Date, Notes_txtBox.Text, IsReceipt, Receipt_txtBox.Text
+                           , Rate_ID, MicroProject_ID, -1, -1, -1);
+
+
+                            DataTable rate_dt = r.Select(Account_ID.ToString(), Date);
+                            if (rate_dt.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < rate_dt.Rows.Count; i++)
+                                {
+                                    int r_id = rate_dt.Rows[i].Field<int>("ID");
+                                    string r_name = rate_dt.Rows[i].Field<string>("Name");
+                                    string BeginDate = rate_dt.Rows[i].Field<DateTime>("BeginDate").ToString("yyyy/MM/dd");
+                                    string EndDate = rate_dt.Rows[i].Field<DateTime>("EndDate").ToString("yyyy/MM/dd");
+                                    Double value = r.Calculate_Value(Account_ID.ToString(), BeginDate, EndDate);
+                                    r.Update(r_id, r_name, BeginDate, EndDate, value);
+
+                                    //update usd_value of all actions with type 'E'
+                                    //that have the updated AVG Rate r_id
+                                    // a.Update_usdValues(r_id);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            a.Insert(Till_ID, DestinationTill_ID, false, inserted_value.Substring(0, 1), amount, rate
+                            , Date, Notes_txtBox.Text, IsReceipt, Receipt_txtBox.Text
+                            , Rate_ID, MicroProject_ID, -1, -1, -1);
+                        }
+
+
+                        /*
+                        a.Insert(Till_ID, DestinationTill_ID, ActionNumber, inserted_value.Substring(0, 1), amount, rate
+                            , Date, Notes_txtBox.Text, IsReceipt, Receipt_txtBox.Text
+                            , Rate_ID, MicroProject_ID, -1, -1, -1);
+
+                        //l.Insert("Insert", TillType + " Till:" + Till_ID, inserted_value + ":" + amount, a.Get_Last_ID().ToString()
+                        //, Properties.Settings.Default.username, DateTime.Now);
+
+                        // If there is outcome & rate & exchanged values => then insert a row into syr_account table // 
+
+                        // السماح بالتعديل فقط من جهة المرسل
+                        if (DestinationTill_comboBox.SelectedIndex != -1 && inserted_value == "Outcome")
+                        {
+                            if (inserted_value == "Outcome")
+                                Destination_value = "I";
+
+                            a.Insert(DestinationTill_ID, Till_ID, ActionNumber, Destination_value, 0, 0
+                            , Date, Notes_txtBox.Text, -1, ""
+                            , -1, -1, -1, -1, -1);
+
+                            //l.Insert("Insert", TillType + " Till:" + DestinationTill_ID, inserted_value + ":" + amount, ActionNumber
+                            //, Properties.Settings.Default.username, DateTime.Now);
+
+                            //Refresh Destination Till Tab//
+                            //account_Window.Fill_Account_Tabs(DestinationTill_ID.ToString(), DestinationTill_comboBox.Text.ToString());
+
+                            // Get the avg rates that contains the date of this action //
+                            DataTable rate_dt = r.Select(Account_ID.ToString(), Date);
+                            if (rate_dt.Rows.Count > 0)
+                            {
+                                for (int i = 0; i < rate_dt.Rows.Count; i++)
+                                {
+                                    int r_id = rate_dt.Rows[i].Field<int>("ID");
+                                    string r_name = rate_dt.Rows[i].Field<string>("Name");
+                                    string BeginDate = rate_dt.Rows[i].Field<DateTime>("BeginDate").ToString("yyyy/MM/dd");
+                                    string EndDate = rate_dt.Rows[i].Field<DateTime>("EndDate").ToString("yyyy/MM/dd");
+                                    Double value = r.Calculate_Value(Account_ID.ToString(), BeginDate, EndDate);
+                                    r.Update(r_id, r_name, BeginDate, EndDate, value);
+
+                                    //update usd_value of all actions with type 'E'
+                                    //that have the updated AVG Rate r_id
+                                    // a.Update_usdValues(r_id);
+                                }
+                            }
+                        }
+                    }
+                    */
+                    MessageBox.Show("تم حفظ المعلومات بنجاح");
+                    Clear_Boxes();
+                    //LoadGrid();
+                    
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
+                {
+                    Login.MyConn.Close();
+                }
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Clear_Boxes()
+        {
+            Amount_txtBox.Text = AvgRate_TxtBox.Text = USD_Value_TxtBox.Text =
+                Rate_txtBox.Text = Exchanged_txtBox.Text =
+                Notes_txtBox.Text = Receipt_txtBox.Text = BeneficiaryName_txtBox.Text =
+                MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = "";
+
+            IsReceipt_comboBox.SelectedIndex = DestinationTill_comboBox.SelectedIndex = -1;
+            Action_ID = -1;
+
+            CreatedAt_datepicker.SelectedDate = Date_datepicker.SelectedDate = DateTime.Today;
+
+        }
+
+        //private void Calculate_USD_value()
+        //{
+        //    Rate_ID = Convert.ToInt32(AvgRate_comboBox.SelectedValue);
+        //    string expand = Amount_txtBox.Text.Replace(",", "");
+        //    Double.TryParse(expand, out expandature);
+
+        //    DataRow[] rows = rate_dt.Select("ID=" + Rate_ID);
+        //    if (rows.Length != 0)
+        //    {
+        //        double avgRate = rows[0].Field<double>("Value");
+
+        //        USD_Value = expandature / avgRate;
+        //        //Calculate usd_value = expandature / avgRate 
+        //        USD_Value_TxtBox.Text = USD_Value.ToString();
+        //    }
+        //}
+
+        private void Type_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                Show_Hide_Components();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+    }
+}
