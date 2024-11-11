@@ -1,0 +1,85 @@
+﻿<Window x:Class="Financial_WPF_App.Views.Attachments"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
+        mc:Ignorable="d"
+        Title="Attachments" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid x:Name="mainGrid" Margin="0,0,10,0" >
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="109*"/>
+                <ColumnDefinition Width="68*"/>
+                <ColumnDefinition Width="79*"/>
+                <ColumnDefinition Width="100*"/>
+                <ColumnDefinition Width="172*"/>
+                <ColumnDefinition Width="91*"/>
+                <ColumnDefinition Width="127*"/>
+                <ColumnDefinition Width="20*"/>
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55*"/>
+
+
+                <RowDefinition Height="358*" />
+                <RowDefinition Height="20.918"/>
+
+            </Grid.RowDefinitions>
+
+
+            <DataGrid Grid.ColumnSpan="7"
+                x:Name="myDataGrid"  
+                ColumnHeaderStyle="{DynamicResource DataGrid_header}" 
+                Style="{DynamicResource DataGrid_body}"
+                AlternatingRowBackground="{DynamicResource HopeBlue1}"
+                RowBackground="{DynamicResource HopeGrey}" AlternationCount="2" Margin="1,5,4,10" Grid.Row="1" IsReadOnly="False" CanUserAddRows="False" Grid.Column="1" AllowDrop="True" Drop="myDataGrid_Drop">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="id"  Binding="{Binding id}" Visibility="Collapsed"  IsReadOnly="True"/>
+                    <DataGridTextColumn Header="action_id"  Binding="{Binding action_id}" Visibility="Collapsed" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Attachment"  Binding="{Binding attach_name}" IsReadOnly="True"  />
+
+
+                    <DataGridTemplateColumn Header="View" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource View_Style}" Click="View_Button_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Download" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource Download_Style}" Click="Download_Button_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Delete" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource Delete_Style}" Click="DeleteButton_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Label Grid.Column="7"  Style="{DynamicResource lableStyle}" Content="Add attachments:" Margin="4,4,2,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <Button Style="{DynamicResource Add_Style}" 
+                x:Name="AddAttachments_btn" TabIndex="15" Margin="19,15,11,15" Grid.Column="6" Height="NaN" Width="NaN" HorizontalAlignment="Stretch" Click="AddAttachments_btn_Click" VerticalAlignment="Stretch"/>
+
+            <Syncfusion:SfCircularProgressBar x:Name="circularProgressBar" IsIndeterminate="False" 
+                                              ShowProgressValue ="True"
+             Grid.ColumnSpan="2" Margin="13,115,54,119" Grid.Column="4" Grid.Row="1">
+
+            </Syncfusion:SfCircularProgressBar>
+
+        </Grid>
+
+    </Grid>
+</Window>

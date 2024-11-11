@@ -1,0 +1,437 @@
+﻿using Financial_WPF_App.Models;
+using System;
+using System.Data;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+
+namespace Financial_WPF_App.Views
+{
+    public partial class All_ActionFiscalBond_Window : Window
+    {
+        public All_ActionFiscalBond_Window()
+        {
+            InitializeComponent();
+            DataContext = this;
+            Load_Form();
+        }
+
+
+        public All_ActionFiscalBond_Window(int FiscalBond_ID, string FiscalBond_Name)
+        {
+            InitializeComponent();
+            DataContext = this;
+
+            this.FiscalBond_ID = FiscalBond_ID;
+            this.FiscalBond_Name = FiscalBond_Name;
+            //Title_lable.Content = FiscalBond_Name;
+
+            Load_Form();
+        }
+
+        int FiscalBond_ID;
+        string FiscalBond_Name;
+        int Action_ID, Till_ID, Account_ID, SubProject_ID, MicroProject_ID, Rate_ID;
+        Till t;
+        Models.Action a;
+        private Beneficiary b;
+        private Log l;
+        private Rate r;
+        private Users u;
+        private FiscalBond fb;
+        Double amount, expandature, exchanged, rate, USD_Value;
+        string type, TillType;
+        private DataTable rate_dt, b_dt, t_dt, fb_dt, dt, sum_dt;
+
+        private void Load_Form()
+        {
+            try
+            {
+                u = new Users();
+                a = new Models.Action();
+                dt = sum_dt = new DataTable();
+                b = new Beneficiary();
+                t = new Till();
+                r = new Rate();
+                fb = new FiscalBond();
+
+                // 1- check user permission (Admin or normal user)
+                //   ADMIN:      show comboBox of available Tills (syr-usd-eur)
+                //   NormalUser: select 'syr' till and hide comboBox of available Tills
+                // 2- get subproject_id of current user (the working center)
+                // 3- get the 'fiscal bonds' of 'accounts' of 'subproject_id'
+                // 4- get the 'actions' of 'today' and fill them into the DataGrid
+
+                LoadFiscalBondComboBox(false);
+                Fill_Actions_of_Today();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        #region fiscal bond
+        private void LoadFiscalBondComboBox(bool ShowClosed)
+        {
+            if (Login.BuildConnection())
+            {
+                fb_dt = fb.Select("", "", Properties.Settings.Default.User_ID.ToString(), ShowClosed);
+                if (fb_dt.Rows.Count > 0)
+                {
+                    FiscalBond_comboBox.ItemsSource = fb_dt.DefaultView;
+                }
+            }
+        }
+
+        private void FiscalBond_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (FiscalBond_comboBox.SelectedValue != null)
+                {
+                    myDataGrid.ItemsSource = null;
+                    int id = Convert.ToInt32(FiscalBond_comboBox.SelectedValue);
+
+                    DataRow[] rows = dt.Select("FiscalBond_ID=" + id);
+                    DataTable selected_dt = new DataTable();
+                    if (rows.Length != 0)
+                    {
+                        selected_dt = rows.CopyToDataTable();
+                        if (selected_dt.Rows.Count > 0)
+                            myDataGrid.ItemsSource = selected_dt.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void FiscalBond_comboBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (FiscalBond_comboBox.Text == "")
+            {
+                myDataGrid.ItemsSource = null;
+                myDataGrid.ItemsSource = dt.DefaultView;
+            }
+        }
+        #endregion
+
+        public void Fill_Actions_of_Today()
+        {
+            try
+            {
+                if (Login.BuildConnection())
+                {
+                    string today_date = DateTime.Today.ToString("yyyy/MM/dd");
+
+                    int User_ID = Properties.Settings.Default.User_ID;
+                    string UserRole = Properties.Settings.Default.Role;
+                    if (UserRole == "1") //ADMIN
+                        dt = a.Select("", "", "", "", "", today_date, false);
+                    else
+                    {
+                        DataTable sub_dt = u.Get_User_Subprojects(User_ID.ToString());
+                        if (sub_dt.Rows.Count == 0)
+                            throw new Exception("عذراً .. هذا المستخدم ليس له صلاحية على أي مركز من المراكز.");
+
+                        SubProject_ID = sub_dt.Rows[0].Field<int>(0);
+                        dt = a.Select("", "", SubProject_ID.ToString(), "", "syr", today_date, false);
+                    }
+
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        myDataGrid.ItemsSource = dt.DefaultView;
+                    }
+
+                    sum_dt = a.Select_Sums(Till_ID.ToString(), today_date);
+                    if (sum_dt.Rows.Count > 0)
+                    {
+                        Income_textBlock.Text = sum_dt.Rows[0].Field<double>(0).ToString("N3");
+                        Outcome_textBlock.Text = sum_dt.Rows[0].Field<double>(1).ToString("N3");
+                        Returned_textBlock.Text = sum_dt.Rows[0].Field<double>(2).ToString("N3");
+                        Exchpand_textBlock.Text = sum_dt.Rows[0].Field<double>(3).ToString("N3");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        #region datagrid functions
+        private void myDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                int count = myDataGrid.SelectedItems.Count;
+                Selected_textBlock.Text = count.ToString("N3");
+
+                double selected_incomes = 0;
+                double selected_outcomes = 0;
+                double selected_returned = 0;
+                double selected_expaned = 0;
+                for (var i = 0; i < count; i++)
+                {
+                    DataRowView SelectedDataRow = (DataRowView)myDataGrid.SelectedItems[i];
+                    if (double.Parse(SelectedDataRow["Income"].ToString()) != 0)
+                    {
+                        selected_incomes += double.Parse(SelectedDataRow["Income"].ToString());
+                    }
+                    else if (double.Parse(SelectedDataRow["Outcome"].ToString()) != 0)
+                    {
+                        selected_outcomes += double.Parse(SelectedDataRow["Outcome"].ToString());
+                    }
+                    else if (double.Parse(SelectedDataRow["Returned"].ToString()) != 0)
+                    {
+                        selected_returned += double.Parse(SelectedDataRow["Returned"].ToString());
+                    }
+                    else if (double.Parse(SelectedDataRow["Expand"].ToString()) != 0)
+                    {
+                        selected_expaned += double.Parse(SelectedDataRow["Expand"].ToString());
+                    }
+                }
+                Income_textBlock.Text = selected_incomes.ToString("N3");
+                Outcome_textBlock.Text = selected_outcomes.ToString("N3");
+                Returned_textBlock.Text = selected_returned.ToString("N3");
+                Exchpand_textBlock.Text = selected_expaned.ToString("N3");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void myDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            IInputElement element = e.MouseDevice.DirectlyOver;
+            if (element != null && element is FrameworkElement)
+            {
+                if (((FrameworkElement)element).Parent is DataGridCell)
+                {
+                    var grid = sender as DataGrid;
+                    if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                    {
+                        DataRowView dataRow = grid.SelectedItem as DataRowView;
+
+                        int Action_ID = Convert.ToInt32(dataRow["ID"]);
+                        // Till_ID //
+                        if (dataRow["Till_ID"] != DBNull.Value && dataRow["Till_ID"] != null)
+                            Till_ID = Convert.ToInt32(dataRow["Till_ID"]);
+                        // Account_ID //
+                        if (dataRow["Account_ID"] != DBNull.Value && dataRow["Account_ID"] != null)
+                            Account_ID = Convert.ToInt32(dataRow["Account_ID"]);
+
+                        AddAction_Window _Window = new AddAction_Window(Account_ID, Till_ID, TillType, Action_ID);
+                        _Window.Show();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region datagrid btn clicks
+        private void ImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            // add or upload image //
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
+                int Action_ID = Convert.ToInt32(dataRow["ID"]);
+                // Till_ID //
+                if (dataRow["Till_ID"] != DBNull.Value && dataRow["Till_ID"] != null)
+                    Till_ID = Convert.ToInt32(dataRow["Till_ID"]);
+                // Account_ID //
+                if (dataRow["Account_ID"] != DBNull.Value && dataRow["Account_ID"] != null)
+                    Account_ID = Convert.ToInt32(dataRow["Account_ID"]);
+
+                AddAction_Window _Window = new AddAction_Window(Account_ID, Till_ID, TillType, Action_ID);
+                _Window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            //try
+            //{
+            //    var dialogResult = MessageBox.Show("هل أنت متأكدأنك تريد حذف هذه البيانات؟", "Confirm before save", MessageBoxButton.YesNo);
+            //    if (dialogResult == MessageBoxResult.Yes)
+            //    {
+            //        string deleted_value = "";
+
+            //        DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
+            //        ID = Convert.ToInt32(dataRow[0].ToString());
+            //        if (dataRow[1] != DBNull.Value && dataRow[1].ToString() != "0")
+            //            deleted_value = "Income:" + dataRow[1].ToString();
+            //        else if (dataRow[2] != DBNull.Value && dataRow[2].ToString() != "0")
+            //            deleted_value = "Outcome:" + dataRow[2].ToString();
+            //        else if (dataRow[3] != DBNull.Value && dataRow[3].ToString() != "0")
+            //            deleted_value = "Returned:" + dataRow[3].ToString();
+            //        else if (dataRow[3] != DBNull.Value && dataRow[4].ToString() != "0")
+            //            deleted_value = "Receipt:" + dataRow[4].ToString();
+
+            //        a.Delete(ID);
+            //        l.Insert("Delete", TillType + " Till:" + Till_ID, deleted_value, ID.ToString()
+            //                , Properties.Settings.Default.username, DateTime.Now);
+
+            //        ID = -1;
+            //        LoadGrid();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
+        }
+        #endregion
+
+
+        private void dataGrid_KeyUp(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void dataGrid_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Fill_Actions_of_Today();
+                FiscalBond_comboBox.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void AddNewAction_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (FiscalBond_comboBox.SelectedIndex == -1)
+                    throw new Exception("الرجاء اختيار السند الرئيسي المُراد إضافة سند عليه.. ");
+
+                //Get the account Id linked to the selected fiscal bond//
+                //for ADMIN don't select till id or select a default one (syr)
+                //for Normal users >> select (syr) till 
+
+                int FiscalBond_ID = Convert.ToInt32(FiscalBond_comboBox.SelectedValue.ToString());
+                int Account_ID = -1;
+
+                DataRow[] rows = fb_dt.Select("ID=" + FiscalBond_ID);
+                if (rows.Length != 0) Account_ID = rows[0].Field<int>("Account_ID");
+
+                AddAction_Window _Window = new AddAction_Window(1, 1, "syr");
+                _Window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+
+        }
+
+        #region search
+        private void Search_DataGrid()
+        {
+            DataTable selected_dt = new DataTable();
+            selected_dt = dt.Copy();
+
+            if (Search_txtBox.Text != "")
+            {
+                if (selected_dt != null)
+                {
+                    DataTable new_dt = selected_dt.Copy();
+                    new_dt.Rows.Clear();
+                    var found = 0;
+
+                    foreach (DataRow r in selected_dt.Rows)
+                    {
+                        for (var i = 0; i < selected_dt.Columns.Count; i++)
+                        {
+                            if (ExactSearch_checkBox.IsChecked == true)
+                            {
+                                if (r.ItemArray.ElementAt(i).ToString().ToLower() == Search_txtBox.Text.ToLower())
+                                {
+                                    new_dt.Rows.Add(r.ItemArray);
+                                    found = 1;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                if (r.ItemArray.ElementAt(i).ToString().ToLower().Contains(Search_txtBox.Text.ToLower()))
+                                {
+                                    new_dt.Rows.Add(r.ItemArray);
+                                    found = 1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    selected_dt = new_dt.Copy();
+                }
+            }
+            myDataGrid.ItemsSource = null;
+
+            if (selected_dt != null)
+            {
+                myDataGrid.ItemsSource = selected_dt.DefaultView;
+                All_textBlock.Text = myDataGrid.Items.Count.ToString();
+            }
+        }
+        private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                Search_DataGrid();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void ExactSearch_checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Search_DataGrid();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void ExactSearch_checkBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Search_DataGrid();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        #endregion
+    }
+}

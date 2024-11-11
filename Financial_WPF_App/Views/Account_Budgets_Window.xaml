@@ -1,0 +1,212 @@
+﻿<Window x:Class="Financial_WPF_App.Views.AddBudgetLines_Windows"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:local="clr-namespace:Financial_WPF_App.Helper"
+        mc:Ignorable="d"
+        Title="Account_Lines_Windows" Height="619.6" Width="1280" 
+        FontFamily="Myriad Arabic" FontSize="18" WindowState="Maximized" WindowStartupLocation="CenterScreen">
+
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Refresh" Click = "Refresh_Click" >
+                <MenuItem.Icon>
+                    <Image Source="/Cashing;component/Images/refresh32.png" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Window.ContextMenu>
+
+    <Grid Margin="0,1,0,1">
+        <Grid.ContextMenu>
+            <ContextMenu Name="cm">
+                <MenuItem Header="Refresh Budget" Click = "Refresh_Click" >
+                    <MenuItem.Icon>
+                        <Image Source="/Cashing;component/Images/refresh32.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition x:Name="First_col" Width="150*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="Grid1" Margin="2,0,0,8" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100*"/>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="100*"/>
+                <ColumnDefinition Width="90"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="7*"/>
+
+                <RowDefinition Height="0.7*"/>
+            </Grid.RowDefinitions>
+            <Label Style="{DynamicResource lableStyle}" Content="Name:" Grid.Column="3" Margin="0,8,0,8" Grid.Row="1" VerticalAlignment="Stretch" RenderTransformOrigin="0.486,0.136" Width="88" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+            <TextBox  x:Name="Name_txtBox" Style="{DynamicResource textBoxStyle}" TabIndex="5"
+                Margin="1,10,3,10" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Grid.Column="2"   />
+            <Label Grid.Column="3" Style="{DynamicResource lableStyle}" Content="Start date:" Grid.Row="2" VerticalAlignment="Stretch" Margin="1,2,1,2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <DatePicker x:Name="beginDate_datepicker" TabIndex="1" Margin="1,2,3,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="2" />
+            <Label Style="{DynamicResource lableStyle}" Content="End date:" Margin="1,2,1,2" Grid.Row="2" VerticalAlignment="Stretch" Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <DatePicker x:Name="endDate_datepicker" TabIndex="2" Margin="3,2,3,2" VerticalAlignment="Stretch"  Grid.Row="2" HorizontalAlignment="Stretch"  />
+            <Label  Style="{DynamicResource lableStyle}" Content="Currency:" Grid.Row="1" VerticalAlignment="Stretch" Margin="0,6,0,12" Width="87" Grid.Column="1" RenderTransformOrigin="0.484,0.414" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <ComboBox x:Name="TillType_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID"
+                    FlowDirection="RightToLeft" TabIndex="1" FontSize="14" Margin="1,8,1,12" VerticalAlignment="Stretch" Grid.Row="1" />
+            <Button  Style="{DynamicResource SaveButton_Style}"
+                    x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" Height="NaN" Width="NaN" Grid.Row="6" Margin="44,1,63,2" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <Grid Grid.Row="4" Margin="3,2,0,1" Grid.ColumnSpan="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="90"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="4"  Style="{DynamicResource lableStyle}" Content="Donor:" VerticalAlignment="Stretch" Margin="0,2,0,2" Width="88" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                <ComboBox x:Name="Donor_comboBox" TabIndex="3" 
+                    DisplayMemberPath="Name" SelectedValuePath="ID" 
+                    FlowDirection="RightToLeft" Width="auto" MinWidth="130" FontSize="16"
+                    VerticalContentAlignment="Center" Grid.Column="3" Margin="1,2,2,2" VerticalAlignment="Stretch"/>
+                <Label  Style="{DynamicResource lableStyle}" Content="%" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1" FontSize="25"/>
+                <Button Style="{DynamicResource Add_Style}" 
+                    x:Name="AddDonor_btn" TabIndex="15" HorizontalAlignment="Stretch" Margin="6,0,5,5" VerticalAlignment="Stretch" Width="NaN" Click="AddDonor_btn_Click"  />
+                <TextBox x:Name="Rate_TextBox" Margin="2,2,2,2" TextWrapping="Wrap" Style="{DynamicResource textBoxStyle}" VerticalAlignment="Stretch" Grid.Column="2" LostFocus="Rate_TextBox_LostFocus" PreviewTextInput="NumberValidationTextBox"/>
+            </Grid>
+            <TextBox x:Name="Exchange_Note_TextBox_Copy" Margin="3,3,3,3" Grid.Row="3" TextWrapping="Wrap" Style="{DynamicResource textBoxStyle}" Text="Please note that the budget's currency is the only currency allowed to be exchanged to Syrian pound." FontSize="20" Foreground="#FFBE121F" VerticalAlignment="Stretch" Grid.ColumnSpan="4" HorizontalContentAlignment="Left"/>
+            <syncfusion:SfDataGrid x:Name="Budget_Dononrs_DataGrid" Margin="1,4,1,10" Grid.Row="5" Grid.ColumnSpan="4"
+                       Style="{DynamicResource SfDataGrid_body}"
+                      HeaderStyle="{DynamicResource SfDataGrid_header}"
+                      RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+                      AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
+                      AllowFiltering="False"  
+                      ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn MappingName="Budget_Donor_ID" HeaderText="Budget_Donor_ID" 
+                                               IsHidden="True" />
+                    <syncfusion:GridTextColumn MappingName="Donor_ID" HeaderText="Donor_ID" 
+                                               IsHidden="True" />
+                    <syncfusion:GridTextColumn MappingName="Donor" HeaderText="Donor"/>
+                    <syncfusion:GridNumericColumn  HeaderText="Percentage"  MappingName="Rate" 
+                                                   NumberDecimalDigits="2"
+                                                   NumberDecimalSeparator="."
+                                                   NumberGroupSizes="3"
+                                                   NumberGroupSeparator=","/>
+
+                    <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource Delete_Style}" Click="Donor_DeleteButton_Click"/>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+                </syncfusion:SfDataGrid.Columns>
+
+            </syncfusion:SfDataGrid>
+        </Grid>
+        <Grid Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="206*"/>
+                <ColumnDefinition Width="255*"/>
+                <ColumnDefinition Width="292*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition/>
+                <RowDefinition Height="45"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="2" Margin="10,0,0,0" Grid.ColumnSpan="5" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="5" Content="All:" Style="{DynamicResource statistic_lableStyle}" />
+                <Border Grid.Column="4" BorderThickness="1" CornerRadius="7" Padding="0" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
+                    </Border.Background>
+                    <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+
+                </Border>
+
+                <Label Grid.Column="3" Content="Slected:" Style="{DynamicResource statistic_lableStyle}" />
+                <Border Grid.Column="2" BorderThickness="1" CornerRadius="7" Padding="0" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
+                    </Border.Background>
+                    <TextBlock x:Name="Selected_textBlock" Text="0" 
+                               Style="{DynamicResource statistic_textBlockStyle}"
+                               OverridesDefaultStyle="True"  />
+                </Border>
+            </Grid>
+            <syncfusion:SfDataGrid FrozenColumnCount="2"
+                      x:Name="myDataGrid"  
+                      HeaderStyle="{DynamicResource SfDataGrid_header}"             
+                      Style="{DynamicResource SfDataGrid_body}"
+                      RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+                      AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"  
+                                   AutoGenerateColumns="True"
+                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" Grid.Row="1" Margin="2,0,3,5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="5" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" >
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click"/>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+
+                    <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+                </syncfusion:SfDataGrid.Columns>
+            </syncfusion:SfDataGrid>
+            <Menu x:Name="ShowHideMenu_Copy" Margin="10,0,0,2" HorizontalAlignment="Left" Width="33" >
+                <Menu.Background>
+                    <ImageBrush/>
+                </Menu.Background>
+                <MenuItem Header="" StaysOpenOnClick="True" Grid.Column="1" Width="33" Height="48" >
+                    <MenuItem.Background>
+                        <ImageBrush ImageSource="/Images/2072010 (100x100).png" Stretch="Uniform" TileMode="Tile"/>
+                    </MenuItem.Background>
+                    <MenuItem x:Name="ShowMenu" Header="Show" StaysOpenOnClick="True" Background="White" />
+                    <MenuItem x:Name="HideMenu" Header="Hide" StaysOpenOnClick="True" Background="White"/>
+                    <Separator Background="Black"/>
+                    <MenuItem Header="ShowAll" Click="ShowAll_MenuItem_Click" Background="White"/>
+                </MenuItem>
+            </Menu>
+            <Button Grid.Column="1" Style="{DynamicResource Export_Style}" x:Name="Export_btn"
+                    TabIndex="5" Command="local:Commands.ExportToExcel" HorizontalAlignment="Left" Height="34" Width="36" />
+            <StackPanel Grid.Column="2" x:Name="Panel1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,8,4,2" Grid.ColumnSpan="3" Width="745" HorizontalAlignment="Right" >
+                <RadioButton x:Name="Total_RadioButton" Content="Show total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Height="34" Width="126" HorizontalAlignment="Right" Checked="Total_RadioButton_Checked"/>
+                <RadioButton x:Name="PerDonor_RadioButton" Content="Show per donor" Height="34" Width="150" Style="{DynamicResource RadioButtonStyle}" HorizontalAlignment="Right" Checked="PerDonor_RadioButton_Checked"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

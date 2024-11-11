@@ -1,0 +1,107 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
+        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+    
+        x:Class="Financial_WPF_App.Views.Add_Misssing_Budget_Lines"
+        mc:Ignorable="d"
+        Title="Add_Misssing_Budget_Lines"  Width="1000" Height="600"  WindowStartupLocation="CenterScreen">
+    <Grid>
+
+        <Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="168*"/>
+                    <ColumnDefinition Width="482*"/>
+                    <ColumnDefinition Width="218*"/>
+                    <ColumnDefinition Width="133*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="355*"/>
+                    <RowDefinition Height="44*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="2" Grid.ColumnSpan="4" Margin="1,1,1,1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250*"/>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="250*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button 
+                        Style="{DynamicResource SaveButton_Style}"
+                        x:Name="Save_btn" TabIndex="20" Click="Save_btn_Click" Margin="10,4,10,4" Height="NaN" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                </Grid>
+                
+                <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
+                    Style="{DynamicResource SfDataGrid_body}"
+                    HeaderStyle="{DynamicResource SfDataGrid_header}"
+                    RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+                    AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
+                    NavigationMode="Cell"
+                    Loaded="myDataGrid_Loaded" 
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
+                    Margin="1,1,1,1" FilterChanged="myDataGrid_FilterChanged" Grid.ColumnSpan="4" Grid.RowSpan="2" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged" >
+
+                    <syncfusion:SfDataGrid.Columns>
+                        <syncfusion:GridTextColumn x:Name="Category_DataGridColumn" HeaderText="Category"  MappingName="Category" />
+                        <syncfusion:GridTextColumn x:Name="Type_DataGridColumn" HeaderText="Type"  MappingName="Type" />
+
+                        <syncfusion:GridTextColumn x:Name="Kind_DataGridColumn" HeaderText="Kind"  MappingName="Kind" />
+
+                        <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Line"  MappingName="Line" />
+
+                        <syncfusion:GridNumericColumn  x:Name="Unit_DataGridColumn" HeaderText="Unit"  MappingName="Unit" AllowEditing="True"
+                                                      NumberDecimalDigits="0"
+                                                   NumberDecimalSeparator="."
+                                                   NumberGroupSizes="3"
+                                                   NumberGroupSeparator=","/>
+                        <syncfusion:GridNumericColumn  x:Name="Timing_DataGridColumn" HeaderText="Timing"  MappingName="Timing" AllowEditing="True"
+                                                      NumberDecimalDigits="0"
+                                                   NumberDecimalSeparator="."
+                                                   NumberGroupSizes="3"
+                                                   NumberGroupSeparator=","/>
+                        <syncfusion:GridNumericColumn  x:Name="Price_DataGridColumn" HeaderText="Price"  MappingName="Price" AllowEditing="True"
+                                                      NumberDecimalDigits="2"
+                                                   NumberDecimalSeparator="."
+                                                   NumberGroupSizes="3"
+                                                   NumberGroupSeparator=","/>
+
+                        <syncfusion:GridCheckBoxColumn x:Name="Selected_DataGridColumn" HeaderText="Select" MappingName="IsSelected" AllowEditing="True" AllowFiltering="False" AllowGrouping="False">
+                            <syncfusion:GridCheckBoxColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <CheckBox x:Name="chkHeader" Loaded="chkHeader_Loaded" Click="chkHeader_Click"/>
+                                </DataTemplate>
+                            </syncfusion:GridCheckBoxColumn.HeaderTemplate>
+                            <syncfusion:GridCheckBoxColumn.CellStyle>
+                                <Style>
+                                    <Style.Resources>
+                                        <Style TargetType="CheckBox">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="1">
+                                                    <Setter Property="Background" Value="Green" />
+                                                    <Setter Property="FlowDirection" Value="LeftToRight" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="0">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Style.Resources>
+                                </Style>
+                            </syncfusion:GridCheckBoxColumn.CellStyle>
+                        </syncfusion:GridCheckBoxColumn>
+                        
+                    </syncfusion:SfDataGrid.Columns>
+                </syncfusion:SfDataGrid>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</Window>

@@ -1,0 +1,9 @@
+<FileList>
+
+<File Reference="Syncfusion.SfBusyIndicator.WPF.dll">
+	<ContainsControls>True</ContainsControls>
+	<ToolboxItems UIFramework="WPF" VSCategory="Syncfusion WPF UI Controls (NuGet)" BlendCategory="Syncfusion WPF UI Controls (NuGet)">
+		<Item Type="Syncfusion.Windows.Controls.Notification.SfBusyIndicator"/>
+	</ToolboxItems>
+</File>
+</FileList>
