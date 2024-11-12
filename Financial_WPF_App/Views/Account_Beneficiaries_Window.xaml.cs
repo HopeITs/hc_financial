@@ -25,6 +25,8 @@ namespace Financial_WPF_App.Views
         {
             InitializeComponent();
 
+            //
+
             this.Account_ID = Account_ID;
             this.main_Window = main_Window;
             this.SubProject_ID = SubProject_ID;
