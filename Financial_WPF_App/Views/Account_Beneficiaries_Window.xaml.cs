@@ -1,4 +1,4 @@
-﻿using ControlzEx.Standard;
+using ControlzEx.Standard;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.Data.Extensions;
@@ -26,6 +26,8 @@ namespace Financial_WPF_App.Views
             InitializeComponent();
 
             //Comment Local test
+
+            //Comment Remot Test
 
             this.Account_ID = Account_ID;
             this.main_Window = main_Window;
