@@ -11,6 +11,9 @@ namespace Financial_WPF_App.Models
         // Test By Nay
 
         // EDIT BY SARY
+
+
+        //New Branch edit
         public static MySqlConnection MyConn;
 
         //CHARSET=utf8 for recognizing Arabic in c#
