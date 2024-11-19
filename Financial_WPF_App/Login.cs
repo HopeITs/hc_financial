@@ -8,7 +8,7 @@ namespace Financial_WPF_App.Models
 {
     internal static class Login
     {
-
+        // Test By Nay
         public static MySqlConnection MyConn;
 
         //CHARSET=utf8 for recognizing Arabic in c#
