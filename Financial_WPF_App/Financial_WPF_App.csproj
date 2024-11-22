@@ -787,7 +787,6 @@
     <Resource Include="Images\Login\Remeber 2.png" />
     <Resource Include="Images\Login\Remeber.png" />
     <Resource Include="Images\Login\Vector Smart Object copy 41.png" />
-    <Resource Include="Images\Login\WEB 2.png" />
     <Resource Include="Images\Login\WEB.png" />
   </ItemGroup>
   <ItemGroup>
@@ -878,6 +877,44 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Buttons\restore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Cover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Remember2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Remember.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Power.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Power2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Asset 58.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Online.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\Online2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\minimize.png" />
+    <Resource Include="Images\Buttons\resize.png" />
+    <Resource Include="Images\Buttons\close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="minimize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Login\App Logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.0.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.0.0\build\MaterialDesignThemes.targets')" />

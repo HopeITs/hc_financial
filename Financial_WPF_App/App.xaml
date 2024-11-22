@@ -189,8 +189,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
-
             <Style x:Key="RestoreButton_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="86" />
                 <Setter Property="Button.Height" Value="32" />
@@ -226,8 +224,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
-
             <Style x:Key="lableStyle" TargetType="{x:Type Label}"  >
                 <Setter Property="Label.FontSize" Value="20" />
                 <Setter Property="Label.FontFamily" Value="Myriad Arabic" />
@@ -268,7 +264,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
             <Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
                 <Setter Property="Label.FontSize" Value="15" />
                 <Setter Property="Label.FontFamily" Value="Arial" />
@@ -357,7 +352,6 @@
             </Style>
 
 
-
             <Style x:Key="DataGrid_body" TargetType="{x:Type DataGrid}"  
                    BasedOn="{StaticResource {x:Type DataGrid}}">
                 <Setter Property="DataGrid.FontFamily" Value="Myriad Arabic" />
@@ -443,7 +437,6 @@
 
 
 
-
             <Style x:Key="SfDataGrid_body" TargetType="{x:Type syncfusion:SfDataGrid}">
                 <Setter Property="FontFamily" Value="Myriad Arabic" />
                 <Setter Property="FontSize" Value="18" />
@@ -478,11 +471,9 @@
                 <Setter Property ="AllowResizingColumns" Value ="True" />
                 <Setter Property ="FrozenRowsCount" Value ="0" />
             </Style>
-
             <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_alternatingRowStyle">
                 <Setter Property="Background" Value="{DynamicResource HopeBlue1}"/>
             </Style>
-            
             <Style x:Key="SfDataGrid_header"
                     BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}"
                     TargetType="{x:Type syncfusion:GridHeaderCellControl}">
@@ -503,7 +494,6 @@
                 <Setter Property="VerticalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
             </Style>
-
             <Style x:Key="SfDataGrid_StackedHeaderstyle" TargetType="syncfusion:GridStackedHeaderCellControl">
                 <Setter Property="FontFamily" Value="Myriad Arabic" />
                 <Setter Property="FontSize" Value="20" />
@@ -523,11 +513,9 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
 
             </Style>
-          
             <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_RowStyle">
                 <Setter Property="Background" Value="{DynamicResource HopeGrey}"/>
             </Style>
-
             <Style x:Key="rowStyle1" TargetType="syncfusion:VirtualizingCellsControl">
                 <Setter Property="Background" Value="{DynamicResource HopeRed1}" />
             </Style>

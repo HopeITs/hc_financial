@@ -85,9 +85,9 @@ namespace Financial_WPF_App.Models
             database = "hcsyria_financial";
             test_database = "hcsyria_financial_test";
 
-            bool test_online = false;
-            bool test_offline = false;
-            bool test_Attachments = false;
+            bool test_online = true;
+            bool test_offline = true;
+            bool test_Attachments = true;
             bool PC_Admin = true;
 
             string localserver;
@@ -189,5 +189,6 @@ namespace Financial_WPF_App.Models
                 Login.MyConn.Close();
             }
         }
+        
     }
 }
