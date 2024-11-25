@@ -731,6 +731,20 @@
     <Resource Include="Images\Design\login_btn_c.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Fonts\Rubik-Black.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-BlackItalic.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-Bold.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-BoldItalic.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-ExtraBold.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-ExtraBoldItalic.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-Italic.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-Light.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-LightItalic.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-Medium.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-MediumItalic.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-Regular.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-SemiBold.ttf" />
+    <Resource Include="Resources\Fonts\Rubik-SemiBoldItalic.ttf" />
     <None Include="Resources\login_btn.png" />
   </ItemGroup>
   <ItemGroup>
@@ -907,11 +921,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Buttons\minimize.png" />
-    <Resource Include="Images\Buttons\resize.png" />
     <Resource Include="Images\Buttons\close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="minimize.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Login\App Logo.ico" />

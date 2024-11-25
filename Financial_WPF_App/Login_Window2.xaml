@@ -759,7 +759,7 @@
             <!-- Buttons Over Image -->
             <Rectangle x:Name="WEB_RED" HorizontalAlignment="Left" Height="12" Margin="332,358,0,0" VerticalAlignment="Top" Width="23">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="/Images/Login/WEB.png"/>
+                    <ImageBrush ImageSource="/Images/Login/Asset 58.png"/>
                 </Rectangle.Fill>
             </Rectangle>
             <Button x:Name="WEB_Butten" Content="" Margin="331,357,309,329" BorderBrush="{x:Null}" Click="WEB_Butten_Click" Style="{DynamicResource ButtonStyle2}" RenderTransformOrigin="0.5,0.5" ToolTip="Our Website" Cursor="Hand">
@@ -772,7 +772,7 @@
                     </TransformGroup>
                 </Button.RenderTransform>
                 <Button.Background>
-                    <ImageBrush ImageSource="/Images/Login/Asset 58.png"/>
+                    <ImageBrush ImageSource="/Images/Login/WEB.png"/>
                 </Button.Background>
             </Button>
             <Rectangle x:Name="rectangle" Margin="94,306,370,309" StrokeThickness="0"/>
@@ -818,12 +818,12 @@
                     <ImageBrush ImageSource="/Images/Login/power2.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Online_Butten_Copy" Content="Button" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonStyle1}" ToolTip="Offline Database" Cursor="Hand" Width="25">
+            <Button x:Name="Online_Butten_Copy" Content="Button" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonStyle1}" ToolTip="Online Database" Cursor="Hand" Width="25">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Online2.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Online_Butten" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonStyle1}" Click="Online_Butten_Click"  ToolTip="Online Database" Cursor="Hand" d:IsHidden="True">
+            <Button x:Name="Online_Butten" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonStyle1}" Click="Online_Butten_Click"  ToolTip="Offline Database" Cursor="Hand" d:IsHidden="True">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Online.png"/>
                 </Button.Background>
@@ -873,29 +873,27 @@
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="40"/>
                     <!--<ColumnDefinition Width="Auto" />-->
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="14.966" />
+                    <ColumnDefinition Width="2.034"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Minimize Button -->
-                <Button Width="17" Height="17" Grid.Column="0" Click="Minimize_Click" Background="{x:Null}" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="2">
-                    <Image Source="/Images/Buttons/minimize.png" Stretch="Uniform" Width="20" >
-                        <Image.OpacityMask>
-                            <ImageBrush ImageSource="/Images/Buttons/minimize.png"/>
-                        </Image.OpacityMask>
-                    </Image>
+                <Button Width="17" Height="17" Grid.Column="1" Click="Minimize_Click"  BorderBrush="{x:Null}" Foreground="{x:Null}" Margin="12,2,12,2">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/minimize.png" Stretch="Uniform" Opacity="1"/>
+                    </Button.Background>
                 </Button>
                 <!-- Resize Button -->
                 <!--<Button Width="30" Height="30" Grid.Column="1" Click="Resize_Click" Background="{x:Null}">
                     <Image Source="/Images/Buttons/resize.png" Stretch="Uniform" />
                 </Button>-->
                 <!-- Close Button -->
-                <Button Width="17" Height="17" Grid.Column="2" Click="Shutdown_btn_Click" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
-                    <Image Source="/Images/Buttons/close.png" Stretch="Uniform" Width="17" >
-                        <Image.OpacityMask>
-                            <ImageBrush ImageSource="/Images/Buttons/close.png"/>
-                        </Image.OpacityMask>
-                    </Image>
+                <Button Width="17" Height="17" Grid.Column="2" Click="Shutdown_btn_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" FontWeight="Normal" Grid.ColumnSpan="2" Margin="0,2,0,2">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/close.png" Stretch="Uniform" Opacity="1"/>
+                    </Button.Background>
                 </Button>
+
             </Grid>
             <!-- Logo -->
             <Image Source="/Images/Login/App Logo.ico" Margin="121,149,121,141" />
