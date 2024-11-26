@@ -745,6 +745,7 @@
     <Resource Include="Resources\Fonts\Rubik-Regular.ttf" />
     <Resource Include="Resources\Fonts\Rubik-SemiBold.ttf" />
     <Resource Include="Resources\Fonts\Rubik-SemiBoldItalic.ttf" />
+    <Resource Include="Resources\Fonts\digital-7.ttf" />
     <None Include="Resources\login_btn.png" />
   </ItemGroup>
   <ItemGroup>

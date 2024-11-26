@@ -5,6 +5,7 @@
              xmlns:converters="clr-namespace:Financial_WPF_App.Views"
              xmlns:syncfusion="clr-namespace:Syncfusion.UI.Xaml.Grid;assembly=Syncfusion.SfGrid.WPF"
              StartupUri="Main_Window2.xaml">
+    
     <Application.Resources>
 
         <ResourceDictionary>
@@ -66,8 +67,30 @@
                 <ResourceDictionary Source="/Fluent;component/Themes/Generic.xaml" />
                 <!--<ResourceDictionary Source="/Fluent;component/Themes/Office2010/Silver.xaml" />-->
 
-
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Global font for TextBlock -->
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+
+             <!--Global font for TextBox--> 
+            <Style TargetType="TextBox">
+                <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+
+             <!--Global font for PasswordBox--> 
+            <Style TargetType="PasswordBox">
+                <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+
+
+             <!--Global font for Label--> 
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+
+
 
             <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>
             <SolidColorBrush x:Key="HopeBlue2" Color="#FF4474A2"/>
@@ -112,6 +135,7 @@
                     Stretch="Uniform"></ImageBrush>
 
             <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="Rubik" />
                 <Setter Property="Background" Value="{StaticResource ButtonImage}"></Setter>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -129,7 +153,7 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Foreground" Value="Blue" />
                                     <Setter Property="Cursor" Value="Hand" />
-                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                     <!--If we don't tell the background to change on hover, it will remain the same--> 
                                     <Setter Property="Background" Value="{StaticResource ButtonImage_H}"></Setter>
                                 </Trigger>
                             </ControlTemplate.Triggers>
@@ -228,7 +252,7 @@
             </Style>
 
 
-            <Style x:Key="lableStyle" TargetType="{x:Type Label}"  >
+            <!--<Style x:Key="lableStyle" TargetType="{x:Type Label}"  >
                 <Setter Property="Label.FontSize" Value="20" />
                 <Setter Property="Label.FontFamily" Value="Myriad Arabic" />
                 <Setter Property="Foreground" >
@@ -240,7 +264,19 @@
                 <Setter Property="Label.HorizontalAlignment" Value="Left" />
                 <Setter Property="Label.VerticalAlignment" Value="Center" />
                 <Setter Property="Label.VerticalContentAlignment" Value="Center" />
-            </Style>
+            </Style>--><!--<Style x:Key="lableStyle" TargetType="{x:Type Label}"  >
+                <Setter Property="Label.FontSize" Value="20" />
+                <Setter Property="Label.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Label.FlowDirection" Value="RightToLeft" />
+                <Setter Property="Label.HorizontalAlignment" Value="Left" />
+                <Setter Property="Label.VerticalAlignment" Value="Center" />
+                <Setter Property="Label.VerticalContentAlignment" Value="Center" />
+            </Style>-->
             <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="FontFamily" Value="Myriad Arabic" />
@@ -269,7 +305,7 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
+            <!--<Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
                 <Setter Property="Label.FontSize" Value="15" />
                 <Setter Property="Label.FontFamily" Value="Arial" />
                 <Setter Property="Foreground" >
@@ -338,7 +374,7 @@
                 <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
                 <Setter Property="TextBlock.TextAlignment" Value="Left" />
                 <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
-            </Style>
+            </Style>-->
             <Style TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MaterialDesignDatePicker}"  >
                 <Setter Property="DatePicker.FontSize" Value="22" />
                 <Setter Property="DatePicker.FontFamily" Value="Myriad Arabic" />
