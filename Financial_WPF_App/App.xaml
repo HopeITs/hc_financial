@@ -30,21 +30,6 @@
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Indigo.xaml" />
                     </ResourceDictionary.MergedDictionaries>
-                    <!--  include three hues from the primary palette (and the associated forecolours).    
-                            Do not rename, keep in sequence; light to dark.  s -->
-                    <!--<SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary100}"/>
-                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary100Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary500}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary500Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary700}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary700Foreground}"/>-->
-
-                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF84ABCD"/>
-                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FF1C3144"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF84ABCD"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FF00416A"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FFFF3333"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFF3333"/>
                 </ResourceDictionary>
 
                 <!-- secondary colour -->
@@ -53,10 +38,6 @@
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Yellow.xaml" />
                     </ResourceDictionary.MergedDictionaries>
-
-                    <!-- include a single secondary accent color (and the associated forecolour) -->
-                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource Accent200}"/>
-                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Accent200Foreground}"/>
                 </ResourceDictionary>
 
                 <!-- Include the Dragablz Material Design style -->
@@ -65,9 +46,11 @@
 
                 <!-- Include the Fluent Library for RIBBON -->
                 <ResourceDictionary Source="/Fluent;component/Themes/Generic.xaml" />
-                <!--<ResourceDictionary Source="/Fluent;component/Themes/Office2010/Silver.xaml" />-->
 
             </ResourceDictionary.MergedDictionaries>
+
+
+            <!--New Style-->
 
             <!-- Global font for TextBlock -->
             <Style TargetType="TextBlock">
@@ -90,7 +73,143 @@
                 <Setter Property="FontFamily" Value="Rubik" />
             </Style>
 
+           
 
+            <SolidColorBrush x:Key="White" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="HopeRed" Color="#BE1F24"/>
+            <SolidColorBrush x:Key="Orange" Color="#F7981D"/>
+            <SolidColorBrush x:Key="PastelGreen" Color="#7d9885"/>
+            <SolidColorBrush x:Key="PastelDarkBlue" Color="#074063"/>
+            <SolidColorBrush x:Key="GreenBlue" Color="#17778D"/>
+            <SolidColorBrush x:Key="DarkGray" Color="#6E6F72"/>
+            <SolidColorBrush x:Key="MidGray" Color="#939598"/>
+            <SolidColorBrush x:Key="LightGray1" Color="#DCDDDE"/>
+            <SolidColorBrush x:Key="LightGray2" Color="#F1F2F2"/>
+
+            <Color x:Key="Color_HopeRed" >#BE1F24</Color>
+            <Color x:Key="Color_Orange" >#F7981D</Color>
+            <Color x:Key="Color_PastelGreen" >#7d9885</Color>
+            <Color x:Key="Color_PastelDarkBlue" >#074063</Color>
+            <Color x:Key="Color_GreenBlue" >#17778D</Color>
+            <Color x:Key="Color_DarkGray" >#6E6F72</Color>
+            <Color x:Key="Color_MidGray" >#939598</Color>
+            <Color x:Key="Color_LightGray1" >#DCDDDE</Color>
+            <Color x:Key="Color_LightGray2" >#F1F2F2</Color>
+
+            <CornerRadius x:Key="CornerRadius">5</CornerRadius>
+
+            <DropShadowEffect x:Key="ShadowEffect" BlurRadius="6" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_MidGray}" />
+
+            <Style x:Key="BorderStyle" TargetType="Border">
+                <Setter Property="CornerRadius" Value="{StaticResource CornerRadius}"/>
+                <Setter Property="Background" Value="{StaticResource White}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource DarkGray}"/>
+                <Setter Property="BorderThickness" Value="0.5"/>
+            </Style>
+
+            <Style x:Key="PlaceholderTextStyle" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="Opacity" Value="0.6"/>
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            
+            <Style x:Key="TextBoxStyle" TargetType="TextBox">
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="SelectionBrush" Value="{StaticResource GreenBlue}"/>
+                <Setter Property="SelectionTextBrush" Value="{StaticResource White}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
+                                <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- PasswordBox Style -->
+            <Style x:Key="PasswordBoxStyle" TargetType="PasswordBox">
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="SelectionBrush" Value="{StaticResource GreenBlue}"/>
+                <Setter Property="SelectionTextBrush" Value="{StaticResource White}"/>
+                <Setter Property="PasswordChar" Value="*" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="PasswordBox">
+                            <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
+                                <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- Global Button Style -->
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="BorderBrush" Value="{x:Null}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Foreground" Value="{StaticResource LightGray2}" />
+                <Setter Property="Background" Value="{StaticResource GreenBlue}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Border" 
+                            CornerRadius="{StaticResource CornerRadius}" 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="#FF1A8BA1" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="#FF14576B" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <!--End New Style-->
 
             <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>
             <SolidColorBrush x:Key="HopeBlue2" Color="#FF4474A2"/>
