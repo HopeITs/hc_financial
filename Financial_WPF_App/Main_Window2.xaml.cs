@@ -23,7 +23,7 @@ using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App
 {
-    public partial class Main_Window_2 : Fluent.RibbonWindow
+    public partial class Main_Window_2 : Window
     {
         public Main_Window_2()
         {
@@ -35,7 +35,7 @@ namespace Financial_WPF_App
             timer.Start();
 
 
-            this.WindowState = WindowState.Minimized;
+            //this.WindowState = WindowState.Minimized;
             main_tabControl.ClosingItemCallback += TabControl_ClosingItemHandler;
             myExpander.IsExpanded = false;
             On_Load();
@@ -52,12 +52,13 @@ namespace Financial_WPF_App
                 t = new Till();
                 fb = new FiscalBond();
                 v = new Models.Version();
+                Shutdown_Mode = new ShutdownMode();
                 bool? result = window.ShowDialog();
                 if (result ?? true)
                 {
                     Username_lable.Content = Settings.Default.username;
 
-                    this.WindowState = WindowState.Maximized;
+                    window.WindowState = WindowState.Maximized;
                     Login.Shutdown_Mode = ShutdownMode.OnMainWindowClose;
                     Fill_TreeView(false);
 
@@ -139,7 +140,7 @@ namespace Financial_WPF_App
 
         SubProject sub; Account Acc; Models.Version v;
         City c; Till t; FiscalBond fb;
-
+        public static ShutdownMode Shutdown_Mode;
         int RClicked_ID = -1; string RClicked_Name = "";
 
         public DataSet AllAccounts_ds;
@@ -1705,6 +1706,25 @@ namespace Financial_WPF_App
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
+        }
+
+        private void Resize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.ResizeWindow(this); // Calls the WindowUtils method
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.CloseWindow(this); // Calls the WindowUtils method
+        }
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
         }
     }
 }

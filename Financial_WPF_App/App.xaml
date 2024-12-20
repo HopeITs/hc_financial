@@ -73,7 +73,7 @@
                 <Setter Property="FontFamily" Value="Rubik" />
             </Style>
 
-           
+            
 
             <SolidColorBrush x:Key="White" Color="#FFFFFF"/>
             <SolidColorBrush x:Key="HopeRed" Color="#BE1F24"/>
@@ -115,28 +115,36 @@
                 <Setter Property="IsHitTestVisible" Value="False"/>
                 <Setter Property="Visibility" Value="Collapsed"/>
                 <Style.Triggers>
+                    <!-- Show placeholder when the TextBox is empty -->
                     <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="">
                         <Setter Property="Visibility" Value="Visible" />
                     </DataTrigger>
+                    <!-- Show placeholder when the TextBox has a null value -->
                     <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="{x:Null}">
                         <Setter Property="Visibility" Value="Visible" />
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="">
-                        <Setter Property="Visibility" Value="Visible" />
-                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="PlaceholderPasswordStyle" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="Opacity" Value="0.6"/>
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <!-- Show placeholder for PasswordBox when empty -->
                     <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="">
                         <Setter Property="Visibility" Value="Visible" />
                     </DataTrigger>
+                    <!-- Show placeholder for PasswordBox when null -->
                     <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="{x:Null}">
-                        <Setter Property="Visibility" Value="Visible" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="">
                         <Setter Property="Visibility" Value="Visible" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
 
-            
+
             <Style x:Key="TextBoxStyle" TargetType="TextBox">
                 <Setter Property="Height" Value="50"/>
                 <Setter Property="Background" Value="Transparent"/>
@@ -208,6 +216,22 @@
                 </Setter>
             </Style>
 
+            <ImageBrush x:Key="ButtonImageClose"  ImageSource="/Images/Buttons/close.png" Stretch="Uniform"></ImageBrush>
+            <ImageBrush x:Key="ButtonImageMaximize"  ImageSource="/Images/Buttons/resize-restore.png" Stretch="Uniform"></ImageBrush>
+            <ImageBrush x:Key="ButtonImageRestore"  ImageSource="/Images/Buttons/resize-restore1.png" Stretch="Uniform"></ImageBrush>
+            <ImageBrush x:Key="ButtonImageMinimize"  ImageSource="/Images/Buttons/minimize.png" Stretch="Uniform"></ImageBrush>
+
+            <!--Window Style-->
+            <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
+                <Setter Property="Foreground" Value="{x:Null}"/>
+                <Setter Property="WindowStyle" Value="None"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Style.Triggers>
+                    <Trigger Property="ResizeMode" Value="NoResize"></Trigger>
+                </Style.Triggers>
+            </Style>
+            
 
             <!--End New Style-->
 
@@ -270,7 +294,7 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="Blue" />
+                                    <!--<Setter Property="Foreground" Value="Blue" />-->
                                     <Setter Property="Cursor" Value="Hand" />
                                      <!--If we don't tell the background to change on hover, it will remain the same--> 
                                     <Setter Property="Background" Value="{StaticResource ButtonImage_H}"></Setter>

@@ -1,4 +1,4 @@
-﻿using ControlzEx.Standard;
+﻿
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using MySqlX.XDevAPI.Relational;
@@ -241,7 +241,7 @@ namespace Financial_WPF_App
                 {
                     Login.Shutdown_Mode = new ShutdownMode();
                     //Shutdown_Pressed_BeginStoryboard.Storyboard.BeginTime = TimeSpan.FromSeconds(2);
-                    Shutdown_Pressed_BeginStoryboard.Storyboard.Begin();
+                    //Shutdown_Pressed_BeginStoryboard.Storyboard.Begin();
                 }
             }
             catch (Exception ex)
@@ -283,17 +283,21 @@ namespace Financial_WPF_App
         }
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
         }
 
         private void Resize_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = this.WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
+            WindowUtils.ResizeWindow(this); // Calls the WindowUtils method
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            WindowUtils.CloseWindow(this); // Calls the WindowUtils method
+        }
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
         }
 
     }
