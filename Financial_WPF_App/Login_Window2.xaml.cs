@@ -40,8 +40,8 @@ namespace Financial_WPF_App
                     Settings.Default.Save();
                 }
 
-                Settings.Default.Online = false;
-
+                Settings.Default.Online = true;
+                Settings.Default.Save();
                 if (Settings.Default.RememberMe)
                 {
                     Remember_checkBox_Copy.IsChecked = true;
@@ -206,6 +206,7 @@ namespace Financial_WPF_App
             try
             {
                 Settings.Default.Online = !Settings.Default.Online;
+                Settings.Default.Save();
                 Online_Working_Loop_BeginStoryboard1.Storyboard.RepeatBehavior = RepeatBehavior.Forever;
             }
             catch (Exception ex)

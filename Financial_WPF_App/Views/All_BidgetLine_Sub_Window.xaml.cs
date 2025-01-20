@@ -11,7 +11,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Ubiety.Dns.Core.Records;
 
 namespace Financial_WPF_App.Views
 {

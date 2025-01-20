@@ -9,6 +9,7 @@ using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -17,8 +18,10 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App
@@ -54,10 +57,11 @@ namespace Financial_WPF_App
                 v = new Models.Version();
                 Shutdown_Mode = new ShutdownMode();
                 bool? result = window.ShowDialog();
+                
                 if (result ?? true)
                 {
-                    Username_lable.Content = Settings.Default.username;
-
+                    Username_label.Content = Settings.Default.username;
+                    Update_Online_Button();
                     window.WindowState = WindowState.Maximized;
                     Login.Shutdown_Mode = ShutdownMode.OnMainWindowClose;
                     Fill_TreeView(false);
@@ -157,7 +161,7 @@ namespace Financial_WPF_App
             oTab.Content = window.Content;
             oTab.Header = header;
             oTab.Foreground = (SolidColorBrush)Application.Current.Resources["HopeBlue4"];
-            oTab.FontFamily = new FontFamily("Arial Bold");
+            oTab.FontFamily = new System.Windows.Media.FontFamily("Arial Bold");
             oTab.FlowDirection = FlowDirection.LeftToRight;
             main_tabControl.Items.Add(oTab);
             main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
@@ -168,6 +172,29 @@ namespace Financial_WPF_App
         {
             //Online_Working_Loop_BeginStoryboard1.Storyboard.RepeatBehavior = RepeatBehavior.Forever;
         }
+
+        private void Update_Online_Button()
+        {
+            // Update the button's background image
+            if (Settings.Default.Online)
+            {
+                Online_Button.Background = new ImageBrush
+                {
+                    ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/online.png", UriKind.Absolute)),
+                    Stretch = Stretch.Uniform
+                };
+                Online_Button.ToolTip = "Online Database";
+            }
+            else
+                {
+                    Online_Button.Background = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/online_hover.png", UriKind.Absolute)),
+                        Stretch = Stretch.Uniform
+                    };
+                    Online_Button.ToolTip = "Offline Database";
+                }
+            }
 
         private void Notification_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -184,7 +211,7 @@ namespace Financial_WPF_App
                 {
                     //Get_User_Profile();
                     //Check_Notifications();
-                    Username_lable.Content = Settings.Default.username;
+                    Username_label.Content = Settings.Default.username;
                     //Check_User_Role();
                 }
             }
@@ -1565,11 +1592,14 @@ namespace Financial_WPF_App
 
             foreach (var city in cityNames)
             {
-                var menuItem = new MenuItemAdv
+                //Changes From Syncfusion:MenuItemAdv to MenuItem
+                var menuItem = new MenuItem
                 {
                     Header = city.Key,
                     Tag = city.Value
                 };
+                // Apply Style Dynamically 
+                Approval_MenuItem.Style = (Style)this.Resources["MenuItemStyle"];
                 menuItem.Click += Approval_MenuItemAdv_Click;
                 Approval_MenuItem.Items.Add(menuItem);
             }
@@ -1725,6 +1755,22 @@ namespace Financial_WPF_App
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowUtils.TitleBar_MouseDown(this, e);
+        }
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            // Check if the window is minimized
+            if (this.WindowState == WindowState.Minimized)
+            {
+                // Resize the window when minimized
+                this.Width = 1330;  // Set desired width
+                this.Height = 700; // Set desired height
+            }
+            else if (this.WindowState == WindowState.Normal)
+            {
+                // Restore the original size when window is restored
+                this.Width = 1920;  // Original width
+                this.Height = 1021; // Original height
+            }
         }
     }
 }

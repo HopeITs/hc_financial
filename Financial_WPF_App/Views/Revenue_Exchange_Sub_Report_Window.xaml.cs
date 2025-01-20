@@ -16,7 +16,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Ubiety.Dns.Core.Records;
 
 namespace Financial_WPF_App.Views
 {
