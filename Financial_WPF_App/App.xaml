@@ -9,6 +9,7 @@
     <Application.Resources>
 
         <ResourceDictionary>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />-->
@@ -41,12 +42,12 @@
 
                 <!-- Include the Dragablz Material Design style -->
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
-
-                <ResourceDictionary>
+              
+                <!--<ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/MahApps.xaml" />
                     </ResourceDictionary.MergedDictionaries>
-                </ResourceDictionary>
+                </ResourceDictionary>-->
                 <!-- Include the Fluent Library for RIBBON -->
                 <ResourceDictionary Source="/Fluent;component/Themes/Generic.xaml" />
 
@@ -54,10 +55,7 @@
 
 
             <!--New Style-->
-            <Style TargetType="{x:Type dragablz:DragablzWindow}" BasedOn="{StaticResource {x:Type dragablz:DragablzWindow}}">
-                <Setter Property="Background" Value="{DynamicResource GrayBrush8}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource WindowTitleColorBrush}" />
-            </Style>
+           
             <!-- Global font for TextBlock -->
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="Rubik" />
@@ -78,10 +76,6 @@
             <Style TargetType="Label">
                 <Setter Property="FontFamily" Value="Rubik" />
             </Style>
-
-            
-
-
 
             <SolidColorBrush x:Key="White" Color="#FFFFFF"/>
             <SolidColorBrush x:Key="HopeRed" Color="#BE1F24"/>
@@ -114,7 +108,6 @@
                 <Setter Property="BorderBrush" Value="{StaticResource DarkGray}"/>
                 <Setter Property="BorderThickness" Value="0.5"/>
             </Style>
-
             <Style x:Key="PlaceholderTextStyle" TargetType="TextBlock">
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -151,8 +144,6 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-
-
             <Style x:Key="TextBoxStyle" TargetType="TextBox">
                 <Setter Property="Height" Value="50"/>
                 <Setter Property="Background" Value="Transparent"/>
@@ -240,9 +231,6 @@
                 </Style.Triggers>
             </Style>
 
-           
-            
-            
             <!--<Style x:Key="TabHeader" TargetType="TabItem">
                 <Setter Property="Background" Value="LightBlue"/>
                 <Setter Property="Foreground" Value="DarkSlateGray"/>
@@ -421,6 +409,16 @@
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
             </Style>-->
+
+            <!-- tell Dragablz tab control to use the Material Design theme -->
+            <Style TargetType="{x:Type dragablz:TabablzControl}" 
+                   BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" >
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"></Setter>
+            </Style>
+
+
+
             <!--End New Style-->
 
             <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>

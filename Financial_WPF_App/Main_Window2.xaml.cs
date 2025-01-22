@@ -6,6 +6,7 @@ using Financial_WPF_App.Views;
 using MySqlX.XDevAPI.Relational;
 using Syncfusion.Data.Extensions;
 using Syncfusion.Windows.Shared;
+using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,6 +29,7 @@ namespace Financial_WPF_App
 {
     public partial class Main_Window_2 : Window
     {
+
         public Main_Window_2()
         {
             InitializeComponent();
@@ -36,14 +38,11 @@ namespace Financial_WPF_App
             timer.Interval = TimeSpan.FromMinutes(30);
             timer.Tick += Timer_Tick;
             timer.Start();
-
-
             //this.WindowState = WindowState.Minimized;
-            main_tabControl.ClosingItemCallback += TabControl_ClosingItemHandler;
             myExpander.IsExpanded = false;
             On_Load();
         }
-
+        
         private void On_Load()
         {
             try
@@ -139,7 +138,9 @@ namespace Financial_WPF_App
             }
         }
 
-
+        private bool isDragging = false;
+        private System.Windows.Point mouseDownPosition;
+        private TabItem draggedTabItem;
         private DispatcherTimer timer;
 
         SubProject sub; Account Acc; Models.Version v;
@@ -157,12 +158,13 @@ namespace Financial_WPF_App
 
         public void Create_dragablz_tabItem(Window window, string header)
         {
-            TabItem oTab = new TabItem();
+            TabItem oTab = new TabItemExt();
             oTab.Content = window.Content;
             oTab.Header = header;
-            oTab.Foreground = (SolidColorBrush)Application.Current.Resources["HopeBlue4"];
-            oTab.FontFamily = new System.Windows.Media.FontFamily("Arial Bold");
+            oTab.Foreground = (SolidColorBrush)Application.Current.Resources["DarkGray"];
+            oTab.FontFamily = new System.Windows.Media.FontFamily("Rubik");
             oTab.FlowDirection = FlowDirection.LeftToRight;
+            // Add the TabItemExt to the TabControlExt
             main_tabControl.Items.Add(oTab);
             main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
 

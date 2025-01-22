@@ -7,8 +7,10 @@
     xmlns:local="clr-namespace:Financial_WPF_App" 
     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
     xmlns:Themes="clr-namespace:Dragablz.Themes;assembly=Dragablz" 
-    xmlns:Converters="clr-namespace:Dragablz.Converters;assembly=Dragablz" 
+    xmlns:Converters="clr-namespace:Dragablz.Converters;assembly=Dragablz"
     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:controlzex="urn:controlzex"
     x:Name="Main_Window2"  
     x:Class="Financial_WPF_App.Main_Window_2" mc:Ignorable="d"
     Title="" Height="720" Width="1280" WindowState="Maximized" ResizeMode="CanResize"
@@ -23,7 +25,7 @@
         <local:MenuIcon x:Key="MenuIcon6" IconPath="/Images/MainForm/log.png" HoverIconPath="/Images/MainForm/log_hover.png" />
 
         <!-- Custom Style for SubMenuItem -->
-        <Style x:Key="SubMenuItemStyle" TargetType="MenuItem">
+        <Style x:Key="SubMenuItemStyle" TargetType="{x:Type MenuItem}">
             <!-- Default Properties -->
             <Setter Property="FontFamily" Value="Rubik" />
             <Setter Property="FontSize" Value="13.5" />
@@ -32,7 +34,7 @@
             <Setter Property="FontWeight" Value="Normal" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="MenuItem">
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
                         <Grid>
                             <!-- Main Content -->
                             <Border x:Name="Border" Padding="20,10,20,10"
@@ -60,12 +62,12 @@
         </Style>
 
         <!-- Custom Style for MenuItem -->
-        <Style x:Key="MenuItemStyle" TargetType="MenuItem">
+        <Style x:Key="MenuItemStyle" TargetType="{x:Type MenuItem}">
             <Setter Property="ItemContainerStyle" Value="{StaticResource SubMenuItemStyle}" />
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="MenuItem">
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
                         <Grid>
                             <!-- Main Content -->
                             <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
@@ -95,18 +97,18 @@
                             <!-- Submenu Popup -->
                             <Popup IsOpen="{TemplateBinding IsSubmenuOpen}" VerticalOffset="5"
                            Placement="Bottom" 
-                           PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" 
+                           PlacementTarget="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" 
                            AllowsTransparency="True" PopupAnimation="Fade"
                            Focusable="False" HorizontalOffset="20">
                                 <Grid Background="#F0FFFFFF" Margin="5" Width="240">
+                                    <Grid.Effect>
+                                        <DropShadowEffect  BlurRadius="6" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_MidGray}" />
+                                    </Grid.Effect>
                                     <Border Background="Transparent" CornerRadius="{StaticResource CornerRadius}">
                                         <StackPanel>
                                             <ItemsPresenter />
                                         </StackPanel>
                                     </Border>
-                                    <Grid.Effect>
-                                        <DropShadowEffect  BlurRadius="6" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_MidGray}" />
-                                    </Grid.Effect>
                                 </Grid>
                             </Popup>
                         </Grid>
@@ -132,12 +134,12 @@
         </Style>
 
         <!-- Custom Style for MenuItem Without Submenu -->
-        <Style x:Key="MenuItemStyle1" TargetType="MenuItem">
+        <Style x:Key="MenuItemStyle1" TargetType="{x:Type MenuItem}">
             <Setter Property="ItemContainerStyle" Value="{StaticResource SubMenuItemStyle}" />
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="MenuItem">
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
                         <Grid>
                             <!-- Main Content -->
                             <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
@@ -172,7 +174,6 @@
             <Setter Property="Cursor" Value="Hand" />
         </Style>
 
-
         <Style x:Key="ButtonHoverStyle" TargetType="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -185,7 +186,7 @@
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Background">
                                     <Setter.Value>
-                                        <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}" />
+                                        <ImageBrush ImageSource="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
@@ -194,6 +195,85 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style TargetType="{x:Type syncfusion:TabItemExt}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+            <Setter Property="Padding" Value="8,5,58,3"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="AllowPin" Value="True"/>
+            <Setter Property="AllowDrop" Value="True"/>
+
+            <!-- Trigger for Active Tab -->
+            <!--<Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
+                    -->
+            <!-- Active Tab styles -->
+            <!--
+                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                    <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    -->
+            <!-- Bottom Border -->
+
+            <!-- Add shadow effect for selected tab -->
+            <!--
+                    <Setter Property="Canvas.Background" Value="Transparent">
+                        
+                    </Setter>
+                    
+                </DataTrigger>
+
+                -->
+            <!-- Inactive Tab -->
+            <!--
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False">
+                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                    <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    
+                </DataTrigger>
+            </Style.Triggers>-->
+            <!-- ControlTemplate to handle custom behavior -->
+            <!--<Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type syncfusion:TabItemExt}">
+                        <Grid>
+                            <Border x:Name="TabBorder" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="5" BorderBrush="Transparent" BorderThickness="0">
+                                <Border.Effect>
+                                    <DropShadowEffect x:Name="TabShadow" Color="Black" BlurRadius="10" ShadowDepth="3" Opacity="0"/>
+                                </Border.Effect>
+                                <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <Rectangle x:Name="Underline" Height="3" VerticalAlignment="Bottom" Fill="Transparent"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabBorder" Property="BorderThickness" Value="1"/>
+                                <Setter TargetName="Underline" Property="Fill" Value="#BE1F24"/>
+                            </Trigger>
+
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="Transparent"/>
+                                <Setter TargetName="TabBorder" Property="BorderThickness" Value="0"/>
+                                <Setter TargetName="Underline" Property="Fill" Value="Transparent"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>-->
+        </Style>
+
+
     </Window.Resources>
     <Grid Background="White">
         <!-- Content Over Background -->
@@ -220,71 +300,67 @@
                     <ColumnDefinition x:Name="Grid_col" Width="80*" />
                 </Grid.ColumnDefinitions>
 
-                <dragablz:TabablzControl  Grid.Row="1" Grid.Column="1" x:Name="main_tabControl" Background="{DynamicResource LightGray1}" ItemContainerStyle="{DynamicResource TabHeader}" Margin="0,26,0,10">
-                    <dragablz:TabablzControl.Template>
-                        <ControlTemplate TargetType="dragablz:TabablzControl">
-                            <Grid>
-                                <!-- Header area -->
-                                <Border Background="{StaticResource LightGray1}" BorderBrush="{StaticResource MidGray}" BorderThickness="1">
-                                    <Grid x:Name="HeaderPanel" >
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                    </Grid>
-                                </Border>
-                            </Grid>
-                        </ControlTemplate>
-                    </dragablz:TabablzControl.Template>
-                    <dragablz:TabablzControl.Resources>
-                        <Style x:Key="TabHeader" TargetType="TabItem">
-                            <Setter Property="Background" Value="{StaticResource LightGray1}" />
-                            <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
-                            <Setter Property="FontSize" Value="14"/>
-                            <Setter Property="Padding" Value="10,5"/>
-                            <Setter Property="BorderBrush" Value="Gray"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                        </Style>
-                    </dragablz:TabablzControl.Resources>
-                    <!-- TabItems -->
-                    
-                    <dragablz:TabablzControl.InterTabController>
-                        <dragablz:InterTabController />
-                    </dragablz:TabablzControl.InterTabController>
-                    
-                </dragablz:TabablzControl>
-                <!--<dragablz:TabablzControl
-            ItemContainerStyle="{DynamicResource TabHeader}"                             
-    x:Name="main_tabControl"
-    Margin="0,30,30,30"
-    ShowDefaultCloseButton="True"
-    AdjacentHeaderItemOffset="10"
-    FlowDirection="LeftToRight"
-    EmptyHeaderSizingHint="PreviousTab"
-    Grid.Column="1" BorderThickness="0 0.5 0.5 0.5"
-    Grid.Row="1">
-                    --><!-- Home Tab --><!--
-                    <TabItem Header="Home" IsSelected="True">
-                        <TabItem.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="Home">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="FontSize" Value="14"/>
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                            <Setter Property="Foreground" Value="{DynamicResource MidGray}"/>
-                                            <Setter Property="TextAlignment" Value="Center"/>
-                                            
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </DataTemplate>
-                        </TabItem.HeaderTemplate>
-                        <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="Fill" />
-                    </TabItem>
-                </dragablz:TabablzControl>-->
+                <!-- Main Content Border -->
+                <Border Grid.Row="1" Grid.Column="1" BorderBrush="{StaticResource MidGray}" 
+            BorderThickness=".5,0,.5,.5" 
+            Margin="1,27,30,20">
+                    <syncfusion:TabControlExt x:Name="main_tabControl" IsTextSearchEnabled="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#DCDDDE"
+             BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="{x:Null}" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}">
+                        <syncfusion:TabControlExt.TabItemHoverBackground>
+                            <SolidColorBrush Color="{DynamicResource Color_LightGray1}"/>
+                        </syncfusion:TabControlExt.TabItemHoverBackground>
+                        <syncfusion:TabControlExt.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
+                        </syncfusion:TabControlExt.Foreground>
+                        <syncfusion:TabControlExt.DragMarkerColor>
+                            <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
+                        </syncfusion:TabControlExt.DragMarkerColor>
+                        <syncfusion:TabControlExt.TabItemSelectedForeground>
+                            <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
+                        </syncfusion:TabControlExt.TabItemSelectedForeground>
+                        <syncfusion:TabControlExt.TabItemSelectedBackground>
+                            <SolidColorBrush Color="{DynamicResource Color_LightGray1}"/>
+                        </syncfusion:TabControlExt.TabItemSelectedBackground>
+
+                        <syncfusion:TabItemExt ContentTemplate="{DynamicResource TabItemExtContentTemplate1}" Header="Home" x:Name="tabItemHome" Padding="1,5,58,3" Margin="0,0,0,0" FontFamily="Rubik" HeaderMargin="9,0,6,1" ShowPin="True" AllowDrop="True" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" IsSelected="True" IsPinned="True">
+
+                            <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" VerticalAlignment="Center" />
+                        </syncfusion:TabItemExt>
+                        <syncfusion:TabItemExt Header="Home"  IsSelected="False" Padding="1,5,58,3" Margin="0,0,0,0" FontFamily="Rubik" HeaderMargin="9,0,6,1" ShowPin="True" AllowDrop="True" BorderBrush="{x:Null}" BorderThickness="0,0,0,0">
+                            <syncfusion:TabItemExt.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </syncfusion:TabItemExt.LayoutTransform>
+
+                            <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" VerticalAlignment="Center" />
+                        </syncfusion:TabItemExt>
+                    </syncfusion:TabControlExt>
+                    <!--<dragablz:TabablzControl x:Name="main_tabControl" Style="{StaticResource TabablzControlStyle}"
+                             ShowDefaultCloseButton="True"
+                                 AdjacentHeaderItemOffset="10" 
+                                 FlowDirection="LeftToRight" 
+                                 FontFamily="Rubik" FontSize="14" FontWeight="Bold"
+                                 EmptyHeaderSizingHint="PreviousTab" Background="{StaticResource LightGray1}" BorderBrush="Transparent" BorderThickness="0,0,0,0" IsSynchronizedWithCurrentItem="True">
+                             -->
+                    <!--TabItems-->
+                    <!-- 
+                            <TabItem IsSelected="True"  Background="Transparent" Foreground="Transparent">
+                                <TabItem.Header>
+                                    <TextBlock Text="Home" Focusable="True">
+                                        <TextBlock.Foreground>
+                                            <SolidColorBrush Color="{DynamicResource Color_MidGray}"/>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                </TabItem.Header>
+                                <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </TabItem>
+                        </dragablz:TabablzControl>-->
+                </Border>
+
                 <Grid Grid.ColumnSpan="2"  Background="#FFDCDDDE" Height="47" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <!-- Menu -->
@@ -354,11 +430,24 @@
                                 <!--<ColumnDefinition Width="Auto" />-->
                             </Grid.ColumnDefinitions>
 
+                            <!-- Notification Button -->
+                            <!--<Grid Grid.Column="3" VerticalAlignment="Center">
+                                <Button x:Name="Notification_Button" ToolTip="Notification"
+     Width="30" BorderBrush="{x:Null}" Click="Notification_Button_Click" Height="30" FontFamily="Rubik" FontSize="14">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/notification.png" Stretch="Uniform" />
+                                    </Button.Background>
+                                </Button>-->
+                            <!-- Notification Badge -->
+                            <!--<Ellipse Fill="#FFBC0000" Width="10" Height="10"
+      VerticalAlignment="Top" HorizontalAlignment="Right"
+      Margin="30,-5,0,0" IsEnabled="False" />-->
+                            <!--</Grid>-->
                             <!-- Username Label -->
                             <Label x:Name="Username_label" Content="UserName" 
 Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
                                 <Label.Style>
-                                    <Style TargetType="Label">
+                                    <Style TargetType="{x:Type Label}">
                                         <Setter Property="Foreground" Value="{DynamicResource GreenBlue}" />
                                     </Style>
                                 </Label.Style>
@@ -388,27 +477,15 @@ Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
                                     <ImageBrush ImageSource="/Images/Buttons/online.png" Stretch="Uniform" />
                                 </Button.Background>
                             </Button>
-                            <!-- Notification Button -->
-                            <!--<Grid Grid.Column="3" VerticalAlignment="Center">
-                                <Button x:Name="Notification_Button" ToolTip="Notification"
-     Width="30" BorderBrush="{x:Null}" Click="Notification_Button_Click" Height="30" FontFamily="Rubik" FontSize="14">
-                                    <Button.Background>
-                                        <ImageBrush ImageSource="/Images/Buttons/notification.png" Stretch="Uniform" />
-                                    </Button.Background>
-                                </Button>-->
-                            <!-- Notification Badge -->
-                            <!--<Ellipse Fill="#FFBC0000" Width="10" Height="10"
-      VerticalAlignment="Top" HorizontalAlignment="Right"
-      Margin="30,-5,0,0" IsEnabled="False" />-->
-                            <!--</Grid>-->
                         </Grid>
                     </Grid>
 
                 </Grid>
                 <Expander x:Name="myExpander" Grid.Column="0" IsExpanded="True"
             ExpandDirection="Left" 
-            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="-16,3,4,-15" Background="{x:Null}" Grid.Row="1">
-                    <Grid Margin="0,0,0,7"  >
+            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="-16,0,4,20" Background="{x:Null}" Grid.Row="1">
+
+                    <Grid  >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="45" />
                             <RowDefinition Height="100*" />
@@ -419,13 +496,24 @@ Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
 
                         <TreeView x:Name="MyTreeView" 
                               PreviewMouseRightButtonDown="MyTreeView_PreviewMouseRightButtonDown"
-                              FontFamily="Rubik" FontSize="14" FontWeight="Bold"
-                              Margin="16,26,-16,20" Grid.RowSpan="2">
-
+                              FontFamily="Rubik" FontSize="14" FontWeight="normal"
+                              Margin="16,26,-16,0" Grid.RowSpan="2">
+                            <!-- TreeView Item Style -->
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="{x:Type TreeViewItem}">
+                                    <Setter Property="FontWeight" Value="Normal"/>
+                                    <Setter Property="Margin" Value="0,5"/>
+                                    <Setter Property="Padding" Value="5"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
                             <TreeView.ContextMenu>
-                                <ContextMenu Name="cm">
+                                <ContextMenu x:Name="cm">
                                     <ContextMenu.Resources>
-                                        <Style TargetType="Border" BasedOn="{StaticResource BorderStyle}" />
+                                        <Style TargetType="{x:Type Border}" BasedOn="{StaticResource BorderStyle}" />
                                     </ContextMenu.Resources>
                                     <MenuItem Header="Refresh" Click = "Refresh_Click" >
                                         <MenuItem.Icon>
