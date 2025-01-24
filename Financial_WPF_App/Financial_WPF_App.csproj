@@ -1028,6 +1028,9 @@
     <Resource Include="Images\Buttons\log.png" />
     <Resource Include="Images\Buttons\log_hover.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Home_Background2_new.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

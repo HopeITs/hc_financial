@@ -92,23 +92,23 @@ namespace Financial_WPF_App.Models
 
             string localserver;
 
-            if (!PC_Admin)
+            //if (!PC_Admin)
                 localserver = "localhost";
-            else
-                localserver = "PC-ADMIN";
+            //else
+            //    localserver = "PC-ADMIN";
 
-            if (!test_online)
-                ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + database +
-                            ";Uid=hcsyria;Password=Hope2018Center;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
-            else
+            //if (!test_online)
+            //    ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + database +
+            //                ";Uid=hcsyria;Password=Hope2018Center;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
+            //else
                 ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + test_database +
                             ";Uid=hcsyria;Password=Hope2018Center;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
-            if (!test_offline)
-                ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + database +
-                                     ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
-            else
-                ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
+            //if (!test_offline)
+            //    ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + database +
+            //                         ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
+            //else
+               ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
                          ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
             if (!test_Attachments)

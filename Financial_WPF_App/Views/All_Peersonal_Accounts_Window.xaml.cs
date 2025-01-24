@@ -165,7 +165,7 @@ namespace Financial_WPF_App.Views
                 int Acc_ID = Convert.ToInt32(dataRow[0].ToString());
 
                 Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
-                main_Window.Create_dragablz_tabItem(account_Window, Name);
+                main_Window.Create_tabItem(account_Window, Name, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
             }
             catch (Exception ex)
             {
@@ -393,7 +393,7 @@ namespace Financial_WPF_App.Views
                             int Acc_ID = Convert.ToInt32(dataRow[0].ToString());
                             string AccName = dataRow["Name"].ToString();
                             Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
-                            main_Window.Create_dragablz_tabItem(account_Window, AccName);
+                            main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
                         }
                     }
                 }

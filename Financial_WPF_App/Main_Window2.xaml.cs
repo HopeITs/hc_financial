@@ -23,6 +23,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App
@@ -56,7 +57,6 @@ namespace Financial_WPF_App
                 v = new Models.Version();
                 Shutdown_Mode = new ShutdownMode();
                 bool? result = window.ShowDialog();
-                
                 if (result ?? true)
                 {
                     Username_label.Content = Settings.Default.username;
@@ -140,9 +140,8 @@ namespace Financial_WPF_App
 
         private bool isDragging = false;
         private System.Windows.Point mouseDownPosition;
-        private TabItem draggedTabItem;
         private DispatcherTimer timer;
-
+        private ImageBrush defaultBackground = new ImageBrush();
         SubProject sub; Account Acc; Models.Version v;
         City c; Till t; FiscalBond fb;
         public static ShutdownMode Shutdown_Mode;
@@ -156,17 +155,81 @@ namespace Financial_WPF_App
         DataTable CashAccounts;
         DataTable PersonalAccounts;
 
-        public void Create_dragablz_tabItem(Window window, string header)
+        public void Create_tabItem(Window window, string header, System.Windows.Media.Brush foreground)
         {
-            TabItem oTab = new TabItemExt();
+            TabItemExt oTab = new TabItemExt();
             oTab.Content = window.Content;
             oTab.Header = header;
-            oTab.Foreground = (SolidColorBrush)Application.Current.Resources["DarkGray"];
+            oTab.Foreground = foreground;
+            // Store the original Foreground color in the Tag property
+            oTab.Tag = foreground;
             oTab.FontFamily = new System.Windows.Media.FontFamily("Rubik");
             oTab.FlowDirection = FlowDirection.LeftToRight;
             // Add the TabItemExt to the TabControlExt
             main_tabControl.Items.Add(oTab);
             main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
+
+
+        }
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            defaultBackground.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/MainForm/Home_Background2_new.png"));
+            defaultBackground.Stretch = Stretch.UniformToFill;
+            TransformGroup transformGroup = new TransformGroup();
+            ScaleTransform scaleTransform = new ScaleTransform
+            {
+                ScaleX = 1.05, // Scale horizontally by 0.5x
+                ScaleY = 1.05,  // Scale vertically by 0.5x
+                CenterX = 0.5,
+                CenterY = 0.5
+            };
+            TranslateTransform translateTransform = new TranslateTransform
+            {
+                X = -0.55,
+                Y = -0.55
+            };
+            transformGroup.Children.Add(scaleTransform);
+            transformGroup.Children.Add(translateTransform);
+            defaultBackground.Transform = transformGroup;
+            // Check if any tab is selected
+            if (main_tabControl.SelectedIndex >= 0)
+            {
+                // Change the background to a solid color when a tab is selected
+                main_tabControl.Background = (SolidColorBrush)Application.Current.Resources["LightGray1"]; // Custom background color
+            }
+            else
+            {
+                // Revert to the default background image when no tab is selected
+                main_tabControl.Background = defaultBackground;
+            }
+            // Get the currently selected tab
+            //if (main_tabControl.SelectedItem is TabItemExt selectedTab)
+            //{
+            //    // Update the TabControlExt's TabSelectedItemForeground to match the selected tab's Foreground
+            //    main_tabControl.Foreground = (SolidColorBrush)Application.Current.Resources["MidGray"];
+            //    main_tabControl.TabItemSelectedForeground = selectedTab.Foreground;
+
+            //}
+            // Iterate through all tabs
+            foreach (var item in main_tabControl.Items)
+            {
+                if (item is TabItemExt tab)
+                {
+                    // Check if the tab is selected
+                    if (tab.IsSelected)
+                    {
+                        // Set the foreground of the selected tab to its original color (stored in Tag)
+                        tab.Foreground = (System.Windows.Media.Brush)tab.Tag;
+                        main_tabControl.TabItemSelectedForeground = tab.Foreground;
+                    }
+                    else
+                    {
+                        // Set the foreground of non-selected tabs to gray
+                        tab.Foreground = (SolidColorBrush)Application.Current.Resources["MidGray"];
+                    }
+                }
+            }
 
         }
 
@@ -214,6 +277,7 @@ namespace Financial_WPF_App
                     //Get_User_Profile();
                     //Check_Notifications();
                     Username_label.Content = Settings.Default.username;
+                    Update_Online_Button();
                     //Check_User_Role();
                 }
             }
@@ -796,19 +860,19 @@ namespace Financial_WPF_App
                     {
                         case "All Accounts":
                             All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
-                            Create_dragablz_tabItem(All_Accounts, clickedItem.Header + "-" + Sub_Name);
+                            Create_tabItem(All_Accounts, clickedItem.Header + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                             break;
                         case "Payments Account":
                             Window Payments = new Payments_Window(this, Sub_ID);
-                            Create_dragablz_tabItem(Payments, clickedItem.Header + "-" + Sub_Name);
+                            Create_tabItem(Payments, clickedItem.Header + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                             break;
                         case "Beneficiaries Accounts":
                             Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
-                            Create_dragablz_tabItem(account_Beneficiaries, clickedItem.Header + "-" + Sub_Name);
+                            Create_tabItem(account_Beneficiaries, clickedItem.Header + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                             break;
                         case "All Personal Accounts":
                             All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
-                            Create_dragablz_tabItem(All_Peersonal_Accounts, clickedItem.Header + "-" + Sub_Name);
+                            Create_tabItem(All_Peersonal_Accounts, clickedItem.Header + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                             break;
                     }
                 }
@@ -863,7 +927,7 @@ namespace Financial_WPF_App
                         string Acc_Name = accountItem.Header.ToString();
 
                         Account_Window account_Window = new Account_Window(Acc_ID, this);
-                        Create_dragablz_tabItem(account_Window, Acc_Name);
+                        Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                     }
                 }
             }
@@ -890,7 +954,7 @@ namespace Financial_WPF_App
                     string Acc_Name = accountItem.Header.ToString();
 
                     Account_Window account_Window = new Account_Window(Acc_ID, "Cash", this);
-                    Create_dragablz_tabItem(account_Window, Acc_Name);
+                    Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                 }
             }
             catch (Exception ex)
@@ -916,7 +980,7 @@ namespace Financial_WPF_App
                     string fiscalbond_Name = fiscalbondItem.Header.ToString();
 
                     Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
-                    Create_dragablz_tabItem(till_Window, fiscalbond_Name);
+                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                     /*
                     All_ActionFiscalBond_Window window = new All_ActionFiscalBond_Window(fiscalbond_ID, fiscalbond_Name, this);
                     Create_dragablz_tabItem(window, fiscalbond_Name);*/
@@ -951,23 +1015,23 @@ namespace Financial_WPF_App
                             break;
                         case "Create New Micro Projects Account":
                             Account_Window Maccount_ = new Account_Window("Micro Projects", "Project", "", "", this);
-                            Create_dragablz_tabItem(Maccount_, "New Micro Projects Account");
+                            Create_tabItem(Maccount_, "New Micro Projects Account", (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                             break;
                         case "Create New Exchange Account":
                             Account_Window Eaccount_ = new Account_Window("", "Exchange", "", "", this);
-                            Create_dragablz_tabItem(Eaccount_, "New Exchange Account");
+                            Create_tabItem(Eaccount_, "New Exchange Account", (SolidColorBrush)Application.Current.Resources["Orange"]);
                             break;
                         case "Create New Budget Account":
                             Account_Window Yaccount_ = new Account_Window("Budget", "Project", "", "", this);
-                            Create_dragablz_tabItem(Yaccount_, "New Budget Account");
+                            Create_tabItem(Yaccount_, "New Budget Account",(SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                             break;
                         case "Create New Cash Till":
                             Account_Window Cashaccount_ = new Account_Window("", "Cash", "", "", this);
-                            Create_dragablz_tabItem(Cashaccount_, "New Cash Till");
+                            Create_tabItem(Cashaccount_, "New Cash Till",(SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                             break;
                         case "Create New Personal Account":
                             Account_Window Personalaccount_ = new Account_Window("", "Personal", "", "", this);
-                            Create_dragablz_tabItem(Personalaccount_, "New Personal Account");
+                            Create_tabItem(Personalaccount_, "New Personal Account",(SolidColorBrush)Application.Current.Resources["Color_PastelGreen"]);
                             break;
                     }
                 }
@@ -1032,7 +1096,7 @@ namespace Financial_WPF_App
                     {
                         if (main_tabControl.Items != null && main_tabControl.Items.Count != 0)
                         {
-                            foreach (TabItem tab in main_tabControl.Items)
+                            foreach (TabItemExt tab in main_tabControl.Items)
                             {
                                 if (tab.Header.ToString() == RClicked_Name)
                                 {
@@ -1074,7 +1138,7 @@ namespace Financial_WPF_App
                     {
                         if (main_tabControl.Items != null && main_tabControl.Items.Count != 0)
                         {
-                            foreach (TabItem tab in main_tabControl.Items)
+                            foreach (TabItemExt tab in main_tabControl.Items)
                             {
                                 if (tab.Header.ToString() == RClicked_Name)
                                 {
@@ -1126,7 +1190,7 @@ namespace Financial_WPF_App
                                 {
                                     for (int i = 0; i < accounts_dt.Rows.Count; i++)
                                     {
-                                        foreach (TabItem tab in main_tabControl.Items)
+                                        foreach (TabItemExt tab in main_tabControl.Items)
                                         {
                                             if (tab.Header.ToString() == accounts_dt.Rows[i]["AccountName"].ToString())
                                             {
@@ -1171,7 +1235,7 @@ namespace Financial_WPF_App
                     {
                         if (main_tabControl.Items != null && main_tabControl.Items.Count != 0)
                         {
-                            foreach (TabItem tab in main_tabControl.Items)
+                            foreach (TabItemExt tab in main_tabControl.Items)
                             {
                                 if (tab.Header.ToString() == RClicked_Name)
                                 {
@@ -1345,7 +1409,7 @@ namespace Financial_WPF_App
             try
             {
                 Log_Window log = new Log_Window(this);
-                Create_dragablz_tabItem(log, "LOG");
+                Create_tabItem(log, "LOG", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1364,7 +1428,7 @@ namespace Financial_WPF_App
             try
             {
                 Lines_Report_Window Lines_Report_Window = new Lines_Report_Window(this);
-                Create_dragablz_tabItem(Lines_Report_Window, "Expenses Report");
+                Create_tabItem(Lines_Report_Window, "Expenses Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1383,7 +1447,7 @@ namespace Financial_WPF_App
             try
             {
                 CashBalances_Window CashBalances_Window = new CashBalances_Window(-1, this);
-                Create_dragablz_tabItem(CashBalances_Window, "Balances");
+                Create_tabItem(CashBalances_Window, "Balances", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1403,7 +1467,7 @@ namespace Financial_WPF_App
             try
             {
                 User_Window User_Window = new User_Window(this);
-                Create_dragablz_tabItem(User_Window, "Users");
+                Create_tabItem(User_Window, "Users", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1459,7 +1523,7 @@ namespace Financial_WPF_App
             try
             {
                 Employee_Window Employee_Window = new Employee_Window(this);
-                Create_dragablz_tabItem(Employee_Window, "Volunteers");
+                Create_tabItem(Employee_Window, "Volunteers", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1478,7 +1542,7 @@ namespace Financial_WPF_App
             try
             {
                 Monthly_Salaries_Window Monthly_Salaries = new Monthly_Salaries_Window(this);
-                Create_dragablz_tabItem(Monthly_Salaries, "Salaries");
+                Create_tabItem(Monthly_Salaries, "Salaries", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1522,7 +1586,7 @@ namespace Financial_WPF_App
                     string cityName = menuItem.Header.ToString();
 
                     Approval_Window Approval = new Approval_Window(cityId, this);
-                    Create_dragablz_tabItem(Approval, "Approval - " + cityName);
+                    Create_tabItem(Approval, "Approval - " + cityName, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                 }
 
 
@@ -1612,7 +1676,7 @@ namespace Financial_WPF_App
             try
             {
                 All_Budgetlins_Window All_Budgetlins_Window = new All_Budgetlins_Window(this);
-                Create_dragablz_tabItem(All_Budgetlins_Window, "All Bidget Lines Report");
+                Create_tabItem(All_Budgetlins_Window, "All Bidget Lines Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1631,7 +1695,7 @@ namespace Financial_WPF_App
             try
             {
                 Revenue_Exchange_Report_Window Revenue_Exchange_Report_Window = new Revenue_Exchange_Report_Window(this);
-                Create_dragablz_tabItem(Revenue_Exchange_Report_Window, "Revenue/Exchange Report");
+                Create_tabItem(Revenue_Exchange_Report_Window, "Revenue/Exchange Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1650,7 +1714,7 @@ namespace Financial_WPF_App
             try
             {
                 Lines_lifetime_Window Lines_lifetime_Window = new Lines_lifetime_Window(this);
-                Create_dragablz_tabItem(Lines_lifetime_Window, "Lines lifetime");
+                Create_tabItem(Lines_lifetime_Window, "Lines lifetime", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
@@ -1669,7 +1733,7 @@ namespace Financial_WPF_App
             try
             {
                 Fixed_Assets_Report_Window Fixed_Assets_Report_Window = new Fixed_Assets_Report_Window(this);
-                Create_dragablz_tabItem(Fixed_Assets_Report_Window, "Fixed Assets Report");
+                Create_tabItem(Fixed_Assets_Report_Window, "Fixed Assets Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {

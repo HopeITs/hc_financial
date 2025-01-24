@@ -195,11 +195,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        
+        <!-- Override TabControlExt Style -->
+        <Style TargetType="{x:Type syncfusion:TabControlExt}">
+            <Setter Property="TabItemSelectedForeground" Value="{x:Null}" />
+        </Style>
         <Style TargetType="{x:Type syncfusion:TabItemExt}">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Background" Value="{StaticResource LightGray1}"/>
             <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
             <Setter Property="Padding" Value="8,5,58,3"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -207,7 +211,8 @@
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="AllowPin" Value="True"/>
             <Setter Property="AllowDrop" Value="True"/>
-
+            <Setter Property="ShowPin" Value="True"/>
+            
             <!-- Trigger for Active Tab -->
             <!--<Style.Triggers>
                 <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
@@ -301,53 +306,51 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Main Content Border -->
-                <Border Grid.Row="1" Grid.Column="1" BorderBrush="{StaticResource MidGray}" 
-            BorderThickness=".5,0,.5,.5" 
-            Margin="1,27,30,20">
-                    <syncfusion:TabControlExt x:Name="main_tabControl" IsTextSearchEnabled="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#DCDDDE"
-             BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="{x:Null}" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}">
-                        <syncfusion:TabControlExt.TabItemHoverBackground>
-                            <SolidColorBrush Color="{DynamicResource Color_LightGray1}"/>
-                        </syncfusion:TabControlExt.TabItemHoverBackground>
-                        <syncfusion:TabControlExt.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
-                        </syncfusion:TabControlExt.Foreground>
-                        <syncfusion:TabControlExt.DragMarkerColor>
-                            <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
-                        </syncfusion:TabControlExt.DragMarkerColor>
-                        <syncfusion:TabControlExt.TabItemSelectedForeground>
-                            <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
-                        </syncfusion:TabControlExt.TabItemSelectedForeground>
-                        <syncfusion:TabControlExt.TabItemSelectedBackground>
-                            <SolidColorBrush Color="{DynamicResource Color_LightGray1}"/>
-                        </syncfusion:TabControlExt.TabItemSelectedBackground>
 
-                        <syncfusion:TabItemExt ContentTemplate="{DynamicResource TabItemExtContentTemplate1}" Header="Home" x:Name="tabItemHome" Padding="1,5,58,3" Margin="0,0,0,0" FontFamily="Rubik" HeaderMargin="9,0,6,1" ShowPin="True" AllowDrop="True" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" IsSelected="True" IsPinned="True">
-
-                            <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" VerticalAlignment="Center" />
-                        </syncfusion:TabItemExt>
-                        <syncfusion:TabItemExt Header="Home"  IsSelected="False" Padding="1,5,58,3" Margin="0,0,0,0" FontFamily="Rubik" HeaderMargin="9,0,6,1" ShowPin="True" AllowDrop="True" BorderBrush="{x:Null}" BorderThickness="0,0,0,0">
-                            <syncfusion:TabItemExt.LayoutTransform>
+                <syncfusion:TabControlExt SelectionChanged="TabControl_SelectionChanged" Grid.Row="1" Grid.Column="1" x:Name="main_tabControl"
+             BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="#FFD8D8D8" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}" BorderBrush="{x:Null}" TabItemHoverForeground="Gray" Margin="0,28,30,20" TabItemSelectedBackground="#FFDCDDDE" Panel.ZIndex="-2" TabItemSelectedForeground="{x:Null}">
+                    <syncfusion:TabControlExt.Background>
+                        <ImageBrush ImageSource="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill">
+                            <ImageBrush.RelativeTransform>
                                 <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform/>
+                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.05" ScaleY="1.05"/>
                                     <TranslateTransform/>
                                 </TransformGroup>
-                            </syncfusion:TabItemExt.LayoutTransform>
+                            </ImageBrush.RelativeTransform>
+                        </ImageBrush>
+                    </syncfusion:TabControlExt.Background>
+                    <syncfusion:TabControlExt.TabItemHoverBackground>
+                        <SolidColorBrush Color="{DynamicResource Color_LightGray1}"/>
+                    </syncfusion:TabControlExt.TabItemHoverBackground>
+                    <!--<syncfusion:TabControlExt.Foreground>
+                        <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
+                    </syncfusion:TabControlExt.Foreground>-->
+                    <syncfusion:TabControlExt.DragMarkerColor>
+                        <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
+                    </syncfusion:TabControlExt.DragMarkerColor>
 
-                            <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" VerticalAlignment="Center" />
-                        </syncfusion:TabItemExt>
-                    </syncfusion:TabControlExt>
-                    <!--<dragablz:TabablzControl x:Name="main_tabControl" Style="{StaticResource TabablzControlStyle}"
+                    <!--<syncfusion:TabItemExt Header="Home"  IsSelected="False" Padding="1,5,58,3" Margin="0,0,0,0" FontFamily="Rubik" HeaderMargin="9,0,6,1" ShowPin="True" AllowDrop="True" BorderBrush="{x:Null}" BorderThickness="0,0,0,0">
+                        <syncfusion:TabItemExt.LayoutTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </syncfusion:TabItemExt.LayoutTransform>
+
+                        <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" IsEnabled="False" IsHitTestVisible="False" AllowDrop="False" />
+                    </syncfusion:TabItemExt>-->
+                </syncfusion:TabControlExt>
+                <!--<dragablz:TabablzControl x:Name="main_tabControl" Style="{StaticResource TabablzControlStyle}"
                              ShowDefaultCloseButton="True"
                                  AdjacentHeaderItemOffset="10" 
                                  FlowDirection="LeftToRight" 
                                  FontFamily="Rubik" FontSize="14" FontWeight="Bold"
                                  EmptyHeaderSizingHint="PreviousTab" Background="{StaticResource LightGray1}" BorderBrush="Transparent" BorderThickness="0,0,0,0" IsSynchronizedWithCurrentItem="True">
                              -->
-                    <!--TabItems-->
-                    <!-- 
+                <!--TabItems-->
+                <!-- 
                             <TabItem IsSelected="True"  Background="Transparent" Foreground="Transparent">
                                 <TabItem.Header>
                                     <TextBlock Text="Home" Focusable="True">
@@ -359,7 +362,6 @@
                                 <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </TabItem>
                         </dragablz:TabablzControl>-->
-                </Border>
 
                 <Grid Grid.ColumnSpan="2"  Background="#FFDCDDDE" Height="47" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
@@ -472,7 +474,7 @@ Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
                             <!-- Online/Offline Button -->
 
                             <Button x:Name="Online_Button" ToolTip="Online/Offline Database" Grid.Column="2"
-                                Cursor="None" Width="25" Height="28" BorderBrush="{x:Null}" Margin="0,0,7,0">
+                                Cursor="Arrow" Width="25" Height="28" BorderBrush="{x:Null}" Margin="0,0,7,0">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/online.png" Stretch="Uniform" />
                                 </Button.Background>
