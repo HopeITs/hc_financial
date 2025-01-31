@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Syncfusion.Windows.Tools.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,12 @@ namespace Financial_WPF_App
     /// <summary>
     /// Interaction logic for WindowControlBar.xaml
     /// </summary>
+    /// 
+    // Define the Event for Expander
+    
     public partial class WindowControlBar : UserControl
     {
+        public event Action<double> ResizeExpanderRequested;
         public WindowControlBar()
         {
             InitializeComponent();
@@ -44,6 +49,11 @@ namespace Financial_WPF_App
                 window.WindowState = window.WindowState == WindowState.Maximized
                 ? WindowState.Normal
                 : WindowState.Maximized;
+                if (window.WindowState == WindowState.Normal)
+                {
+                    // Raise the event and pass the new width (e.g., 300)
+                    ResizeExpanderRequested?.Invoke(50);
+                }
                 // Check if the window is minimized
                 //if (window.WindowState == WindowState.Minimized)
                 //{

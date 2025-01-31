@@ -5,18 +5,21 @@ using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
 using MySqlX.XDevAPI.Relational;
 using Syncfusion.Data.Extensions;
+using Syncfusion.UI.Xaml.TreeView;
 using Syncfusion.Windows.Shared;
 using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -42,6 +45,8 @@ namespace Financial_WPF_App
             //this.WindowState = WindowState.Minimized;
             myExpander.IsExpanded = false;
             On_Load();
+            // Subscribe to the event
+            ControlBar.ResizeExpanderRequested += OnResizeExpanderRequested;
         }
         
         private void On_Load()
@@ -141,6 +146,7 @@ namespace Financial_WPF_App
         private bool isDragging = false;
         private System.Windows.Point mouseDownPosition;
         private DispatcherTimer timer;
+        private ToggleButton _expanderToggleButton;
         private ImageBrush defaultBackground = new ImageBrush();
         SubProject sub; Account Acc; Models.Version v;
         City c; Till t; FiscalBond fb;
@@ -168,8 +174,6 @@ namespace Financial_WPF_App
             // Add the TabItemExt to the TabControlExt
             main_tabControl.Items.Add(oTab);
             main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
-
-
         }
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -323,13 +327,89 @@ namespace Financial_WPF_App
             Thread.Sleep(500);
             Application.Current.Shutdown();
         }
+        private void myExpander_Loaded(object sender, RoutedEventArgs e)
+        {
+            _expanderToggleButton = FindChild<ToggleButton>(myExpander);
 
+            if (_expanderToggleButton != null)
+            {
+                // Set initial appearance
+                // Replace the ToggleButton template with a new one
+                _expanderToggleButton.Template = CreateCustomToggleButtonTemplate();
+                // Set the cursor to "Hand"
+                _expanderToggleButton.Cursor = Cursors.Hand;
+            }
+        }
+        private ControlTemplate CreateCustomToggleButtonTemplate()
+        {
+            // Create a new ControlTemplate for the ToggleButton
+            var template = new ControlTemplate(typeof(ToggleButton));
+            var grid = new FrameworkElementFactory(typeof(Grid));
+
+            var image = new FrameworkElementFactory(typeof(System.Windows.Controls.Image));
+            image.SetBinding(System.Windows.Controls.Image.SourceProperty, new Binding("IsChecked")
+            {
+                RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent),
+                Converter = new BooleanToImageConverter(), // Custom converter for the arrow
+            });
+
+            image.SetValue(System.Windows.Controls.Image.WidthProperty, 12.0);
+            image.SetValue(System.Windows.Controls.Image.HeightProperty, 12.0);
+            image.SetValue(System.Windows.Controls.Image.HorizontalAlignmentProperty, HorizontalAlignment.Stretch);
+            image.SetValue(System.Windows.Controls.Image.VerticalAlignmentProperty, VerticalAlignment.Top);
+            image.SetValue(System.Windows.Controls.Image.MarginProperty, new Thickness(5, 0, -10, 0));
+
+            grid.AppendChild(image);
+            template.VisualTree = grid;
+
+            return template;
+        }
+        public class BooleanToImageConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                bool isChecked = (bool)value;
+                string imagePath = isChecked
+                    ? "pack://application:,,,/Images/Icons/arrow_collapsed.png"
+                    : "pack://application:,,,/Images/Icons/arrow_collapsed.png";
+
+                return new BitmapImage(new Uri(imagePath));
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                throw new NotImplementedException();
+            }
+        }
         private void myExpander_Collapsed(object sender, RoutedEventArgs e)
         {
             try
             {
-                Grid_col.Width = new GridLength(97, GridUnitType.Star);
-                Expander_col.Width = new GridLength(3, GridUnitType.Star);
+                Grid_col.Width = new GridLength(125, GridUnitType.Star);
+                Expander_col.Width = new GridLength(2.5, GridUnitType.Star);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+        private void myExpander_Expanded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var window = Window.GetWindow(this);
+                Grid_col.Width = new GridLength(150, GridUnitType.Star);
+                Expander_col.Width = new GridLength(44, GridUnitType.Star);
+                if (myExpander.IsExpanded && window.WindowState == WindowState.Normal)
+                  Expander_col.Width = new GridLength(50, GridUnitType.Star);
+                else if (!myExpander.IsExpanded && window.WindowState == WindowState.Normal)
+                    Expander_col.Width = new GridLength(44, GridUnitType.Star);
             }
             catch (Exception ex)
             {
@@ -343,23 +423,30 @@ namespace Financial_WPF_App
             }
         }
 
-        private void myExpander_Expanded(object sender, RoutedEventArgs e)
+        private void OnResizeExpanderRequested(double newWidth)
         {
-            try
+            if(myExpander.IsExpanded)
+                Expander_col.Width = new GridLength(newWidth, GridUnitType.Star);
+        }
+
+        private T FindChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            if (parent == null) return null;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
             {
-                Grid_col.Width = new GridLength(80, GridUnitType.Star);
-                Expander_col.Width = new GridLength(20, GridUnitType.Star);
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T foundChild)
+                {
+                    return foundChild;
+                }
+                var result = FindChild<T>(child);
+                if (result != null)
+                {
+                    return result;
+                }
             }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
+            return null;
         }
 
         private void TabControl_ClosingItemHandler(ItemActionCallbackArgs<TabablzControl> args)
@@ -393,9 +480,8 @@ namespace Financial_WPF_App
                 List<TreeViewItemState> expandedItems = MyTreeView.GetExpandedItems();
 
                 PopulateTreeView();
-
                 MyTreeView.RestoreExpandedState(expandedItems);
-
+                
             }
             RClicked_ID = -1; RClicked_Name = "";
         }
@@ -410,24 +496,19 @@ namespace Financial_WPF_App
             CashAccounts = AllAccounts_ds.Tables[3];
             PersonalAccounts = AllAccounts_ds.Tables[4];
 
-            var projects = new TreeViewItem();
-            projects.Header = "Projects Accounts";
+            var projects = CreateParentTreeViewItem("Projects Accounts");
             projects.IsExpanded = false;
 
-            var CaAccounts = new TreeViewItem();
-            CaAccounts.Header = "Cash Tills";
+            var CaAccounts = CreateParentTreeViewItem("Cash Tills");
             CaAccounts.Tag = -1;
 
-            var ExcAccounts = new TreeViewItem();
-            ExcAccounts.Header = "Exchange Accounts";
+            var ExcAccounts = CreateParentTreeViewItem("Exchange Accounts");
             ExcAccounts.Tag = -1;
 
-            var PerAccounts = new TreeViewItem();
-            PerAccounts.Header = "Personal Accounts";
+            var PerAccounts = CreateParentTreeViewItem("Personal Accounts");
             PerAccounts.Tag = -1;
 
-            var fiscalbonds = new TreeViewItem();
-            fiscalbonds.Header = "Bonds";
+            var fiscalbonds = CreateParentTreeViewItem("Bonds");
             fiscalbonds.Tag = -1;
 
 
@@ -438,8 +519,17 @@ namespace Financial_WPF_App
 
                 foreach (var Account in NewAccount)
                 {
-                    var AddNewAccount = new TreeViewItem();
-                    AddNewAccount.Header = Account;
+                    System.Windows.Controls.TreeViewItem AddNewAccount;
+                    if (Account == "Create New Micro Projects Account")
+                    {
+                         AddNewAccount = CreateTreeViewItem("Create New Micro Projects Account", "pack://application:,,,/Images/Icons/micro_projects.png");
+                                             
+                    }
+                    else
+                    {
+                         AddNewAccount = CreateTreeViewItem("Create New Budget Account", "pack://application:,,,/Images/Icons/budget_account.png");
+                                            
+                    }
                     AddNewAccount.Tag = -1;
                     AddNewAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
@@ -453,8 +543,7 @@ namespace Financial_WPF_App
             foreach (var city in Projects_cityGroups)
             {
                 // Create a treeview item for the city
-                var city_Item = new TreeViewItem();
-                city_Item.Header = city.Key;
+                var city_Item =  CreateTreeViewItem(city.Key);
                 city_Item.Tag = city.First().Field<int>("CityID");
 
                 // Group projects by project_ID
@@ -462,10 +551,9 @@ namespace Financial_WPF_App
                 foreach (var project in project_Groups)
                 {
                     // Create a treeview item for the project
-                    var project_Item = new TreeViewItem();
+                    var project_Item = new System.Windows.Controls.TreeViewItem();
                     project_Item.Header = project.First().Field<string>("ProjectName");
                     project_Item.Tag = project.First().Field<int?>("ProjectID");
-
                     // Group subprojects by subproject_ID
                     var subproject_Groups = project.GroupBy(row => row.Field<string>("SubprojectName"));
 
@@ -473,7 +561,7 @@ namespace Financial_WPF_App
                     foreach (var subproject in subproject_Groups)
                     {
                         // Create a treeview item for the subproject
-                        var subproject_Item = new TreeViewItem();
+                        var subproject_Item = new System.Windows.Controls.TreeViewItem();
                         subproject_Item.Header = subproject.First().Field<string>("SubprojectName");
                         subproject_Item.Tag = subproject.First().Field<int?>("SubprojectID");
 
@@ -486,7 +574,7 @@ namespace Financial_WPF_App
                             subproject_contextMenu.Items.Add(subproject_OptionsMenuItem);
 
                             subproject_Item.ContextMenu = subproject_contextMenu;
-                            subproject_Item.AddHandler(TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
+                            subproject_Item.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
 
                         }
 
@@ -494,20 +582,17 @@ namespace Financial_WPF_App
                         {
                             if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                             {
-                                var AllAccounts = new TreeViewItem();
-                                AllAccounts.Header = "All Accounts";
+                                var AllAccounts = CreateTreeViewItem("All Accounts");
                                 AllAccounts.Tag = -1;
                                 AllAccounts.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
                                 subproject_Item.Items.Add(AllAccounts);
                             }
 
-                            var Payments = new TreeViewItem();
-                            Payments.Header = "Payments Account";
+                            var Payments = CreateTreeViewItem("Payments Account");
                             Payments.Tag = -1;
                             Payments.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
 
-                            var Beneficiary = new TreeViewItem();
-                            Beneficiary.Header = "Beneficiaries Accounts";
+                            var Beneficiary = CreateTreeViewItem("Beneficiaries Accounts");
                             Beneficiary.Tag = -1;
                             Beneficiary.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
 
@@ -519,8 +604,7 @@ namespace Financial_WPF_App
                         {
                             if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                             {
-                                var AllAccounts = new TreeViewItem();
-                                AllAccounts.Header = "All Accounts";
+                                var AllAccounts = CreateTreeViewItem("All Accounts");
                                 AllAccounts.Tag = -1;
                                 AllAccounts.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
 
@@ -532,9 +616,8 @@ namespace Financial_WPF_App
                         // Add accounts as child items
                         foreach (var Row in subproject)
                         {
-                            var account_Item = new TreeViewItem();
                             string AccountName = Row.Field<string>("AccountName");
-                            account_Item.Header = AccountName;
+                            var account_Item = CreateTreeViewItem(AccountName);
                             account_Item.Tag = Row.Field<int?>("AccountID");
                             if (AccountName != null && Row.Field<Int64>("IsPayments") == 0 && Row.Field<Int32>("is_administrative") != 1 && Row.Field<Int32>("IsClosed") != 1)
                             {
@@ -549,7 +632,7 @@ namespace Financial_WPF_App
                                     contextMenu.Items.Add(OptionsMenuItem);
 
                                     account_Item.ContextMenu = contextMenu;
-                                    account_Item.AddHandler(TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
+                                    account_Item.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
                                 }
 
 
@@ -560,10 +643,8 @@ namespace Financial_WPF_App
 
                                     foreach (var AdminAccount in AdminAccounts_Groups)
                                     {
-                                        var AdminAccount_Item = new TreeViewItem();
-                                        AdminAccount_Item.Header = AdminAccount.First().Field<string>("AccountName");
+                                        var AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"));
                                         AdminAccount_Item.Tag = AdminAccount.First().Field<int?>("AccountID");
-
                                         AdminAccount_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
 
 
@@ -574,7 +655,7 @@ namespace Financial_WPF_App
                                         contextMenu.Items.Add(OptionsMenuItem);
 
                                         AdminAccount_Item.ContextMenu = contextMenu;
-                                        AdminAccount_Item.AddHandler(TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
+                                        AdminAccount_Item.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
 
 
                                         account_Item.Items.Add(AdminAccount_Item);
@@ -595,8 +676,7 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewCashAccount = new TreeViewItem();
-                AddNewCashAccount.Header = "Create New Cash Till";
+                var AddNewCashAccount = CreateTreeViewItem("Create New Cash Till", "pack://application:,,,/Images/Icons/cash_till.png");
                 AddNewCashAccount.Tag = -1;
                 AddNewCashAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
@@ -608,8 +688,7 @@ namespace Financial_WPF_App
             foreach (var city in Cash_cityGroups)
             {
                 // Create a treeview item for the city
-                var city_Item = new TreeViewItem();
-                city_Item.Header = city.Key;
+                var city_Item = CreateTreeViewItem(city.Key);
                 city_Item.Tag = city.First().Field<int>("CityID");
 
                 var CashAccount_Groups = city.GroupBy(row => row.Field<string>("Name"));
@@ -617,8 +696,7 @@ namespace Financial_WPF_App
                 // Add accounts as child items
                 foreach (var CashAccount in CashAccount_Groups)
                 {
-                    var Cash_Item = new TreeViewItem();
-                    Cash_Item.Header = CashAccount.First().Field<string>("Name");
+                    var Cash_Item = CreateTreeViewItem(CashAccount.First().Field<string>("Name"));
                     Cash_Item.Tag = CashAccount.First().Field<int>("ID");
 
                     Cash_Item.PreviewMouseLeftButtonDown += Cash_AccountItem_PreviewMouseLeftButtonDown;
@@ -632,7 +710,7 @@ namespace Financial_WPF_App
                         contextMenu.Items.Add(OptionsMenuItem);
 
                         Cash_Item.ContextMenu = contextMenu;
-                        Cash_Item.AddHandler(TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
+                        Cash_Item.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
 
                     }
                     city_Item.Items.Add(Cash_Item);
@@ -643,8 +721,7 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewExAccount = new TreeViewItem();
-                AddNewExAccount.Header = "Create New Exchange Account";
+                var AddNewExAccount = CreateTreeViewItem("Create New Exchange Account", "pack://application:,,,/Images/Icons/exchange_account.png");
                 AddNewExAccount.Tag = -1;
                 AddNewExAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
@@ -656,16 +733,14 @@ namespace Financial_WPF_App
             foreach (var City in Exchange_cityGroups)
             {
                 // Create a treeview item for the city
-                var city_Item = new TreeViewItem();
-                city_Item.Header = City.Key;
+                var city_Item = CreateTreeViewItem(City.Key);
                 city_Item.Tag = City.First().Field<int>("CityID");
 
                 var ExchangeAccount_Groups = City.GroupBy(row => row.Field<string>("Name"));
 
                 foreach (var ExchangeAccount in ExchangeAccount_Groups)
                 {
-                    var Exchange_Item = new TreeViewItem();
-                    Exchange_Item.Header = ExchangeAccount.First().Field<string>("Name");
+                    var Exchange_Item = CreateTreeViewItem(ExchangeAccount.First().Field<string>("Name"));
                     Exchange_Item.Tag = ExchangeAccount.First().Field<int>("ID");
 
                     Exchange_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
@@ -682,7 +757,7 @@ namespace Financial_WPF_App
                         Exchange_Item.ContextMenu = contextMenu;
                     }
 
-                    Exchange_Item.AddHandler(TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
+                    Exchange_Item.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
 
                     city_Item.Items.Add(Exchange_Item);
                 }
@@ -691,8 +766,7 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewPersonalAccount = new TreeViewItem();
-                AddNewPersonalAccount.Header = "Create New Personal Account";
+                var AddNewPersonalAccount = CreateTreeViewItem("Create New Personal Account" , "pack://application:,,,/Images/Icons/personal_account.png");
                 AddNewPersonalAccount.Tag = -1;
                 AddNewPersonalAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
@@ -704,16 +778,14 @@ namespace Financial_WPF_App
             foreach (var City in Personal_cityGroups)
             {
                 // Create a treeview item for the city
-                var city_Item = new TreeViewItem();
-                city_Item.Header = City.Key;
+                var city_Item = CreateTreeViewItem(City.Key);
                 city_Item.Tag = City.First().Field<int>("CityID");
 
                 var PersonalAccounts_Groups = City.GroupBy(row => row.Field<string>("Name"));
 
                 if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                 {
-                    var AllPersonalAccounts = new TreeViewItem();
-                    AllPersonalAccounts.Header = "All Personal Accounts";
+                    var AllPersonalAccounts = CreateTreeViewItem("All Personal Accounts");
                     AllPersonalAccounts.Tag = -1;
                     AllPersonalAccounts.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
 
@@ -722,8 +794,7 @@ namespace Financial_WPF_App
 
                 foreach (var PersonalAccount in PersonalAccounts_Groups)
                 {
-                    var Personal_Item = new TreeViewItem();
-                    Personal_Item.Header = PersonalAccount.First().Field<string>("Name");
+                    var Personal_Item = CreateTreeViewItem(PersonalAccount.First().Field<string>("Name"));
                     Personal_Item.Tag = PersonalAccount.First().Field<int>("ID");
                     if (Personal_Item != null && PersonalAccount.First().Field<Int32>("IsClosed") != 1)
                     {
@@ -741,7 +812,7 @@ namespace Financial_WPF_App
                             Personal_Item.ContextMenu = contextMenu;
                         }
 
-                        Personal_Item.AddHandler(TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
+                        Personal_Item.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
 
 
                         city_Item.Items.Add(Personal_Item);
@@ -755,8 +826,7 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewFiscalbond = new TreeViewItem();
-                AddNewFiscalbond.Header = "Create New Bond";
+                var AddNewFiscalbond = CreateTreeViewItem("Create New Bond");
                 AddNewFiscalbond.Tag = -1;
                 AddNewFiscalbond.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
                 fiscalbonds.Items.Add(AddNewFiscalbond);
@@ -767,8 +837,7 @@ namespace Financial_WPF_App
             foreach (var cityGroup in cityGroups1)
             {
                 // Create a treeview item for the city
-                var cityItem = new TreeViewItem();
-                cityItem.Header = cityGroup.Key;
+                var cityItem = CreateTreeViewItem(cityGroup.Key);
                 cityItem.Tag = cityGroup.First().Field<int>("CityID");
 
                 // Group projects by project_ID
@@ -776,8 +845,7 @@ namespace Financial_WPF_App
                 foreach (var projectGroup in projectGroups)
                 {
                     // Create a treeview item for the project
-                    var projectItem = new TreeViewItem();
-                    projectItem.Header = projectGroup.First().Field<string>("ProjectName");
+                    var projectItem = CreateTreeViewItem(projectGroup.First().Field<string>("ProjectName"));
                     projectItem.Tag = projectGroup.First().Field<int?>("ProjectID");
 
                     // Group subprojects by subproject_ID
@@ -785,17 +853,16 @@ namespace Financial_WPF_App
                     foreach (var subprojectGroup in subprojectGroups)
                     {
                         // Create a treeview item for the subproject
-                        var subprojectItem = new TreeViewItem();
-                        subprojectItem.Header = subprojectGroup.First().Field<string>("SubprojectName");
+                        var subprojectItem = CreateTreeViewItem(subprojectGroup.First().Field<string>("SubprojectName"));
                         subprojectItem.Tag = subprojectGroup.First().Field<int?>("SubprojectID");
 
 
                         // Add accounts as child items
                         foreach (var FiscalbondRow in subprojectGroup)
                         {
-                            var FiscalbondItem = new TreeViewItem();
+                            
                             string FiscalbondName = FiscalbondRow.Field<string>("FiscalbondName");
-                            FiscalbondItem.Header = FiscalbondName;
+                            var FiscalbondItem = CreateTreeViewItem(FiscalbondName);
                             FiscalbondItem.Tag = FiscalbondRow.Field<int?>("FiscalbondID");
                             if (FiscalbondName != null && FiscalbondRow.Field<Int32>("IsClosed") != 1)
                             {
@@ -810,7 +877,7 @@ namespace Financial_WPF_App
                                     Till_contextMenu.Items.Add(Till_OptionsMenuItem);
 
                                     FiscalbondItem.ContextMenu = Till_contextMenu;
-                                    FiscalbondItem.AddHandler(TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
+                                    FiscalbondItem.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
 
                                 }
 
@@ -839,42 +906,164 @@ namespace Financial_WPF_App
             if (fiscalbonds.Items.Count > 0)
                 MyTreeView.Items.Add(fiscalbonds);
 
-
             Fill_Approval_Cities();
         }
 
+        private System.Windows.Controls.TreeViewItem CreateTreeViewItem(string text, string imagePath = null)
+        {
+            // Create a DockPanel for the header
+            var panel = new DockPanel();
+
+            // Add an image if the imagePath is provided
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                var image = new System.Windows.Controls.Image
+                {
+                    Source = new BitmapImage(new Uri(imagePath)),
+                    Width = 13,
+                    Height = 10,
+                    Margin = new Thickness(-20, 0, 10, 0)
+                };
+                panel.Children.Add(image);
+            }
+
+            // Add text
+            var textBlock = new TextBlock
+            {
+                Text = text,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            panel.Children.Add(textBlock);
+
+            // Return the TreeViewItem
+
+            return new System.Windows.Controls.TreeViewItem
+            {
+                Header = panel,
+            };
+        }
+
+        private System.Windows.Controls.TreeViewItem CreateParentTreeViewItem(string text)
+        {
+            var textBlock = new TextBlock
+            {
+                Text = text,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = (SolidColorBrush)Application.Current.Resources["DarkGray"]
+
+            };
+
+            return new System.Windows.Controls.TreeViewItem
+            {
+                Header = textBlock,
+                IsExpanded = false,
+                Margin = new Thickness(20, 0, 5, 0)
+            };
+        }
+        
+        
         private void Options_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
-                TreeViewItem clickedItem = sender as TreeViewItem;
-                if (clickedItem != null)
+                System.Windows.Controls.TreeViewItem clickedItem = sender as System.Windows.Controls.TreeViewItem;
+                if (clickedItem != null && clickedItem.Header is DockPanel panel)
                 {
                     ItemsControl parent = GetSelectedTreeViewItemParent(clickedItem);
 
-                    TreeViewItem treeitem = parent as TreeViewItem;
+                    System.Windows.Controls.TreeViewItem treeitem = parent as System.Windows.Controls.TreeViewItem;
                     string Sub_ID = treeitem.Tag.ToString();
-                    string Sub_Name = treeitem.Header.ToString();
-
-                    switch (clickedItem.Header)
+                    var Sub_Name = treeitem.Header.ToString();
+                    if (treeitem.Header is DockPanel panel1)
                     {
-                        case "All Accounts":
-                            All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
-                            Create_tabItem(All_Accounts, clickedItem.Header + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                            break;
-                        case "Payments Account":
-                            Window Payments = new Payments_Window(this, Sub_ID);
-                            Create_tabItem(Payments, clickedItem.Header + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                            break;
-                        case "Beneficiaries Accounts":
-                            Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
-                            Create_tabItem(account_Beneficiaries, clickedItem.Header + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                            break;
-                        case "All Personal Accounts":
-                            All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
-                            Create_tabItem(All_Peersonal_Accounts, clickedItem.Header + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                            break;
+                        // Extract text from the TextBlock inside the DockPanel
+                        Sub_Name = panel1.Children.OfType<TextBlock>().FirstOrDefault()?.Text ?? string.Empty;
+                        foreach (var child in panel.Children)
+                            {
+                                if (child is TextBlock textBlock)
+                                {
+                                    switch (textBlock.Text)
+                                    {
+                                        case "All Accounts":
+                                            All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                            Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            break;
+                                        case "Payments Account":
+                                            Window Payments = new Payments_Window(this, Sub_ID);
+                                            Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            break;
+                                        case "Beneficiaries Accounts":
+                                            Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
+                                            Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            break;
+                                        case "All Personal Accounts":
+                                            All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
+                                            Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                                            break;
+                                    }
+                                }
+                            }
                     }
+                    else if (Sub_Name.Contains("Micro"))
+                    {
+                        foreach (var child in panel.Children)
+                            {
+                                if (child is TextBlock textBlock)
+                                {
+                                    if (Sub_Name.Contains("Micro"))
+                                    {
+                                        switch (textBlock.Text)
+                                        {
+                                            case "All Accounts":
+                                                All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                                Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                                                break;
+                                            case "Payments Account":
+                                                Window Payments = new Payments_Window(this, Sub_ID);
+                                                Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                                                break;
+                                            case "Beneficiaries Accounts":
+                                                Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
+                                                Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                                                break;
+                                            case "All Personal Accounts":
+                                                All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
+                                                Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + clickedItem.Header, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                    else
+                    {
+                        foreach (var child in panel.Children)
+                            {
+                                if (child is TextBlock textBlock)
+                                {
+                                    switch (textBlock.Text)
+                                    {
+                                        case "All Accounts":
+                                            All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                            Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            break;
+                                        case "Payments Account":
+                                            Window Payments = new Payments_Window(this, Sub_ID);
+                                            Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            break;
+                                        case "Beneficiaries Accounts":
+                                            Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
+                                            Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            break;
+                                        case "All Personal Accounts":
+                                            All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
+                                            Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + clickedItem.Header, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                                            break;
+                                    }
+                                }
+                            }
+                    }
+                    
                 }
             }
             catch (Exception ex)
@@ -889,10 +1078,10 @@ namespace Financial_WPF_App
             }
         }
 
-        public ItemsControl GetSelectedTreeViewItemParent(TreeViewItem item)
+        public ItemsControl GetSelectedTreeViewItemParent(System.Windows.Controls.TreeViewItem item)
         {
             DependencyObject parent = VisualTreeHelper.GetParent(item);
-            while (!(parent is TreeViewItem || parent is System.Windows.Controls.TreeView))
+            while (!(parent is System.Windows.Controls.TreeViewItem || parent is System.Windows.Controls.TreeView))
             {
                 parent = VisualTreeHelper.GetParent(parent);
             }
@@ -900,6 +1089,7 @@ namespace Financial_WPF_App
             return parent as ItemsControl;
         }
 
+        //Exchange Account
         private void AccountItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             try
@@ -916,18 +1106,40 @@ namespace Financial_WPF_App
                     // Ignore the event if the source is a ToggleButton (expander arrow)
                     return;
                 }
-
-                var treeViewItem = sender as TreeViewItem;
-                if (treeViewItem.Items.OfType<TreeViewItem>().All(item => !item.IsMouseOver))
+                
+                
+                    var treeViewItem = sender as System.Windows.Controls.TreeViewItem;
+                if (treeViewItem.Items.OfType<System.Windows.Controls.TreeViewItem>().All(item => !item.IsMouseOver))
                 {
-                    TreeViewItem accountItem = sender as TreeViewItem;
-                    if (accountItem != null)
+                    System.Windows.Controls.TreeViewItem accountItem = sender as System.Windows.Controls.TreeViewItem;
+                    if (accountItem != null && accountItem.Header is DockPanel panel)
                     {
                         int Acc_ID = Convert.ToInt32(accountItem.Tag.ToString());
-                        string Acc_Name = accountItem.Header.ToString();
+                        string Acc_Name = "";
+                        foreach (var child in panel.Children)
+                        {
+                            if (child is TextBlock textBlock)
+                            {
+                                Acc_Name = textBlock.Text;
+                            }
+                        }
+                        ItemsControl parent = GetSelectedTreeViewItemParent(accountItem);
 
+                        System.Windows.Controls.TreeViewItem treeitem = parent as System.Windows.Controls.TreeViewItem;
+                        string Sub_ID = treeitem.Tag.ToString();
+                        string Sub_Name = treeitem.Header.ToString();
                         Account_Window account_Window = new Account_Window(Acc_ID, this);
-                        Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                        if (Sub_Name.Contains("Micro")) { 
+                            Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                        }
+                        if (Acc_Name.Contains("Exchange"))
+                        {
+                            Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["Orange"]);
+                        }
+                        else if(Acc_Name.Contains("Advance Payments"))
+                            Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                        else if( !Acc_Name.Contains("Exchange") && !Acc_Name.Contains("Advance Payments") && !Sub_Name.Contains("Micro"))
+                            Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                     }
                 }
             }
@@ -947,14 +1159,21 @@ namespace Financial_WPF_App
         {
             try
             {
-                TreeViewItem accountItem = sender as TreeViewItem;
-                if (accountItem != null)
+                System.Windows.Controls.TreeViewItem accountItem = sender as System.Windows.Controls.TreeViewItem;
+                if (accountItem != null && accountItem.Header is DockPanel panel)
                 {
                     int Acc_ID = Convert.ToInt32(accountItem.Tag.ToString());
-                    string Acc_Name = accountItem.Header.ToString();
+                    string Acc_Name = "";
+                    foreach (var child in panel.Children)
+                    {
+                        if (child is TextBlock textBlock)
+                        {
+                            Acc_Name = textBlock.Text;
+                        }
+                    }
 
                     Account_Window account_Window = new Account_Window(Acc_ID, "Cash", this);
-                    Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                    Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                 }
             }
             catch (Exception ex)
@@ -973,11 +1192,18 @@ namespace Financial_WPF_App
         {
             try
             {
-                TreeViewItem fiscalbondItem = sender as TreeViewItem;
-                if (fiscalbondItem != null)
+                System.Windows.Controls.TreeViewItem fiscalbondItem = sender as System.Windows.Controls.TreeViewItem;
+                if (fiscalbondItem != null && fiscalbondItem.Header is DockPanel panel)
                 {
                     int fiscalbond_ID = Convert.ToInt32(fiscalbondItem.Tag.ToString());
-                    string fiscalbond_Name = fiscalbondItem.Header.ToString();
+                    string fiscalbond_Name = "";
+                    foreach (var child in panel.Children)
+                    {
+                        if (child is TextBlock textBlock)
+                        {
+                            fiscalbond_Name = textBlock.Text;
+                        }
+                    }
 
                     Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
                     Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
@@ -1003,36 +1229,41 @@ namespace Financial_WPF_App
         {
             try
             {
-                TreeViewItem NewItem = sender as TreeViewItem;
-
-                if (NewItem != null)
+                System.Windows.Controls.TreeViewItem NewItem = sender as System.Windows.Controls.TreeViewItem;
+                if (NewItem != null && NewItem.Header is DockPanel panel)
                 {
-                    switch (NewItem.Header)
+                    foreach (var child in panel.Children)
                     {
-                        case "Create New Bond":
-                            FiscalBond_Window _FBWindow = new FiscalBond_Window(this);
-                            _FBWindow.Show();
-                            break;
-                        case "Create New Micro Projects Account":
-                            Account_Window Maccount_ = new Account_Window("Micro Projects", "Project", "", "", this);
-                            Create_tabItem(Maccount_, "New Micro Projects Account", (SolidColorBrush)Application.Current.Resources["HopeRed"]);
-                            break;
-                        case "Create New Exchange Account":
-                            Account_Window Eaccount_ = new Account_Window("", "Exchange", "", "", this);
-                            Create_tabItem(Eaccount_, "New Exchange Account", (SolidColorBrush)Application.Current.Resources["Orange"]);
-                            break;
-                        case "Create New Budget Account":
-                            Account_Window Yaccount_ = new Account_Window("Budget", "Project", "", "", this);
-                            Create_tabItem(Yaccount_, "New Budget Account",(SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                            break;
-                        case "Create New Cash Till":
-                            Account_Window Cashaccount_ = new Account_Window("", "Cash", "", "", this);
-                            Create_tabItem(Cashaccount_, "New Cash Till",(SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
-                            break;
-                        case "Create New Personal Account":
-                            Account_Window Personalaccount_ = new Account_Window("", "Personal", "", "", this);
-                            Create_tabItem(Personalaccount_, "New Personal Account",(SolidColorBrush)Application.Current.Resources["Color_PastelGreen"]);
-                            break;
+                        if (child is TextBlock textBlock)
+                        {
+                            switch (textBlock.Text)
+                            {
+                                case "Create New Bond":
+                                    FiscalBond_Window _FBWindow = new FiscalBond_Window(this);
+                                    _FBWindow.Show();
+                                    break;
+                                case "Create New Micro Projects Account":
+                                    Account_Window Maccount_ = new Account_Window("Micro Projects", "Project", "", "", this);
+                                    Create_tabItem(Maccount_, "New Micro Projects Account", (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                                    break;
+                                case "Create New Exchange Account":
+                                    Account_Window Eaccount_ = new Account_Window("", "Exchange", "", "", this);
+                                    Create_tabItem(Eaccount_, "New Exchange Account", (SolidColorBrush)Application.Current.Resources["Orange"]);
+                                    break;
+                                case "Create New Budget Account":
+                                    Account_Window Yaccount_ = new Account_Window("Budget", "Project", "", "", this);
+                                    Create_tabItem(Yaccount_, "New Budget Account", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                    break;
+                                case "Create New Cash Till":
+                                    Account_Window Cashaccount_ = new Account_Window("", "Cash", "", "", this);
+                                    Create_tabItem(Cashaccount_, "New Cash Till", (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                                    break;
+                                case "Create New Personal Account":
+                                    Account_Window Personalaccount_ = new Account_Window("", "Personal", "", "", this);
+                                    Create_tabItem(Personalaccount_, "New Personal Account", (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                                    break;
+                            }
+                        }
                     }
                 }
             }
@@ -1054,7 +1285,7 @@ namespace Financial_WPF_App
             try
             {
                 DependencyObject source = e.OriginalSource as DependencyObject;
-                TreeViewItem treeViewItem = FindParentTreeViewItem(source);
+                System.Windows.Controls.TreeViewItem treeViewItem = FindParentTreeViewItem(source);
                 if (treeViewItem != null)
                 {
                     treeViewItem.Focus();
@@ -1268,7 +1499,7 @@ namespace Financial_WPF_App
         {
             try
             {
-                TreeViewItem treeViewItem = sender as TreeViewItem;
+                System.Windows.Controls.TreeViewItem treeViewItem = sender as System.Windows.Controls.TreeViewItem;
                 if (treeViewItem != null)
                 {
                     e.Handled = true;
@@ -1287,16 +1518,16 @@ namespace Financial_WPF_App
 
         }
 
-        private TreeViewItem FindParentTreeViewItem(DependencyObject child)
+        private System.Windows.Controls.TreeViewItem FindParentTreeViewItem(DependencyObject child)
         {
             try
             {
-                while (child != null && !(child is TreeViewItem))
+                while (child != null && !(child is System.Windows.Controls.TreeViewItem))
                 {
                     child = VisualTreeHelper.GetParent(child);
                 }
 
-                return child as TreeViewItem;
+                return child as System.Windows.Controls.TreeViewItem;
             }
             catch (Exception ex)
             {
@@ -1695,7 +1926,7 @@ namespace Financial_WPF_App
             try
             {
                 Revenue_Exchange_Report_Window Revenue_Exchange_Report_Window = new Revenue_Exchange_Report_Window(this);
-                Create_tabItem(Revenue_Exchange_Report_Window, "Revenue/Exchange Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                Create_tabItem(Revenue_Exchange_Report_Window, "Revenue/Exchange Report", (SolidColorBrush)Application.Current.Resources["Orange"]);
             }
             catch (Exception ex)
             {

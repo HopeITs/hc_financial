@@ -255,6 +255,7 @@
     <Compile Include="Models\Log.cs" />
     <Compile Include="Helper\TreeViewItemViewModel.cs" />
     <Compile Include="Models\Version.cs" />
+    <Compile Include="TreeViewItemHeaderContainsWordConverter.cs" />
     <Compile Include="Views\Account_Budget_Lines_Windows.xaml.cs">
       <DependentUpon>Account_Budget_Lines_Windows.xaml</DependentUpon>
     </Compile>
@@ -1030,6 +1031,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Home_Background2_new.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\arrow_collapsed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\budget_account.png" />
+    <Resource Include="Images\Icons\micro_projects.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\cash_till.png" />
+    <Resource Include="Images\Icons\exchange_account.png" />
+    <Resource Include="Images\Icons\personal_account.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets')" />

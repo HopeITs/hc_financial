@@ -16,6 +16,8 @@
     Title="" Height="720" Width="1280" WindowState="Maximized" ResizeMode="CanResize"
     FontSize="12" Icon="Logo.ico" Closing="Main_Window2_Closing" Closed="Main_Window2_Closed" AllowsTransparency="True" WindowStyle="None" Background="Transparent">
     <Window.Resources>
+        <!-- Converter Instance -->
+        <local:TreeViewItemHeaderContainsWordConverter x:Key="HeaderWordConverter"/>
         <!-- Define the MenuIcons class as a static resource -->
         <local:MenuIcon x:Key="MenuIcon1" IconPath="/Images/MainForm/create_new.png" HoverIconPath="/Images/MainForm/create_new_hover.png" />
         <local:MenuIcon x:Key="MenuIcon2" IconPath="/Images/MainForm/volunteers.png" HoverIconPath="/Images/MainForm/volunteers_hover.png" />
@@ -212,7 +214,6 @@
             <Setter Property="AllowPin" Value="True"/>
             <Setter Property="AllowDrop" Value="True"/>
             <Setter Property="ShowPin" Value="True"/>
-            
             <!-- Trigger for Active Tab -->
             <!--<Style.Triggers>
                 <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
@@ -278,6 +279,154 @@
             </Setter>-->
         </Style>
 
+        <!-- Override TreeViewItem Style -->
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="{StaticResource Color_DarkGray}"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Fill" Color="{StaticResource Color_DarkGray}"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Stroke" Color="{StaticResource Color_DarkGray}"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Fill" Color="{StaticResource Color_DarkGray}"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Stroke" Color="#FF262626"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Checked.Fill" Color="#FF595959"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Checked.Stroke" Color="{StaticResource Color_DarkGray}"/>
+        <SolidColorBrush x:Key="TreeViewItem.TreeArrow.MouseOver.Checked.Fill" Color="{StaticResource Color_DarkGray}"/>
+        <PathGeometry x:Key="TreeArrow" Figures="M0,0 L0,6 L6,0 z"/>
+        <Style x:Key="ExpandCollapseToggleStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="Transparent" Height="16" Padding="5,5,5,5" Width="16">
+                            <Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}" Fill="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro'}" Stroke="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro'}">
+                                <Path.RenderTransform>
+                                    <RotateTransform Angle="135" CenterX="3" CenterY="3"/>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="RenderTransform" TargetName="ExpandPath">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="180" CenterX="3" CenterY="3"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Fill" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro'}"/>
+                                <Setter Property="Stroke" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro'}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Stroke}"/>
+                                <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Fill}"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Checked.Stroke}"/>
+                                <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Checked.Fill}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="TreeViewItemFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="5,0,5,0" />
+            <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
+            <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <!-- Header -->
+                                <RowDefinition Height="1" />
+                                <!-- Separator Line -->
+                                <RowDefinition />
+                                <!-- Items -->
+                            </Grid.RowDefinitions>
+
+                            <!-- Header Content -->
+                            <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            Padding="0"
+                            SnapsToDevicePixels="True"
+                            Grid.Row="0">
+                                <DockPanel>
+                                    <ToggleButton x:Name="Expander"
+                                          Width="16"
+                                          Height="16"
+                                          VerticalAlignment="Center"
+                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Style="{StaticResource ExpandCollapseToggleStyle}" />
+                                    <ContentPresenter x:Name="PART_Header"
+                                              ContentSource="Header"
+                                              Margin="6,6,6,6"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                </DockPanel>
+                            </Border>
+
+                            <!-- Separator Line -->
+                            <Border Grid.Row="1"
+                            Background="{StaticResource LightGray2}"
+                            Height="1"
+                            HorizontalAlignment="Stretch" />
+
+                            <!-- Items Presenter -->
+                            <ItemsPresenter x:Name="ItemsHost"
+                                    Grid.Row="2" />
+                        </Grid>
+
+                        <!-- Triggers -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="false">
+                                <Setter Property="Visibility" TargetName="ItemsHost" Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter Property="Visibility" TargetName="Expander" Value="Hidden" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="true">
+                                <Setter Property="Background"
+                                Value="{StaticResource LightGray2}" />
+                                <!--<Setter Property="Foreground"
+                                Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />-->
+                            </Trigger>
+                            <!--<MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="true" />
+                                    <Condition Property="IsSelectionActive" Value="false" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd"
+                                Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
+                                <Setter Property="Foreground"
+                                Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}" />
+                            </MultiTrigger>-->
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground"
+                                Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
     </Window.Resources>
     <Grid Background="White">
@@ -291,7 +440,7 @@
             </Grid.RowDefinitions>
             <!-- Custom Title Bar -->
             <DockPanel Background="#DCDDDE" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Margin="0,0,0,-12">
-                <local:WindowControlBar HorizontalAlignment="Right"/>
+                <local:WindowControlBar x:Name="ControlBar" HorizontalAlignment="Right"/>
             </DockPanel>
 
 
@@ -307,8 +456,8 @@
 
                 <!-- Main Content Border -->
 
-                <syncfusion:TabControlExt SelectionChanged="TabControl_SelectionChanged" Grid.Row="1" Grid.Column="1" x:Name="main_tabControl"
-             BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="#FFD8D8D8" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}" BorderBrush="{x:Null}" TabItemHoverForeground="Gray" Margin="0,28,30,20" TabItemSelectedBackground="#FFDCDDDE" Panel.ZIndex="-2" TabItemSelectedForeground="{x:Null}">
+                <syncfusion:TabControlExt Grid.Row="1" Grid.Column="1" SelectionChanged="TabControl_SelectionChanged"  x:Name="main_tabControl"
+                        BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="#FFD8D8D8" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}" BorderBrush="Black" TabItemHoverForeground="Gray" Margin="0,19,30,20" TabItemSelectedBackground="#FFDCDDDE" Panel.ZIndex="-2" TabItemSelectedForeground="{x:Null}">
                     <syncfusion:TabControlExt.Background>
                         <ImageBrush ImageSource="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill">
                             <ImageBrush.RelativeTransform>
@@ -322,46 +471,10 @@
                     <syncfusion:TabControlExt.TabItemHoverBackground>
                         <SolidColorBrush Color="{DynamicResource Color_LightGray1}"/>
                     </syncfusion:TabControlExt.TabItemHoverBackground>
-                    <!--<syncfusion:TabControlExt.Foreground>
-                        <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
-                    </syncfusion:TabControlExt.Foreground>-->
                     <syncfusion:TabControlExt.DragMarkerColor>
                         <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
                     </syncfusion:TabControlExt.DragMarkerColor>
-
-                    <!--<syncfusion:TabItemExt Header="Home"  IsSelected="False" Padding="1,5,58,3" Margin="0,0,0,0" FontFamily="Rubik" HeaderMargin="9,0,6,1" ShowPin="True" AllowDrop="True" BorderBrush="{x:Null}" BorderThickness="0,0,0,0">
-                        <syncfusion:TabItemExt.LayoutTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform/>
-                                <RotateTransform/>
-                                <TranslateTransform/>
-                            </TransformGroup>
-                        </syncfusion:TabItemExt.LayoutTransform>
-
-                        <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" IsEnabled="False" IsHitTestVisible="False" AllowDrop="False" />
-                    </syncfusion:TabItemExt>-->
                 </syncfusion:TabControlExt>
-                <!--<dragablz:TabablzControl x:Name="main_tabControl" Style="{StaticResource TabablzControlStyle}"
-                             ShowDefaultCloseButton="True"
-                                 AdjacentHeaderItemOffset="10" 
-                                 FlowDirection="LeftToRight" 
-                                 FontFamily="Rubik" FontSize="14" FontWeight="Bold"
-                                 EmptyHeaderSizingHint="PreviousTab" Background="{StaticResource LightGray1}" BorderBrush="Transparent" BorderThickness="0,0,0,0" IsSynchronizedWithCurrentItem="True">
-                             -->
-                <!--TabItems-->
-                <!-- 
-                            <TabItem IsSelected="True"  Background="Transparent" Foreground="Transparent">
-                                <TabItem.Header>
-                                    <TextBlock Text="Home" Focusable="True">
-                                        <TextBlock.Foreground>
-                                            <SolidColorBrush Color="{DynamicResource Color_MidGray}"/>
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
-                                </TabItem.Header>
-                                <Image Source="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </TabItem>
-                        </dragablz:TabablzControl>-->
 
                 <Grid Grid.ColumnSpan="2"  Background="#FFDCDDDE" Height="47" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
@@ -481,54 +594,64 @@ Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
                             </Button>
                         </Grid>
                     </Grid>
-
                 </Grid>
-                <Expander x:Name="myExpander" Grid.Column="0" IsExpanded="True"
-            ExpandDirection="Left" 
-            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="-16,0,4,20" Background="{x:Null}" Grid.Row="1">
 
-                    <Grid  >
+                <Expander x:Name="myExpander" Grid.Column="0" IsExpanded="True"
+          ExpandDirection="Left" Loaded="myExpander_Loaded"
+          Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+          Foreground="#FF30323E"  Background="White" Grid.Row="1" Margin="0,0,12,0">
+                    <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="45" />
-                            <RowDefinition Height="100*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-
-                        <TreeView x:Name="MyTreeView" 
-                              PreviewMouseRightButtonDown="MyTreeView_PreviewMouseRightButtonDown"
-                              FontFamily="Rubik" FontSize="14" FontWeight="normal"
-                              Margin="16,26,-16,0" Grid.RowSpan="2">
-                            <!-- TreeView Item Style -->
-                            <TreeView.ItemContainerStyle>
-                                <Style TargetType="{x:Type TreeViewItem}">
-                                    <Setter Property="FontWeight" Value="Normal"/>
-                                    <Setter Property="Margin" Value="0,5"/>
-                                    <Setter Property="Padding" Value="5"/>
-                                    <Setter Property="Foreground" Value="Black"/>
-                                    <Setter Property="BorderBrush" Value="Gray"/>
-                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                    <Setter Property="Background" Value="Transparent"/>
-                                </Style>
-                            </TreeView.ItemContainerStyle>
-                            <TreeView.ContextMenu>
-                                <ContextMenu x:Name="cm">
-                                    <ContextMenu.Resources>
-                                        <Style TargetType="{x:Type Border}" BasedOn="{StaticResource BorderStyle}" />
-                                    </ContextMenu.Resources>
-                                    <MenuItem Header="Refresh" Click = "Refresh_Click" >
-                                        <MenuItem.Icon>
-                                            <Image Source="/Cashing;component/Images/refresh32.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </TreeView.ContextMenu>
-                        </TreeView>
+                        <Border CornerRadius="10" Margin="0,20,0,20"
+                Grid.RowSpan="2"
+                Background="White" Padding="5,5,5,5" SnapsToDevicePixels="True">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity=".3" Color="{StaticResource Color_MidGray}" />
+                            </Border.Effect>
+                            <TreeView ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+          ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource {x:Type TreeViewItem}}" x:Name="MyTreeView" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                      PreviewMouseRightButtonDown="MyTreeView_PreviewMouseRightButtonDown"
+                      FontFamily="Rubik" FontSize="14" Foreground="{StaticResource MidGray}"
+                      Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="-5,0,0,0" Padding="3">
+                                <!-- TreeView Item Style -->
+                                <!--<TreeView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type TreeViewItem}">
+                                        <Setter Property="FontWeight" Value="Normal" />
+                                        <Setter Property="Foreground" Value="{StaticResource MidGray}" />
+                                        <Setter Property="Padding" Value="5,15,5,5" />
+                                        <Setter Property="FontSize" Value="14" />
+                                        -->
+                                <!--<Setter Property="BorderBrush" Value="{StaticResource MidGray}" />
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />-->
+                                <!--
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Style>
+                                </TreeView.ItemContainerStyle>-->
+                                <TreeView.ContextMenu>
+                                    <ContextMenu x:Name="cm">
+                                        <ContextMenu.Resources>
+                                            <Style TargetType="{x:Type Border}" BasedOn="{StaticResource BorderStyle}" />
+                                        </ContextMenu.Resources>
+                                        <MenuItem Header="Refresh" Click="Refresh_Click">
+                                            <MenuItem.Icon>
+                                                <Image Source="/Cashing;component/Images/refresh32.png" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </TreeView.ContextMenu>
+                            </TreeView>
+                        </Border>
                     </Grid>
                 </Expander>
             </Grid>
         </Grid>
     </Grid>
-
 </Window>
