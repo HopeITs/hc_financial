@@ -1,22 +1,19 @@
-﻿using Financial_WPF_App.Models;
-using Financial_WPF_App.Helper;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
 using Microsoft.Win32;
+using Syncfusion.Data.Extensions;
+using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MahApps.Metro.Controls;
-using MySqlX.XDevAPI.Relational;
-using System.Linq;
-using Syncfusion.XlsIO.Implementation.PivotAnalysis;
-using Syncfusion.Windows.Shared;
-using Syncfusion.Data.Extensions;
 
 namespace Financial_WPF_App
 {

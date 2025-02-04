@@ -1,5 +1,4 @@
 ﻿using Financial_WPF_App.Models;
-using MySqlX.XDevAPI.Relational;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;

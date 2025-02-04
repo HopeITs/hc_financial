@@ -1,7 +1,6 @@
 ﻿
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
-using MySqlX.XDevAPI.Relational;
 using System;
 using System.Data;
 using System.Diagnostics;

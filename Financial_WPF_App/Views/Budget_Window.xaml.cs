@@ -1,7 +1,5 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Views;
-using Syncfusion.UI.Xaml.Grid.Helpers;
-using Syncfusion.XlsIO.Implementation.PivotAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Data;

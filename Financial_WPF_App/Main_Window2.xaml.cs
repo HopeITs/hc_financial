@@ -1,17 +1,12 @@
-﻿using Dragablz;
-using Financial_WPF_App.Helper;
+﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
-using MySqlX.XDevAPI.Relational;
 using Syncfusion.Data.Extensions;
-using Syncfusion.UI.Xaml.TreeView;
-using Syncfusion.Windows.Shared;
 using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -23,10 +18,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
 using System.Windows.Threading;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App
