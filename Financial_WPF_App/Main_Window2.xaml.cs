@@ -161,6 +161,13 @@ namespace Financial_WPF_App
         DataTable CashAccounts;
         DataTable PersonalAccounts;
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var workArea = SystemParameters.WorkArea; // Gets the area excluding the taskbar
+            this.MaxWidth = workArea.Width + 5;
+            this.MaxHeight = workArea.Height + 5;
+        }
+
         public void Create_tabItem(Window window, string header, System.Windows.Media.Brush foreground)
         {
             TabItemExt oTab = new TabItemExt();
@@ -174,6 +181,11 @@ namespace Financial_WPF_App
             // Add the TabItemExt to the TabControlExt
             main_tabControl.Items.Add(oTab);
             main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(oTab.Content, foreground);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -207,14 +219,7 @@ namespace Financial_WPF_App
                 // Revert to the default background image when no tab is selected
                 main_tabControl.Background = defaultBackground;
             }
-            // Get the currently selected tab
-            //if (main_tabControl.SelectedItem is TabItemExt selectedTab)
-            //{
-            //    // Update the TabControlExt's TabSelectedItemForeground to match the selected tab's Foreground
-            //    main_tabControl.Foreground = (SolidColorBrush)Application.Current.Resources["MidGray"];
-            //    main_tabControl.TabItemSelectedForeground = selectedTab.Foreground;
-
-            //}
+            
             // Iterate through all tabs
             foreach (var item in main_tabControl.Items)
             {
@@ -234,6 +239,7 @@ namespace Financial_WPF_App
                     }
                 }
             }
+            
 
         }
 

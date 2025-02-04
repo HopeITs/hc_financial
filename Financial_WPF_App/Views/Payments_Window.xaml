@@ -99,79 +99,41 @@
                 </Grid.RowDefinitions>
 
 
-
-                <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,1,0">
-                    <StackPanel.Background>
-                        <ImageBrush ImageSource="/Images/MainForm/MainForm Tab Header.png"/>
-                    </StackPanel.Background>
-                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="56" FontSize="11" />
-                    <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                        Width="auto" >
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                        </Border.Background>
-                        <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-                    </Border>
-                    <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"  Width="79" FontSize="11" />
-                    <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                        </Border.Background>
-                        <TextBlock x:Name="Amount_textBlock" Text="0.00" 
+                <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+                    <WrapPanel  Orientation="Horizontal">
+                        <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="56" FontSize="11" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                        </Border>
+                        <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"  Width="79" FontSize="11" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="Amount_textBlock" Text="0.00" 
                             Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Amount_textBlock_SizeChanged" FontSize="15" />
-                    </Border>
-                    <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}" FontSize="11" />
-                    <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                        </Border.Background>
-                        <TextBlock x:Name="ToPayAmount_textBlock"
+                        </Border>
+                        <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}" FontSize="11" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="ToPayAmount_textBlock"
                             Text="0.00"
                             Style="{DynamicResource statistic_textBlockStyle}" 
                             OverridesDefaultStyle="True" FontSize="15"  />
-                    </Border>
+                        </Border>
 
-                    <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}" FontSize="11" />
-                    <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                        </Border.Background>
-                        <TextBlock x:Name="PaidAmount_textBlock"
+                        <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}" FontSize="11" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="PaidAmount_textBlock"
                             Text="0.00"
                             Style="{DynamicResource statistic_textBlockStyle}" 
                             OverridesDefaultStyle="True" FontSize="15"  />
-                    </Border>
-                    <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}" FontSize="11" />
-                    <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                        Width="auto" Height="29" >
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                        </Border.Background>
-                        <TextBlock x:Name="RemainingAmount_textBlock"
+                        </Border>
+                        <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}" FontSize="11" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
+                            <TextBlock x:Name="RemainingAmount_textBlock"
                             Text="0.00"
                             Style="{DynamicResource statistic_textBlockStyle}" 
                             OverridesDefaultStyle="True" FontSize="15"  />
-                    </Border>
-                </StackPanel>
-
+                        </Border>
+                    </WrapPanel>
+                </Border>
                 <!--</ScrollViewer>-->
                 <!--<ScrollViewer   
                 FlowDirection="RightToLeft"
@@ -271,34 +233,19 @@
                     <TextBlock x:Name="Delete_Selected" Grid.Row="1" TextWrapping="Wrap" Height="18" Width="111" Margin="1,4,772,3"><Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click"><Run Text="Delete Selected"/></Hyperlink></TextBlock>
 
                 </Grid>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,1,0">
-                    <StackPanel.Background>
-                        <ImageBrush ImageSource="/Images/MainForm/MainForm Tab Header.png"/>
-                    </StackPanel.Background>
-                    <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="56" FontSize="11" />
-                    <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                        Width="auto" >
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                        </Border.Background>
-                        <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-                    </Border>
-                    <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}" Width="79" FontSize="11" />
-                    <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                        </Border.Background>
-                        <TextBlock x:Name="PaidAmount_textBlock1" Text="0.00" 
+                <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1">
+                    <WrapPanel Orientation="Horizontal">
+                        <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="56" FontSize="11" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                        </Border>
+                        <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}" Width="79" FontSize="11" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}" >
+                            <TextBlock x:Name="PaidAmount_textBlock1" Text="0.00" 
                             Style="{DynamicResource statistic_textBlockStyle}" FontSize="15" SizeChanged="Amount_textBlock_SizeChanged" />
-                    </Border>
-                </StackPanel>
+                        </Border>
+                    </WrapPanel>
+                </Border>
                 <Grid Margin="1,1,1,2" Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />

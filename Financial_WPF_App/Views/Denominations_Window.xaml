@@ -71,14 +71,7 @@
                 <!--<Label Grid.Column="2" Style="{DynamicResource lableStyle}" x:Name="All_lable" Content="All: 0" />-->
 
                 <Label Grid.Column="4" Content="All: " Style="{DynamicResource statistic_lableStyle}" />
-                <Border Grid.Column="3" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
+                <Border Grid.Column="3" Style="{StaticResource BorderStackPanelStyle}" >
                     <TextBlock  x:Name="All_textBlock" 
                         Text="{Binding Items.Count, ElementName=myDataGrid, StringFormat=\{0:N0\}}"  
                         Style="{DynamicResource statistic_textBlockStyle}"
@@ -86,14 +79,7 @@
                 </Border>
 
                 <Label Grid.Column="2" Content="Selected: " Style="{DynamicResource statistic_lableStyle}" />
-                <Border Grid.Column="1" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
+                <Border Grid.Column="1" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}"
                         OverridesDefaultStyle="True"  />
                 </Border>

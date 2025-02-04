@@ -1668,5 +1668,6 @@ namespace Financial_WPF_App.Views
                 Delete_Selected_TextBlock.IsEnabled = true;
             }
         }
+
     }
 }

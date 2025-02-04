@@ -56,10 +56,7 @@
 
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft" Grid.ColumnSpan="7" Margin="0,0,0,44" Grid.RowSpan="2" >
-                    <StackPanel.Background>
-                        <ImageBrush ImageSource="/Images/MainForm/MainForm Tab Header.png"/>
-                    </StackPanel.Background>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="7" Margin="0,0,0,44" Grid.RowSpan="2" Style="{StaticResource SolidStackPanelStyle}">
                     <Label Content="Account: " Style="{DynamicResource title_lableStyle}" 
                         HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"   />
                     <Label Content="Account" Style="{DynamicResource title_lableStyle}" 

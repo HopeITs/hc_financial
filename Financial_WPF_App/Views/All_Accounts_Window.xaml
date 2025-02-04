@@ -95,27 +95,12 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Column="5" Content="All;" Style="{DynamicResource statistic_lableStyle}" />
-                <Border Grid.Column="4" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
+                <Border Grid.Column="4" Style="{StaticResource BorderStackPanelStyle}" >
                     <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
-
                 </Border>
 
                 <Label Grid.Column="3" Content="Selected:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border Grid.Column="2" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
+                <Border Grid.Column="2" Style="{StaticResource BorderStackPanelStyle}" >
                     <TextBlock x:Name="Selected_textBlock" Text="0" 
                         Style="{DynamicResource statistic_textBlockStyle}"
                         OverridesDefaultStyle="True"  />

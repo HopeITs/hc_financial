@@ -231,184 +231,6 @@
                 </Style.Triggers>
             </Style>
 
-            <!--<Style x:Key="TabHeader" TargetType="TabItem">
-                <Setter Property="Background" Value="LightBlue"/>
-                <Setter Property="Foreground" Value="DarkSlateGray"/>
-                <Setter Property="FontSize" Value="16"/>
-                <Setter Property="Padding" Value="10,5"/>
-                <Setter Property="BorderBrush" Value="Gray"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            </Style>-->
-
-            <!-- tell Dragablz tab control to use the Material Design theme -->
-            <!--<Style TargetType="{x:Type dragablz:TabablzControl}" 
-                    BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" >
-                <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
-                <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"></Setter>
-            </Style>
-
-            <style x:key="tabheader" targettype="{x:type tabitem}" basedon="{staticresource materialdesigndragabletabitemstyle}">
-                <setter property="horizontalcontentalignment" value="center"/>
-                <setter property="verticalcontentalignment" value="center"/>
-            </style>-->
-            <!--<Style x:Key="TabablzControlStyle1" TargetType="{x:Type dragablz:TabablzControl}">
-                <Setter Property="Padding" Value="2"/>
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Background">
-                    <Setter.Value>
-                        <Binding Path="Background" RelativeSource="{RelativeSource Self}"/>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="BorderBrush">
-                    <Setter.Value>
-                        <Binding Path="BorderBrush" RelativeSource="{RelativeSource Self}"/>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-                <Setter Property="ItemContainerStyle" Value="{DynamicResource StandardDragablzTabItemStyle}"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type dragablz:TabablzControl}">
-                            <Grid x:Name="templateRoot" ClipToBounds="true" SnapsToDevicePixels="true">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition x:Name="ColumnDefinition0"/>
-                                    <ColumnDefinition x:Name="ColumnDefinition1" Width="0"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition x:Name="RowDefinition0" Height="Auto"/>
-                                    <RowDefinition x:Name="RowDefinition1" Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Border x:Name="contentPanel" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.Column="0" Margin="0 -1 0 0" Grid.Row="1">
-                                    <Grid x:Name="PART_ItemsHolder"/>
-                                </Border>
-                                <Grid x:Name="HeaderContainerGrid" Grid.Column="0" Margin="0,2,2,0" Grid.Row="0">
-                                    <Grid.Resources>
-                                        <Style BasedOn="{StaticResource StandardEmbeddedButtonStyle}" TargetType="{x:Type Button}"/>
-                                    </Grid.Resources>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.Visibility>
-                                        <TemplateBinding Converter="{StaticResource BooleanToVisibilityConverter}" Property="IsHeaderPanelVisible"/>
-                                    </Grid.Visibility>
-                                    <ContentControl x:Name="PrefixContentControl" ContentStringFormat="{TemplateBinding HeaderPrefixContentStringFormat}" ContentTemplate="{TemplateBinding HeaderPrefixContentStringFormat}" Grid.Column="0" Content="{TemplateBinding HeaderPrefixContent}" ContentTemplateSelector="{TemplateBinding HeaderPrefixContentTemplateSelector}"/>
-                                    <dragablz:DragablzItemsControl x:Name="PART_HeaderItemsControl" Grid.Column="1" FixedItemCount="{TemplateBinding FixedHeaderCount}" ItemsOrganiser="{TemplateBinding HeaderItemsOrganiser}" ItemTemplate="{TemplateBinding HeaderItemTemplate}" ItemsSource="{Binding Items, RelativeSource={RelativeSource Mode=TemplatedParent}}" ItemContainerStyle="{TemplateBinding ItemContainerStyle}" Style="{StaticResource TabablzDragablzItemsControlStyle}" TabIndex="1">
-                                        <dragablz:DragablzItemsControl.MaxWidth>
-                                            <MultiBinding>
-                                                <MultiBinding.Converter>
-                                                    <dragablz:TabablzHeaderSizeConverter Orientation="Horizontal"/>
-                                                </MultiBinding.Converter>
-                                                <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
-                                                <Binding Path="ItemsPresenterWidth" RelativeSource="{RelativeSource Mode=Self}"/>
-                                                <Binding ElementName="PrefixContentControl" Path="ActualWidth"/>
-                                                <Binding ElementName="DefaultAddButton" Path="DesiredSize.Width"/>
-                                                <Binding ElementName="SuffixContentControl" Path="DesiredSize.Width"/>
-                                            </MultiBinding>
-                                        </dragablz:DragablzItemsControl.MaxWidth>
-                                    </dragablz:DragablzItemsControl>
-                                    <Button x:Name="DefaultAddButton" Command="{x:Static dragablz:TabablzControl.AddItemCommand}" Grid.Column="2" Visibility="{TemplateBinding ShowDefaultAddButton, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    <ContentControl x:Name="SuffixContentControl" ContentStringFormat="{TemplateBinding HeaderSuffixContentStringFormat}" ContentTemplate="{TemplateBinding HeaderSuffixContentStringFormat}" Grid.Column="3" Content="{TemplateBinding HeaderSuffixContent}" ContentTemplateSelector="{TemplateBinding HeaderSuffixContentTemplateSelector}" HorizontalAlignment="Stretch"/>
-                                </Grid>
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                --><!-- Add other triggers here --><!--
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                --><!-- Add additional setters/triggers if needed --><!--
-            </Style>-->
-            <!--<Style x:Key="CustomTabablzControlStyle" TargetType="{x:Type dragablz:TabablzControl}">
-                <Setter Property="Padding" Value="2" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Background" Value="White" />
-                <Setter Property="BorderBrush" Value="Gray" />
-                <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="ItemContainerStyle" Value="{StaticResource CustomTabItemStyle}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type dragablz:TabablzControl}">
-                            <Grid x:Name="templateRoot" ClipToBounds="true" SnapsToDevicePixels="true">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                --><!-- Tab Headers --><!--
-                                <dragablz:DragablzItemsControl
-                        x:Name="PART_HeaderItemsControl"
-                        Grid.Row="0"
-                        ItemsSource="{Binding Items, RelativeSource={RelativeSource TemplatedParent}}"
-                        ItemTemplate="{TemplateBinding HeaderItemTemplate}"
-                        ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
-                        Style="{StaticResource TabablzDragablzItemsControlStyle}" />
-
-                                --><!-- Tab Content --><!--
-                                <Border
-                        x:Name="contentPanel"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        Grid.Row="1"
-                        Margin="0">
-                                    <ContentPresenter ContentSource="SelectedContent" />
-                                </Border>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style x:Key="CustomTabItemStyle" TargetType="{x:Type TabItem}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type TabItem}">
-                            <Grid>
-                                <Border
-                        x:Name="TabHeader"
-                        Background="White"
-                        BorderBrush="Gray"
-                        BorderThickness="1"
-                        Padding="10,5"
-                        CornerRadius="4">
-                                    <ContentPresenter
-                            ContentSource="Header"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                                </Border>
-
-                                --><!-- Active Tab Indicator --><!--
-                                <Border
-                        x:Name="ActiveTabIndicator"
-                        Height="2"
-                        Background="Blue"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Bottom"
-                        Visibility="Collapsed" />
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter TargetName="TabHeader" Property="Background" Value="LightBlue" />
-                                    <Setter TargetName="TabHeader" Property="BorderBrush" Value="Blue" />
-                                    <Setter TargetName="ActiveTabIndicator" Property="Visibility" Value="Visible" />
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="TabHeader" Property="Background" Value="#F0F0F0" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-            </Style>-->
 
             <!-- tell Dragablz tab control to use the Material Design theme -->
             <Style TargetType="{x:Type dragablz:TabablzControl}" 
@@ -417,8 +239,55 @@
                 <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"></Setter>
             </Style>
 
+            <!--Global Style for StackPanel in Accounts-->
+            <Style x:Key="SolidStackPanelStyle" TargetType="StackPanel">
+                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+            </Style>
+            <Style x:Key="MainBorderWrapPanelStyle" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                <Setter Property="Padding" Value="0,5,0,5"></Setter>
+                <Setter Property="BorderBrush" Value="{StaticResource MidGray}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+            </Style>
+            <Style x:Key="statistic_textBlockStyle" TargetType="{x:Type TextBlock}" >
+                <Setter Property="Label.FontSize" Value="14" />
+                <Setter Property="Label.FontFamily" Value="RubiK" />
+                <Setter Property="Label.FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeRed}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Left" />
+                <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
+                <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                <Setter Property="TextBlock.Margin" Value="3,3,3,3" />
+                <Setter Property="TextBlock.Padding" Value="5,0,5,0" />
+                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+            </Style>
 
+            <Style x:Key="BorderStackPanelStyle" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource White}"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                <Setter Property="Width" Value="Auto"></Setter>
+                <Setter Property="Margin" Value="0,2,0,1.909"></Setter>
+            </Style>
 
+            <Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
+                <Setter Property="Label.FontSize" Value="14" />
+                <Setter Property="Label.FontWeight" Value="Medium" />
+                <Setter Property="Label.FontFamily" Value="Rubik" />
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                <Setter Property="Label.FlowDirection" Value="LeftToRight" />
+                <Setter Property="Label.HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Label.VerticalAlignment" Value="Center" />
+                <Setter Property="Label.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Label.Margin" Value="10,0,1,0" />
+            </Style>
+            
             <!--End New Style-->
 
             <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>
@@ -499,7 +368,8 @@
                 <Setter Property="FontSize" Value="19" />
                 <Setter Property="FontFamily" Value="Myriad Arabic Bold" />
             </Style>
-
+            
+            
 
             <!--MY STYLES -->
             <Style x:Key="SaveButton_Style" TargetType="{x:Type Button}">
