@@ -1,17 +1,12 @@
-﻿using Dragablz;
-using Financial_WPF_App.Helper;
+﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
-using MySqlX.XDevAPI.Relational;
 using Syncfusion.Data.Extensions;
-using Syncfusion.UI.Xaml.TreeView;
-using Syncfusion.Windows.Shared;
 using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -23,10 +18,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
 using System.Windows.Threading;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App
@@ -37,6 +29,7 @@ namespace Financial_WPF_App
         public Main_Window_2()
         {
             InitializeComponent();
+
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMinutes(30);
@@ -60,6 +53,7 @@ namespace Financial_WPF_App
                 t = new Till();
                 fb = new FiscalBond();
                 v = new Models.Version();
+
                 Shutdown_Mode = new ShutdownMode();
                 bool? result = window.ShowDialog();
                 if (result ?? true)
@@ -455,13 +449,14 @@ namespace Financial_WPF_App
             return null;
         }
 
-        private void TabControl_ClosingItemHandler(ItemActionCallbackArgs<TabablzControl> args)
+
+        private void main_tabControl_TabClosing(object sender, CancelingRoutedEventArgs e)
         {
             try
             {
                 if (MessageBox.Show("Are you sure you want to close this page?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.No)
                 {
-                    args.Cancel();
+                    e.Cancel = true;
                 }
             }
             catch (Exception ex)
@@ -1816,7 +1811,7 @@ namespace Financial_WPF_App
         {
             try
             {
-                var menuItem = sender as MenuItemAdv;
+                var menuItem = sender as MenuItem;
                 if (menuItem != null)
                 {
                     int cityId = Convert.ToInt32(menuItem.Tag.ToString());
@@ -2075,6 +2070,8 @@ namespace Financial_WPF_App
                 this.Height = 1021; // Original height
             }
         }
+
+
     }
 }
 

@@ -1,12 +1,10 @@
-﻿using ControlzEx.Standard;
-using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.Data;
 using Syncfusion.Data.Extensions;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;

@@ -1,5 +1,4 @@
 ﻿using Financial_WPF_App.Models;
-using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Data;
 using System.Linq;

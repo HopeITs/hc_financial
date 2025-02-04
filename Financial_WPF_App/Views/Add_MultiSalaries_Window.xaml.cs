@@ -1,7 +1,6 @@
 ﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
-using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
