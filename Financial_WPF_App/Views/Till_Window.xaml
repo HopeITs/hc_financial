@@ -65,14 +65,14 @@
                 <Border x:Name="Net_Border" Style="{StaticResource BorderStackPanelStyle}" >
                     <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
                 </Border>
-            </WrapPanel>
-        </Border>
-        <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
-            <WrapPanel  Orientation="Horizontal">
                 <Label x:Name="CashNet_label" Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border x:Name="CashNet_Border" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
                 </Border>
+            </WrapPanel>
+        </Border>
+        <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+            <WrapPanel  Orientation="Horizontal">
                 <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
                 <Border Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
