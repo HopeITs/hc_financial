@@ -457,7 +457,7 @@
                 <!-- Main Content Border -->
 
                 <syncfusion:TabControlExt Grid.Row="1" Grid.Column="1" SelectionChanged="TabControl_SelectionChanged"  x:Name="main_tabControl"
-                        BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="#FFD8D8D8" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}" BorderBrush="Black" TabItemHoverForeground="Gray" Margin="0,19,30,20" TabItemSelectedBackground="#FFDCDDDE" Panel.ZIndex="-2" TabItemSelectedForeground="{x:Null}">
+                        BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="#FFD8D8D8" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}" BorderBrush="Black" TabItemHoverForeground="Gray" Margin="0,19,30,20" TabItemSelectedBackground="#FFDCDDDE" Panel.ZIndex="-2" TabItemSelectedForeground="{x:Null}" TabClosing="main_tabControl_TabClosing">
                     <syncfusion:TabControlExt.Background>
                         <ImageBrush ImageSource="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill">
                             <ImageBrush.RelativeTransform>

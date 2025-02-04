@@ -38,6 +38,7 @@ namespace Financial_WPF_App
         {
             InitializeComponent();
 
+
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMinutes(30);
             timer.Tick += Timer_Tick;
@@ -60,6 +61,7 @@ namespace Financial_WPF_App
                 t = new Till();
                 fb = new FiscalBond();
                 v = new Models.Version();
+
                 Shutdown_Mode = new ShutdownMode();
                 bool? result = window.ShowDialog();
                 if (result ?? true)
@@ -449,13 +451,14 @@ namespace Financial_WPF_App
             return null;
         }
 
-        private void TabControl_ClosingItemHandler(ItemActionCallbackArgs<TabablzControl> args)
+
+        private void main_tabControl_TabClosing(object sender, CancelingRoutedEventArgs e)
         {
             try
             {
                 if (MessageBox.Show("Are you sure you want to close this page?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.No)
                 {
-                    args.Cancel();
+                    e.Cancel = true;
                 }
             }
             catch (Exception ex)
@@ -1810,7 +1813,7 @@ namespace Financial_WPF_App
         {
             try
             {
-                var menuItem = sender as MenuItemAdv;
+                var menuItem = sender as MenuItem;
                 if (menuItem != null)
                 {
                     int cityId = Convert.ToInt32(menuItem.Tag.ToString());
@@ -2069,6 +2072,8 @@ namespace Financial_WPF_App
                 this.Height = 1021; // Original height
             }
         }
+
+
     }
 }
 
