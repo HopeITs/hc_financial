@@ -49,8 +49,8 @@
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>-->
                 <!-- Include the Fluent Library for RIBBON -->
-                <ResourceDictionary Source="/Fluent;component/Themes/Generic.xaml" />
 
+                
             </ResourceDictionary.MergedDictionaries>
 
 
