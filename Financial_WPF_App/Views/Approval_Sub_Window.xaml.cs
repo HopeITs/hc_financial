@@ -732,7 +732,7 @@ namespace Financial_WPF_App.Views
                 else
                 {
                     Window _Window = new Attachments(Action_ID, -1, false, null, null, this);
-                    _Window.Show();
+                    _Window.ShowDialog();
                 }
             }
             catch (Exception ex)

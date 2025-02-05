@@ -295,11 +295,7 @@ namespace Financial_WPF_App
                         Show_Hide();
 
                         this.Show();
-                    }
-                    else
-                    {
-                        Application.Current.Shutdown();
-                    }
+                    }       
                 }
                 else
                 {
@@ -1263,7 +1259,7 @@ namespace Financial_WPF_App
                             {
                                 case "Create New Bond":
                                     FiscalBond_Window _FBWindow = new FiscalBond_Window(this);
-                                    _FBWindow.Show();
+                                    _FBWindow.ShowDialog();
                                     break;
                                 case "Create New Micro Projects Account":
                                     Account_Window Maccount_ = new Account_Window("Micro Projects", "Project", "", "", this);
@@ -1568,7 +1564,7 @@ namespace Financial_WPF_App
             try
             {
                 Window _DonorWindow = new NewDonor_Window(this);
-                _DonorWindow.Show();
+                _DonorWindow.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -1587,7 +1583,7 @@ namespace Financial_WPF_App
             try
             {
                 Window _CityWindow = new CityWindow(this);
-                _CityWindow.Show();
+                _CityWindow.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -1606,7 +1602,7 @@ namespace Financial_WPF_App
             try
             {
                 Window _SubPWindow = new SubProjectWindow(this);
-                _SubPWindow.Show(); ;
+                _SubPWindow.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -1625,7 +1621,7 @@ namespace Financial_WPF_App
             try
             {
                 Window _BudgetWindow = new Budget_Window(this);
-                _BudgetWindow.Show();
+                _BudgetWindow.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -1644,7 +1640,7 @@ namespace Financial_WPF_App
             try
             {
                 Window _DenominationsWindow = new Denominations_Window(this);
-                _DenominationsWindow.Show();
+                _DenominationsWindow.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -1758,7 +1754,7 @@ namespace Financial_WPF_App
             try
             {
                 Project_Window _Project_Window = new Project_Window(this);
-                _Project_Window.Show();
+                _Project_Window.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -1815,7 +1811,7 @@ namespace Financial_WPF_App
             try
             {
                 Window _Approval_Limits = new Approval_Limit_Window(this);
-                _Approval_Limits.Show();
+                _Approval_Limits.ShowDialog();
             }
             catch (Exception ex)
             {

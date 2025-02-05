@@ -179,7 +179,7 @@ namespace Financial_WPF_App.Views
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                 int Beneficiary_ID = Convert.ToInt32(dataRow["beneficiary_ID"].ToString());
                 Window _Window = new Attachments(-1, Beneficiary_ID, false, null, this, null);
-                _Window.Show();
+                _Window.ShowDialog();
             }
             catch (Exception ex)
             {
