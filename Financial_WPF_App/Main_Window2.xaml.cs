@@ -1198,19 +1198,76 @@ namespace Financial_WPF_App
                 {
                     int fiscalbond_ID = Convert.ToInt32(fiscalbondItem.Tag.ToString());
                     string fiscalbond_Name = "";
-                    foreach (var child in panel.Children)
+                    ItemsControl parent = GetSelectedTreeViewItemParent(fiscalbondItem);
+
+                    System.Windows.Controls.TreeViewItem treeitem = parent as System.Windows.Controls.TreeViewItem;
+                    string Sub_ID = treeitem.Tag.ToString();
+                    var Sub_Name = treeitem.Header.ToString();
+                    if (treeitem.Header is DockPanel panel1)
                     {
-                        if (child is TextBlock textBlock)
+                        // Extract text from the TextBlock inside the DockPanel
+                        Sub_Name = panel1.Children.OfType<TextBlock>().FirstOrDefault()?.Text ?? string.Empty;
+                        if (Sub_Name.Contains("Micro"))
                         {
-                            fiscalbond_Name = textBlock.Text;
+                            foreach (var child in panel.Children)
+                            {
+                                if (child is TextBlock textBlock)
+                                {
+                                    fiscalbond_Name = textBlock.Text;
+                                    Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
+                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                                }
+                            }
+                        }
+                        else if (fiscalbond_Name.Contains("Exchange"))
+                        {
+                            foreach (var child in panel.Children)
+                            {
+                                if (child is TextBlock textBlock)
+                                {
+                                    fiscalbond_Name = textBlock.Text;
+                                    Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
+                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["Orange"]);
+                                }
+                            }
+                        }
+                        else if (fiscalbond_Name.Contains("Personal"))
+                        {
+                            foreach (var child in panel.Children)
+                            {
+                                if (child is TextBlock textBlock)
+                                {
+                                    fiscalbond_Name = textBlock.Text;
+                                    Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
+                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                                }
+                            }
+                        }
+                        else if (fiscalbond_Name.Contains("Cash"))
+                        {
+                            foreach (var child in panel.Children)
+                            {
+                                if (child is TextBlock textBlock)
+                                {
+                                    fiscalbond_Name = textBlock.Text;
+                                    Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
+                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var child in panel.Children)
+                            {
+                                if (child is TextBlock textBlock)
+                                {
+                                    fiscalbond_Name = textBlock.Text;
+                                    Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
+                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                }
+                            }
                         }
                     }
-
-                    Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
-                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                    /*
-                    All_ActionFiscalBond_Window window = new All_ActionFiscalBond_Window(fiscalbond_ID, fiscalbond_Name, this);
-                    Create_dragablz_tabItem(window, fiscalbond_Name);*/
                 }
             }
             catch (Exception ex)
@@ -2050,10 +2107,12 @@ namespace Financial_WPF_App
         {
             WindowUtils.CloseWindow(this); // Calls the WindowUtils method
         }
+
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowUtils.TitleBar_MouseDown(this, e);
         }
+
         private void Window_StateChanged(object sender, EventArgs e)
         {
             // Check if the window is minimized
