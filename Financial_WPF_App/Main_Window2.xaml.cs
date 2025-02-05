@@ -41,7 +41,7 @@ namespace Financial_WPF_App
             // Subscribe to the event
             ControlBar.ResizeExpanderRequested += OnResizeExpanderRequested;
         }
-        
+
         private void On_Load()
         {
             try
@@ -65,7 +65,6 @@ namespace Financial_WPF_App
                     Fill_TreeView(false);
 
                     Show_Hide();
-
                 }
             }
             catch (Exception ex)
@@ -213,7 +212,7 @@ namespace Financial_WPF_App
                 // Revert to the default background image when no tab is selected
                 main_tabControl.Background = defaultBackground;
             }
-            
+
             // Iterate through all tabs
             foreach (var item in main_tabControl.Items)
             {
@@ -233,7 +232,7 @@ namespace Financial_WPF_App
                     }
                 }
             }
-            
+
 
         }
 
@@ -255,15 +254,15 @@ namespace Financial_WPF_App
                 Online_Button.ToolTip = "Online Database";
             }
             else
+            {
+                Online_Button.Background = new ImageBrush
                 {
-                    Online_Button.Background = new ImageBrush
-                    {
-                        ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/online_hover.png", UriKind.Absolute)),
-                        Stretch = Stretch.Uniform
-                    };
-                    Online_Button.ToolTip = "Offline Database";
-                }
+                    ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/online_hover.png", UriKind.Absolute)),
+                    Stretch = Stretch.Uniform
+                };
+                Online_Button.ToolTip = "Offline Database";
             }
+        }
 
         private void Notification_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -274,15 +273,37 @@ namespace Financial_WPF_App
         {
             try
             {
-                Window window = new Login_Window2(this);
-                bool? result = window.ShowDialog();
-                if (result ?? true)
+                if (MessageBox.Show("Are you sure you want to logout?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.Yes)
                 {
-                    //Get_User_Profile();
-                    //Check_Notifications();
-                    Username_label.Content = Settings.Default.username;
-                    Update_Online_Button();
-                    //Check_User_Role();
+
+                    this.Hide();
+                    main_tabControl.Items.Clear();
+
+                    Login_Window2 loginWindow = new Login_Window2(this);
+                    bool? result = loginWindow.ShowDialog();
+
+                    if (result == true)
+                    {
+                        Window window = new Login_Window2(this);
+
+                        Username_label.Content = Settings.Default.username;
+                        Update_Online_Button();
+                        window.WindowState = WindowState.Maximized;
+                        Login.Shutdown_Mode = ShutdownMode.OnMainWindowClose;
+                        Fill_TreeView(false);
+
+                        Show_Hide();
+
+                        this.Show();
+                    }
+                    else
+                    {
+                        Application.Current.Shutdown();
+                    }
+                }
+                else
+                {
+
                 }
             }
             catch (Exception ex)
@@ -407,7 +428,7 @@ namespace Financial_WPF_App
                 Grid_col.Width = new GridLength(150, GridUnitType.Star);
                 Expander_col.Width = new GridLength(44, GridUnitType.Star);
                 if (myExpander.IsExpanded && window.WindowState == WindowState.Normal)
-                  Expander_col.Width = new GridLength(50, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(50, GridUnitType.Star);
                 else if (!myExpander.IsExpanded && window.WindowState == WindowState.Normal)
                     Expander_col.Width = new GridLength(44, GridUnitType.Star);
             }
@@ -425,7 +446,7 @@ namespace Financial_WPF_App
 
         private void OnResizeExpanderRequested(double newWidth)
         {
-            if(myExpander.IsExpanded)
+            if (myExpander.IsExpanded)
                 Expander_col.Width = new GridLength(newWidth, GridUnitType.Star);
         }
 
@@ -482,7 +503,7 @@ namespace Financial_WPF_App
 
                 PopulateTreeView();
                 MyTreeView.RestoreExpandedState(expandedItems);
-                
+
             }
             RClicked_ID = -1; RClicked_Name = "";
         }
@@ -523,13 +544,13 @@ namespace Financial_WPF_App
                     System.Windows.Controls.TreeViewItem AddNewAccount;
                     if (Account == "Create New Micro Projects Account")
                     {
-                         AddNewAccount = CreateTreeViewItem("Create New Micro Projects Account", "pack://application:,,,/Images/Icons/micro_projects.png");
-                                             
+                        AddNewAccount = CreateTreeViewItem("Create New Micro Projects Account", "pack://application:,,,/Images/Icons/micro_projects.png");
+
                     }
                     else
                     {
-                         AddNewAccount = CreateTreeViewItem("Create New Budget Account", "pack://application:,,,/Images/Icons/budget_account.png");
-                                            
+                        AddNewAccount = CreateTreeViewItem("Create New Budget Account", "pack://application:,,,/Images/Icons/budget_account.png");
+
                     }
                     AddNewAccount.Tag = -1;
                     AddNewAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
@@ -544,7 +565,7 @@ namespace Financial_WPF_App
             foreach (var city in Projects_cityGroups)
             {
                 // Create a treeview item for the city
-                var city_Item =  CreateTreeViewItem(city.Key);
+                var city_Item = CreateTreeViewItem(city.Key);
                 city_Item.Tag = city.First().Field<int>("CityID");
 
                 // Group projects by project_ID
@@ -767,7 +788,7 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewPersonalAccount = CreateTreeViewItem("Create New Personal Account" , "pack://application:,,,/Images/Icons/personal_account.png");
+                var AddNewPersonalAccount = CreateTreeViewItem("Create New Personal Account", "pack://application:,,,/Images/Icons/personal_account.png");
                 AddNewPersonalAccount.Tag = -1;
                 AddNewPersonalAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
@@ -861,7 +882,7 @@ namespace Financial_WPF_App
                         // Add accounts as child items
                         foreach (var FiscalbondRow in subprojectGroup)
                         {
-                            
+
                             string FiscalbondName = FiscalbondRow.Field<string>("FiscalbondName");
                             var FiscalbondItem = CreateTreeViewItem(FiscalbondName);
                             FiscalbondItem.Tag = FiscalbondRow.Field<int?>("FiscalbondID");
@@ -961,8 +982,8 @@ namespace Financial_WPF_App
                 Margin = new Thickness(20, 0, 5, 0)
             };
         }
-        
-        
+
+
         private void Options_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             try
@@ -980,91 +1001,91 @@ namespace Financial_WPF_App
                         // Extract text from the TextBlock inside the DockPanel
                         Sub_Name = panel1.Children.OfType<TextBlock>().FirstOrDefault()?.Text ?? string.Empty;
                         foreach (var child in panel.Children)
+                        {
+                            if (child is TextBlock textBlock)
                             {
-                                if (child is TextBlock textBlock)
+                                switch (textBlock.Text)
                                 {
-                                    switch (textBlock.Text)
-                                    {
-                                        case "All Accounts":
-                                            All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
-                                            Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                                            break;
-                                        case "Payments Account":
-                                            Window Payments = new Payments_Window(this, Sub_ID);
-                                            Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                                            break;
-                                        case "Beneficiaries Accounts":
-                                            Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
-                                            Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
-                                            break;
-                                        case "All Personal Accounts":
-                                            All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
-                                            Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
-                                            break;
-                                    }
+                                    case "All Accounts":
+                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                        Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        break;
+                                    case "Payments Account":
+                                        Window Payments = new Payments_Window(this, Sub_ID);
+                                        Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        break;
+                                    case "Beneficiaries Accounts":
+                                        Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
+                                        Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        break;
+                                    case "All Personal Accounts":
+                                        All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
+                                        Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                                        break;
                                 }
                             }
+                        }
                     }
                     else if (Sub_Name.Contains("Micro"))
                     {
                         foreach (var child in panel.Children)
+                        {
+                            if (child is TextBlock textBlock)
                             {
-                                if (child is TextBlock textBlock)
-                                {
-                                    if (Sub_Name.Contains("Micro"))
-                                    {
-                                        switch (textBlock.Text)
-                                        {
-                                            case "All Accounts":
-                                                All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
-                                                Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
-                                                break;
-                                            case "Payments Account":
-                                                Window Payments = new Payments_Window(this, Sub_ID);
-                                                Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
-                                                break;
-                                            case "Beneficiaries Accounts":
-                                                Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
-                                                Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
-                                                break;
-                                            case "All Personal Accounts":
-                                                All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
-                                                Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + clickedItem.Header, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
-                                                break;
-                                        }
-                                    }
-                                }
-                            }
-                    }
-                    else
-                    {
-                        foreach (var child in panel.Children)
-                            {
-                                if (child is TextBlock textBlock)
+                                if (Sub_Name.Contains("Micro"))
                                 {
                                     switch (textBlock.Text)
                                     {
                                         case "All Accounts":
                                             All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
-                                            Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                             break;
                                         case "Payments Account":
                                             Window Payments = new Payments_Window(this, Sub_ID);
-                                            Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                             break;
                                         case "Beneficiaries Accounts":
                                             Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
-                                            Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                             break;
                                         case "All Personal Accounts":
                                             All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
-                                            Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + clickedItem.Header, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                                            Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + clickedItem.Header, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                             break;
                                     }
                                 }
                             }
+                        }
                     }
-                    
+                    else
+                    {
+                        foreach (var child in panel.Children)
+                        {
+                            if (child is TextBlock textBlock)
+                            {
+                                switch (textBlock.Text)
+                                {
+                                    case "All Accounts":
+                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                        Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        break;
+                                    case "Payments Account":
+                                        Window Payments = new Payments_Window(this, Sub_ID);
+                                        Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        break;
+                                    case "Beneficiaries Accounts":
+                                        Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
+                                        Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        break;
+                                    case "All Personal Accounts":
+                                        All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
+                                        Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + clickedItem.Header, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -1094,7 +1115,7 @@ namespace Financial_WPF_App
         private void AccountItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             try
-            {   
+            {
                 var source = e.OriginalSource as DependencyObject;
                 while (source != null && !(source is ToggleButton))
                 {
@@ -1107,9 +1128,9 @@ namespace Financial_WPF_App
                     // Ignore the event if the source is a ToggleButton (expander arrow)
                     return;
                 }
-                
-                
-                    var treeViewItem = sender as System.Windows.Controls.TreeViewItem;
+
+
+                var treeViewItem = sender as System.Windows.Controls.TreeViewItem;
                 if (treeViewItem.Items.OfType<System.Windows.Controls.TreeViewItem>().All(item => !item.IsMouseOver))
                 {
                     System.Windows.Controls.TreeViewItem accountItem = sender as System.Windows.Controls.TreeViewItem;
@@ -1130,16 +1151,17 @@ namespace Financial_WPF_App
                         string Sub_ID = treeitem.Tag.ToString();
                         string Sub_Name = treeitem.Header.ToString();
                         Account_Window account_Window = new Account_Window(Acc_ID, this);
-                        if (Sub_Name.Contains("Micro")) { 
+                        if (Sub_Name.Contains("Micro"))
+                        {
                             Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                         }
                         if (Acc_Name.Contains("Exchange"))
                         {
                             Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["Orange"]);
                         }
-                        else if(Acc_Name.Contains("Advance Payments"))
+                        else if (Acc_Name.Contains("Advance Payments"))
                             Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
-                        else if( !Acc_Name.Contains("Exchange") && !Acc_Name.Contains("Advance Payments") && !Sub_Name.Contains("Micro"))
+                        else if (!Acc_Name.Contains("Exchange") && !Acc_Name.Contains("Advance Payments") && !Sub_Name.Contains("Micro"))
                             Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                     }
                 }
