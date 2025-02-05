@@ -1927,7 +1927,7 @@ namespace Financial_WPF_App
             try
             {
                 Revenue_Exchange_Report_Window Revenue_Exchange_Report_Window = new Revenue_Exchange_Report_Window(this);
-                Create_tabItem(Revenue_Exchange_Report_Window, "Revenue/Exchange Report", (SolidColorBrush)Application.Current.Resources["Orange"]);
+                Create_tabItem(Revenue_Exchange_Report_Window, "Revenue/Exchange Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
