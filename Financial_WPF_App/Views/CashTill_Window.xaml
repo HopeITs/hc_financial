@@ -20,40 +20,49 @@
                 </ContextMenu>
             </Grid.ContextMenu>
             <Grid.RowDefinitions>
-                <RowDefinition Height="45"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1"/>
                 <RowDefinition Height="1"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
                 <WrapPanel Orientation="Horizontal">
-                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="63" />
-                    <Border Style="{StaticResource BorderStackPanelStyle}" Margin="0,2,0,1.909" >
-                        <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
-                    </Border>
-                    <Label x:Name="Income_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
-                    <Border Style="{StaticResource BorderStackPanelStyle}" Margin="0,2,0,1.909" >
-                        <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
-                    </Border>
-
-                    <Label x:Name="Exchpand_Label" Content="Outcome:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}" >
-                        <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                    </Border>
-
-                    <Label x:Name="Net_lable" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border x:Name="Net_Border" Style="{StaticResource BorderStackPanelStyle}" >
-                        <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                    </Border>
-
-                    <Label x:Name="CashNet_label" Content="Net accounts:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border Style="{StaticResource BorderStackPanelStyle}" >
-                        <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                    </Border>
-                    <Label x:Name="CashNet_label_Copy" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border Style="{StaticResource BorderStackPanelStyle}" Height="30" >
-                        <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                    </Border>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="63" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}" Margin="0,2,0,1.909" >
+                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Income_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                        <Border Style="{StaticResource BorderStackPanelStyle}" Margin="0,2,0,1.909" >
+                            <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Exchpand_Label" Content="Outcome:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                            <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Net_lable" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border x:Name="Net_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                            <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="CashNet_label" Content="Net accounts:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}" >
+                            <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="CashNet_label_Copy" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}" Height="30" >
+                            <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                        </Border>
+                    </StackPanel>
                 </WrapPanel>
             </Border>
             <Grid Grid.Row="3" Margin="2,5,0,0">

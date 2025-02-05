@@ -34,71 +34,94 @@
         </Grid.RowDefinitions>
         <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
             <WrapPanel  Orientation="Horizontal">
-                <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
-                <Border Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-                </Border>
-                <Label x:Name="Income_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
-                <Border Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
-                </Border>
-                <Label x:Name="Outcome_Label" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}" >
-                    <TextBlock x:Name="Outcome_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
-                </Border>
-
-                <Label x:Name="Returned_Label" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Returned_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
-                </Border>
-                <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
-                <Border x:Name="Exchange_Border" Style="{StaticResource BorderStackPanelStyle}" >
-                    <TextBlock x:Name="Exchange_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
-                </Border>
-
-                <Label x:Name="Exchpand_Label" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
-                </Border>
-
-                <Label x:Name="Net_lable" Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Net_Border" Style="{StaticResource BorderStackPanelStyle}" >
-                    <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                </Border>
-                <Label x:Name="CashNet_label" Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="CashNet_Border" Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                </Border>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Income_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Outcome_Label" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Outcome_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Returned_Label" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Returned_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border x:Name="Exchange_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Exchange_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchpand_Label" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Net_lable" Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Net_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="CashNet_label" Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="CashNet_Border" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
             </WrapPanel>
         </Border>
         <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
             <WrapPanel  Orientation="Horizontal">
-                <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
-                <Border Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-                </Border>
-                <Label x:Name="Income_Label1" Content="Income:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Income_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
-                </Border>
-                <Label x:Name="Outcome_Label1" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Outcome_Border2" Style="{StaticResource BorderStackPanelStyle}" >
-                    <TextBlock x:Name="Outcome_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
-                </Border>
-
-                <Label x:Name="Returned_Label1" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Returned_Border1" Style="{StaticResource BorderStackPanelStyle}" >
-                    <TextBlock x:Name="Returned_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
-                </Border>
-                <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
-                <Border x:Name="Exchange_Border1" Style="{StaticResource BorderStackPanelStyle}" >
-                    <TextBlock x:Name="Exchange_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
-                </Border>
-
-                <Label x:Name="Exchpand_Label1" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Exchpand_Border1" Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Exchpand_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
-                </Border>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Income_Label1" Content="Income:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Income_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Outcome_Label1" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Outcome_Border2" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Outcome_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Returned_Label1" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Returned_Border1" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Returned_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border x:Name="Exchange_Border1" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Exchange_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchpand_Label1" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Exchpand_Border1" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Exchpand_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                    </Border>
+                </StackPanel>
             </WrapPanel >
         </Border>
         <Grid Grid.Row="3" Margin="2,5,0,0">

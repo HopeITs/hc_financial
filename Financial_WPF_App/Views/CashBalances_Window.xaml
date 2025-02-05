@@ -23,7 +23,7 @@
 
         <Grid Margin="10,0,10,0" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="95*"/>
                 <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
@@ -47,38 +47,43 @@
             </Grid>
             <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
                 <WrapPanel x:Name="Total_Panel" Orientation="Horizontal">
-                    <Label x:Name="Income_Label" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909"  >
-                        <Label.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform/>
-                                <RotateTransform Angle="0.772"/>
-                                <TranslateTransform/>
-                            </TransformGroup>
-                        </Label.RenderTransform>
-                    </Label>
-                    <Border Style="{StaticResource BorderStackPanelStyle}"
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                        <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
-                    </Border>
-                    <Label x:Name="Outcome_Label" Content="Net Accounts:" Style="{DynamicResource statistic_lableStyle}" RenderTransformOrigin="0.5,0.5" >
-                        <Label.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform/>
-                                <RotateTransform Angle="0.953"/>
-                                <TranslateTransform/>
-                            </TransformGroup>
-                        </Label.RenderTransform>
-
-                    </Label>
-                    <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="AccountsNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
-                    </Border>
-                    <Label x:Name="Returned_Label" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
-                    </Border>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Income_Label" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909"  >
+                            <Label.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="0.772"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Label.RenderTransform>
+                        </Label>
+                        <Border Style="{StaticResource BorderStackPanelStyle}"
+                            VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
+                            <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Outcome_Label" Content="Net Accounts:" Style="{DynamicResource statistic_lableStyle}" RenderTransformOrigin="0.5,0.5" >
+                            <Label.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="0.953"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Label.RenderTransform>
+                        </Label>
+                        <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="AccountsNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Returned_Label" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
+                        </Border>
+                    </StackPanel>
                 </WrapPanel>
             </Border>
             <syncfusion:SfDataGrid x:Name="myDataGrid"
