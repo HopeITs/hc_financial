@@ -241,7 +241,7 @@
     <Compile Include="Helper\ScrollViewerHelper.cs" />
     <Compile Include="Helper\TreeViewExtensions.cs" />
     <Compile Include="Helper\TreeViewItemState.cs" />
-    <Compile Include="MenuIcon.cs" />
+    <Compile Include="Design\MenuIcon.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\Budget_Lines.cs" />
     <Compile Include="Models\Denominations.cs" />
@@ -252,7 +252,7 @@
     <Compile Include="Models\Log.cs" />
     <Compile Include="Helper\TreeViewItemViewModel.cs" />
     <Compile Include="Models\Version.cs" />
-    <Compile Include="TreeViewItemHeaderContainsWordConverter.cs" />
+    <Compile Include="Design\TreeViewItemHeaderContainsWordConverter.cs" />
     <Compile Include="Views\Account_Budget_Lines_Windows.xaml.cs">
       <DependentUpon>Account_Budget_Lines_Windows.xaml</DependentUpon>
     </Compile>
@@ -425,10 +425,10 @@
     <Compile Include="Views\User_Window.xaml.cs">
       <DependentUpon>User_Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowControlBar.xaml.cs">
+    <Compile Include="Design\WindowControlBar.xaml.cs">
       <DependentUpon>WindowControlBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowUtils.cs" />
+    <Compile Include="Design\WindowUtils.cs" />
     <Page Include="Controls\AutoCompleteTextBoxUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -663,7 +663,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WindowControlBar.xaml">
+    <Page Include="Design\WindowControlBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -949,9 +949,6 @@
     <Resource Include="Images\Login\App Logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Asset 58.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Buttons\resize-restore.png" />
     <Resource Include="Images\Buttons\resize-restore1.png" />
   </ItemGroup>
@@ -976,9 +973,6 @@
     <Resource Include="Images\MainForm\create_new.png" />
     <Resource Include="Images\MainForm\log.png" />
     <Resource Include="Images\MainForm\reports.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="navlogo.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\MainForm\navlogo.png" />
@@ -1025,9 +1019,6 @@
   <ItemGroup>
     <Resource Include="Images\Buttons\log.png" />
     <Resource Include="Images\Buttons\log_hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Home_Background2_new.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Icons\arrow_collapsed.png" />
