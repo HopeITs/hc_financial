@@ -338,7 +338,7 @@ namespace Financial_WPF_App.Views
                 int Action_ID = Convert.ToInt32(dataRow["id"].ToString());
 
                 CashAction_Window _Window = new CashAction_Window(Account_ID, Account_Name, Action_ID, main_Window, this);
-                _Window.Show();
+                _Window.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -543,7 +543,7 @@ namespace Financial_WPF_App.Views
                                 int Action_ID = Convert.ToInt32(dataRow["id"].ToString());
 
                                 CashAction_Window _Window = new CashAction_Window(Account_ID, Account_Name, Action_ID, main_Window, this);
-                                _Window.Show();
+                                _Window.ShowDialog();
 
 
                             }

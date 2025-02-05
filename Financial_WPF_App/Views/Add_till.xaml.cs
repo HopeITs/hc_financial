@@ -91,7 +91,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 Window _Window = new AddTillType(this, main_Window);
-                _Window.Show();
+                _Window.ShowDialog();
             }
             catch (Exception ex)
             {

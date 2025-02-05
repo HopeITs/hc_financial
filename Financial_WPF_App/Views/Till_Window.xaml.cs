@@ -761,7 +761,7 @@ namespace Financial_WPF_App.Views
 
 
                     Window _Window = new Attachments(Action_ID, -1, Approved_Action, this, null, null);
-                    _Window.Show();
+                    _Window.ShowDialog();
                 }
             }
             catch (Exception ex)
@@ -803,7 +803,7 @@ namespace Financial_WPF_App.Views
                     }
                     AddAction_Window _Window = new AddAction_Window(Account_ID, IsAdminAccount, Account_Name, Account_Type, Category, Till_ID, TillType_Name, Action_ID, SubProject_ID, true, Approved_Action, main_Window, this);
 
-                    _Window.Show();
+                    _Window.ShowDialog();
                 }
             }
             catch (Exception ex)
@@ -1088,7 +1088,7 @@ namespace Financial_WPF_App.Views
                                     }
 
                                     AddAction_Window _Window = new AddAction_Window(Account_ID, IsAdminAccount, Account_Name, Account_Type, Category, Till_ID, TillType_Name, Action_ID, SubProject_ID, true, Approved_Action, main_Window, this);
-                                    _Window.Show();
+                                    _Window.ShowDialog();
                                 }
                             }
                         }

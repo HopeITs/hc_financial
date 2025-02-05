@@ -109,7 +109,7 @@ namespace Financial_WPF_App
                         if(main_Window.Check_App_Version())
                         {
                             u = new Users();
-                            user_dt = u.Get_User(username_txt.Text.ToLower(), password_txt1.Password.ToLower());
+                            user_dt = u.Get_User(username_txt.Text, password_txt1.Password);
                             if (user_dt.Rows.Count == 1) // user exsist
                             {
                                 var User_ID = user_dt.Rows[0].Field<int>(0);
@@ -153,6 +153,11 @@ namespace Financial_WPF_App
                                 Login.Execute_Query(Query);
                                 Sb1Completed = true;
                                 this.DialogResult = true;
+                            }
+                            else
+                            {
+                                Storyboard sb = this.FindResource("Login_False") as Storyboard;
+                                sb.Begin();
                             }
                         }
                            
