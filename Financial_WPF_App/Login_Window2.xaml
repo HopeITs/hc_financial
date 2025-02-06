@@ -609,7 +609,7 @@
                     <ImageBrush ImageSource="/Images/Login/power.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Online_Butten_Copy" Content="Button" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" ToolTip="Online Database" Cursor="Hand" Width="25">
+            <Button x:Name="Online_Butten_Copy" Content="Button" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click" ToolTip="Online Database" Cursor="Hand" Width="25">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Online.png"/>
                 </Button.Background>
