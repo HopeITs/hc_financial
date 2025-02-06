@@ -1,16 +1,13 @@
-using ControlzEx.Standard;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.Data.Extensions;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -182,7 +179,7 @@ namespace Financial_WPF_App.Views
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                 int Beneficiary_ID = Convert.ToInt32(dataRow["beneficiary_ID"].ToString());
                 Window _Window = new Attachments(-1, Beneficiary_ID, false, null, this, null);
-                _Window.Show();
+                _Window.ShowDialog();
             }
             catch (Exception ex)
             {

@@ -1,5 +1,4 @@
 ﻿using Financial_WPF_App.Models;
-using MySqlX.XDevAPI.Relational;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
@@ -196,12 +195,12 @@ namespace Financial_WPF_App.Views
                             int Sub_ID = Convert.ToInt32(Selected_DataRow["Subproject_ID"].ToString());
                             string Sub_Name = Selected_DataRow["Center"].ToString();
                             Window Payments = new Payments_Window(main_Window, Sub_ID.ToString());
-                            main_Window.Create_dragablz_tabItem(Payments, "Payments Account - " + Sub_Name);
+                            main_Window.Create_tabItem(Payments, "Payments Account - " + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                         }
                         else
                         {
                             Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
-                            main_Window.Create_dragablz_tabItem(account_Window, AccName);
+                            main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                         }
 
                     }

@@ -6,7 +6,6 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:Controls="clr-namespace:Financial_WPF_App.Controls" 
-        xmlns:fluent="urn:fluent-ribbon" 
         x:Class="Financial_WPF_App.Views.ExpensesReport_Window"
         mc:Ignorable="d"
         Title="ExpensesReport_Window" Width="1280" Height="720" WindowStartupLocation="CenterScreen">

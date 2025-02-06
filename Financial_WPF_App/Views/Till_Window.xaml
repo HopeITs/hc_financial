@@ -7,11 +7,11 @@
     xmlns:local="clr-namespace:Financial_WPF_App.Helper"
     x:Class="Financial_WPF_App.Views.Till_Window"
         mc:Ignorable="d"
-        Title="Till_Window" Width="1280" Height="620" FontFamily="Myriad Arabic" FontSize="18" WindowStartupLocation="CenterScreen">
+        Title="Till_Window" Width="1280" Height="620" FontSize="18" WindowStartupLocation="CenterScreen">
 
 
 
-    <Grid>
+    <Grid >
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
                 <MenuItem Header="Refresh Till" Click = "Refresh_Click" >
@@ -27,182 +27,103 @@
             </ContextMenu>
         </Grid.ContextMenu>
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="5"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft">
-            <StackPanel.Background>
-                <ImageBrush ImageSource="/Images/MainForm/MainForm Tab Header.png"/>
-            </StackPanel.Background>
-            <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
-            <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-            </Border>
-            <Label x:Name="Income_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909" />
-            <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
-            </Border>
-            <Label x:Name="Outcome_Label" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
-            <Border x:Name="Outcome_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Outcome_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
-            </Border>
-
-            <Label x:Name="Returned_Label" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
-            <Border x:Name="Returned_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Returned_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
-            </Border>
-            <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909" />
-            <Border x:Name="Exchange_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
-            	VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Exchange_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
-            </Border>
-
-            <Label x:Name="Exchpand_Label" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
-            <Border x:Name="Exchpand_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
-            </Border>
-
-            <Label x:Name="Net_lable" Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}" />
-            <Border x:Name="Net_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-            </Border>
-
-            <Label x:Name="CashNet_label" Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}" />
-            <Border x:Name="CashNet_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-            </Border>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,1">
-            <StackPanel.Background>
-                <ImageBrush ImageSource="/Images/MainForm/MainForm Tab Header.png"/>
-            </StackPanel.Background>
-            <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
-            <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-            </Border>
-            <Label x:Name="Income_Label1" Content="Income:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909" />
-            <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Income_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
-            </Border>
-            <Label x:Name="Outcome_Label1" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
-            <Border x:Name="Outcome_Border2" BorderThickness="1" CornerRadius="7" Padding="0" 
-                VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Outcome_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
-            </Border>
-
-            <Label x:Name="Returned_Label1" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
-            <Border x:Name="Returned_Border1" BorderThickness="1" CornerRadius="7" Padding="0" 
-                VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Returned_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
-            </Border>
-            <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909" />
-            <Border x:Name="Exchange_Border1" BorderThickness="1" CornerRadius="7" Padding="0" 
-                VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Exchange_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
-            </Border>
-
-            <Label x:Name="Exchpand_Label1" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
-            <Border x:Name="Exchpand_Border1" BorderThickness="1" CornerRadius="7" Padding="0" 
-                VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Border.Background>
-                <TextBlock x:Name="Exchpand_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
-            </Border>
-        </StackPanel>
+        <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+            <WrapPanel  Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Income_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Outcome_Label" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Outcome_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Returned_Label" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Returned_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border x:Name="Exchange_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Exchange_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchpand_Label" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Net_lable" Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Net_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="CashNet_label" Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="CashNet_Border" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+            </WrapPanel>
+        </Border>
+        <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+            <WrapPanel  Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Income_Label1" Content="Income:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Income_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Outcome_Label1" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Outcome_Border2" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Outcome_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Returned_Label1" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Returned_Border1" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Returned_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border x:Name="Exchange_Border1" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Exchange_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchpand_Label1" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Exchpand_Border1" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Exchpand_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                    </Border>
+                </StackPanel>
+            </WrapPanel >
+        </Border>
         <Grid Grid.Row="3" Margin="2,5,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="45"/>

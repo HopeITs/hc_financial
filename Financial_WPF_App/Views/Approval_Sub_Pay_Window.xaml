@@ -31,14 +31,7 @@
                     x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" Height="NaN" Width="NaN" HorizontalAlignment="Stretch" Grid.Column="3" VerticalAlignment="Stretch" Margin="28,3,27,3" />
                 <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="7,10,4,7" Grid.Column="4" >
                     <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                        </Border.Background>
+                    <Border Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                     </Border>
                 </StackPanel>

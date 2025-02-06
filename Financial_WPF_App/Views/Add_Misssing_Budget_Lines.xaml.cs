@@ -7,8 +7,6 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Xml.Linq;
 
 namespace Financial_WPF_App.Views
 {

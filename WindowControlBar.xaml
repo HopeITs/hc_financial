@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="YourNamespace.WindowControlBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             d:DesignHeight="30" d:DesignWidth="200">
+    <DockPanel Background="Gray" LastChildFill="False">
+        <!-- Minimize Button -->
+        <Button DockPanel.Dock="Right" Width="30" Content="_" 
+                Click="Minimize_Click" ToolTip="Minimize"/>
+
+        <!-- Resize Button -->
+        <Button DockPanel.Dock="Right" Width="30" Content="[]" 
+                Click="Resize_Click" ToolTip="Resize"/>
+
+        <!-- Close Button -->
+        <Button DockPanel.Dock="Right" Width="30" Content="X" 
+                Click="Close_Click" ToolTip="Close"/>
+    </DockPanel>
+</UserControl>

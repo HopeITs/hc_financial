@@ -1,10 +1,6 @@
-﻿using ControlzEx.Standard;
-using Financial_WPF_App.Models;
-using Syncfusion.UI.Xaml.Grid;
-using Syncfusion.Windows.Shared;
+﻿using Syncfusion.UI.Xaml.Grid;
 using System;
 using System.Data;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 

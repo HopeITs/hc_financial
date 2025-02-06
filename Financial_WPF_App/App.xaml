@@ -3,16 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"  
              xmlns:converters="clr-namespace:Financial_WPF_App.Views"
-             xmlns:syncfusion="clr-namespace:Syncfusion.UI.Xaml.Grid;assembly=Syncfusion.SfGrid.WPF"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              StartupUri="Main_Window2.xaml">
+    
     <Application.Resources>
 
         <ResourceDictionary>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />-->
 
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <!--
@@ -29,45 +31,264 @@
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Indigo.xaml" />
                     </ResourceDictionary.MergedDictionaries>
-                    <!--  include three hues from the primary palette (and the associated forecolours).    
-                            Do not rename, keep in sequence; light to dark.  s -->
-                    <!--<SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary100}"/>
-                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary100Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary500}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary500Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary700}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary700Foreground}"/>-->
-
-                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF84ABCD"/>
-                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FF1C3144"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#FF84ABCD"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FF00416A"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FFFF3333"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFF3333"/>
                 </ResourceDictionary>
-
                 <!-- secondary colour -->
                 <ResourceDictionary>
                     <!-- include your secondary pallette -->
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Yellow.xaml" />
                     </ResourceDictionary.MergedDictionaries>
-
-                    <!-- include a single secondary accent color (and the associated forecolour) -->
-                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource Accent200}"/>
-                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Accent200Foreground}"/>
                 </ResourceDictionary>
 
                 <!-- Include the Dragablz Material Design style -->
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
-
-
+              
+                <!--<ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/MahApps.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>-->
                 <!-- Include the Fluent Library for RIBBON -->
-                <ResourceDictionary Source="/Fluent;component/Themes/Generic.xaml" />
-                <!--<ResourceDictionary Source="/Fluent;component/Themes/Office2010/Silver.xaml" />-->
 
-
+                
             </ResourceDictionary.MergedDictionaries>
+
+
+            <!--New Style-->
+           
+            <!-- Global font for TextBlock -->
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+
+             <!--Global font for TextBox--> 
+            <Style TargetType="TextBox">
+                <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+
+             <!--Global font for PasswordBox--> 
+            <Style TargetType="PasswordBox">
+                <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+
+
+             <!--Global font for Label--> 
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+
+            <SolidColorBrush x:Key="White" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="HopeRed" Color="#BE1F24"/>
+            <SolidColorBrush x:Key="Orange" Color="#F7981D"/>
+            <SolidColorBrush x:Key="PastelGreen" Color="#7d9885"/>
+            <SolidColorBrush x:Key="PastelDarkBlue" Color="#074063"/>
+            <SolidColorBrush x:Key="GreenBlue" Color="#17778D"/>
+            <SolidColorBrush x:Key="DarkGray" Color="#6E6F72"/>
+            <SolidColorBrush x:Key="MidGray" Color="#939598"/>
+            <SolidColorBrush x:Key="LightGray1" Color="#DCDDDE"/>
+            <SolidColorBrush x:Key="LightGray2" Color="#F1F2F2"/>
+
+            <Color x:Key="Color_HopeRed" >#BE1F24</Color>
+            <Color x:Key="Color_Orange" >#F7981D</Color>
+            <Color x:Key="Color_PastelGreen" >#7d9885</Color>
+            <Color x:Key="Color_PastelDarkBlue" >#074063</Color>
+            <Color x:Key="Color_GreenBlue" >#17778D</Color>
+            <Color x:Key="Color_DarkGray" >#6E6F72</Color>
+            <Color x:Key="Color_MidGray" >#939598</Color>
+            <Color x:Key="Color_LightGray1" >#DCDDDE</Color>
+            <Color x:Key="Color_LightGray2" >#F1F2F2</Color>
+
+            <CornerRadius x:Key="CornerRadius">5</CornerRadius>
+
+            <DropShadowEffect x:Key="ShadowEffect" BlurRadius="6" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_MidGray}" />
+
+            <Style x:Key="BorderStyle" TargetType="Border">
+                <Setter Property="CornerRadius" Value="{StaticResource CornerRadius}"/>
+                <Setter Property="Background" Value="{StaticResource White}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource DarkGray}"/>
+                <Setter Property="BorderThickness" Value="0.5"/>
+            </Style>
+            <Style x:Key="PlaceholderTextStyle" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="Opacity" Value="0.6"/>
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <!-- Show placeholder when the TextBox is empty -->
+                    <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <!-- Show placeholder when the TextBox has a null value -->
+                    <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="PlaceholderPasswordStyle" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="Opacity" Value="0.6"/>
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <!-- Show placeholder for PasswordBox when empty -->
+                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <!-- Show placeholder for PasswordBox when null -->
+                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="TextBoxStyle" TargetType="TextBox">
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="SelectionBrush" Value="{StaticResource GreenBlue}"/>
+                <Setter Property="SelectionTextBrush" Value="{StaticResource White}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
+                                <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- PasswordBox Style -->
+            <Style x:Key="PasswordBoxStyle" TargetType="PasswordBox">
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="SelectionBrush" Value="{StaticResource GreenBlue}"/>
+                <Setter Property="SelectionTextBrush" Value="{StaticResource White}"/>
+                <Setter Property="PasswordChar" Value="*" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="PasswordBox">
+                            <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
+                                <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- Global Button Style -->
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="BorderBrush" Value="{x:Null}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Foreground" Value="{StaticResource LightGray2}" />
+                <Setter Property="Background" Value="{StaticResource GreenBlue}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Border" 
+                            CornerRadius="{StaticResource CornerRadius}" 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="#FF1A8BA1" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="#FF14576B" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <ImageBrush x:Key="ButtonImageClose"  ImageSource="/Images/Buttons/close.png" Stretch="Uniform"></ImageBrush>
+            <ImageBrush x:Key="ButtonImageMaximize"  ImageSource="/Images/Buttons/resize-restore.png" Stretch="Uniform"></ImageBrush>
+            <ImageBrush x:Key="ButtonImageRestore"  ImageSource="/Images/Buttons/resize-restore1.png" Stretch="Uniform"></ImageBrush>
+            <ImageBrush x:Key="ButtonImageMinimize"  ImageSource="/Images/Buttons/minimize.png" Stretch="Uniform"></ImageBrush>
+
+            <!--Window Style-->
+            <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
+                <Setter Property="Foreground" Value="{x:Null}"/>
+                <Setter Property="WindowStyle" Value="None"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Style.Triggers>
+                    <Trigger Property="ResizeMode" Value="NoResize"></Trigger>
+                </Style.Triggers>
+            </Style>
+
+
+            <!-- tell Dragablz tab control to use the Material Design theme -->
+            <Style TargetType="{x:Type dragablz:TabablzControl}" 
+                   BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" >
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"></Setter>
+            </Style>
+
+            <!--Global Style for StackPanel in Accounts-->
+            <Style x:Key="SolidStackPanelStyle" TargetType="StackPanel">
+                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+            </Style>
+            <Style x:Key="MainBorderWrapPanelStyle" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                <Setter Property="Padding" Value="0,5,0,5"></Setter>
+                <Setter Property="BorderBrush" Value="{StaticResource MidGray}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+            </Style>
+            <Style x:Key="statistic_textBlockStyle" TargetType="{x:Type TextBlock}" >
+                <Setter Property="Label.FontSize" Value="14" />
+                <Setter Property="Label.FontFamily" Value="RubiK" />
+                <Setter Property="Label.FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeRed}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Left" />
+                <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
+                <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                <Setter Property="TextBlock.Margin" Value="3,3,3,3" />
+                <Setter Property="TextBlock.Padding" Value="5,0,5,0" />
+                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+            </Style>
+
+            <Style x:Key="BorderStackPanelStyle" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource White}"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                <Setter Property="Width" Value="Auto"></Setter>
+                <Setter Property="Margin" Value="0,2,0,1.909"></Setter>
+            </Style>
+
+            <Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
+                <Setter Property="Label.FontSize" Value="14" />
+                <Setter Property="Label.FontWeight" Value="Medium" />
+                <Setter Property="Label.FontFamily" Value="Rubik" />
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                <Setter Property="Label.FlowDirection" Value="LeftToRight" />
+                <Setter Property="Label.HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Label.VerticalAlignment" Value="Center" />
+                <Setter Property="Label.VerticalContentAlignment" Value="Center" />
+                <Setter Property="Label.Margin" Value="10,0,1,0" />
+            </Style>
+            
+            <!--End New Style-->
 
             <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>
             <SolidColorBrush x:Key="HopeBlue2" Color="#FF4474A2"/>
@@ -93,12 +314,7 @@
             <Color x:Key="Color_HopeRed1">#FFFF3333</Color>
             <Color x:Key="Color_HopeRed2">#FFCC0000</Color>
 
-            <!-- tell Dragablz tab control to use the Material Design theme -->
-            <Style TargetType="{x:Type dragablz:TabablzControl}" 
-                   BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" >
-                <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
-                <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"></Setter>
-            </Style>
+            
 
             <ImageBrush x:Key="ButtonImage" 
                     ImageSource="/Images/Buttons/save_btn.png" 
@@ -110,8 +326,9 @@
             <ImageBrush x:Key="ButtonImage_Restore" 
                     ImageSource="/Images/Buttons/Restore.png" 
                     Stretch="Uniform"></ImageBrush>
-            
+
             <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="Rubik" />
                 <Setter Property="Background" Value="{StaticResource ButtonImage}"></Setter>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -127,9 +344,9 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="Blue" />
+                                    <!--<Setter Property="Foreground" Value="Blue" />-->
                                     <Setter Property="Cursor" Value="Hand" />
-                                    <!-- If we don't tell the background to change on hover, it will remain the same -->
+                                     <!--If we don't tell the background to change on hover, it will remain the same--> 
                                     <Setter Property="Background" Value="{StaticResource ButtonImage_H}"></Setter>
                                 </Trigger>
                             </ControlTemplate.Triggers>
@@ -151,7 +368,8 @@
                 <Setter Property="FontSize" Value="19" />
                 <Setter Property="FontFamily" Value="Myriad Arabic Bold" />
             </Style>
-
+            
+            
 
             <!--MY STYLES -->
             <Style x:Key="SaveButton_Style" TargetType="{x:Type Button}">
@@ -228,7 +446,7 @@
             </Style>
 
 
-            <Style x:Key="lableStyle" TargetType="{x:Type Label}"  >
+            <!--<Style x:Key="lableStyle" TargetType="{x:Type Label}"  >
                 <Setter Property="Label.FontSize" Value="20" />
                 <Setter Property="Label.FontFamily" Value="Myriad Arabic" />
                 <Setter Property="Foreground" >
@@ -240,7 +458,19 @@
                 <Setter Property="Label.HorizontalAlignment" Value="Left" />
                 <Setter Property="Label.VerticalAlignment" Value="Center" />
                 <Setter Property="Label.VerticalContentAlignment" Value="Center" />
-            </Style>
+            </Style>--><!--<Style x:Key="lableStyle" TargetType="{x:Type Label}"  >
+                <Setter Property="Label.FontSize" Value="20" />
+                <Setter Property="Label.FontFamily" Value="Myriad Arabic" />
+                <Setter Property="Foreground" >
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Label.FlowDirection" Value="RightToLeft" />
+                <Setter Property="Label.HorizontalAlignment" Value="Left" />
+                <Setter Property="Label.VerticalAlignment" Value="Center" />
+                <Setter Property="Label.VerticalContentAlignment" Value="Center" />
+            </Style>-->
             <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="FontFamily" Value="Myriad Arabic" />
@@ -269,7 +499,7 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
+            <!--<Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
                 <Setter Property="Label.FontSize" Value="15" />
                 <Setter Property="Label.FontFamily" Value="Arial" />
                 <Setter Property="Foreground" >
@@ -338,8 +568,9 @@
                 <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
                 <Setter Property="TextBlock.TextAlignment" Value="Left" />
                 <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
-            </Style>
-            <Style TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MaterialDesignDatePicker}"  >
+            </Style>-->
+            <!--<Style TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MaterialDesignDatePicker}"  >-->
+            <Style TargetType="{x:Type DatePicker}"  >
                 <Setter Property="DatePicker.FontSize" Value="22" />
                 <Setter Property="DatePicker.FontFamily" Value="Myriad Arabic" />
                 <Setter Property="Foreground" >
@@ -482,7 +713,7 @@
             <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_alternatingRowStyle">
                 <Setter Property="Background" Value="{DynamicResource HopeBlue1}"/>
             </Style>
-            
+
             <Style x:Key="SfDataGrid_header"
                     BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}"
                     TargetType="{x:Type syncfusion:GridHeaderCellControl}">
@@ -523,7 +754,7 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
 
             </Style>
-          
+
             <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_RowStyle">
                 <Setter Property="Background" Value="{DynamicResource HopeGrey}"/>
             </Style>
@@ -753,8 +984,8 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
-            
+
+
             <Style x:Key="View_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="25" />
                 <Setter Property="Button.Height" Value="25" />
@@ -900,7 +1131,7 @@
             </Style>
 
 
-           
+
 
 
         </ResourceDictionary>

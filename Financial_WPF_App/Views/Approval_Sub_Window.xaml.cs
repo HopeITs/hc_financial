@@ -3,7 +3,6 @@ using Financial_WPF_App.Properties;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -733,7 +732,7 @@ namespace Financial_WPF_App.Views
                 else
                 {
                     Window _Window = new Attachments(Action_ID, -1, false, null, null, this);
-                    _Window.Show();
+                    _Window.ShowDialog();
                 }
             }
             catch (Exception ex)

@@ -1,23 +1,12 @@
-﻿using ControlzEx.Standard;
-using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.UI.Xaml.Grid.Helpers;
-using Syncfusion.UI.Xaml.TreeGrid;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Financial_WPF_App.Views
 {

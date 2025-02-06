@@ -1,16 +1,8 @@
-﻿
-using ControlzEx.Standard;
-using Financial_WPF_App.Properties;
-using MahApps.Metro.Controls;
+﻿using Financial_WPF_App.Properties;
 using MySql.Data.MySqlClient;
-using Syncfusion.Windows.Shared.Resources;
 using System;
 using System.Data;
 using System.Text.RegularExpressions;
-using System.Web.UI.WebControls;
-using static Financial_WPF_App.Helper.TreeViewItemViewModel;
-using System.Windows.Forms;
-using System.Windows.Shapes;
 
 
 namespace Financial_WPF_App.Models

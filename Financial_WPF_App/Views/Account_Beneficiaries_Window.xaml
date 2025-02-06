@@ -110,28 +110,14 @@
             </syncfusion:SfDataGrid>
 
 
-            <StackPanel Orientation="Horizontal" Grid.Row="3" FlowDirection="RightToLeft" Margin="6,5,2,5" Grid.Column="1" >
+            <StackPanel  Orientation="Horizontal" Grid.Row="3" Style="{StaticResource SolidStackPanelStyle}" Margin="6,5,2,5" Grid.Column="1" >
                 <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
+                <Border Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                 </Border>
 
                 <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
+                <Border Style="{StaticResource BorderStackPanelStyle}" >
                     <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
                 </Border>
             </StackPanel>

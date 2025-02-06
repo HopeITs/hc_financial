@@ -1,5 +1,5 @@
-﻿using Financial_WPF_App.Models;
-using Financial_WPF_App.Helper;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using Syncfusion.Data;
 using Syncfusion.Data.Extensions;
 using Syncfusion.UI.Xaml.Grid;

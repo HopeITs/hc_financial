@@ -1,7 +1,6 @@
-﻿using ControlzEx.Standard;
+﻿
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
-using MySqlX.XDevAPI.Relational;
 using System;
 using System.Data;
 using System.Diagnostics;
@@ -40,8 +39,8 @@ namespace Financial_WPF_App
                     Settings.Default.Save();
                 }
 
-                Settings.Default.Online = false;
-
+                Settings.Default.Online = true;
+                Settings.Default.Save();
                 if (Settings.Default.RememberMe)
                 {
                     Remember_checkBox_Copy.IsChecked = true;
@@ -110,7 +109,7 @@ namespace Financial_WPF_App
                         if(main_Window.Check_App_Version())
                         {
                             u = new Users();
-                            user_dt = u.Get_User(username_txt.Text.ToLower(), password_txt1.Password.ToLower());
+                            user_dt = u.Get_User(username_txt.Text, password_txt1.Password);
                             if (user_dt.Rows.Count == 1) // user exsist
                             {
                                 var User_ID = user_dt.Rows[0].Field<int>(0);
@@ -154,6 +153,11 @@ namespace Financial_WPF_App
                                 Login.Execute_Query(Query);
                                 Sb1Completed = true;
                                 this.DialogResult = true;
+                            }
+                            else
+                            {
+                                Storyboard sb = this.FindResource("Login_False") as Storyboard;
+                                sb.Begin();
                             }
                         }
                            
@@ -206,6 +210,7 @@ namespace Financial_WPF_App
             try
             {
                 Settings.Default.Online = !Settings.Default.Online;
+                Settings.Default.Save();
                 Online_Working_Loop_BeginStoryboard1.Storyboard.RepeatBehavior = RepeatBehavior.Forever;
             }
             catch (Exception ex)
@@ -241,7 +246,7 @@ namespace Financial_WPF_App
                 {
                     Login.Shutdown_Mode = new ShutdownMode();
                     //Shutdown_Pressed_BeginStoryboard.Storyboard.BeginTime = TimeSpan.FromSeconds(2);
-                    Shutdown_Pressed_BeginStoryboard.Storyboard.Begin();
+                    //Shutdown_Pressed_BeginStoryboard.Storyboard.Begin();
                 }
             }
             catch (Exception ex)
@@ -280,6 +285,24 @@ namespace Financial_WPF_App
                 if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL")) { MessageBox.Show("please check your network and try again", "Error"); } else if (ex.Message.Contains("host")) { MessageBox.Show("please check the server or your network connection and try again", "Error"); } else if (ex.Message.Contains("Duplicate entry")) { MessageBox.Show("Error … There are duplicate values.", "Error"); } else { MessageBox.Show(ex.Message, "Error"); }
             }
 
+        }
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
+        }
+
+        private void Resize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.ResizeWindow(this); // Calls the WindowUtils method
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.CloseWindow(this); // Calls the WindowUtils method
+        }
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
         }
 
     }

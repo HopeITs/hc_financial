@@ -1753,8 +1753,8 @@ namespace Financial_WPF_App
 
                             if (dt.Rows[i]["Name"] != DBNull.Value)
                             {
-                                TabItem oTab = main_Window.main_tabControl.Items[main_Window.main_tabControl.SelectedIndex] as TabItem;
-                                oTab.Header = dt.Rows[i].Field<string>("Name"); ;
+                                //TabItem oTab = main_Window.main_tabControl.Items[main_Window.main_tabControl.SelectedIndex] as TabItem;
+                                //oTab.Header = dt.Rows[i].Field<string>("Name");
                             }
                         }
 

@@ -20,86 +20,51 @@
                 </ContextMenu>
             </Grid.ContextMenu>
             <Grid.RowDefinitions>
-                <RowDefinition Height="45"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1"/>
                 <RowDefinition Height="1"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-
-            <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft">
-                <StackPanel.Background>
-                    <ImageBrush ImageSource="/Images/MainForm/MainForm Tab Header.png"/>
-                </StackPanel.Background>
-                <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="63" />
-                <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
-                </Border>
-                <Label x:Name="Income_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909" />
-                <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
-                </Border>
-
-                <Label x:Name="Exchpand_Label" Content="Outcome:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Exchpand_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                </Border>
-
-                <Label x:Name="Net_lable" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border x:Name="Net_Border" BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                </Border>
-
-                <Label x:Name="CashNet_label" Content="Net accounts:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                </Border>
-                <Label x:Name="CashNet_label_Copy" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border BorderThickness="1" CornerRadius="7" Padding="0" 
-                    Width="auto" Height="30" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
-                </Border>
-            </StackPanel>
+            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+                <WrapPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="63" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}" Margin="0,2,0,1.909" >
+                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Income_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                        <Border Style="{StaticResource BorderStackPanelStyle}" Margin="0,2,0,1.909" >
+                            <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Exchpand_Label" Content="Outcome:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                            <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="Net_lable" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border x:Name="Net_Border" Style="{StaticResource BorderStackPanelStyle}" >
+                            <TextBlock x:Name="Net_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="CashNet_label" Content="Net accounts:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}" >
+                            <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label x:Name="CashNet_label_Copy" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}" Height="30" >
+                            <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                        </Border>
+                    </StackPanel>
+                </WrapPanel>
+            </Border>
             <Grid Grid.Row="3" Margin="2,5,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="45"/>

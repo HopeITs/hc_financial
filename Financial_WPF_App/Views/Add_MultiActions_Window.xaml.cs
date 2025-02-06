@@ -1,11 +1,8 @@
 ﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
-using MySqlX.XDevAPI.Relational;
 using Syncfusion.Data.Extensions;
 using Syncfusion.UI.Xaml.Grid;
-using Syncfusion.UI.Xaml.Grid.Helpers;
-using Syncfusion.UI.Xaml.ProgressBar;
 using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
@@ -13,7 +10,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App.Views

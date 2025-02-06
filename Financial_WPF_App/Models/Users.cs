@@ -18,7 +18,7 @@ namespace Financial_WPF_App.Models
                             (SELECT GROUP_CONCAT(cashaccount.ID) FROM cashaccount JOIN user_cashaccounts ON cashaccount.ID = user_cashaccounts.cashaccount_id WHERE user_cashaccounts.user_id = user.ID) AS 'user_cashaccounts',
                             (SELECT GROUP_CONCAT(DISTINCT subproject_id) FROM user_accounts WHERE user_accounts.user_id = user.id) AS 'user_subproject_id'
 
-                            from `user` left join role on user.role = role.id where LOWER(Username) like @username and LOWER(Password) like @password;";
+                            from `user` left join role on user.role = role.id where BINARY Username like @username and Password like @password;";
 
 
             DataTable dt = new DataTable();

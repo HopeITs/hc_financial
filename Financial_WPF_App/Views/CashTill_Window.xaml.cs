@@ -1,12 +1,10 @@
-﻿using ControlzEx.Standard;
-using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.Data;
 using Syncfusion.Data.Extensions;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -340,7 +338,7 @@ namespace Financial_WPF_App.Views
                 int Action_ID = Convert.ToInt32(dataRow["id"].ToString());
 
                 CashAction_Window _Window = new CashAction_Window(Account_ID, Account_Name, Action_ID, main_Window, this);
-                _Window.Show();
+                _Window.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -545,7 +543,7 @@ namespace Financial_WPF_App.Views
                                 int Action_ID = Convert.ToInt32(dataRow["id"].ToString());
 
                                 CashAction_Window _Window = new CashAction_Window(Account_ID, Account_Name, Action_ID, main_Window, this);
-                                _Window.Show();
+                                _Window.ShowDialog();
 
 
                             }
