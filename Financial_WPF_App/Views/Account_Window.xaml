@@ -16,59 +16,6 @@
 
 
     <Window.Resources>
-        <Style x:Key="tabItemStyle" TargetType="{x:Type TabItem}" >
-            <Setter Property="Width" Value="Auto" />
-            <Setter Property="Height" Value="25" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="MinWidth" Value="120" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="BorderBrush" >
-                <Setter.Value>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Foreground" >
-                <Setter.Value>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" >
-                <Setter.Value>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="FontFamily" Value="Arial" />
-            <Setter Property="FontSize" Value="16" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" >
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="Foreground" >
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeYellow2}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="FontFamily" Value="Arial Bold" />
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" >
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeBlue3}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="Foreground" >
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeYellow2}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="FontFamily" Value="Arial Bold" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
     </Window.Resources>
     <Grid >
         <Grid.ContextMenu>
@@ -93,14 +40,7 @@
                   HorizontalContentAlignment="Stretch"  Margin="5,2,2,0" 
                   Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" />
 
-        <TabControl x:Name="tabControl1" Grid.Column="0" Height="auto" Width="auto"
-                    FlowDirection="RightToLeft" TabStripPlacement="Top" 
-                    HorizontalContentAlignment="Stretch"  >
-            <TabControl.Background>
-                <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-            </TabControl.Background>
-
-        </TabControl>
+        <TabControl x:Name="tabControl1" Style="{StaticResource TabControlStyle}" Grid.Column="0"></TabControl>
         <Grid Grid.Column="1" Margin="50,7,10,10" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="197*"/>
