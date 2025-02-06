@@ -88,7 +88,7 @@ namespace Financial_WPF_App.Models
             bool test_online = true;
             bool test_offline = true;
             bool test_Attachments = true;
-            bool PC_Admin = false;
+            bool PC_Admin = true;
 
             string localserver;
 

@@ -156,28 +156,38 @@ namespace Financial_WPF_App
                             }
                             else
                             {
-                                Storyboard sb = this.FindResource("Login_False") as Storyboard;
+                                Storyboard sb = this.FindResource("User_False") as Storyboard;
                                 sb.Begin();
                             }
-                        }
-                           
-                    }
-                    else
-                    {
-                        Storyboard sb = this.FindResource("Login_False") as Storyboard;
-                        sb.Begin();
+                        }         
                     }
                 }
                 else
                 {
-                    Storyboard sb = this.FindResource("No_Network") as Storyboard;
+                    Storyboard sb = this.FindResource("Server_False") as Storyboard;
                     sb.Begin();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Storyboard sb = this.FindResource("No_Network") as Storyboard;
-                sb.Begin();
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                {
+                    Storyboard sb = this.FindResource("Network_False") as Storyboard;
+                    sb.Begin();
+                }
+                else if (ex.Message.Contains("host"))
+                {
+                    Storyboard sb = this.FindResource("Server_False") as Storyboard;
+                    sb.Begin();
+                }
+                else
+                {
+                    Storyboard sb = this.FindResource("Other_False") as Storyboard;
+                    sb.Begin();
+
+                    MessageBox.Show(ex.Message, "Error");
+                }
+   
             }
         }
 
