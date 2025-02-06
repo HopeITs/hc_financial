@@ -276,7 +276,7 @@ namespace Financial_WPF_App
                 if (MessageBox.Show("Are you sure you want to logout?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.Yes)
                 {
 
-                    this.Hide();
+                    Application.Current.MainWindow.Hide();
                     main_tabControl.Items.Clear();
 
                     Login_Window2 loginWindow = new Login_Window2(this);
@@ -284,17 +284,16 @@ namespace Financial_WPF_App
 
                     if (result == true)
                     {
-                        Window window = new Login_Window2(this);
 
                         Username_label.Content = Settings.Default.username;
                         Update_Online_Button();
-                        window.WindowState = WindowState.Maximized;
+                        loginWindow.WindowState = WindowState.Maximized;
                         Login.Shutdown_Mode = ShutdownMode.OnMainWindowClose;
                         Fill_TreeView(false);
 
                         Show_Hide();
 
-                        this.Show();
+                        Application.Current.MainWindow.Show();
                     }       
                 }
                 else
@@ -1949,6 +1948,8 @@ namespace Financial_WPF_App
         private void Fill_Approval_Cities()
         {
             var cityNames = new Dictionary<string, int>(); // Change HashSet to Dictionary
+
+            Approval_MenuItem.Items.Clear();
 
             foreach (DataTable dt in new[] { Projects, ExchangeAccounts, PersonalAccounts })
             {
