@@ -100,7 +100,7 @@
 
             <CornerRadius x:Key="CornerRadius">5</CornerRadius>
 
-            <DropShadowEffect x:Key="ShadowEffect" BlurRadius="6" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_MidGray}" />
+            <DropShadowEffect x:Key="ShadowEffect" BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
 
             <Style x:Key="BorderStyle" TargetType="Border">
                 <Setter Property="CornerRadius" Value="{StaticResource CornerRadius}"/>
@@ -350,6 +350,104 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <PathGeometry x:Key="TreeArrow" Figures="M0,0 L0,6 L6,0 z"/>
+            <Style x:Key="ExpandCollapseToggleStyle" TargetType="{x:Type ToggleButton}">
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Width" Value="18"/>
+                <Setter Property="Height" Value="18"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Background="Transparent" Height="18" Padding="5,5,5,5" Width="18">
+                                <Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}" Fill="{StaticResource DarkGray}" Stroke="{StaticResource DarkGray}">
+                                    <Path.RenderTransform>
+                                        <RotateTransform Angle="-45" CenterX="3" CenterY="3"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <!--<Setter Property="RenderTransform" TargetName="ExpandPath">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="180" CenterX="3" CenterY="3"/>
+                                        </Setter.Value>
+                                    </Setter>-->
+                                    <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                    <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                    <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                        <Condition Property="IsChecked" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                    <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="AccountExpander" TargetType="{x:Type Expander}">
+                <Setter Property="IsExpanded" Value="False"/>
+                <Setter Property="Background" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Expander}">
+                            <Grid>
+                                <!-- Outer border containing header and content -->
+                                <Border x:Name="OuterBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{StaticResource LightGray2}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Effect="{StaticResource ShadowEffect}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <!-- Header row -->
+                                            <RowDefinition Height="Auto" />
+                                            <!-- Content row -->
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <!-- Header Content (if any) -->
+                                        <ContentPresenter x:Name="HeaderContent"
+                                        Grid.Row="0"
+                                        ContentSource="Header"
+                                        Margin="6" />
+                                        <!-- Expander Content -->
+                                        <ContentPresenter x:Name="ExpanderContent"
+                                        Grid.Row="1"
+                                        ContentSource="Content"
+                                        Margin="6" />
+                                    </Grid>
+                                </Border>
+
+                                <!-- Overlay Toggle Button: vertically centered in the entire Expander -->
+                                <ToggleButton x:Name="ExpanderToggleButton"
+                          Width="16"
+                          Height="16"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left"
+                          Margin="6,0,0,0"
+                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                          Style="{StaticResource ExpandCollapseToggleStyle}" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
 
             <!--End New Style-->
 

@@ -2146,7 +2146,11 @@ namespace Financial_WPF_App
             }
             e.Handled = true;
         }
-
+        //private void OnToggleExpanderClick(object sender, RoutedEventArgs e)
+        //{
+        //    // Toggle the visibility of the Popup
+        //    ExpanderPopup.IsOpen = !ExpanderPopup.IsOpen;
+        //}
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
         {
             First_col.Width = new GridLength(70, GridUnitType.Star);
@@ -2155,9 +2159,8 @@ namespace Financial_WPF_App
 
         private void myExpander_Collapsed(object sender, RoutedEventArgs e)
         {
-
             First_col.Width = new GridLength(97, GridUnitType.Star);
-            Second_col.Width = new GridLength(3, GridUnitType.Star);
+            Second_col.Width = new GridLength(2.3, GridUnitType.Star);
         }
 
         private void IsClosed_btn_Click(object sender, RoutedEventArgs e)
