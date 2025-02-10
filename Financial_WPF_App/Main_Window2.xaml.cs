@@ -1003,7 +1003,7 @@ namespace Financial_WPF_App
                                 switch (textBlock.Text)
                                 {
                                     case "All Accounts":
-                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID, "");
                                         Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                         break;
                                     case "Payments Account":
@@ -1033,7 +1033,7 @@ namespace Financial_WPF_App
                                     switch (textBlock.Text)
                                     {
                                         case "All Accounts":
-                                            All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                            All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID, "Micro Projects");
                                             Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                             break;
                                         case "Payments Account":
@@ -1062,7 +1062,7 @@ namespace Financial_WPF_App
                                 switch (textBlock.Text)
                                 {
                                     case "All Accounts":
-                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID, "Budget");
                                         Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                         break;
                                     case "Payments Account":
