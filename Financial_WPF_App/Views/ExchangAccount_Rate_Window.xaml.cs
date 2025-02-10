@@ -43,6 +43,9 @@ namespace Financial_WPF_App.Views
 
         double HOffset = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+
+
         #region privileges
         bool Add_privileges, Delete_privileges;
 
@@ -63,7 +66,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
 
    
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

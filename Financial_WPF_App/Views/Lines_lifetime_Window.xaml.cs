@@ -41,6 +41,9 @@ namespace Financial_WPF_App.Views
 
         double HOffset = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         private void OnLoad()
         {
             UserMode = false;
@@ -58,7 +61,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
  
 

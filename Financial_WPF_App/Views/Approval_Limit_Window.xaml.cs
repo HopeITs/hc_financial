@@ -33,6 +33,9 @@ namespace Financial_WPF_App.Views
         List<int> isDirty_list;
         string Query, Log_Query;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region //IsDirty
         bool Limits_IsDirty = false;
         #endregion
@@ -60,7 +63,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

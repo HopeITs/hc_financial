@@ -33,6 +33,9 @@ namespace Financial_WPF_App
         List<int> isDirty_list;
         List<int> Delete_list;
         string Query, Log_Query;
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
         #region //IsDirty
         bool Donor_IsDirty = false;
         #endregion
@@ -64,7 +67,6 @@ namespace Financial_WPF_App
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

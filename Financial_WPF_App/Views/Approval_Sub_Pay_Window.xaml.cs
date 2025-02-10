@@ -44,6 +44,9 @@ namespace Financial_WPF_App.Views
         double HOffset = 0;
         private DataRowView _lastCurrentItem;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+
+
         private bool Onload()
         {
             try
@@ -76,9 +79,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
-
-
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
                 WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);

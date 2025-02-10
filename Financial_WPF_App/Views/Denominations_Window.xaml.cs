@@ -39,6 +39,9 @@ namespace Financial_WPF_App.Views
 
         bool IsDirty = false;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         private bool OnLoad()
         {
             try
@@ -63,7 +66,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
  
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

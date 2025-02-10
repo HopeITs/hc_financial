@@ -47,6 +47,9 @@ namespace Financial_WPF_App
         #region privileges
         bool Delete_privileges, Administrative_privileges;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #endregion
 
         private bool OnLoad()
@@ -79,7 +82,6 @@ namespace Financial_WPF_App
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
             if (Category == "Micro Projects")
@@ -199,7 +201,7 @@ namespace Financial_WPF_App
                 int Acc_ID = Convert.ToInt32(dataRow[0].ToString());
 
                 Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
-                main_Window.Create_tabItem(account_Window, Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                main_Window.Create_tabItem(account_Window, Name, Theme_Color);
             }
             catch (Exception ex)
             {
@@ -462,7 +464,7 @@ namespace Financial_WPF_App
                             int Acc_ID = Convert.ToInt32(dataRow[0].ToString());
                             string AccName = dataRow["Name"].ToString();
                             Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
-                            main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                            main_Window.Create_tabItem(account_Window, AccName, Theme_Color);
                         }
                     }
                 }

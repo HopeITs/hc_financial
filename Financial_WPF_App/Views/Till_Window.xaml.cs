@@ -78,6 +78,9 @@ namespace Financial_WPF_App.Views
         string FiscalBond_Name;
         bool AsFiscalBond;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
 
@@ -122,7 +125,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
             if (Account_Type == "Project")
             {
@@ -796,7 +798,7 @@ namespace Financial_WPF_App.Views
                         Approved_Action = true;
 
 
-                    Window _Window = new Attachments(Action_ID, -1, Approved_Action, this, null, null);
+                    Window _Window = new Attachments(Action_ID, -1, Approved_Action, Account_Type, Category, this, null, null);
                     _Window.ShowDialog();
                 }
             }

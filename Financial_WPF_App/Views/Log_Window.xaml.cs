@@ -36,6 +36,9 @@ namespace Financial_WPF_App.Views
         List<string> HiddenColumns = new List<string>();
         List<string> Originally_HiddenColumns = new List<string>();
 
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
         private bool OnLoad()
         {
             try
@@ -61,7 +64,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

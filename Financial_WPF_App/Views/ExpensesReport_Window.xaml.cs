@@ -49,6 +49,9 @@ namespace Financial_WPF_App.Views
 
         DataTable Report_dt = new DataTable();
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
 
         private void OnLoad()
         {
@@ -65,7 +68,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

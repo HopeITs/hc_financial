@@ -36,6 +36,7 @@ namespace Financial_WPF_App.Views
         private DataTable dt, Employee_Subprojects_dt;
         Employee Emp;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
@@ -71,7 +72,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

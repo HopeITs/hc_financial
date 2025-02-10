@@ -93,6 +93,7 @@ namespace Financial_WPF_App.Views
 
         string Selected_budgetID;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
         #region privileges
@@ -1455,7 +1456,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
             if (Account_Type == "Project")
             {

@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
 {
@@ -15,7 +16,7 @@ namespace Financial_WPF_App.Views
     /// </summary>
     public partial class Attachments : Window
     {
-        public Attachments(int Action_ID, int Beneficiary_ID, bool Approved_Action, Till_Window TW, Account_Beneficiaries_Window AB, Approval_Sub_Window App)
+        public Attachments(int Action_ID, int Beneficiary_ID, bool Approved_Action, string Account_Type, string Category, Till_Window TW, Account_Beneficiaries_Window AB, Approval_Sub_Window App)
         {
             InitializeComponent();
             this.TW = TW;
@@ -23,6 +24,8 @@ namespace Financial_WPF_App.Views
             this.App = App;
             this.Action_ID = Action_ID;
             this.Beneficiary_ID = Beneficiary_ID;
+            this.Account_Type = Account_Type;
+            this.Category = Category;
             this.Approved_Action = Approved_Action;
             if (OnLoad())
             {
@@ -37,7 +40,7 @@ namespace Financial_WPF_App.Views
         Document d;
         DataTable attachments_dt = new DataTable();
         int Action_ID; int Beneficiary_ID;
-
+        private string Account_Type; private string Category;
         private OpenFileDialog open;
         private string[] FullAttachNames;
         private Thread myTh;
@@ -52,6 +55,9 @@ namespace Financial_WPF_App.Views
         Till_Window TW;
         Account_Beneficiaries_Window AB;
         Approval_Sub_Window App;
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
         private bool OnLoad()
         {
             try
@@ -59,6 +65,7 @@ namespace Financial_WPF_App.Views
                 circularProgressBar.Visibility = Visibility.Collapsed;
                 d = new Document();
                 Load_Data();
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -72,6 +79,40 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+            if (Account_Type == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (Account_Type == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (Account_Type == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (Account_Type == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()

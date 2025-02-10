@@ -51,6 +51,9 @@ namespace Financial_WPF_App.Views
 
         double HOffset = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
         #endregion
@@ -80,7 +83,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

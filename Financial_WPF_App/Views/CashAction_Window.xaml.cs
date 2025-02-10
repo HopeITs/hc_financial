@@ -68,6 +68,9 @@ namespace Financial_WPF_App.Views
 
         int NewAddedRows = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+
+
         private bool OnLoad()
         {
             try
@@ -96,7 +99,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
 
        
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

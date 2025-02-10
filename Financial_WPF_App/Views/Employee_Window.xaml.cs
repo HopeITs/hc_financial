@@ -38,6 +38,9 @@ namespace Financial_WPF_App.Views
         int Employee_ID = -1;
         DataTable All_Employees_dt, Employee_Subproject_Table, Original_Employee_Subproject_Table, Subproject_dt, Lines_dt;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
         #endregion
@@ -69,7 +72,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

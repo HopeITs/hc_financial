@@ -47,6 +47,8 @@ namespace Financial_WPF_App.Views
 
         private DataTable MissingLiens_dt;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+
         private bool OnLoad()
         {
             try
@@ -77,7 +79,6 @@ namespace Financial_WPF_App.Views
         }
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

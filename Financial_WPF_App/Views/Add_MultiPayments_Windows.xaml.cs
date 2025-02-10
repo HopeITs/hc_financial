@@ -37,6 +37,9 @@ namespace Financial_WPF_App.Views
         Beneficiary b; Account Acc; Payment p;
         private DataTable dt, CashAccounts_dt, Beneficiaries_dt, Payments_dt;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+
+
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             if (myDataGrid.View != null)
@@ -75,7 +78,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
 
   
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

@@ -46,6 +46,9 @@ namespace Financial_WPF_App.Views
         StackedHeaderRow StackedHeaderRow1 = new StackedHeaderRow { };
         double HOffset = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
 
@@ -71,7 +74,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
             if (Account_Type == "Project")
             {

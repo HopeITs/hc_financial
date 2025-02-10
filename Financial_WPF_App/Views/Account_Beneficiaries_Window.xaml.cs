@@ -49,6 +49,9 @@ namespace Financial_WPF_App.Views
 
         double HOffset = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
 
@@ -82,7 +85,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
 
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
@@ -189,7 +191,7 @@ namespace Financial_WPF_App.Views
             {
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                 int Beneficiary_ID = Convert.ToInt32(dataRow["beneficiary_ID"].ToString());
-                Window _Window = new Attachments(-1, Beneficiary_ID, false, null, this, null);
+                Window _Window = new Attachments(-1, Beneficiary_ID, false, "Project", "Micro Projects", null, this, null);
                 _Window.ShowDialog();
             }
             catch (Exception ex)

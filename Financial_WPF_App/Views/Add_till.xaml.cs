@@ -30,6 +30,8 @@ namespace Financial_WPF_App.Views
         Account_Window Ac;
         Main_Window_2 main_Window;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
         private void OnLoad()
         {
 
@@ -40,7 +42,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
             if (AccType == "Project")
             {

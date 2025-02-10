@@ -46,6 +46,8 @@ namespace Financial_WPF_App.Views
         double HOffset = 0;
         private DataRowView _lastCurrentItem;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
         private bool Onload()
         {
             try
@@ -78,7 +80,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
             if (Account_Type == "Project")
             {
@@ -767,7 +768,7 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
-                    Window _Window = new Attachments(Action_ID, -1, false, null, null, this);
+                    Window _Window = new Attachments(Action_ID, -1, false, Account_Type, Category, null, null, this);
                     _Window.ShowDialog();
                 }
             }

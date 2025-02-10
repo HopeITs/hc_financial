@@ -126,6 +126,8 @@ namespace Financial_WPF_App
         List<Local_ExchangeAcc> objExchangeAccList;
         List<Local_ExchangeAcc> Original_ExchangeAccList;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
 
         #region privileges
         bool Edit_privileges, Syr_privileges, foreign_privileges, Rates_privileges, Administrative_Account_privileges,
@@ -202,7 +204,6 @@ namespace Financial_WPF_App
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
             if (AccType == "Project")
             {

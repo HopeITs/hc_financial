@@ -64,6 +64,9 @@ namespace Financial_WPF_App
         bool DeleteSchedualedPayments = false;
         Main_Window_2 main_Window;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+
+
         private bool OnLoad()
         {
             try
@@ -94,7 +97,6 @@ namespace Financial_WPF_App
         }
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
 
    
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>

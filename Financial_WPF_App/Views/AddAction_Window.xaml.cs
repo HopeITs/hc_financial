@@ -125,6 +125,9 @@ namespace Financial_WPF_App
 
         bool PassException = false;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region privileges
         bool Income_privileges, Outcome_privileges, Returned_privileges,
             Exchange_privileges, ExchangeToForeign_privileges,
@@ -2146,7 +2149,6 @@ namespace Financial_WPF_App
 
         private void Apply_Color_Theme()
         {
-            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
             if (Account_Type == "Project")
             {
