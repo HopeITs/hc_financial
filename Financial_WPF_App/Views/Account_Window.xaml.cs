@@ -179,8 +179,8 @@ namespace Financial_WPF_App
 
                 Load_Data();
 
-
                 Show_Hide_Component();
+                Apply_Color_Theme();
 
                 return true;
 
@@ -198,6 +198,41 @@ namespace Financial_WPF_App
                 return false;
                 //main_Window.main_tabControl.Items.RemoveAt(main_Window.main_tabControl.SelectedIndex);
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+            if (AccType == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (AccType == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (AccType == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (AccType == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Set_privileges()
@@ -868,7 +903,7 @@ namespace Financial_WPF_App
 
                 if (AddTill_privileges)
                 {
-                    Add_till add_till = new Add_till(Acc_ID, this, main_Window);
+                    Add_till add_till = new Add_till(Acc_ID, AccType, Category, this, main_Window);
                     newTabItem = new TabItem
                     {
                         Header = "+",

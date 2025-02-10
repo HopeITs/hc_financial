@@ -3,6 +3,7 @@ using Financial_WPF_App.Models;
 using System;
 using System.Data;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
 {
@@ -51,6 +52,7 @@ namespace Financial_WPF_App.Views
 
                 Create_Columns();
                 Fill_Datatables();
+                Apply_Color_Theme();
                 this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
 
                 return true;
@@ -67,7 +69,17 @@ namespace Financial_WPF_App.Views
                 return false;
             }
         }
+        private void Apply_Color_Theme()
+        {
+            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
 
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
         private void Create_Columns()
         {
 

@@ -74,7 +74,19 @@ namespace Financial_WPF_App.Views
             }
             Panel1.Visibility = Visibility.Collapsed;
             Load_Data();
+            Apply_Color_Theme();
             UserMode = true;
+        }
+
+        private void Apply_Color_Theme()
+        {
+            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()

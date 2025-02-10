@@ -2,6 +2,7 @@
 using System;
 using System.Data;
 using System.Windows;
+using System.Windows.Media;
 
 
 namespace Financial_WPF_App.Views
@@ -11,16 +12,19 @@ namespace Financial_WPF_App.Views
     /// </summary>
     public partial class Add_till : Window
     {
-        public Add_till(int Account_ID, Account_Window Ac, Main_Window_2 main_Window)
+        public Add_till(int Account_ID, string AccType, string Category, Account_Window Ac, Main_Window_2 main_Window)
         {
             InitializeComponent();
             this.main_Window = main_Window;
             this.Account_ID = Account_ID;
             this.Ac = Ac;
+            this.Category = Category;
+            this.AccType = AccType;
             OnLoad();
         }
 
         int Account_ID;
+        string AccType; string Category;
         DataTable dt;
         private Till t;
         Account_Window Ac;
@@ -31,7 +35,42 @@ namespace Financial_WPF_App.Views
 
             t = new Till();
             Load_Data();
+            Apply_Color_Theme();
+        }
 
+        private void Apply_Color_Theme()
+        {
+            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+            if (AccType == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (AccType == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (AccType == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (AccType == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()
@@ -99,7 +138,7 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("please check your network and try again", "Error"); }
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else 
+                else
                 { MessageBox.Show(ex.Message, "Error"); }
             }
 

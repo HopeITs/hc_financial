@@ -51,6 +51,7 @@ namespace Financial_WPF_App.Views
                 }
 
                 Load_Data();
+                Apply_Color_Theme();
                 return true;
             }
 
@@ -67,6 +68,15 @@ namespace Financial_WPF_App.Views
                 return false;
             }
 
+        }
+        private void Apply_Color_Theme()
+        {
+            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         public void Load_Data()

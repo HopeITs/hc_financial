@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
 {
@@ -77,7 +78,7 @@ namespace Financial_WPF_App.Views
                 d = new Denominations();
                 AccountName_lable.Content = Account_Name;
                 Load_Form();
-
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -91,6 +92,17 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+
+       
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Form()

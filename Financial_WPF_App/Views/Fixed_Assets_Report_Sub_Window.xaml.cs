@@ -1,4 +1,5 @@
-﻿using Syncfusion.Data;
+﻿using Financial_WPF_App.Models;
+using Syncfusion.Data;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
@@ -56,7 +57,19 @@ namespace Financial_WPF_App.Views
                 myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
             }
             Load_Data();
+            Apply_Color_Theme();
             UserMode = true;
+        }
+
+        private void Apply_Color_Theme()
+        {
+            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()

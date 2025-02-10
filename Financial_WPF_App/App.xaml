@@ -259,7 +259,7 @@
                 <Setter Property="Label.FontWeight" Value="SemiBold" />
                 <Setter Property="Foreground">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_HopeRed}"/>
+                        <SolidColorBrush Color="{StaticResource Color_GreenBlue}"/>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="TextBlock.HorizontalAlignment" Value="Left" />

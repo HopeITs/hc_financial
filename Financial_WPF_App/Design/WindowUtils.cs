@@ -106,5 +106,5 @@ namespace Financial_WPF_App
                 }
             }
         }
-        }
+    }
 }

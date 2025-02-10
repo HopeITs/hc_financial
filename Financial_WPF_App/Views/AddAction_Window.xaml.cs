@@ -14,6 +14,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Financial_WPF_App
 {
@@ -93,6 +94,7 @@ namespace Financial_WPF_App
                 throw new ArgumentException("This page will not open due to data fetching error.");
             }
         }
+
 
         int Action_ID, Account_ID, Till_ID, SubProject_ID;
         string Account_Name; bool FromTillForm;
@@ -2125,6 +2127,8 @@ namespace Financial_WPF_App
                     }
                 }
                 //}
+
+                Apply_Color_Theme();
             }
             catch (Exception ex)
             {
@@ -2138,6 +2142,41 @@ namespace Financial_WPF_App
                 if (PassException)
                     throw;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+            System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+            if (Account_Type == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (Account_Type == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (Account_Type == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (Account_Type == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Account_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
