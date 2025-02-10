@@ -50,54 +50,6 @@ namespace Financial_WPF_App
             }
         }
 
-        //public static void UpdateTextBlocksForeground(object content, Brush foreground)
-        //{
-        //    if (!(content is DependencyObject parent) || foreground == null)
-        //        return;
-
-        //    // Define the target style key
-        //    string targetStyleKey = "statistic_textBlockStyle";
-
-        //    foreach (var textBlock in FindVisualChildren<TextBlock>(parent))
-        //    {
-        //        if (textBlock.Style != null && textBlock.Style.Equals(Application.Current.TryFindResource(targetStyleKey)))
-        //        {
-        //            textBlock.Foreground = foreground;
-        //        }
-        //    }
-
-        //    // If content is inside a UserControl or ContentControl, check inside it
-        //    if (content is ContentControl contentControl && contentControl.Content is DependencyObject innerContent)
-        //    {
-        //        foreach (var textBlock in FindVisualChildren<TextBlock>(innerContent))
-        //        {
-        //            if (textBlock.Style != null && textBlock.Style.Equals(Application.Current.TryFindResource(targetStyleKey)))
-        //            {
-        //                textBlock.Foreground = foreground;
-        //            }
-        //        }
-        //    }
-        //}
-
-        //// Helper method to find all TextBlock elements in a given UI structure
-        //private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
-        //{
-        //    if (parent == null) yield break;
-
-        //    for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-        //    {
-        //        DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-        //        if (child is T typedChild)
-        //        {
-        //            yield return typedChild;
-        //        }
-
-        //        foreach (var descendant in FindVisualChildren<T>(child))
-        //        {
-        //            yield return descendant;
-        //        }
-        //    }
-        //}
         public static void UpdateTextBlocksForeground(object content, Brush foreground)
         {
             if (!(content is DependencyObject parent) || foreground == null)

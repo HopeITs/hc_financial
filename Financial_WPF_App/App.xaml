@@ -82,6 +82,7 @@
             <SolidColorBrush x:Key="Orange" Color="#F7981D"/>
             <SolidColorBrush x:Key="PastelGreen" Color="#7d9885"/>
             <SolidColorBrush x:Key="PastelDarkBlue" Color="#074063"/>
+            <SolidColorBrush x:Key="DarkgrayishViolet" Color="#826F89"/>
             <SolidColorBrush x:Key="GreenBlue" Color="#17778D"/>
             <SolidColorBrush x:Key="DarkGray" Color="#6E6F72"/>
             <SolidColorBrush x:Key="MidGray" Color="#939598"/>
@@ -92,6 +93,7 @@
             <Color x:Key="Color_Orange" >#F7981D</Color>
             <Color x:Key="Color_PastelGreen" >#7d9885</Color>
             <Color x:Key="Color_PastelDarkBlue" >#074063</Color>
+            <Color x:Key="Color_DarkgrayishViolet" >#826F89</Color>
             <Color x:Key="Color_GreenBlue" >#17778D</Color>
             <Color x:Key="Color_DarkGray" >#6E6F72</Color>
             <Color x:Key="Color_MidGray" >#939598</Color>

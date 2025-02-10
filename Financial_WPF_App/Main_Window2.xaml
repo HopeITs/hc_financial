@@ -214,69 +214,6 @@
             <Setter Property="AllowPin" Value="True"/>
             <Setter Property="AllowDrop" Value="True"/>
             <Setter Property="ShowPin" Value="True"/>
-            <!-- Trigger for Active Tab -->
-            <!--<Style.Triggers>
-                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
-                    -->
-            <!-- Active Tab styles -->
-            <!--
-                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
-                    <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    -->
-            <!-- Bottom Border -->
-
-            <!-- Add shadow effect for selected tab -->
-            <!--
-                    <Setter Property="Canvas.Background" Value="Transparent">
-                        
-                    </Setter>
-                    
-                </DataTrigger>
-
-                -->
-            <!-- Inactive Tab -->
-            <!--
-                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False">
-                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
-                    <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    
-                </DataTrigger>
-            </Style.Triggers>-->
-            <!-- ControlTemplate to handle custom behavior -->
-            <!--<Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type syncfusion:TabItemExt}">
-                        <Grid>
-                            <Border x:Name="TabBorder" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="5" BorderBrush="Transparent" BorderThickness="0">
-                                <Border.Effect>
-                                    <DropShadowEffect x:Name="TabShadow" Color="Black" BlurRadius="10" ShadowDepth="3" Opacity="0"/>
-                                </Border.Effect>
-                                <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-
-                            <Rectangle x:Name="Underline" Height="3" VerticalAlignment="Bottom" Fill="Transparent"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="TabBorder" Property="BorderThickness" Value="1"/>
-                                <Setter TargetName="Underline" Property="Fill" Value="#BE1F24"/>
-                            </Trigger>
-
-                            <Trigger Property="IsSelected" Value="False">
-                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="Transparent"/>
-                                <Setter TargetName="TabBorder" Property="BorderThickness" Value="0"/>
-                                <Setter TargetName="Underline" Property="Fill" Value="Transparent"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>-->
         </Style>
 
         <!-- Override TreeViewItem Style -->

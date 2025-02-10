@@ -24,7 +24,8 @@ namespace Financial_WPF_App
             InitializeComponent();
 
             this.main_Window = main_Window;
-
+            First_col.Width = new GridLength(70, GridUnitType.Star);
+            Second_col.Width = new GridLength(30, GridUnitType.Star);
             this.Acc_ID = -1;
 
             this.Category = Category;
@@ -55,7 +56,8 @@ namespace Financial_WPF_App
         public Account_Window(int Account_ID, Main_Window_2 main_Window)
         {
             InitializeComponent();
-
+            First_col.Width = new GridLength(97, GridUnitType.Star);
+            Second_col.Width = new GridLength(2.3, GridUnitType.Star);
             this.main_Window = main_Window;
 
             this.Acc_ID = Account_ID;
@@ -75,7 +77,8 @@ namespace Financial_WPF_App
         public Account_Window(int Account_ID, string AccType, Main_Window_2 main_Window)
         {
             InitializeComponent();
-
+            First_col.Width = new GridLength(97, GridUnitType.Star);
+            Second_col.Width = new GridLength(2.3, GridUnitType.Star);
             this.main_Window = main_Window;
 
             this.Acc_ID = Account_ID;
@@ -703,16 +706,16 @@ namespace Financial_WPF_App
                                     switch (Category)
                                     {
                                         case "Budget":
-                                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                             break;
                                         case "Micro Projects":
                                             newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["HopeRed"];
                                             newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                             break;
                                         default:
-                                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                             break;
                                     }
                                 }
@@ -753,16 +756,16 @@ namespace Financial_WPF_App
                         switch (Category)
                         {
                             case "Budget":
-                                newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                                newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                                newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                 break;
                             case "Micro Projects":
                                 newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["HopeRed"];
                                 newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                 break;
                             default:
-                                newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                                newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                                newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                 break;
                         }
                         tabControl1.Items.Add(newTabItem);
@@ -801,8 +804,8 @@ namespace Financial_WPF_App
                                 Style = this.FindResource("tabItemStyle") as Style,
                                 FlowDirection = FlowDirection.LeftToRight
                             };
-                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                             tabControl1.Items.Add(newTabItem);
                             newTabItem.Content = null;
                             newTabItem.Content = AddBudgetLines_Windows.Content;
@@ -817,8 +820,8 @@ namespace Financial_WPF_App
                                 Style = this.FindResource("tabItemStyle") as Style,
                                 FlowDirection = FlowDirection.LeftToRight,
                             };
-                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                             tabControl1.Items.Add(newTabItem);
                             newTabItem.Content = null;
                             newTabItem.Content = AllAccountBudgetLines_Windows.Content;
@@ -834,8 +837,8 @@ namespace Financial_WPF_App
                                 Style = this.FindResource("tabItemStyle") as Style,
                                 FlowDirection = FlowDirection.LeftToRight,
                             };
-                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                            newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                            newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                             tabControl1.Items.Add(newTabItem);
                             newTabItem.Content = null;
                             newTabItem.Content = ExpensesReport_Window.Content;
@@ -878,16 +881,16 @@ namespace Financial_WPF_App
                         switch (Category)
                         {
                             case "Budget":
-                                newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                                newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                                newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                 break;
                             case "Micro Projects":
                                 newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["HopeRed"];
                                 newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                 break;
                             default:
-                                newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                                newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                                newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                 break;
                         }
                     }
@@ -903,8 +906,8 @@ namespace Financial_WPF_App
                     }
                     else
                     {
-                        newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-                        newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                        newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                        newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                     }
                     tabControl1.Items.Add(newTabItem);
                     newTabItem.Content = null;
@@ -927,8 +930,8 @@ namespace Financial_WPF_App
                         Style = this.FindResource("tabItemStyle") as Style,
                         FlowDirection = FlowDirection.LeftToRight
                     };
-                    newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
-                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                    newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
                     tabControl1.Items.Add(newTabItem);
                     newTabItem.Content = null;
                     newTabItem.Content = cash_window.Content;
@@ -942,10 +945,10 @@ namespace Financial_WPF_App
                         Header = "Balances",
                         Name = "Balances_tab",
                         Style = this.FindResource("tabItemStyle") as Style,
-                        Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"],
+                        Foreground = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"],
                         FlowDirection = FlowDirection.LeftToRight
                     };
-                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
                     tabControl1.Items.Add(newTabItem);
                     newTabItem.Content = null;
                     newTabItem.Content = CashBalances_Window.Content;
@@ -2161,6 +2164,11 @@ namespace Financial_WPF_App
         {
             First_col.Width = new GridLength(97, GridUnitType.Star);
             Second_col.Width = new GridLength(2.3, GridUnitType.Star);
+        }
+
+        private void myExpander_Loaded(object sender, RoutedEventArgs e)
+        {
+            myExpander.IsExpanded = false;
         }
 
         private void IsClosed_btn_Click(object sender, RoutedEventArgs e)
