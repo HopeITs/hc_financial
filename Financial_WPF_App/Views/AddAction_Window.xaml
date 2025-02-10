@@ -12,7 +12,7 @@
         mc:Ignorable="d"
         Title="AddAction_Window" Height="720" Width="749" WindowStartupLocation="CenterScreen" d:DesignHeight="800">
 
-        <Window.ContextMenu>
+    <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Header="Refresh" Click = "Refresh_Click" >
                 <MenuItem.Icon>
@@ -22,137 +22,137 @@
         </ContextMenu>
     </Window.ContextMenu>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
-            <Grid Margin="0,0,0,0" Height="766" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*"/>
+        <Grid Margin="0,0,0,0" Height="766" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
 
-                    <ColumnDefinition Width="201*"/>
-                    <ColumnDefinition Width="156*"/>
+                <ColumnDefinition Width="201*"/>
+                <ColumnDefinition Width="156*"/>
 
-                    <ColumnDefinition Width="208*"/>
-                    <ColumnDefinition Width="173*"/>
+                <ColumnDefinition Width="208*"/>
+                <ColumnDefinition Width="173*"/>
 
-                    <ColumnDefinition Width="0*"/>
+                <ColumnDefinition Width="0*"/>
 
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition/>
 
-                </Grid.RowDefinitions>
+            </Grid.RowDefinitions>
 
-                <Label x:Name="MircoProject_ID_lable" Grid.Column="4" Grid.Row="7" 
+            <Label x:Name="MircoProject_ID_lable" Grid.Column="4" Grid.Row="7" 
                 Style="{DynamicResource lableStyle}" Content="Micro Project number:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <uc:AutoCompleteTextBoxUserControl 
+            <uc:AutoCompleteTextBoxUserControl 
                 x:Name="MircoProject_ID_autoSuggestionUserControl" 
                 Grid.Column="3" Grid.Row="7" Margin="6,2,3,8" TabIndex="9" 
                 LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
 
-                <!--<TextBox x:Name="MircoProject_ID_txtBox" TabIndex="3"
+            <!--<TextBox x:Name="MircoProject_ID_txtBox" TabIndex="3"
                      Grid.Column="3" Grid.Row="1"  
                 TextChanged="MircoProject_ID_txtBox_TextChanged" 
                      Style="{DynamicResource textBoxStyle}" 
                 Text="{Binding TestText, UpdateSourceTrigger=PropertyChanged}"
                 WPFTextBoxAutoComplete:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding XPath=TestItems}" />-->
 
-                <Label x:Name="BeneficiaryName_lable" Grid.Column="2" Grid.Row="7" 
+            <Label x:Name="BeneficiaryName_lable" Grid.Column="2" Grid.Row="7" 
                 Style="{DynamicResource lableStyle}" Content="Beneficiary Name:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
 
-                <Label Grid.Column="4" Grid.Row="4" x:Name="DestinationTill_lable" Style="{DynamicResource lableStyle}" Content="Corresponding till:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <StackPanel Grid.Column="3" Grid.Row="4" x:Name="DestinationTill_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" >
-                    <ComboBox x:Name="DestinationTill_comboBox" TabIndex="5" 
+            <Label Grid.Column="4" Grid.Row="4" x:Name="DestinationTill_lable" Style="{DynamicResource lableStyle}" Content="Corresponding till:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <StackPanel Grid.Column="3" Grid.Row="4" x:Name="DestinationTill_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" >
+                <ComboBox x:Name="DestinationTill_comboBox" TabIndex="5" 
                           DisplayMemberPath="Type" SelectedValuePath="ID" 
                           FlowDirection="RightToLeft" Height="30" Width="auto" MinWidth="130" FontSize="16"
                           Margin="0,6,0,6.764" VerticalContentAlignment="Center" SelectionChanged="DestinationTill_comboBox_SelectionChanged"/>
-                    <Button x:Name="DestinationTill_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" 
+                <Button x:Name="DestinationTill_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" 
                     Click="DestinationTill_clear_btn_Click" Margin="0,9,0,8.764" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="../Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="DestinationTill_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
+                    <Button.Background>
+                        <ImageBrush ImageSource="../Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="DestinationTill_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
 
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Views/qm1.png" Stretch="Uniform"/>
-                        </Button.Background>
-                        <Button.ToolTip>
-                            <TextBlock><Run Text="The account only appears if it contains a till of the same currency."/><LineBreak /><Run Text="In foreign currency till, The account only appears if it contains a till of the same currency and the account has the selected donor"/></TextBlock>
-                        </Button.ToolTip>
-                    </Button>
-                </StackPanel>
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Views/qm1.png" Stretch="Uniform"/>
+                    </Button.Background>
+                    <Button.ToolTip>
+                        <TextBlock><Run Text="The account only appears if it contains a till of the same currency."/><LineBreak /><Run Text="In foreign currency till, The account only appears if it contains a till of the same currency and the account has the selected donor"/></TextBlock>
+                    </Button.ToolTip>
+                </Button>
+            </StackPanel>
 
-                <ComboBox x:Name="Type_comboBox" TabIndex="1" Grid.Column="1" Grid.Row="1"
+            <ComboBox x:Name="Type_comboBox" TabIndex="1" Grid.Column="1" Grid.Row="1"
                       FlowDirection="RightToLeft" FontSize="14" Margin="1,6,2,7" Width="auto" MinWidth="100px" IsEditable="True"
                       HorizontalContentAlignment="Right" 
                       SelectionChanged="Type_comboBox_SelectionChanged" VerticalAlignment="Stretch" >
-                    <ComboBoxItem x:Name="Type_ComboBox_Income_Item" Content="Income" />
-                    <ComboBoxItem x:Name="Type_ComboBox_Outcome_Item" Content="Adv. Payment"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Returned_Item" Content="Returned"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Exchange_Item" Content="Exchange"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Expand_Item" Content="Expenses"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Move_Item" Content="Move"/>
-                </ComboBox>
+                <ComboBoxItem x:Name="Type_ComboBox_Income_Item" Content="Income" />
+                <ComboBoxItem x:Name="Type_ComboBox_Outcome_Item" Content="Adv. Payment"/>
+                <ComboBoxItem x:Name="Type_ComboBox_Returned_Item" Content="Returned"/>
+                <ComboBoxItem x:Name="Type_ComboBox_Exchange_Item" Content="Exchange"/>
+                <ComboBoxItem x:Name="Type_ComboBox_Expand_Item" Content="Expenses"/>
+                <ComboBoxItem x:Name="Type_ComboBox_Move_Item" Content="Move"/>
+            </ComboBox>
 
-                <TextBox x:Name="Amount_txtBox" Style="{DynamicResource textBoxStyle}" 
+            <TextBox x:Name="Amount_txtBox" Style="{DynamicResource textBoxStyle}" 
                 Grid.Column="1" Grid.Row="2" TabIndex="2"
                 LostFocus="Amount_txtBox_LostFocus" Margin="114,6,4,6" Grid.ColumnSpan="2" VerticalAlignment="Stretch" PreviewTextInput="NumberValidationTextBox"   />
 
-                <Label x:Name="ActionDate_Label" Grid.Column="4" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Operation date:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                <DatePicker x:Name="ActionDate_datepicker" Grid.Row="2" TabIndex="3"
+            <Label x:Name="ActionDate_Label" Grid.Column="4" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Operation date:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+            <DatePicker x:Name="ActionDate_datepicker" Grid.Row="2" TabIndex="3"
                         Margin="4,6,3,6" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Column="3" SelectedDateChanged="ActionDate_datepicker_SelectedDateChanged" VerticalAlignment="Stretch" />
 
-                <Label x:Name="Notes_Label" Grid.Column="4" Grid.Row="3" Style="{DynamicResource lableStyle}" Content="Description (AR):" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <TextBox x:Name="Notes_txtBox" Style="{DynamicResource textBoxStyle}"  HorizontalContentAlignment="Right" 
+            <Label x:Name="Notes_Label" Grid.Column="4" Grid.Row="3" Style="{DynamicResource lableStyle}" Content="Description (AR):" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <TextBox x:Name="Notes_txtBox" Style="{DynamicResource textBoxStyle}"  HorizontalContentAlignment="Right" 
                      Grid.Column="3" Grid.Row="3" TabIndex="4" Margin="4,6,3,6" VerticalAlignment="Stretch"   />
 
-                <ComboBox x:Name="IsReceipt_comboBox" Grid.Column="4" Grid.Row="11" TabIndex="15" 
+            <ComboBox x:Name="IsReceipt_comboBox" Grid.Column="4" Grid.Row="11" TabIndex="15" 
                 FlowDirection="RightToLeft" FontSize="14" Margin="3,4,3,6" Width="auto" MinWidth="100px" IsEditable="True"
                       HorizontalContentAlignment="Right" VerticalAlignment="Stretch" SelectionChanged="IsReceipt_comboBox_SelectionChanged" >
-                    <ComboBoxItem x:Name="invoice_ComboBoxItem" Content="invoice" />
-                    <ComboBoxItem x:Name="receipt_ComboBoxItem" Content="receipt"/>
-                    <ComboBoxItem x:Name="payslip_ComboBoxItem" Content="payslip"/>
-                </ComboBox>
+                <ComboBoxItem x:Name="invoice_ComboBoxItem" Content="invoice" />
+                <ComboBoxItem x:Name="receipt_ComboBoxItem" Content="receipt"/>
+                <ComboBoxItem x:Name="payslip_ComboBoxItem" Content="payslip"/>
+            </ComboBox>
 
-                <TextBox x:Name="ReceiptNum_txtBox" Style="{DynamicResource textBoxStyle}"
+            <TextBox x:Name="ReceiptNum_txtBox" Style="{DynamicResource textBoxStyle}"
                      Grid.Column="3" Grid.Row="11" TabIndex="16" Margin="4,3,3,6"
                      VerticalAlignment="Stretch" />
-                <TextBlock Grid.Column="3" Grid.Row="11" x:Name="Placeholder1" IsHitTestVisible="False" 
+            <TextBlock Grid.Column="3" Grid.Row="11" x:Name="Placeholder1" IsHitTestVisible="False" 
                 Text="Document number" Foreground="DarkGray" FlowDirection="RightToLeft" Height="18" Width="200" >
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Text, ElementName=ReceiptNum_txtBox}" Value="" />
-                                        <Condition Binding="{Binding ElementName=ReceiptNum_txtBox, Path=Visibility}" Value="Visible" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Text, ElementName=ReceiptNum_txtBox}" Value="" />
+                                    <Condition Binding="{Binding ElementName=ReceiptNum_txtBox, Path=Visibility}" Value="Visible" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
 
 
 
 
-                <Label Grid.Column="4" Grid.Row="13" x:Name="Original_AvgRate_lable" Style="{DynamicResource lableStyle}" Content="Origin Avg Rate:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                <!--<StackPanel  Grid.Column="3" Grid.Row="7" x:Name="AvgRate_panel" Orientation="Horizontal" FlowDirection="RightToLeft" >
+            <Label Grid.Column="4" Grid.Row="13" x:Name="Original_AvgRate_lable" Style="{DynamicResource lableStyle}" Content="Origin Avg Rate:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+            <!--<StackPanel  Grid.Column="3" Grid.Row="7" x:Name="AvgRate_panel" Orientation="Horizontal" FlowDirection="RightToLeft" >
                 <ComboBox x:Name="AvgRate_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" 
                     FlowDirection="RightToLeft" Height="30" Width="auto" MinWidth="130" FontSize="16"
                     TabIndex="12" Margin="0" VerticalContentAlignment="Center"
@@ -166,256 +166,256 @@
                 </Button>
             </StackPanel>-->
 
-                <Label Grid.Column="4" Grid.Row="14" x:Name="USD_Value_lable" Style="{DynamicResource lableStyle}" Content="Value:" Margin="2,3,2,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                <TextBox x:Name="USD_Value_TxtBox" Style="{DynamicResource textBoxStyle}" 
+            <Label Grid.Column="4" Grid.Row="14" x:Name="USD_Value_lable" Style="{DynamicResource lableStyle}" Content="Value:" Margin="2,3,2,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+            <TextBox x:Name="USD_Value_TxtBox" Style="{DynamicResource textBoxStyle}" 
                      Grid.Column="3" Grid.Row="14" TabIndex="100" IsReadOnly="True" Margin="4,6,4,0" VerticalAlignment="Top" Height="30"  />
 
-                <Label x:Name="Rate_lable" Grid.Column="2" Grid.Row="13" Style="{DynamicResource lableStyle}" Content="Rate:" Margin="2,2,2,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"   />
-                <TextBox x:Name="Rate_txtBox" Style="{DynamicResource textBoxStyle}" 
+            <Label x:Name="Rate_lable" Grid.Column="2" Grid.Row="13" Style="{DynamicResource lableStyle}" Content="Rate:" Margin="2,2,2,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"   />
+            <TextBox x:Name="Rate_txtBox" Style="{DynamicResource textBoxStyle}" 
                 Grid.Column="1" Grid.Row="13" TabIndex="19"   
                 LostFocus="Rate_txtBox_LostFocus" Margin="4,6,2,0" VerticalAlignment="Top" PreviewTextInput="NumberValidationTextBox" Height="30"  />
 
-                <Label x:Name="Exchanged_lable" Grid.Column="2" Grid.Row="14" Style="{DynamicResource lableStyle}" Content="Exchanged:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"   />
-                <TextBox x:Name="Exchanged_txtBox" Style="{DynamicResource textBoxStyle}" 
+            <Label x:Name="Exchanged_lable" Grid.Column="2" Grid.Row="14" Style="{DynamicResource lableStyle}" Content="Exchanged:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"   />
+            <TextBox x:Name="Exchanged_txtBox" Style="{DynamicResource textBoxStyle}" 
                 Grid.Column="1" Grid.Row="14" TabIndex="101" IsReadOnly="True" Margin="3,6,3,0" VerticalAlignment="Top" Height="30"  />
 
-                <Button Grid.Row="15" Grid.Column="1" 
+            <Button Grid.Row="15" Grid.Column="1" 
                     Style="{DynamicResource SaveButton_Style}"
                 x:Name="Save_btn" TabIndex="20" Click="Save_btn_Click" Margin="6,3,0,0" VerticalAlignment="Top" Height="32" Width="86" />
-                <Label Grid.Column="2" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Operation type:" Margin="6,4,3,4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                <TextBlock Grid.Column="2" Grid.Row="2" x:Name="Placeholder2" IsHitTestVisible="False" 
+            <Label Grid.Column="2" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Operation type:" Margin="6,4,3,4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+            <TextBlock Grid.Column="2" Grid.Row="2" x:Name="Placeholder2" IsHitTestVisible="False" 
             	Text="Amount..." Foreground="DarkGray" FlowDirection="RightToLeft"
             	HorizontalAlignment="Left" VerticalAlignment="Center" Margin="35,0,0,0" Width="111" Height="16" >
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Text, ElementName=Amount_txtBox}" Value="" />
-                                        <Condition Binding="{Binding ElementName=Amount_txtBox, Path=Visibility}" Value="Visible" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <Label Grid.Column="4" Grid.Row="6" x:Name="ExchangeAcc_lable" Style="{DynamicResource lableStyle}" Content="Exchange account:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <StackPanel Grid.Row="6" x:Name="ExchangeAcc_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="3" >
-                    <ComboBox x:Name="ExchangeAcc_comboBox" TabIndex="8" 
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Text, ElementName=Amount_txtBox}" Value="" />
+                                    <Condition Binding="{Binding ElementName=Amount_txtBox, Path=Visibility}" Value="Visible" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <Label Grid.Column="4" Grid.Row="6" x:Name="ExchangeAcc_lable" Style="{DynamicResource lableStyle}" Content="Exchange account:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <StackPanel Grid.Row="6" x:Name="ExchangeAcc_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="3" >
+                <ComboBox x:Name="ExchangeAcc_comboBox" TabIndex="8" 
                     DisplayMemberPath="Name" SelectedValuePath="id" 
                     FlowDirection="RightToLeft" Height="28" Width="auto" MinWidth="130" FontSize="16"
                     Margin="0,6,0,6.764" VerticalContentAlignment="Center" SelectionChanged="ExchangeAcc_comboBox_SelectionChanged"/>
-                    <Button x:Name="ExchangeAcc_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" 
+                <Button x:Name="ExchangeAcc_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" 
                     Click="ExchangeTill_clear_btn_Click" Margin="0,9,0,8.764" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="ExchangeAcc_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="ExchangeAcc_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
 
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
-                        </Button.Background>
-                        <Button.ToolTip>
-                            <ToolTip Content="The exchange account only appears if it contains a till for both currencies (from/to))"/>
-                        </Button.ToolTip>
-                    </Button>
-                </StackPanel>
-                <Label Grid.Column="4" Grid.Row="10" x:Name="Line_lable" Style="{DynamicResource lableStyle}" Content="Budget Line:" Margin="2,3,2,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <StackPanel Grid.Column="3" Grid.Row="10" x:Name="Line_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" >
-                    <ComboBox x:Name="Line_comboBox" TabIndex="14" 
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
+                    </Button.Background>
+                    <Button.ToolTip>
+                        <ToolTip Content="The exchange account only appears if it contains a till for both currencies (from/to))"/>
+                    </Button.ToolTip>
+                </Button>
+            </StackPanel>
+            <Label Grid.Column="4" Grid.Row="10" x:Name="Line_lable" Style="{DynamicResource lableStyle}" Content="Budget Line:" Margin="2,3,2,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <StackPanel Grid.Column="3" Grid.Row="10" x:Name="Line_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" >
+                <ComboBox x:Name="Line_comboBox" TabIndex="14" 
                     DisplayMemberPath="line_Name" SelectedValuePath="budget_line_ID" 
                     FlowDirection="RightToLeft" Height="30" Width="auto" MinWidth="130" FontSize="16"
                     Margin="0,6,0,6.764" VerticalContentAlignment="Center"/>
-                    <Button x:Name="Line_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Line_comboBox_clear_btn_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                </StackPanel>
-                <Label Grid.Column="4" Grid.Row="5" x:Name="CashAccount_lable" Style="{DynamicResource lableStyle}" Content="Cash till:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <StackPanel Grid.Row="5" x:Name="CashAccount_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="3" >
-                    <ComboBox x:Name="CashAccount_comboBox" TabIndex="6" 
+                <Button x:Name="Line_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Line_comboBox_clear_btn_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
+            <Label Grid.Column="4" Grid.Row="5" x:Name="CashAccount_lable" Style="{DynamicResource lableStyle}" Content="Cash till:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <StackPanel Grid.Row="5" x:Name="CashAccount_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="3" >
+                <ComboBox x:Name="CashAccount_comboBox" TabIndex="6" 
                     DisplayMemberPath="Name" SelectedValuePath="ID" 
                     FlowDirection="RightToLeft" Height="30" Width="auto" MinWidth="130" FontSize="16"
                     Margin="0,6,0,6.764" VerticalContentAlignment="Center" SelectionChanged="CashAccount_comboBox_SelectionChanged"/>
-                    <Button x:Name="CashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="CashAccount_clear_btn_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                </StackPanel>
-                <Label Grid.Column="4" Grid.Row="9" x:Name="Budget_lable" Style="{DynamicResource lableStyle}" Content="Budget:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <StackPanel Grid.Column="3" Grid.Row="9" x:Name="Budget_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" >
-                    <ComboBox x:Name="Budget_comboBox" TabIndex="12" 
+                <Button x:Name="CashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="CashAccount_clear_btn_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
+            <Label Grid.Column="4" Grid.Row="9" x:Name="Budget_lable" Style="{DynamicResource lableStyle}" Content="Budget:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <StackPanel Grid.Column="3" Grid.Row="9" x:Name="Budget_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" >
+                <ComboBox x:Name="Budget_comboBox" TabIndex="12" 
                     DisplayMemberPath="budget_Name" SelectedValuePath="budget_ID" 
                     FlowDirection="RightToLeft" Height="30" Width="auto" MinWidth="130" FontSize="16"
                     Margin="0,6,0,6.764" VerticalContentAlignment="Center" SelectionChanged="Budget_comboBox_SelectionChanged"/>
-                    <Button x:Name="Budget_comboBox_clear" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Budget_comboBox_clear_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="Budget_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
+                <Button x:Name="Budget_comboBox_clear" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Budget_comboBox_clear_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="Budget_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
 
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
-                        </Button.Background>
-                        <Button.ToolTip>
-                            <ToolTip Content="The budget only appears if Lines have been added to it."/>
-                        </Button.ToolTip>
-                    </Button>
-                </StackPanel>
-                <Label Grid.Column="2" Grid.Row="9" x:Name="Category_lable" Style="{DynamicResource lableStyle}" Content="Category:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"/>
-                <StackPanel Grid.Row="9" x:Name="Category_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" RenderTransformOrigin="0.5,0.5" Grid.Column="1" >
-                    <StackPanel.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform AngleX="-1.436"/>
-                            <RotateTransform/>
-                            <TranslateTransform X="0.848"/>
-                        </TransformGroup>
-                    </StackPanel.RenderTransform>
-                    <ComboBox x:Name="Category_comboBox" TabIndex="13" 
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
+                    </Button.Background>
+                    <Button.ToolTip>
+                        <ToolTip Content="The budget only appears if Lines have been added to it."/>
+                    </Button.ToolTip>
+                </Button>
+            </StackPanel>
+            <Label Grid.Column="2" Grid.Row="9" x:Name="Category_lable" Style="{DynamicResource lableStyle}" Content="Category:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"/>
+            <StackPanel Grid.Row="9" x:Name="Category_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" RenderTransformOrigin="0.5,0.5" Grid.Column="1" >
+                <StackPanel.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform AngleX="-1.436"/>
+                        <RotateTransform/>
+                        <TranslateTransform X="0.848"/>
+                    </TransformGroup>
+                </StackPanel.RenderTransform>
+                <ComboBox x:Name="Category_comboBox" TabIndex="13" 
                     DisplayMemberPath="linecategory_Name" SelectedValuePath="linecategory_ID" 
                     FlowDirection="RightToLeft" Height="30" Width="auto" MinWidth="130" FontSize="16"
                     Margin="0,6,0,6.764" VerticalContentAlignment="Center" SelectionChanged="Category_comboBox_SelectionChanged"/>
-                    <Button x:Name="Category_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Category_comboBox_clear_btn_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                </StackPanel>
-                <StackPanel Grid.Column="2" Grid.Row="13
+                <Button x:Name="Category_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Category_comboBox_clear_btn_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Grid.Row="13
                         " x:Name="Line_panel_Copy" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="3,2,3,2" Grid.ColumnSpan="2" >
-                    <ComboBox x:Name="Original_AvgRate_comboBox" TabIndex="18" 
+                <ComboBox x:Name="Original_AvgRate_comboBox" TabIndex="18" 
             	DisplayMemberPath="Name" SelectedValuePath="ID" 
             	FlowDirection="RightToLeft" Height="30" Width="234" MinWidth="130" FontSize="16"
             	VerticalContentAlignment="Center" SelectionChanged="Original_AvgRate_comboBox_SelectionChanged"/>
-                    <Button x:Name="Original_AvgRate_clear_btn" Width="25" Height="25" BorderBrush="{x:Null}" RenderTransformOrigin="0.262,5.596" Click="Avgrate_clear_btn_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Cashing;component/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="Original_AvgRate_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
+                <Button x:Name="Original_AvgRate_clear_btn" Width="25" Height="25" BorderBrush="{x:Null}" RenderTransformOrigin="0.262,5.596" Click="Avgrate_clear_btn_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Cashing;component/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="Original_AvgRate_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
 
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
-                        </Button.Background>
-                        <Button.ToolTip>
-                            <TextBlock>
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
+                    </Button.Background>
+                    <Button.ToolTip>
+                        <TextBlock>
                  Avg Rate only appears if it includes the operation date implicitly or if there is a remainder in it.
                  <LineBreak /> 
                  In case of having a budget, Avg Rate only appears from the selected budget currency to the local currency (Syr).
-                            </TextBlock>
-                        </Button.ToolTip>
-                    </Button>
-                </StackPanel>
-                <Label Grid.Column="2" Grid.Row="15" x:Name="Exchange_Note_lable" Style="{DynamicResource lableStyle}" Content="Please ensure that there is at least one AvgRate that matches the conversion currency&#xD;&#xA;and extends for a period that includes the transaction date." Margin="3,1,1,0" Grid.ColumnSpan="3" FontSize="18" Foreground="#FFBE121F" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" FlowDirection="LeftToRight" />
-                <Button x:Name="Add_Attachment_btn" BorderBrush="{x:Null}" Margin="18,0,148,0" Grid.Row="2" Height="25" VerticalAlignment="Top" Click="Add_Attachment_btn_Click" Grid.Column="1" >
-                    <Button.Foreground>
-                        <ImageBrush/>
-                    </Button.Foreground>
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/attachment_icon.png" Stretch="Uniform"/>
-                    </Button.Background>
+                        </TextBlock>
+                    </Button.ToolTip>
                 </Button>
-                <StackPanel Grid.Row="2" x:Name="AddedAttachments_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,20,122,1" Grid.Column="1" >
-                    <Label x:Name="AddedAttachments_lable" Style="{DynamicResource lableStyle}" Content="Attachments" Width="62" FontSize="13" Foreground="#FFBE121F" Height="22" />
-                    <Button x:Name="AddedAttachments_clear_btn" VerticalAlignment="Center" Width="16" Height="13" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="AddedAttachments_clear_btn_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                        <Button.ToolTip>
-                            <ToolTip Content="Clear attachments"/>
-                        </Button.ToolTip>
-                    </Button>
-                </StackPanel>
-                <uc:AutoCompleteTextBoxUserControl 
+            </StackPanel>
+            <Label Grid.Column="2" Grid.Row="15" x:Name="Exchange_Note_lable" Style="{DynamicResource lableStyle}" Content="Please ensure that there is at least one AvgRate that matches the conversion currency&#xD;&#xA;and extends for a period that includes the transaction date." Margin="3,1,1,0" Grid.ColumnSpan="3" FontSize="18" Foreground="#FFBE121F" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" FlowDirection="LeftToRight" />
+            <Button x:Name="Add_Attachment_btn" BorderBrush="{x:Null}" Margin="18,0,148,0" Grid.Row="2" Height="25" VerticalAlignment="Top" Click="Add_Attachment_btn_Click" Grid.Column="1" >
+                <Button.Foreground>
+                    <ImageBrush/>
+                </Button.Foreground>
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/attachment_icon.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <StackPanel Grid.Row="2" x:Name="AddedAttachments_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,20,122,1" Grid.Column="1" >
+                <Label x:Name="AddedAttachments_lable" Style="{DynamicResource lableStyle}" Content="Attachments" Width="62" FontSize="13" Foreground="#FFBE121F" Height="22" />
+                <Button x:Name="AddedAttachments_clear_btn" VerticalAlignment="Center" Width="16" Height="13" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="AddedAttachments_clear_btn_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                    <Button.ToolTip>
+                        <ToolTip Content="Clear attachments"/>
+                    </Button.ToolTip>
+                </Button>
+            </StackPanel>
+            <uc:AutoCompleteTextBoxUserControl 
                 x:Name="BeneficiaryName_txtBox" Margin="9,5,2,5" TabIndex="10" 
                 LostFocus="BeneficiaryName_autoSuggestionUserControl_LostFocus" FontFamily="Segoe UI" FontSize="12" Grid.Row="7" Grid.ColumnSpan="2" />
-                <StackPanel Grid.Row="8" x:Name="Donor_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="3" >
-                    <ComboBox x:Name="Donor_comboBox" TabIndex="11" 
+            <StackPanel Grid.Row="8" x:Name="Donor_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="3" >
+                <ComboBox x:Name="Donor_comboBox" TabIndex="11" 
                     DisplayMemberPath="Name" SelectedValuePath="ID" 
                     FlowDirection="RightToLeft" Height="30" Width="auto" MinWidth="130" FontSize="16"
                     VerticalContentAlignment="Center" SelectionChanged="Donor_comboBox_SelectionChanged"/>
-                    <Button x:Name="Donor_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Donor_comboBox_clear_btn_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                </StackPanel>
-                <Label Grid.Column="4" Grid.Row="8" x:Name="Donor_lable" Style="{DynamicResource lableStyle}" Content="Donor:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <Label Grid.Column="2" Grid.Row="5" x:Name="ObserveCashAccount_lable" Style="{DynamicResource lableStyle}" Content="Corresponding cash till:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <StackPanel Grid.Row="5" x:Name="ObserveCashAccount_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="1" >
-                    <ComboBox x:Name="ObserveCashAccount_comboBox" TabIndex="7" 
+                <Button x:Name="Donor_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Donor_comboBox_clear_btn_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
+            <Label Grid.Column="4" Grid.Row="8" x:Name="Donor_lable" Style="{DynamicResource lableStyle}" Content="Donor:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <Label Grid.Column="2" Grid.Row="5" x:Name="ObserveCashAccount_lable" Style="{DynamicResource lableStyle}" Content="Corresponding cash till:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <StackPanel Grid.Row="5" x:Name="ObserveCashAccount_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="1" >
+                <ComboBox x:Name="ObserveCashAccount_comboBox" TabIndex="7" 
                     DisplayMemberPath="Name" SelectedValuePath="ID" 
                     FlowDirection="RightToLeft" Height="30" Width="auto" MinWidth="130" FontSize="16"
                     Margin="0,6,0,6.764" VerticalContentAlignment="Center" SelectionChanged="ObserveCashAccount_comboBox_SelectionChanged"/>
-                    <Button x:Name="ObserveCashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="ObserveCashAccount_clear_btn_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                </StackPanel>
-                <Label x:Name="E_Notes_Label" Grid.Column="2" Grid.Row="3" Style="{DynamicResource lableStyle}" Content="Description (Eng):" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <TextBox x:Name="E_Notes_txtBox" Style="{DynamicResource textBoxStyle}"  HorizontalContentAlignment="Right" Grid.Row="3" TabIndex="4" Margin="2,6,2,6" VerticalAlignment="Stretch" Grid.Column="1"   />
-                <Label Grid.Column="2" Grid.Row="6" x:Name="ExchangeCash_lable" Style="{DynamicResource lableStyle}" Content="Exchange cash till:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <StackPanel Grid.Row="6" x:Name="ExchangeAcc_panel_Copy" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="1" >
-                    <ComboBox x:Name="ExchangeCash_comboBox" TabIndex="8" 
+                <Button x:Name="ObserveCashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="ObserveCashAccount_clear_btn_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
+            <Label x:Name="E_Notes_Label" Grid.Column="2" Grid.Row="3" Style="{DynamicResource lableStyle}" Content="Description (Eng):" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <TextBox x:Name="E_Notes_txtBox" Style="{DynamicResource textBoxStyle}"  HorizontalContentAlignment="Right" Grid.Row="3" TabIndex="4" Margin="2,6,2,6" VerticalAlignment="Stretch" Grid.Column="1"   />
+            <Label Grid.Column="2" Grid.Row="6" x:Name="ExchangeCash_lable" Style="{DynamicResource lableStyle}" Content="Exchange cash till:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <StackPanel Grid.Row="6" x:Name="ExchangeAcc_panel_Copy" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,2,2,2" Grid.Column="1" >
+                <ComboBox x:Name="ExchangeCash_comboBox" TabIndex="8" 
                     DisplayMemberPath="Name" SelectedValuePath="ID" 
                     FlowDirection="RightToLeft" Height="28" Width="auto" MinWidth="130" FontSize="16"
                     Margin="0,6,0,6.764" VerticalContentAlignment="Center"/>
-                    <Button x:Name="ExchangeCash_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="ExchangeCash_clear_btn_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                </StackPanel>
-                <Label Grid.Column="2" Grid.Row="11" x:Name="Employee_lable" Style="{DynamicResource lableStyle}" Content="Volunteer:" Margin="1,2,1,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <StackPanel Grid.Row="11" x:Name="Budget_panel_Copy" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,2,3,2" Grid.Column="1" >
-                    <ComboBox x:Name="Employee_comboBox" TabIndex="12" 
+                <Button x:Name="ExchangeCash_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="ExchangeCash_clear_btn_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
+            <Label Grid.Column="2" Grid.Row="11" x:Name="Employee_lable" Style="{DynamicResource lableStyle}" Content="Volunteer:" Margin="1,2,1,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+            <StackPanel Grid.Row="11" x:Name="Budget_panel_Copy" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,2,3,2" Grid.Column="1" >
+                <ComboBox x:Name="Employee_comboBox" TabIndex="12" 
                     DisplayMemberPath="Employee_Name" SelectedValuePath="Employee_Salary_ID" 
                     FlowDirection="RightToLeft" Height="30" Width="150" MinWidth="130" FontSize="16"
                     Margin="0,6,0,6.764" VerticalContentAlignment="Center"/>
-                    <Button x:Name="Employee_comboBox_clear" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Employee_comboBox_clear_Click" >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="Employee_help" Width="25" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
+                <Button x:Name="Employee_comboBox_clear" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" BorderBrush="{x:Null}" Margin="0,9,0,8.764" Click="Employee_comboBox_clear_Click" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="Employee_help" Width="25" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
 
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
-                        </Button.Background>
-                        <Button.ToolTip>
-                            <TextBlock><Run Text="Only the volunteer from this center appears, provided that his salary has been added for the month corresponding to the operation date."/></TextBlock>
-                        </Button.ToolTip>
-                    </Button>
-                </StackPanel>
-                <Label Grid.Column="4" Style="{DynamicResource lableStyle}" Content="Subproject:" Margin="2,2,2,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                <Label Grid.Column="2" Style="{DynamicResource lableStyle}" Content="Account:" Margin="2,2,2,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                <ComboBox x:Name="Subproject_comboBox" TabIndex="1" Grid.Column="3" DisplayMemberPath="Subproject_Name" SelectedValuePath="Subproject_ID" 
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
+                    </Button.Background>
+                    <Button.ToolTip>
+                        <TextBlock><Run Text="Only the volunteer from this center appears, provided that his salary has been added for the month corresponding to the operation date."/></TextBlock>
+                    </Button.ToolTip>
+                </Button>
+            </StackPanel>
+            <Label Grid.Column="4" Style="{DynamicResource lableStyle}" Content="Subproject:" Margin="2,2,2,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+            <Label Grid.Column="2" Style="{DynamicResource lableStyle}" Content="Account:" Margin="2,2,2,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+            <ComboBox x:Name="Subproject_comboBox" TabIndex="1" Grid.Column="3" DisplayMemberPath="Subproject_Name" SelectedValuePath="Subproject_ID" 
                 FlowDirection="RightToLeft" FontSize="14" Margin="5,5,6,5" Width="auto" MinWidth="100px"
                 HorizontalContentAlignment="Right" 
                 VerticalAlignment="Stretch" SelectionChanged="Subproject_comboBox_SelectionChanged" >
 
-                </ComboBox>
-                <ComboBox x:Name="Account_comboBox" TabIndex="1"
+            </ComboBox>
+            <ComboBox x:Name="Account_comboBox" TabIndex="1"
                 FlowDirection="RightToLeft" FontSize="14" Margin="10,5,4,5" Width="auto" MinWidth="100px" DisplayMemberPath="Account_Name" SelectedValuePath="Account_ID" 
                 HorizontalContentAlignment="Right" 
                 VerticalAlignment="Stretch" Grid.ColumnSpan="2" SelectionChanged="Account_comboBox_SelectionChanged" >
 
-                </ComboBox>
-                <Label Grid.Column="4" Style="{DynamicResource lableStyle}" Content="Till:" Margin="2,4,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Row="1"  />
-                <ComboBox x:Name="Till_comboBox" TabIndex="1" Grid.Column="3" DisplayMemberPath="Tilltypes_Name" SelectedValuePath="Till_ID" 
+            </ComboBox>
+            <Label Grid.Column="4" Style="{DynamicResource lableStyle}" Content="Till:" Margin="2,4,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Row="1"  />
+            <ComboBox x:Name="Till_comboBox" TabIndex="1" Grid.Column="3" DisplayMemberPath="Tilltypes_Name" SelectedValuePath="Till_ID" 
                 FlowDirection="RightToLeft" FontSize="14" Margin="6,7,6,6" Width="auto" MinWidth="100px"
                 HorizontalContentAlignment="Right" 
                 VerticalAlignment="Stretch" Grid.Row="1" SelectionChanged="Till_comboBox_SelectionChanged" >
 
-                </ComboBox>
-            </Grid>
+            </ComboBox>
+        </Grid>
     </ScrollViewer>
 </Window>

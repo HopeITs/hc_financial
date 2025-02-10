@@ -2085,19 +2085,18 @@ namespace Financial_WPF_App
 
                     SubProject_ID = Convert.ToInt32(Subproject_comboBox.SelectedValue);
 
-                    Category = tills_dt.AsEnumerable()
-                              .FirstOrDefault(row => row.Field<int?>("Subproject_ID")?.Equals(SubProject_ID) ?? false)
-                              ?.Field<string>("Category_Name")
-                              ?.ToString();
+                    Account_Type = tills_dt.AsEnumerable()
+                                  .FirstOrDefault(row => row.Field<int?>("Subproject_ID")?.Equals(SubProject_ID) ?? false)
+                                  ?.Field<string>("Accounttype_Name")
+                                  ?.ToString();
                 }
 
 
                 DataTable selected_dt = new DataTable();
 
-                //if (!Account_Type.IsNullOrWhiteSpace() && !Account_Type.GetIsDynamicBound())
-                //{
                 if (SubProject_ID > 0)
                 {
+
                     if (Subproject_comboBox.SelectedValue != null && Subproject_comboBox.SelectedIndex != -1)
                     {
                         string Selected_Subproject = Subproject_comboBox.SelectedValue.ToString();
@@ -2105,7 +2104,6 @@ namespace Financial_WPF_App
                         DataRow[] Accountsrows = tills_dt.Select("Subproject_ID = '" + Selected_Subproject + "'");
                         if (Accountsrows.Length != 0)
                         {
-                            //DataTable selected_dt = new DataTable();
                             selected_dt = Accountsrows.CopyToDataTable();
                             if (selected_dt != null && selected_dt.Rows.Count > 0)
                             {
@@ -2129,9 +2127,9 @@ namespace Financial_WPF_App
                             Account_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                 }
-                //}
+                
 
-                Apply_Color_Theme();
+               
             }
             catch (Exception ex)
             {
@@ -2213,6 +2211,11 @@ namespace Financial_WPF_App
                                           ?.Field<string>("Accounttype_Name")
                                           ?.ToString();
 
+                    Category = tills_dt.AsEnumerable()
+                                          .FirstOrDefault(row => row.Field<int?>("Subproject_ID")?.Equals(SubProject_ID) ?? false)
+                                          ?.Field<string>("Category_Name")
+                                          ?.ToString();
+
                     IsAdminAccount = tills_dt.AsEnumerable()
                                         .FirstOrDefault(row => row.Field<int>("Account_ID") == Account_ID)?
                                         .Field<int>("is_administrative") == 1;
@@ -2234,6 +2237,8 @@ namespace Financial_WPF_App
                             Till_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                 }
+
+                Apply_Color_Theme();
             }
             catch (Exception ex)
             {
