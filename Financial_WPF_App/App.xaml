@@ -82,6 +82,7 @@
             <SolidColorBrush x:Key="Orange" Color="#F7981D"/>
             <SolidColorBrush x:Key="PastelGreen" Color="#7d9885"/>
             <SolidColorBrush x:Key="PastelDarkBlue" Color="#074063"/>
+            <SolidColorBrush x:Key="DarkgrayishViolet" Color="#826F89"/>
             <SolidColorBrush x:Key="GreenBlue" Color="#17778D"/>
             <SolidColorBrush x:Key="DarkGray" Color="#6E6F72"/>
             <SolidColorBrush x:Key="MidGray" Color="#939598"/>
@@ -92,6 +93,7 @@
             <Color x:Key="Color_Orange" >#F7981D</Color>
             <Color x:Key="Color_PastelGreen" >#7d9885</Color>
             <Color x:Key="Color_PastelDarkBlue" >#074063</Color>
+            <Color x:Key="Color_DarkgrayishViolet" >#826F89</Color>
             <Color x:Key="Color_GreenBlue" >#17778D</Color>
             <Color x:Key="Color_DarkGray" >#6E6F72</Color>
             <Color x:Key="Color_MidGray" >#939598</Color>
@@ -100,7 +102,7 @@
 
             <CornerRadius x:Key="CornerRadius">5</CornerRadius>
 
-            <DropShadowEffect x:Key="ShadowEffect" BlurRadius="6" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_MidGray}" />
+            <DropShadowEffect x:Key="ShadowEffect" BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
 
             <Style x:Key="BorderStyle" TargetType="Border">
                 <Setter Property="CornerRadius" Value="{StaticResource CornerRadius}"/>
@@ -257,7 +259,7 @@
                 <Setter Property="Label.FontWeight" Value="SemiBold" />
                 <Setter Property="Foreground">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_HopeRed}"/>
+                        <SolidColorBrush Color="{StaticResource Color_GreenBlue}"/>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="TextBlock.HorizontalAlignment" Value="Left" />
@@ -287,7 +289,168 @@
                 <Setter Property="Label.VerticalContentAlignment" Value="Center" />
                 <Setter Property="Label.Margin" Value="10,0,1,0" />
             </Style>
-            
+
+            <Style x:Key="TabControlStyle" TargetType="{x:Type TabControl}">
+                <Setter Property="Margin" Value="1,0,0,0"></Setter>
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="FlowDirection" Value="LeftToRight" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Background" Value="{StaticResource LightGray2}" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="tabItemStyle" TargetType="{x:Type TabItem}">
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Height" Value="30" />
+                <Setter Property="MinWidth" Value="120" />
+                <Setter Property="BorderThickness" Value="0.5" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Foreground" Value="{DynamicResource MidGray}" />
+                <Setter Property="Background" Value="{DynamicResource LightGray2}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <!-- Custom ControlTemplate -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TabItem">
+                            <Grid>
+                                <!-- Full Tab Background -->
+                                <Border x:Name="TabBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="0.5"
+                                    Padding="10,5"
+                                    SnapsToDevicePixels="True">
+                                    <ContentPresenter x:Name="ContentSite"
+                                          ContentSource="Header"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Bottom Border Only (Initially Hidden) -->
+                                <Border x:Name="BottomBorder"
+                                        Height="2"
+                                        Background="{StaticResource HopeRed}"
+                                        VerticalAlignment="Bottom"
+                                        Visibility="Collapsed"/>
+                            </Grid>
+
+                            <!-- Triggers for Selected State -->
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource LightGray1}"/>
+                                    <Setter TargetName="TabBorder" Property="BorderBrush" Value="{StaticResource LightGray1}"/>
+                                    <Setter TargetName="BottomBorder" Property="Visibility" Value="Visible"/>
+                                    <Setter Property="Foreground" Value="{StaticResource HopeRed}"/>
+                                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <PathGeometry x:Key="TreeArrow" Figures="M0,0 L0,6 L6,0 z"/>
+            <Style x:Key="ExpandCollapseToggleStyle" TargetType="{x:Type ToggleButton}">
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Width" Value="18"/>
+                <Setter Property="Height" Value="18"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Background="Transparent" Height="18" Padding="5,5,5,5" Width="18">
+                                <Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}" Fill="{StaticResource DarkGray}" Stroke="{StaticResource DarkGray}">
+                                    <Path.RenderTransform>
+                                        <RotateTransform Angle="-45" CenterX="3" CenterY="3"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <!--<Setter Property="RenderTransform" TargetName="ExpandPath">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="180" CenterX="3" CenterY="3"/>
+                                        </Setter.Value>
+                                    </Setter>-->
+                                    <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                    <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                    <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                        <Condition Property="IsChecked" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                    <Setter Property="Fill" TargetName="ExpandPath" Value="{StaticResource DarkGray}"/>
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="AccountExpander" TargetType="{x:Type Expander}">
+                <Setter Property="IsExpanded" Value="False"/>
+                <Setter Property="Background" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Expander}">
+                            <Grid>
+                                <!-- Outer border containing header and content -->
+                                <Border x:Name="OuterBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{StaticResource LightGray2}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Effect="{StaticResource ShadowEffect}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <!-- Header row -->
+                                            <RowDefinition Height="Auto" />
+                                            <!-- Content row -->
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <!-- Header Content (if any) -->
+                                        <ContentPresenter x:Name="HeaderContent"
+                                        Grid.Row="0"
+                                        ContentSource="Header"
+                                        Margin="6" />
+                                        <!-- Expander Content -->
+                                        <ContentPresenter x:Name="ExpanderContent"
+                                        Grid.Row="1"
+                                        ContentSource="Content"
+                                        Margin="6" />
+                                    </Grid>
+                                </Border>
+
+                                <!-- Overlay Toggle Button: vertically centered in the entire Expander -->
+                                <ToggleButton x:Name="ExpanderToggleButton"
+                          Width="16"
+                          Height="16"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left"
+                          Margin="6,0,0,0"
+                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                          Style="{StaticResource ExpandCollapseToggleStyle}" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
             <!--End New Style-->
 
             <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>

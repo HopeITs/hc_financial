@@ -14,6 +14,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Financial_WPF_App
 {
@@ -94,6 +95,7 @@ namespace Financial_WPF_App
             }
         }
 
+
         int Action_ID, Account_ID, Till_ID, SubProject_ID;
         string Account_Name; bool FromTillForm;
         string Account_Type; string Category;
@@ -122,6 +124,9 @@ namespace Financial_WPF_App
         DataTable dt = new DataTable();
 
         bool PassException = false;
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
 
         #region privileges
         bool Income_privileges, Outcome_privileges, Returned_privileges,
@@ -2080,19 +2085,18 @@ namespace Financial_WPF_App
 
                     SubProject_ID = Convert.ToInt32(Subproject_comboBox.SelectedValue);
 
-                    Category = tills_dt.AsEnumerable()
-                              .FirstOrDefault(row => row.Field<int?>("Subproject_ID")?.Equals(SubProject_ID) ?? false)
-                              ?.Field<string>("Category_Name")
-                              ?.ToString();
+                    Account_Type = tills_dt.AsEnumerable()
+                                  .FirstOrDefault(row => row.Field<int?>("Subproject_ID")?.Equals(SubProject_ID) ?? false)
+                                  ?.Field<string>("Accounttype_Name")
+                                  ?.ToString();
                 }
 
 
                 DataTable selected_dt = new DataTable();
 
-                //if (!Account_Type.IsNullOrWhiteSpace() && !Account_Type.GetIsDynamicBound())
-                //{
                 if (SubProject_ID > 0)
                 {
+
                     if (Subproject_comboBox.SelectedValue != null && Subproject_comboBox.SelectedIndex != -1)
                     {
                         string Selected_Subproject = Subproject_comboBox.SelectedValue.ToString();
@@ -2100,7 +2104,6 @@ namespace Financial_WPF_App
                         DataRow[] Accountsrows = tills_dt.Select("Subproject_ID = '" + Selected_Subproject + "'");
                         if (Accountsrows.Length != 0)
                         {
-                            //DataTable selected_dt = new DataTable();
                             selected_dt = Accountsrows.CopyToDataTable();
                             if (selected_dt != null && selected_dt.Rows.Count > 0)
                             {
@@ -2124,7 +2127,9 @@ namespace Financial_WPF_App
                             Account_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                 }
-                //}
+                
+
+               
             }
             catch (Exception ex)
             {
@@ -2138,6 +2143,40 @@ namespace Financial_WPF_App
                 if (PassException)
                     throw;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+            if (Account_Type == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (Account_Type == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (Account_Type == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (Account_Type == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Account_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -2172,6 +2211,11 @@ namespace Financial_WPF_App
                                           ?.Field<string>("Accounttype_Name")
                                           ?.ToString();
 
+                    Category = tills_dt.AsEnumerable()
+                                          .FirstOrDefault(row => row.Field<int?>("Subproject_ID")?.Equals(SubProject_ID) ?? false)
+                                          ?.Field<string>("Category_Name")
+                                          ?.ToString();
+
                     IsAdminAccount = tills_dt.AsEnumerable()
                                         .FirstOrDefault(row => row.Field<int>("Account_ID") == Account_ID)?
                                         .Field<int>("is_administrative") == 1;
@@ -2193,6 +2237,8 @@ namespace Financial_WPF_App
                             Till_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                 }
+
+                Apply_Color_Theme();
             }
             catch (Exception ex)
             {

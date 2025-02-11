@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
 {
@@ -37,6 +38,9 @@ namespace Financial_WPF_App.Views
         int Employee_ID = -1;
         DataTable All_Employees_dt, Employee_Subproject_Table, Original_Employee_Subproject_Table, Subproject_dt, Lines_dt;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
         #endregion
@@ -50,7 +54,7 @@ namespace Financial_WPF_App.Views
                 l = new Line();
                 //Set_privileges();
                 Load_Form();
-
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -64,6 +68,16 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Form()

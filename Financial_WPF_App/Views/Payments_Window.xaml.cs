@@ -50,6 +50,9 @@ namespace Financial_WPF_App.Views
         List<string> HiddenColumns = new List<string>();
         List<string> Originally_HiddenColumns = new List<string>();
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
         #endregion
@@ -71,6 +74,7 @@ namespace Financial_WPF_App.Views
                 myExpander.IsExpanded = false;
 
                 Load_Data();
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -82,6 +86,16 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()

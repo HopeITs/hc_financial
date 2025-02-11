@@ -3,6 +3,7 @@ using Financial_WPF_App.Models;
 using System;
 using System.Data;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
 {
@@ -39,6 +40,9 @@ namespace Financial_WPF_App.Views
         private Budget_Lines bl;
 
         private DataTable dt, MissingLiens_dt;
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+
         private bool OnLoad()
         {
             try
@@ -48,7 +52,7 @@ namespace Financial_WPF_App.Views
                 Create_Columns();
                 Fill_Datatables();
                 this.myDataGrid.GridCopyPaste = new MultiBudgetLines_CustomCopyPaste(myDataGrid, Budget_ID, Budget_Name, MissingLiens_dt);
-
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -64,6 +68,15 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void Apply_Color_Theme()
+        {
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
         private void Create_Columns()
         {
 

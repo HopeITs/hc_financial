@@ -49,6 +49,9 @@ namespace Financial_WPF_App.Views
 
         DataTable Report_dt = new DataTable();
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
 
         private void OnLoad()
         {
@@ -59,8 +62,18 @@ namespace Financial_WPF_App.Views
             myExpander.IsExpanded = false;
             PassException = true;
             Load_Data();
-
+            Apply_Color_Theme();
             PassException = false;
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()

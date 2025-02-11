@@ -41,6 +41,9 @@ namespace Financial_WPF_App.Views
 
         double HOffset = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         private void OnLoad()
         {
             UserMode = false;
@@ -52,7 +55,19 @@ namespace Financial_WPF_App.Views
             }
 
             Load_Data();
+            Apply_Color_Theme();
             UserMode = true;
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+ 
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
 

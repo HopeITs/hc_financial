@@ -15,13 +15,13 @@ namespace Financial_WPF_App
 {
     public partial class All_Accounts_Window : Window
     {
-        public All_Accounts_Window(Main_Window_2 main_Window, string SubProject_ID)
+        public All_Accounts_Window(Main_Window_2 main_Window, string SubProject_ID, string Category)
         {
             InitializeComponent();
 
             this.main_Window = main_Window;
             this.SubProject_ID = SubProject_ID;
-
+            this.Category = Category;
             if (OnLoad())
             {
 
@@ -34,6 +34,7 @@ namespace Financial_WPF_App
 
         private int ID;
         private string SubProject_ID;
+        private string Category;
         Main_Window_2 main_Window;
         private Account a;
         SubProject_Donor sd;
@@ -45,6 +46,9 @@ namespace Financial_WPF_App
 
         #region privileges
         bool Delete_privileges, Administrative_privileges;
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
 
         #endregion
 
@@ -60,6 +64,7 @@ namespace Financial_WPF_App
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
                 Load_Data();
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -73,6 +78,26 @@ namespace Financial_WPF_App
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+
+            if (Category == "Micro Projects")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+            }
+            else if (Category == "Budget")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+
+            }
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()
@@ -176,7 +201,7 @@ namespace Financial_WPF_App
                 int Acc_ID = Convert.ToInt32(dataRow[0].ToString());
 
                 Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
-                main_Window.Create_tabItem(account_Window, Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                main_Window.Create_tabItem(account_Window, Name, Theme_Color);
             }
             catch (Exception ex)
             {
@@ -439,7 +464,7 @@ namespace Financial_WPF_App
                             int Acc_ID = Convert.ToInt32(dataRow[0].ToString());
                             string AccName = dataRow["Name"].ToString();
                             Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
-                            main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                            main_Window.Create_tabItem(account_Window, AccName, Theme_Color);
                         }
                     }
                 }

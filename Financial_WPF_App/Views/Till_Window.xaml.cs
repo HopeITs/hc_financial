@@ -78,6 +78,9 @@ namespace Financial_WPF_App.Views
         string FiscalBond_Name;
         bool AsFiscalBond;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
 
@@ -101,6 +104,7 @@ namespace Financial_WPF_App.Views
                 myExpander.IsExpanded = false;
 
                 Load_Data();
+                Apply_Color_Theme();
                 return true;
             }
 
@@ -117,6 +121,40 @@ namespace Financial_WPF_App.Views
                 return false;
             }
 
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+            if (Account_Type == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (Account_Type == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (Account_Type == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (Account_Type == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         public void Load_Data()
@@ -760,7 +798,7 @@ namespace Financial_WPF_App.Views
                         Approved_Action = true;
 
 
-                    Window _Window = new Attachments(Action_ID, -1, Approved_Action, this, null, null);
+                    Window _Window = new Attachments(Action_ID, -1, Approved_Action, Account_Type, Category, this, null, null);
                     _Window.ShowDialog();
                 }
             }

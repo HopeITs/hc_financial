@@ -214,69 +214,6 @@
             <Setter Property="AllowPin" Value="True"/>
             <Setter Property="AllowDrop" Value="True"/>
             <Setter Property="ShowPin" Value="True"/>
-            <!-- Trigger for Active Tab -->
-            <!--<Style.Triggers>
-                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
-                    -->
-            <!-- Active Tab styles -->
-            <!--
-                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
-                    <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    -->
-            <!-- Bottom Border -->
-
-            <!-- Add shadow effect for selected tab -->
-            <!--
-                    <Setter Property="Canvas.Background" Value="Transparent">
-                        
-                    </Setter>
-                    
-                </DataTrigger>
-
-                -->
-            <!-- Inactive Tab -->
-            <!--
-                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False">
-                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
-                    <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    
-                </DataTrigger>
-            </Style.Triggers>-->
-            <!-- ControlTemplate to handle custom behavior -->
-            <!--<Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type syncfusion:TabItemExt}">
-                        <Grid>
-                            <Border x:Name="TabBorder" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="5" BorderBrush="Transparent" BorderThickness="0">
-                                <Border.Effect>
-                                    <DropShadowEffect x:Name="TabShadow" Color="Black" BlurRadius="10" ShadowDepth="3" Opacity="0"/>
-                                </Border.Effect>
-                                <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-
-                            <Rectangle x:Name="Underline" Height="3" VerticalAlignment="Bottom" Fill="Transparent"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="TabBorder" Property="BorderThickness" Value="1"/>
-                                <Setter TargetName="Underline" Property="Fill" Value="#BE1F24"/>
-                            </Trigger>
-
-                            <Trigger Property="IsSelected" Value="False">
-                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="Transparent"/>
-                                <Setter TargetName="TabBorder" Property="BorderThickness" Value="0"/>
-                                <Setter TargetName="Underline" Property="Fill" Value="Transparent"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>-->
         </Style>
 
         <!-- Override TreeViewItem Style -->
@@ -408,18 +345,7 @@
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="{StaticResource LightGray2}"/>
-                                <!-- Light Gray -->
                             </Trigger>
-                            <!--<MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="true" />
-                                    <Condition Property="IsSelectionActive" Value="false" />
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="Bd"
-                                Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
-                                <Setter Property="Foreground"
-                                Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}" />
-                            </MultiTrigger>-->
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Foreground"
                                 Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
@@ -441,7 +367,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <!-- Custom Title Bar -->
-            <DockPanel Background="#DCDDDE" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Margin="0,0,0,-12">
+            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Margin="0,0,0,-12">
                 <local:WindowControlBar x:Name="ControlBar" HorizontalAlignment="Right"/>
             </DockPanel>
 
@@ -459,7 +385,7 @@
                 <!-- Main Content Border -->
 
                 <syncfusion:TabControlExt Grid.Row="1" Grid.Column="1" SelectionChanged="TabControl_SelectionChanged"  x:Name="main_tabControl"
-                        BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="#FFD8D8D8" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}" BorderBrush="Black" TabItemHoverForeground="Gray" Margin="0,19,30,20" TabItemSelectedBackground="#FFDCDDDE" Panel.ZIndex="-2" TabItemSelectedForeground="{x:Null}" TabClosing="main_tabControl_TabClosing">
+                        BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="{StaticResource LightGray1}" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}" BorderBrush="Black" TabItemHoverForeground="Gray" Margin="0,19,30,20" TabItemSelectedBackground="{StaticResource LightGray1}" Panel.ZIndex="-2" TabItemSelectedForeground="{x:Null}" TabClosing="main_tabControl_TabClosing">
                     <syncfusion:TabControlExt.Background>
                         <ImageBrush ImageSource="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill">
                             <ImageBrush.RelativeTransform>
@@ -599,11 +525,11 @@ Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
                 </Grid>
 
                 <Expander x:Name="myExpander" Grid.Column="0" IsExpanded="True"
-          ExpandDirection="Left" Loaded="myExpander_Loaded"
-          Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-          Foreground="#FF30323E"  Background="White" Grid.Row="1" Margin="0,0,12,0">
+                            ExpandDirection="Left" Loaded="myExpander_Loaded"
+                            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                            Foreground="#FF30323E"  Background="White" Grid.Row="1" Margin="0,0,12,0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />

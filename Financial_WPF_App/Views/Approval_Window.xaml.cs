@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
 {
@@ -160,9 +161,11 @@ namespace Financial_WPF_App.Views
                             FlowDirection = FlowDirection.RightToLeft
                         };
                         Main_tabControl.Items.Add(newTabItem);
-
+                        newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                        newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
 
                         TabControl SubTabControler = new TabControl();
+                        SubTabControler.Style = (Style)FindResource("TabControlStyle");
                         newTabItem.Content = SubTabControler;
 
                         DataTable t_dt = new DataTable();
@@ -195,6 +198,8 @@ namespace Financial_WPF_App.Views
                                         Style = this.FindResource("tabItemStyle") as Style,
                                         FlowDirection = FlowDirection.LeftToRight
                                     };
+                                    newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                     SubTabControler.Items.Add(newTabItem);
                                     newTabItem.Content = null;
 
@@ -236,9 +241,13 @@ namespace Financial_WPF_App.Views
                             FlowDirection = FlowDirection.RightToLeft
                         };
                         Main_tabControl.Items.Add(newTabItem);
+                        newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                        newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+
 
 
                         TabControl SubTabControler = new TabControl();
+                        SubTabControler.Style = (Style)FindResource("TabControlStyle");
                         newTabItem.Content = SubTabControler;
 
                         DataTable t_dt = new DataTable();
@@ -277,6 +286,8 @@ namespace Financial_WPF_App.Views
                                         Style = this.FindResource("tabItemStyle") as Style,
                                         FlowDirection = FlowDirection.LeftToRight
                                     };
+                                    newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                     SubTabControler.Items.Add(newTabItem);
                                     newTabItem.Content = null;
 
@@ -304,6 +315,8 @@ namespace Financial_WPF_App.Views
                                         Style = this.FindResource("tabItemStyle") as Style,
                                         FlowDirection = FlowDirection.LeftToRight
                                     };
+                                    newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                     SubTabControler.Items.Add(newTabItem);
                                     newTabItem.Content = null;
 
@@ -346,10 +359,13 @@ namespace Financial_WPF_App.Views
                             Style = this.FindResource("tabItemStyle") as Style,
                             FlowDirection = FlowDirection.RightToLeft
                         };
+                        newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["Orange"];
+                        newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["Orange"]);
                         Main_tabControl.Items.Add(newTabItem);
 
 
                         TabControl SubTabControler = new TabControl();
+                        SubTabControler.Style = (Style)FindResource("TabControlStyle");
                         newTabItem.Content = SubTabControler;
 
                         DataTable t_dt = new DataTable();
@@ -382,6 +398,8 @@ namespace Financial_WPF_App.Views
                                         Style = this.FindResource("tabItemStyle") as Style,
                                         FlowDirection = FlowDirection.LeftToRight
                                     };
+                                    newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["Orange"];
+                                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["Orange"]);
                                     SubTabControler.Items.Add(newTabItem);
                                     newTabItem.Content = null;
 
@@ -425,11 +443,14 @@ namespace Financial_WPF_App.Views
                             FlowDirection = FlowDirection.RightToLeft
                         };
                         Main_tabControl.Items.Add(newTabItem);
+                        newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+                        newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
                         newTabItem.Content = null;
 
 
 
                         TabControl SubTabControler = new TabControl();
+                        SubTabControler.Style = (Style)FindResource("TabControlStyle");
                         newTabItem.Content = SubTabControler;
 
                         DataTable t_dt = new DataTable();
@@ -462,6 +483,8 @@ namespace Financial_WPF_App.Views
                                         Style = this.FindResource("tabItemStyle") as Style,
                                         FlowDirection = FlowDirection.LeftToRight
                                     };
+                                    newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+                                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
                                     SubTabControler.Items.Add(newTabItem);
                                     newTabItem.Content = null;
 
@@ -501,6 +524,21 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("Duplicate entry"))
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
                 else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void NewTabItem_Loaded(object sender, RoutedEventArgs e, SolidColorBrush color)
+        {
+            TabItem tabItem = sender as TabItem;
+            if (tabItem != null)
+            {
+                // Find the BottomBorder inside the TabItem template
+                Border bottomBorder = tabItem.Template.FindName("BottomBorder", tabItem) as Border;
+                if (bottomBorder != null)
+                {
+                    // Set the new color for the bottom border
+                    bottomBorder.Background = color;  // Replace with your desired color
+                }
             }
         }
     }

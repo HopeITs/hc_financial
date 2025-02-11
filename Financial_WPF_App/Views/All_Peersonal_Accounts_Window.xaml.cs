@@ -33,9 +33,8 @@ namespace Financial_WPF_App.Views
             {
                 throw new ArgumentException("This page will not open due to data fetching error.");
             }
-
-
         }
+
         private int ID;
         private string City_ID;
         Main_Window_2 main_Window;
@@ -46,6 +45,9 @@ namespace Financial_WPF_App.Views
         List<string> HiddenColumns = new List<string>();
         List<string> Originally_HiddenColumns = new List<string>();
         double HOffset = 0;
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+
 
         #region privileges
         bool Delete_privileges;
@@ -63,6 +65,7 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
                 Load_Data();
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -76,6 +79,16 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()

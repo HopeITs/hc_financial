@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Financial_WPF_App
 {
@@ -63,6 +64,9 @@ namespace Financial_WPF_App
         bool DeleteSchedualedPayments = false;
         Main_Window_2 main_Window;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+
+
         private bool OnLoad()
         {
             try
@@ -76,6 +80,7 @@ namespace Financial_WPF_App
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
                 Load_Data();
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -90,7 +95,15 @@ namespace Financial_WPF_App
                 return false;
             }
         }
+        private void Apply_Color_Theme()
+        {
 
+   
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
         private void Load_Data()
         {
             if (SubProject_ID != -1)

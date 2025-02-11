@@ -10,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App.Views
@@ -92,6 +93,7 @@ namespace Financial_WPF_App.Views
 
         string Selected_budgetID;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
         #region privileges
@@ -1437,6 +1439,8 @@ namespace Financial_WPF_App.Views
                     }
                 }
 
+                Apply_Color_Theme();
+
             }
             catch (Exception ex)
             {
@@ -1448,6 +1452,40 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+            if (Account_Type == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (Account_Type == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (Account_Type == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (Account_Type == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Tilltype_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

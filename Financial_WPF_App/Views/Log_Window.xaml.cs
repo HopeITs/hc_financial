@@ -36,6 +36,9 @@ namespace Financial_WPF_App.Views
         List<string> HiddenColumns = new List<string>();
         List<string> Originally_HiddenColumns = new List<string>();
 
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
         private bool OnLoad()
         {
             try
@@ -43,7 +46,7 @@ namespace Financial_WPF_App.Views
                 l = new Log();
 
                 Load_Data();
-
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -57,6 +60,16 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()

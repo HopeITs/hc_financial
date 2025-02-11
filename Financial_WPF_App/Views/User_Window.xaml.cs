@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 
 namespace Financial_WPF_App.Views
@@ -52,6 +53,9 @@ namespace Financial_WPF_App.Views
         List<int> ExchangeAccounts;
 
         int User_ID = -1;
+
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
         private bool OnLoad()
         {
             try
@@ -74,7 +78,7 @@ namespace Financial_WPF_App.Views
                 ExchangeAccounts = new List<int>();
 
                 Load_Data();
-
+                Apply_Color_Theme();
                 Show_Hide_Component();
 
                 return true;
@@ -94,6 +98,16 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void Apply_Color_Theme()
+        {
+
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
         private void Load_Data()
         {
             Load_Comboboxes_Data();

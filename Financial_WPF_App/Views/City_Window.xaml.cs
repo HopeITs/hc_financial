@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Financial_WPF_App
 {
@@ -33,6 +34,9 @@ namespace Financial_WPF_App
         List<int> Delete_list;
         string Query, Log_Query;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region //IsDirty
         bool City_IsDirty = false;
 
@@ -44,7 +48,7 @@ namespace Financial_WPF_App
             {
                 c = new City();
                 Load_Data();
-
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -58,6 +62,15 @@ namespace Financial_WPF_App
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Load_Data()

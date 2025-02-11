@@ -46,6 +46,9 @@ namespace Financial_WPF_App.Views
         StackedHeaderRow StackedHeaderRow1 = new StackedHeaderRow { };
         double HOffset = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
 
@@ -65,7 +68,42 @@ namespace Financial_WPF_App.Views
                 myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
             }
             Load_Data();
+            Apply_Color_Theme();
             UserMode = true;
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+            if (Account_Type == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (Account_Type == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (Account_Type == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (Account_Type == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void Set_privileges()

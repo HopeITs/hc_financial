@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
 {
@@ -35,6 +36,7 @@ namespace Financial_WPF_App.Views
         private DataTable dt, Employee_Subprojects_dt;
         Employee Emp;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
@@ -52,7 +54,7 @@ namespace Financial_WPF_App.Views
                 Create_Columns();
                 Fill_Datatables();
                 this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
-
+                Apply_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -68,6 +70,15 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void Apply_Color_Theme()
+        {
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
         private void Create_Columns()
         {
 

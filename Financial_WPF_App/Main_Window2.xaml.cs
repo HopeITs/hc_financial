@@ -175,11 +175,12 @@ namespace Financial_WPF_App
             main_tabControl.Items.Add(oTab);
             main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
 
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateTextBlocksForeground(oTab.Content, foreground);
-            }), System.Windows.Threading.DispatcherPriority.Loaded);
+            //Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            //{
+            //    WindowUtils.UpdateTextBlocksForeground(oTab.Content, foreground);
+            //}), System.Windows.Threading.DispatcherPriority.Loaded);
         }
+
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
@@ -1002,16 +1003,16 @@ namespace Financial_WPF_App
                                 switch (textBlock.Text)
                                 {
                                     case "All Accounts":
-                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
-                                        Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID, "");
+                                        Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                         break;
                                     case "Payments Account":
                                         Window Payments = new Payments_Window(this, Sub_ID);
-                                        Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                         break;
                                     case "Beneficiaries Accounts":
                                         Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
-                                        Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                         break;
                                     case "All Personal Accounts":
                                         All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
@@ -1032,7 +1033,7 @@ namespace Financial_WPF_App
                                     switch (textBlock.Text)
                                     {
                                         case "All Accounts":
-                                            All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
+                                            All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID, "Micro Projects");
                                             Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                             break;
                                         case "Payments Account":
@@ -1061,16 +1062,16 @@ namespace Financial_WPF_App
                                 switch (textBlock.Text)
                                 {
                                     case "All Accounts":
-                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID);
-                                        Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        All_Accounts_Window All_Accounts = new All_Accounts_Window(this, Sub_ID, "Budget");
+                                        Create_tabItem(All_Accounts, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                         break;
                                     case "Payments Account":
                                         Window Payments = new Payments_Window(this, Sub_ID);
-                                        Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        Create_tabItem(Payments, textBlock.Text + "-" + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                         break;
                                     case "Beneficiaries Accounts":
                                         Account_Beneficiaries_Window account_Beneficiaries = new Account_Beneficiaries_Window(-1, Convert.ToInt32(Sub_ID), this);
-                                        Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                        Create_tabItem(account_Beneficiaries, textBlock.Text + Sub_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                         break;
                                     case "All Personal Accounts":
                                         All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
@@ -1157,7 +1158,7 @@ namespace Financial_WPF_App
                         else if (Acc_Name.Contains("Advance Payments"))
                             Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
                         else if (!Acc_Name.Contains("Exchange") && !Acc_Name.Contains("Advance Payments") && !Sub_Name.Contains("Micro"))
-                            Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                            Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                     }
                 }
             }
@@ -1191,7 +1192,7 @@ namespace Financial_WPF_App
                     }
 
                     Account_Window account_Window = new Account_Window(Acc_ID, "Cash", this);
-                    Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                    Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
                 }
             }
             catch (Exception ex)
@@ -1268,7 +1269,7 @@ namespace Financial_WPF_App
                                 {
                                     fiscalbond_Name = textBlock.Text;
                                     Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
-                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
                                 }
                             }
                         }
@@ -1280,7 +1281,7 @@ namespace Financial_WPF_App
                                 {
                                     fiscalbond_Name = textBlock.Text;
                                     Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, this);
-                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                    Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                 }
                             }
                         }
@@ -1327,11 +1328,11 @@ namespace Financial_WPF_App
                                     break;
                                 case "Create New Budget Account":
                                     Account_Window Yaccount_ = new Account_Window("Budget", "Project", "", "", this);
-                                    Create_tabItem(Yaccount_, "New Budget Account", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                                    Create_tabItem(Yaccount_, "New Budget Account", (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                     break;
                                 case "Create New Cash Till":
                                     Account_Window Cashaccount_ = new Account_Window("", "Cash", "", "", this);
-                                    Create_tabItem(Cashaccount_, "New Cash Till", (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                                    Create_tabItem(Cashaccount_, "New Cash Till", (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
                                     break;
                                 case "Create New Personal Account":
                                     Account_Window Personalaccount_ = new Account_Window("", "Personal", "", "", this);
@@ -1753,7 +1754,7 @@ namespace Financial_WPF_App
             try
             {
                 CashBalances_Window CashBalances_Window = new CashBalances_Window(-1, this);
-                Create_tabItem(CashBalances_Window, "Balances", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                Create_tabItem(CashBalances_Window, "Balances", (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
             }
             catch (Exception ex)
             {

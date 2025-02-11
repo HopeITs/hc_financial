@@ -45,6 +45,9 @@ namespace Financial_WPF_App.Views
 
         double HOffset = 0;
 
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+
+
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
 
@@ -56,8 +59,18 @@ namespace Financial_WPF_App.Views
             a = new Models.Action();
 
             Load_Data();
+            Apply_Color_Theme();
         }
 
+        private void Apply_Color_Theme()
+        {
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
         public void Load_Data()
         {
             Set_privileges();
