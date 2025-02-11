@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
 {
@@ -83,6 +84,8 @@ namespace Financial_WPF_App.Views
                         Style = this.FindResource("tabItemStyle") as Style,
                         FlowDirection = FlowDirection.LeftToRight
                     };
+                    newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+                    newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                     Main_tabControl.Items.Add(newTabItem);
                     newTabItem.Content = null;
                     newTabItem.Content = All_BidgetLine_Sub_Window.Content;
@@ -107,6 +110,22 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("Duplicate entry"))
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
                 else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+
+        private void NewTabItem_Loaded(object sender, RoutedEventArgs e, SolidColorBrush color)
+        {
+            TabItem tabItem = sender as TabItem;
+            if (tabItem != null)
+            {
+                // Find the BottomBorder inside the TabItem template
+                Border bottomBorder = tabItem.Template.FindName("BottomBorder", tabItem) as Border;
+                if (bottomBorder != null)
+                {
+                    // Set the new color for the bottom border
+                    bottomBorder.Background = color;  // Replace with your desired color
+                }
             }
         }
     }
