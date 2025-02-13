@@ -656,31 +656,10 @@ namespace Financial_WPF_App
                             var AdminAccounts_Groups = subproject.Where(row => row.Field<Int32?>("ObserveAccount_ID") != null && row.Field<Int32?>("ObserveAccount_ID") == Row.Field<int?>("AccountID") && row.Field<Int32>("IsClosed") != 1)
                                      .GroupBy(row => row.Field<Int32>("AccountID"));
 
-                            var account_Item = new TreeViewItem();
+                            var account_itemInfo = new tagItemInfo { ID = Row.Field<int?>("AccountID"), Category = AccountCategory };
 
-                            if (role == "Head Office" && AdminAccounts_Groups.Count() > 0)
-                            {
-                                var account_itemInfo = new tagItemInfo { ID = Row.Field<int?>("AccountID"), Category = "Micro Projects" };
-
-                                account_Item = CreateTreeViewItem(AccountName, null, account_itemInfo);
-                            }
-                            else
-                            {
-                                if (AccountCategory == "Micro Projects")
-                                {
-                                    var account_itemInfo = new tagItemInfo { ID = Row.Field<int?>("AccountID"), Category = "Micro Projects" };
-
-                                    account_Item = CreateTreeViewItem(AccountName, null, account_itemInfo);
-                                }
-                                else if (AccountCategory == "Budget")
-                                {
-                                    var account_itemInfo = new tagItemInfo { ID = Row.Field<int?>("AccountID"), Category = "Budget" };
-
-                                    account_Item = CreateTreeViewItem(AccountName, null, account_itemInfo);
-                                }
-                            }
+                            var account_Item = CreateTreeViewItem(AccountName, null, account_itemInfo);
                    
-
                             if (AccountName != null && Row.Field<Int64>("IsPayments") == 0 && Row.Field<Int32>("is_administrative") != 1 && Row.Field<Int32>("IsClosed") != 1)
                             {
                                 account_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
@@ -704,18 +683,9 @@ namespace Financial_WPF_App
                                     {
                                         string AdminAccountCategory = Row.Field<string>("CategoryName");
                                         var AdminAccount_Item = new TreeViewItem();
-                                        if (AdminAccountCategory == "Micro Projects")
-                                        {
-                                            var account_itemInfo = new tagItemInfo { ID = AdminAccount.First().Field<int?>("AccountID"), Category = "Micro Projects" };
+                                        var account_itemInf = new tagItemInfo { ID = AdminAccount.First().Field<int?>("AccountID"), Category = AdminAccountCategory };
 
-                                            AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"),null, account_itemInfo);
-                                        }
-                                        else if (AdminAccountCategory == "Budget")
-                                        {
-                                            var account_itemInfo = new tagItemInfo { ID = AdminAccount.First().Field<int?>("AccountID"), Category = "Budget" };
-
-                                            AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"), null, account_itemInfo);
-                                        }
+                                        AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"), null, account_itemInf);
               
                                         AdminAccount_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
 
