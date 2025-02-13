@@ -235,7 +235,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                         <Border Background="Transparent" Height="16" Padding="5,5,5,5" Width="16">
-                            <Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}" Fill="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Budget|Exchange|Cash|Personal|Default'}" Stroke="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Budget|Exchange|Cash|Personal|Default'}">
+                            <Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}" Fill="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro Projects|Budget|Exchange|Cash|Personal|Default'}" Stroke="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro Projects|Budget|Exchange|Cash|Personal|Default'}">
                                 <Path.RenderTransform>
                                     <RotateTransform Angle="135" CenterX="3" CenterY="3"/>
                                 </Path.RenderTransform>
@@ -248,8 +248,8 @@
                                         <RotateTransform Angle="180" CenterX="3" CenterY="3"/>
                                     </Setter.Value>
                                 </Setter>
-                                <Setter Property="Fill" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Budget|Exchange|Cash|Personal|Default'}"/>
-                                <Setter Property="Stroke" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Budget|Exchange|Cash|Personal|Default'}"/>
+                                <Setter Property="Fill" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro Projects|Budget|Exchange|Cash|Personal|Default'}"/>
+                                <Setter Property="Stroke" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro Projects|Budget|Exchange|Cash|Personal|Default'}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Stroke}"/>

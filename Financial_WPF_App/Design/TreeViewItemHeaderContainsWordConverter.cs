@@ -23,8 +23,18 @@ namespace Financial_WPF_App
                 return (SolidColorBrush)Application.Current.Resources["DarkGray"];
             }
 
-            // Try to get the TreeViewItem from the value
-            TreeViewItem currentItem = FindParentTreeViewItem(value as DependencyObject);
+            TreeViewItem currentItem = null;
+
+            if (value is DependencyObject depObj)
+            {
+                // Try to get the TreeViewItem from the visual tree
+                currentItem = FindParentTreeViewItem(depObj);
+            }
+            else if (value is string textValue)
+            {
+                // If the value is a string, search for the TreeViewItem by its header text
+                currentItem = FindParentTreeViewItemByText(textValue);
+            }
 
             if (currentItem == null)
             {
@@ -34,18 +44,17 @@ namespace Financial_WPF_App
             if (currentItem.Tag is tagItemInfo itemInfo)
             {
                 string category = itemInfo.Category;
-                string header = ExtractTextFromHeader(currentItem.Header);
 
                 // Example: Map the category to a color
                 var categoryColors = new Dictionary<string, SolidColorBrush>
-                    {
-                        { "Micro", (SolidColorBrush)Application.Current.Resources["HopeRed"] },
-                        { "Budget", (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"] },
-                        { "Exchange", (SolidColorBrush)Application.Current.Resources["Orange"] },
-                        { "Cash", (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"] },
-                        { "Personal", (SolidColorBrush)Application.Current.Resources["PastelGreen"] },
-                        { "Default", (SolidColorBrush)Application.Current.Resources["DarkGray"] }
-                    };
+            {
+                { "Micro Projects", (SolidColorBrush)Application.Current.Resources["HopeRed"] },
+                { "Budget", (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"] },
+                { "Exchange", (SolidColorBrush)Application.Current.Resources["Orange"] },
+                { "Cash", (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"] },
+                { "Personal", (SolidColorBrush)Application.Current.Resources["PastelGreen"] },
+                { "Default", (SolidColorBrush)Application.Current.Resources["DarkGray"] }
+            };
 
                 if (categoryColors.TryGetValue(category, out SolidColorBrush color))
                 {
@@ -53,19 +62,70 @@ namespace Financial_WPF_App
                 }
             }
 
-
             return (SolidColorBrush)Application.Current.Resources["DarkGray"];
         }
 
         private TreeViewItem FindParentTreeViewItem(DependencyObject obj)
         {
-            while (obj != null && !(obj is TreeViewItem))
+            while (obj != null)
             {
-                obj = VisualTreeHelper.GetParent(obj);
+                if (obj is TreeViewItem treeViewItem)
+                {
+                    return treeViewItem;
+                }
+
+                // Check parent in the logical and visual trees
+                if (obj is FrameworkElement fe && fe.Parent != null)
+                {
+                    obj = fe.Parent;
+                }
+                else
+                {
+                    obj = VisualTreeHelper.GetParent(obj);
+                }
             }
-            return obj as TreeViewItem;
+
+            return null;
         }
 
+        private TreeViewItem FindParentTreeViewItemByText(string text)
+        {
+            foreach (TreeViewItem item in FindTreeViewItems(Application.Current.MainWindow))
+            {
+                if (item.Header is string headerText && headerText == text)
+                {
+                    return item; // Return the TreeViewItem that matches the text
+                }
+                else if (item.Header is TextBlock textBlock && textBlock.Text == text)
+                {
+                    return item; // Return the TreeViewItem that contains a TextBlock with the matching text
+                }
+            }
+            return null;
+        }
+
+        private List<TreeViewItem> FindTreeViewItems(DependencyObject parent)
+        {
+            var items = new List<TreeViewItem>();
+
+            if (parent == null)
+                return items;
+
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is TreeViewItem treeViewItem)
+                {
+                    items.Add(treeViewItem);
+                }
+
+                items.AddRange(FindTreeViewItems(child)); // Recursive search
+            }
+
+            return items;
+        }
 
         private string ExtractTextFromHeader(object header)
         {
