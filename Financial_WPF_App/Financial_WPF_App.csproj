@@ -221,6 +221,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Design\tagItemInfo.cs" />
     <Compile Include="Helper\Approval_CustomAlternatingRowStyleSelector.cs" />
     <Compile Include="Helper\Approval_CustomRowStyleSelector.cs" />
     <Compile Include="Helper\CellStyleSelector.cs" />

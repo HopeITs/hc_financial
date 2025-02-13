@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Helper;
+﻿using Financial_WPF_App.Design;
+using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
@@ -19,6 +20,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using static Financial_WPF_App.Helper.TreeViewItemViewModel;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App
@@ -153,6 +155,8 @@ namespace Financial_WPF_App
         DataTable Fiscalbonds;
         DataTable CashAccounts;
         DataTable PersonalAccounts;
+
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -514,20 +518,32 @@ namespace Financial_WPF_App
             CashAccounts = AllAccounts_ds.Tables[3];
             PersonalAccounts = AllAccounts_ds.Tables[4];
 
-            var projects = CreateParentTreeViewItem("Projects Accounts");
+            var projects_itemInfo = new tagItemInfo { ID = -1, Category = "Default" };
+
+            var projects = CreateParentTreeViewItem("Projects Accounts", projects_itemInfo);
+            //projects.Tag = projects_itemInfo;
             projects.IsExpanded = false;
 
-            var CaAccounts = CreateParentTreeViewItem("Cash Tills");
-            CaAccounts.Tag = -1;
 
-            var ExcAccounts = CreateParentTreeViewItem("Exchange Accounts");
-            ExcAccounts.Tag = -1;
+            var CaAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Cash" };
+            var CaAccounts = CreateParentTreeViewItem("Cash Tills", CaAccounts_itemInfo);
+            //CaAccounts.Tag = CaAccounts_itemInfo;
+            //CaAccounts.Tag = -1;
 
-            var PerAccounts = CreateParentTreeViewItem("Personal Accounts");
-            PerAccounts.Tag = -1;
+            var ExcAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Exchange" };
+            var ExcAccounts = CreateParentTreeViewItem("Exchange Accounts", ExcAccounts_itemInfo);
+            //ExcAccounts.Tag = ExcAccounts_itemInfo;
+            //ExcAccounts.Tag = -1;
 
-            var fiscalbonds = CreateParentTreeViewItem("Bonds");
-            fiscalbonds.Tag = -1;
+            var PerAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Personal" };
+            var PerAccounts = CreateParentTreeViewItem("Personal Accounts", PerAccounts_itemInfo);
+            //PerAccounts.Tag = PerAccounts_itemInfo;
+            //PerAccounts.Tag = -1;
+
+            var fiscalbonds_itemInfo = new tagItemInfo { ID = -1, Category = "Default" };
+            var fiscalbonds = CreateParentTreeViewItem("Bonds", fiscalbonds_itemInfo);
+            //fiscalbonds.Tag = fiscalbonds_itemInfo;
+            //fiscalbonds.Tag = -1;
 
 
             if (role == "Head Office")
@@ -540,15 +556,21 @@ namespace Financial_WPF_App
                     System.Windows.Controls.TreeViewItem AddNewAccount;
                     if (Account == "Create New Micro Projects Account")
                     {
-                        AddNewAccount = CreateTreeViewItem("Create New Micro Projects Account", "pack://application:,,,/Images/Icons/micro_projects.png");
+                        var NewAccount_itemInfo = new tagItemInfo { ID = -1, Category = "Micro" };
 
+                        AddNewAccount = CreateTreeViewItem("Create New Micro Projects Account", "pack://application:,,,/Images/Icons/micro_projects.png", NewAccount_itemInfo);
+                        //AddNewAccount.Tag = NewAccount_itemInfo;
+                        //AddNewAccount.Tag = -1;
                     }
                     else
                     {
-                        AddNewAccount = CreateTreeViewItem("Create New Budget Account", "pack://application:,,,/Images/Icons/budget_account.png");
+                        var NewAccount_itemInfo = new tagItemInfo { ID = -1, Category = "Budget" };
 
+                        AddNewAccount = CreateTreeViewItem("Create New Budget Account", "pack://application:,,,/Images/Icons/budget_account.png", NewAccount_itemInfo);
+                        //AddNewAccount.Tag = NewAccount_itemInfo;
+                        //AddNewAccount.Tag = -1;
                     }
-                    AddNewAccount.Tag = -1;
+                    
                     AddNewAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
                     projects.Items.Add(AddNewAccount);
@@ -560,9 +582,11 @@ namespace Financial_WPF_App
             var Projects_cityGroups = Projects.AsEnumerable().GroupBy(row => row.Field<string>("CityName"));
             foreach (var city in Projects_cityGroups)
             {
-                // Create a treeview item for the city
-                var city_Item = CreateTreeViewItem(city.Key);
-                city_Item.Tag = city.First().Field<int>("CityID");
+                var city_itemInfo = new tagItemInfo { ID = city.First().Field<int>("CityID"), Category = "Default" };
+
+                var city_Item = CreateTreeViewItem(city.Key, null,city_itemInfo);
+                //city_Item.Tag = city_itemInfo;
+                //city_Item.Tag = city.First().Field<int>("CityID");
 
                 // Group projects by project_ID
                 var project_Groups = city.GroupBy(row => row.Field<string>("ProjectName"));
@@ -571,7 +595,10 @@ namespace Financial_WPF_App
                     // Create a treeview item for the project
                     var project_Item = new System.Windows.Controls.TreeViewItem();
                     project_Item.Header = project.First().Field<string>("ProjectName");
-                    project_Item.Tag = project.First().Field<int?>("ProjectID");
+                    string projectCategory = project.First().Field<string>("CategoryName");
+                    var project_itemInfo = new tagItemInfo { ID = project.First().Field<int?>("ProjectID"), Category = projectCategory };
+                    project_Item.Tag = project_itemInfo;
+                    //project_Item.Tag = project.First().Field<int?>("ProjectID");
                     // Group subprojects by subproject_ID
                     var subproject_Groups = project.GroupBy(row => row.Field<string>("SubprojectName"));
 
@@ -581,7 +608,10 @@ namespace Financial_WPF_App
                         // Create a treeview item for the subproject
                         var subproject_Item = new System.Windows.Controls.TreeViewItem();
                         subproject_Item.Header = subproject.First().Field<string>("SubprojectName");
-                        subproject_Item.Tag = subproject.First().Field<int?>("SubprojectID");
+                        string subprojectCategory = subproject.First().Field<string>("CategoryName");
+                        var subproject_itemInfo = new tagItemInfo { ID = subproject.First().Field<int?>("SubprojectID"), Category = subprojectCategory };
+                        subproject_Item.Tag = subproject_itemInfo;
+                        //subproject_Item.Tag = subproject.First().Field<int?>("SubprojectID");
 
                         if (role == "Head Office")
                         {
@@ -593,37 +623,48 @@ namespace Financial_WPF_App
 
                             subproject_Item.ContextMenu = subproject_contextMenu;
                             subproject_Item.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
-
                         }
 
                         if (subproject.First().Field<string>("CategoryName") == "Micro Projects")
                         {
                             if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                             {
-                                var AllAccounts = CreateTreeViewItem("All Accounts");
-                                AllAccounts.Tag = -1;
+                                var AllAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Micro" };
+
+                                var AllAccounts = CreateTreeViewItem("All Accounts", "pack://application:,,,/Images/Icons/micro_projects.png", AllAccounts_itemInfo);
+                                //AllAccounts.Tag = AllAccounts_itemInfo;
+                                //AllAccounts.Tag = -1;
                                 AllAccounts.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
                                 subproject_Item.Items.Add(AllAccounts);
                             }
+                            var Payments_itemInfo = new tagItemInfo { ID = -1, Category = "Micro" };
 
-                            var Payments = CreateTreeViewItem("Payments Account");
-                            Payments.Tag = -1;
+                            var Payments = CreateTreeViewItem("Payments Account", "pack://application:,,,/Images/Icons/micro_projects.png", Payments_itemInfo);
+                            //Payments.Tag = Payments_itemInfo;
+                            //Payments.Tag = -1;
                             Payments.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
 
-                            var Beneficiary = CreateTreeViewItem("Beneficiaries Accounts");
-                            Beneficiary.Tag = -1;
+                            var Beneficiary_itemInfo = new tagItemInfo { ID = -1, Category = "Micro" };
+
+                            var Beneficiary = CreateTreeViewItem("Beneficiaries Accounts", "pack://application:,,,/Images/Icons/micro_projects.png", Beneficiary_itemInfo);
+                            //Beneficiary.Tag = Beneficiary_itemInfo;
+                            //Beneficiary.Tag = -1;
                             Beneficiary.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
 
 
                             subproject_Item.Items.Add(Payments);
                             subproject_Item.Items.Add(Beneficiary);
                         }
+
                         else if (subproject.First().Field<string>("CategoryName") == "Budget")
                         {
                             if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                             {
-                                var AllAccounts = CreateTreeViewItem("All Accounts");
-                                AllAccounts.Tag = -1;
+                                var AllAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Budget" };
+
+                                var AllAccounts = CreateTreeViewItem("All Accounts", "pack://application:,,,/Images/Icons/budget_account.png", AllAccounts_itemInfo);
+                                //AllAccounts.Tag = AllAccounts_itemInfo;
+                                //AllAccounts.Tag = -1;
                                 AllAccounts.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
 
                                 subproject_Item.Items.Add(AllAccounts);
@@ -635,8 +676,38 @@ namespace Financial_WPF_App
                         foreach (var Row in subproject)
                         {
                             string AccountName = Row.Field<string>("AccountName");
-                            var account_Item = CreateTreeViewItem(AccountName);
-                            account_Item.Tag = Row.Field<int?>("AccountID");
+                            string AccountCategory = Row.Field<string>("CategoryName");
+
+                            var AdminAccounts_Groups = subproject.Where(row => row.Field<Int32?>("ObserveAccount_ID") != null && row.Field<Int32?>("ObserveAccount_ID") == Row.Field<int?>("AccountID") && row.Field<Int32>("IsClosed") != 1)
+                                     .GroupBy(row => row.Field<Int32>("AccountID"));
+
+                            var account_Item = new TreeViewItem();
+
+                            if (role == "Head Office" && AdminAccounts_Groups.Count() > 0)
+                            {
+                                var account_itemInfo = new tagItemInfo { ID = Row.Field<int?>("AccountID"), Category = "Micro" };
+
+                                account_Item = CreateTreeViewItem(AccountName, null, account_itemInfo);
+                            }
+                            else
+                            {
+                                if (AccountCategory == "Micro Projects")
+                                {
+                                    var account_itemInfo = new tagItemInfo { ID = Row.Field<int?>("AccountID"), Category = "Micro" };
+
+                                    account_Item = CreateTreeViewItem(AccountName, "pack://application:,,,/Images/Icons/micro_projects.png", account_itemInfo);
+                                    //account_Item.Tag = account_itemInfo;
+                                }
+                                else if (AccountCategory == "Budget")
+                                {
+                                    var account_itemInfo = new tagItemInfo { ID = Row.Field<int?>("AccountID"), Category = "Budget" };
+
+                                    account_Item = CreateTreeViewItem(AccountName, "pack://application:,,,/Images/Icons/budget_account.png", account_itemInfo);
+                                    //account_Item.Tag = account_itemInfo;
+                                }
+                            }
+                   
+                            //account_Item.Tag = Row.Field<int?>("AccountID");
                             if (AccountName != null && Row.Field<Int64>("IsPayments") == 0 && Row.Field<Int32>("is_administrative") != 1 && Row.Field<Int32>("IsClosed") != 1)
                             {
                                 account_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
@@ -656,13 +727,25 @@ namespace Financial_WPF_App
 
                                 if (role == "Head Office")
                                 {
-                                    var AdminAccounts_Groups = subproject.Where(row => row.Field<Int32?>("ObserveAccount_ID") != null && row.Field<Int32?>("ObserveAccount_ID") == Row.Field<int?>("AccountID") && row.Field<Int32>("IsClosed") != 1)
-                                                                         .GroupBy(row => row.Field<Int32>("AccountID"));
-
                                     foreach (var AdminAccount in AdminAccounts_Groups)
                                     {
-                                        var AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"));
-                                        AdminAccount_Item.Tag = AdminAccount.First().Field<int?>("AccountID");
+                                        string AdminAccountCategory = Row.Field<string>("CategoryName");
+                                        var AdminAccount_Item = new TreeViewItem();
+                                        if (AdminAccountCategory == "Micro Projects")
+                                        {
+                                            var account_itemInfo = new tagItemInfo { ID = AdminAccount.First().Field<int?>("AccountID"), Category = "Micro" };
+
+                                            AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"), "pack://application:,,,/Images/Icons/micro_projects.png", account_itemInfo);
+                                            //account_Item.Tag = account_itemInfo;
+                                        }
+                                        else if (AdminAccountCategory == "Budget")
+                                        {
+                                            var account_itemInfo = new tagItemInfo { ID = AdminAccount.First().Field<int?>("AccountID"), Category = "Budget" };
+
+                                            AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"), "pack://application:,,,/Images/Icons/budget_account.png", account_itemInfo);
+                                            //account_Item.Tag = account_itemInfo;
+                                        }
+              
                                         AdminAccount_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
 
 
@@ -682,8 +765,8 @@ namespace Financial_WPF_App
                                 }
                                 subproject_Item.Items.Add(account_Item);
                             }
-
                         }
+
                         project_Item.Items.Add(subproject_Item);
                     }
                     city_Item.Items.Add(project_Item);
@@ -694,8 +777,11 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewCashAccount = CreateTreeViewItem("Create New Cash Till", "pack://application:,,,/Images/Icons/cash_till.png");
-                AddNewCashAccount.Tag = -1;
+                var NewCashAccount_itemInfo = new tagItemInfo { ID = -1, Category = "Cash" };
+
+                var AddNewCashAccount = CreateTreeViewItem("Create New Cash Till", "pack://application:,,,/Images/Icons/cash_till.png", NewCashAccount_itemInfo);
+                //AddNewCashAccount.Tag = NewCashAccount_itemInfo;
+                //AddNewCashAccount.Tag = -1;
                 AddNewCashAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
                 CaAccounts.Items.Add(AddNewCashAccount);
@@ -706,16 +792,21 @@ namespace Financial_WPF_App
             foreach (var city in Cash_cityGroups)
             {
                 // Create a treeview item for the city
-                var city_Item = CreateTreeViewItem(city.Key);
-                city_Item.Tag = city.First().Field<int>("CityID");
+                var city_itemInfo = new tagItemInfo { ID = city.First().Field<int>("CityID"), Category = "Default" };
+                var city_Item = CreateTreeViewItem(city.Key, null , city_itemInfo);
+                //city_Item.Tag = city_itemInfo;
+                //city_Item.Tag = city.First().Field<int>("CityID");
 
                 var CashAccount_Groups = city.GroupBy(row => row.Field<string>("Name"));
 
                 // Add accounts as child items
                 foreach (var CashAccount in CashAccount_Groups)
                 {
-                    var Cash_Item = CreateTreeViewItem(CashAccount.First().Field<string>("Name"));
-                    Cash_Item.Tag = CashAccount.First().Field<int>("ID");
+                    var Cash_Item_itemInfo = new tagItemInfo { ID = CashAccount.First().Field<int>("ID"), Category = "Cash" };
+
+                    var Cash_Item = CreateTreeViewItem(CashAccount.First().Field<string>("Name"), "pack://application:,,,/Images/Icons/cash_till.png", Cash_Item_itemInfo);
+                    //Cash_Item.Tag = Cash_Item_itemInfo;
+                    //Cash_Item.Tag = CashAccount.First().Field<int>("ID");
 
                     Cash_Item.PreviewMouseLeftButtonDown += Cash_AccountItem_PreviewMouseLeftButtonDown;
 
@@ -739,8 +830,11 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewExAccount = CreateTreeViewItem("Create New Exchange Account", "pack://application:,,,/Images/Icons/exchange_account.png");
-                AddNewExAccount.Tag = -1;
+                var NewExAccount_itemInfo = new tagItemInfo { ID = -1, Category = "Exchange" };
+
+                var AddNewExAccount = CreateTreeViewItem("Create New Exchange Account", "pack://application:,,,/Images/Icons/exchange_account.png", NewExAccount_itemInfo);
+                //AddNewExAccount.Tag = NewExAccount_itemInfo;
+                //AddNewExAccount.Tag = -1;
                 AddNewExAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
                 ExcAccounts.Items.Add(AddNewExAccount);
@@ -751,15 +845,21 @@ namespace Financial_WPF_App
             foreach (var City in Exchange_cityGroups)
             {
                 // Create a treeview item for the city
-                var city_Item = CreateTreeViewItem(City.Key);
-                city_Item.Tag = City.First().Field<int>("CityID");
+                var city_itemInfo = new tagItemInfo { ID = City.First().Field<int>("CityID"), Category = "Default" };
+
+                var city_Item = CreateTreeViewItem(City.Key, null, city_itemInfo);
+                //city_Item.Tag = city_itemInfo;
+                //city_Item.Tag = City.First().Field<int>("CityID");
 
                 var ExchangeAccount_Groups = City.GroupBy(row => row.Field<string>("Name"));
 
                 foreach (var ExchangeAccount in ExchangeAccount_Groups)
                 {
-                    var Exchange_Item = CreateTreeViewItem(ExchangeAccount.First().Field<string>("Name"));
-                    Exchange_Item.Tag = ExchangeAccount.First().Field<int>("ID");
+                    var Exchang_itemInfo = new tagItemInfo { ID = ExchangeAccount.First().Field<int>("ID"), Category = "Exchange" };
+
+                    var Exchange_Item = CreateTreeViewItem(ExchangeAccount.First().Field<string>("Name"), "pack://application:,,,/Images/Icons/exchange_account.png", Exchang_itemInfo);
+                    //Exchange_Item.Tag = Exchang_itemInfo;
+                    //Exchange_Item.Tag = ExchangeAccount.First().Field<int>("ID");
 
                     Exchange_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
 
@@ -784,8 +884,12 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewPersonalAccount = CreateTreeViewItem("Create New Personal Account", "pack://application:,,,/Images/Icons/personal_account.png");
-                AddNewPersonalAccount.Tag = -1;
+                var cNewPersonalAccount_itemInfo = new tagItemInfo { ID = -1, Category = "Personal" };
+
+                var AddNewPersonalAccount = CreateTreeViewItem("Create New Personal Account", "pack://application:,,,/Images/Icons/personal_account.png", cNewPersonalAccount_itemInfo);
+                //AddNewPersonalAccount.Tag = cNewPersonalAccount_itemInfo;
+
+                //AddNewPersonalAccount.Tag = -1;
                 AddNewPersonalAccount.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
 
                 PerAccounts.Items.Add(AddNewPersonalAccount);
@@ -796,15 +900,21 @@ namespace Financial_WPF_App
             foreach (var City in Personal_cityGroups)
             {
                 // Create a treeview item for the city
-                var city_Item = CreateTreeViewItem(City.Key);
-                city_Item.Tag = City.First().Field<int>("CityID");
+                var city_itemInfo = new tagItemInfo { ID = City.First().Field<int>("CityID"), Category = "Default" };
+
+                var city_Item = CreateTreeViewItem(City.Key, null, city_itemInfo);
+                //city_Item.Tag = city_itemInfo;
+                //city_Item.Tag = City.First().Field<int>("CityID");
 
                 var PersonalAccounts_Groups = City.GroupBy(row => row.Field<string>("Name"));
 
                 if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                 {
-                    var AllPersonalAccounts = CreateTreeViewItem("All Personal Accounts");
-                    AllPersonalAccounts.Tag = -1;
+                    var AllPersonalAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Personal" };
+
+                    var AllPersonalAccounts = CreateTreeViewItem("All Personal Accounts", "pack://application:,,,/Images/Icons/personal_account.png", AllPersonalAccounts_itemInfo);
+                    //AllPersonalAccounts.Tag = AllPersonalAccounts_itemInfo;
+                    //AllPersonalAccounts.Tag = -1;
                     AllPersonalAccounts.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
 
                     city_Item.Items.Add(AllPersonalAccounts);
@@ -812,8 +922,11 @@ namespace Financial_WPF_App
 
                 foreach (var PersonalAccount in PersonalAccounts_Groups)
                 {
-                    var Personal_Item = CreateTreeViewItem(PersonalAccount.First().Field<string>("Name"));
-                    Personal_Item.Tag = PersonalAccount.First().Field<int>("ID");
+                    var Personal_Item_itemInfo = new tagItemInfo { ID = PersonalAccount.First().Field<int>("ID"), Category = "Personal" };
+
+                    var Personal_Item = CreateTreeViewItem(PersonalAccount.First().Field<string>("Name"), "pack://application:,,,/Images/Icons/personal_account.png", Personal_Item_itemInfo);
+                    //Personal_Item.Tag = Personal_Item_itemInfo;
+                    //Personal_Item.Tag = PersonalAccount.First().Field<int>("ID");
                     if (Personal_Item != null && PersonalAccount.First().Field<Int32>("IsClosed") != 1)
                     {
                         Personal_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
@@ -844,8 +957,11 @@ namespace Financial_WPF_App
 
             if (role == "Head Office")
             {
-                var AddNewFiscalbond = CreateTreeViewItem("Create New Bond");
-                AddNewFiscalbond.Tag = -1;
+                var AddNewFiscalbond_itemInfo = new tagItemInfo { ID = -1, Category = "Default" };
+
+                var AddNewFiscalbond = CreateTreeViewItem("Create New Bond", null , AddNewFiscalbond_itemInfo);
+                //AddNewFiscalbond.Tag = AddNewFiscalbond_itemInfo;
+                //AddNewFiscalbond.Tag = -1;
                 AddNewFiscalbond.PreviewMouseLeftButtonDown += AddNewitem_PreviewMouseLeftButtonDown;
                 fiscalbonds.Items.Add(AddNewFiscalbond);
             }
@@ -855,24 +971,33 @@ namespace Financial_WPF_App
             foreach (var cityGroup in cityGroups1)
             {
                 // Create a treeview item for the city
-                var cityItem = CreateTreeViewItem(cityGroup.Key);
-                cityItem.Tag = cityGroup.First().Field<int>("CityID");
+                var cityItem_itemInfo = new tagItemInfo { ID = cityGroup.First().Field<int>("CityID"), Category = "Default" };
+
+                var cityItem = CreateTreeViewItem(cityGroup.Key, null , cityItem_itemInfo);
+                //cityItem.Tag = cityItem_itemInfo;
+                //cityItem.Tag = cityGroup.First().Field<int>("CityID");
 
                 // Group projects by project_ID
                 var projectGroups = cityGroup.GroupBy(row => row.Field<string>("ProjectName"));
                 foreach (var projectGroup in projectGroups)
                 {
-                    // Create a treeview item for the project
-                    var projectItem = CreateTreeViewItem(projectGroup.First().Field<string>("ProjectName"));
-                    projectItem.Tag = projectGroup.First().Field<int?>("ProjectID");
+                    string prjectCategory = projectGroup.First().Field<string>("CategoryName");
+                    var projectItem_itemInfo = new tagItemInfo { ID = projectGroup.First().Field<int?>("ProjectID"), Category = prjectCategory };
+                    var projectItem = CreateTreeViewItem(projectGroup.First().Field<string>("ProjectName"), null , projectItem_itemInfo);
+
+                    //projectItem.Tag = projectItem_itemInfo;
+                    //projectItem.Tag = projectGroup.First().Field<int?>("ProjectID");
 
                     // Group subprojects by subproject_ID
                     var subprojectGroups = projectGroup.GroupBy(row => row.Field<string>("SubprojectName"));
                     foreach (var subprojectGroup in subprojectGroups)
                     {
-                        // Create a treeview item for the subproject
-                        var subprojectItem = CreateTreeViewItem(subprojectGroup.First().Field<string>("SubprojectName"));
-                        subprojectItem.Tag = subprojectGroup.First().Field<int?>("SubprojectID");
+                        string subprojectCategory = subprojectGroup.First().Field<string>("categoryName");
+                        var subprojectItem_itemInfo = new tagItemInfo { ID = subprojectGroup.First().Field<int?>("SubprojectID"), Category = subprojectCategory };
+                        var subprojectItem = CreateTreeViewItem(subprojectGroup.First().Field<string>("SubprojectName"), null , subprojectItem_itemInfo);
+
+                        //subprojectItem.Tag = subprojectItem_itemInfo;
+                        //subprojectItem.Tag = subprojectGroup.First().Field<int?>("SubprojectID");
 
 
                         // Add accounts as child items
@@ -880,8 +1005,13 @@ namespace Financial_WPF_App
                         {
 
                             string FiscalbondName = FiscalbondRow.Field<string>("FiscalbondName");
-                            var FiscalbondItem = CreateTreeViewItem(FiscalbondName);
-                            FiscalbondItem.Tag = FiscalbondRow.Field<int?>("FiscalbondID");
+                            string FiscalbondCategory = FiscalbondRow.Field<string>("CategoryName");
+                            var FiscalbondItem_itemInfo = new tagItemInfo { ID = FiscalbondRow.Field<int?>("FiscalbondID"), Category = FiscalbondCategory };
+                            var FiscalbondItem = CreateTreeViewItem(FiscalbondName, null, FiscalbondItem_itemInfo);
+
+                            //FiscalbondItem.Tag = FiscalbondItem_itemInfo;
+                            //FiscalbondItem.Tag = FiscalbondRow.Field<int?>("FiscalbondID");
+
                             if (FiscalbondName != null && FiscalbondRow.Field<Int32>("IsClosed") != 1)
                             {
                                 FiscalbondItem.PreviewMouseLeftButtonDown += fiscalbondItem_PreviewMouseLeftButtonDown;
@@ -927,7 +1057,7 @@ namespace Financial_WPF_App
             Fill_Approval_Cities();
         }
 
-        private System.Windows.Controls.TreeViewItem CreateTreeViewItem(string text, string imagePath = null)
+        private System.Windows.Controls.TreeViewItem CreateTreeViewItem(string text, string imagePath = null, tagItemInfo tagInfo = null)
         {
             // Create a DockPanel for the header
             var panel = new DockPanel();
@@ -953,30 +1083,33 @@ namespace Financial_WPF_App
             };
             panel.Children.Add(textBlock);
 
-            // Return the TreeViewItem
-
-            return new System.Windows.Controls.TreeViewItem
+            var treeViewItem = new System.Windows.Controls.TreeViewItem
             {
                 Header = panel,
+                Tag = tagInfo // Attach the ItemInfo object
             };
+
+            return treeViewItem;
         }
 
-        private System.Windows.Controls.TreeViewItem CreateParentTreeViewItem(string text)
+        private System.Windows.Controls.TreeViewItem CreateParentTreeViewItem(string text, tagItemInfo tagInfo)
         {
             var textBlock = new TextBlock
             {
                 Text = text,
                 FontWeight = FontWeights.SemiBold,
                 Foreground = (SolidColorBrush)Application.Current.Resources["DarkGray"]
-
             };
 
-            return new System.Windows.Controls.TreeViewItem
+            var treeViewItem = new System.Windows.Controls.TreeViewItem
             {
                 Header = textBlock,
                 IsExpanded = false,
-                Margin = new Thickness(20, 0, 5, 0)
+                Margin = new Thickness(20, 0, 5, 0),
+                Tag = tagInfo // Assigning the ItemInfo object to the Tag property
             };
+
+            return treeViewItem;
         }
 
 
@@ -990,7 +1123,11 @@ namespace Financial_WPF_App
                     ItemsControl parent = GetSelectedTreeViewItemParent(clickedItem);
 
                     System.Windows.Controls.TreeViewItem treeitem = parent as System.Windows.Controls.TreeViewItem;
-                    string Sub_ID = treeitem.Tag.ToString();
+                    //string Sub_ID = treeitem.Tag.ToString();
+
+                    tagItemInfo itemInfo = (tagItemInfo)treeitem.Tag;
+                    string Sub_ID = itemInfo.ID.ToString();
+
                     var Sub_Name = treeitem.Header.ToString();
                     if (treeitem.Header is DockPanel panel1)
                     {
@@ -1132,7 +1269,11 @@ namespace Financial_WPF_App
                     System.Windows.Controls.TreeViewItem accountItem = sender as System.Windows.Controls.TreeViewItem;
                     if (accountItem != null && accountItem.Header is DockPanel panel)
                     {
-                        int Acc_ID = Convert.ToInt32(accountItem.Tag.ToString());
+                        //int Acc_ID = Convert.ToInt32(accountItem.Tag.ToString());
+
+                        tagItemInfo itemInfo = (tagItemInfo)accountItem.Tag;
+                        int Acc_ID = Convert.ToInt32(itemInfo.ID.ToString());
+
                         string Acc_Name = "";
                         foreach (var child in panel.Children)
                         {
@@ -1144,7 +1285,11 @@ namespace Financial_WPF_App
                         ItemsControl parent = GetSelectedTreeViewItemParent(accountItem);
 
                         System.Windows.Controls.TreeViewItem treeitem = parent as System.Windows.Controls.TreeViewItem;
-                        string Sub_ID = treeitem.Tag.ToString();
+                        //string Sub_ID = treeitem.Tag.ToString();
+
+                        tagItemInfo itemInf = (tagItemInfo)treeitem.Tag;
+                        string Sub_ID = itemInf.ID.ToString();
+
                         string Sub_Name = treeitem.Header.ToString();
                         Account_Window account_Window = new Account_Window(Acc_ID, this);
                         if (Sub_Name.Contains("Micro"))
@@ -1181,7 +1326,12 @@ namespace Financial_WPF_App
                 System.Windows.Controls.TreeViewItem accountItem = sender as System.Windows.Controls.TreeViewItem;
                 if (accountItem != null && accountItem.Header is DockPanel panel)
                 {
-                    int Acc_ID = Convert.ToInt32(accountItem.Tag.ToString());
+                    //int Acc_ID = Convert.ToInt32(accountItem.Tag.ToString());
+
+
+                    tagItemInfo itemInfo = (tagItemInfo)accountItem.Tag;
+                    int Acc_ID = Convert.ToInt32(itemInfo.ID.ToString());
+
                     string Acc_Name = "";
                     foreach (var child in panel.Children)
                     {
@@ -1214,12 +1364,20 @@ namespace Financial_WPF_App
                 System.Windows.Controls.TreeViewItem fiscalbondItem = sender as System.Windows.Controls.TreeViewItem;
                 if (fiscalbondItem != null && fiscalbondItem.Header is DockPanel panel)
                 {
-                    int fiscalbond_ID = Convert.ToInt32(fiscalbondItem.Tag.ToString());
+                    //int fiscalbond_ID = Convert.ToInt32(fiscalbondItem.Tag.ToString());
+
+                    tagItemInfo itemInfo = (tagItemInfo)fiscalbondItem.Tag;
+                    int fiscalbond_ID = Convert.ToInt32(itemInfo.ID.ToString());
+
                     string fiscalbond_Name = "";
                     ItemsControl parent = GetSelectedTreeViewItemParent(fiscalbondItem);
 
                     System.Windows.Controls.TreeViewItem treeitem = parent as System.Windows.Controls.TreeViewItem;
-                    string Sub_ID = treeitem.Tag.ToString();
+                    //string Sub_ID = treeitem.Tag.ToString();
+
+                    tagItemInfo itemInf = (tagItemInfo)treeitem.Tag;
+                    string Sub_ID = itemInf.ID.ToString();
+
                     var Sub_Name = treeitem.Header.ToString();
                     if (treeitem.Header is DockPanel panel1)
                     {
@@ -1368,7 +1526,11 @@ namespace Financial_WPF_App
                     treeViewItem.IsSelected = true;
                     if (treeViewItem.ContextMenu != null)
                     {
-                        RClicked_ID = Convert.ToInt32(treeViewItem.Tag.ToString());
+                        //RClicked_ID = Convert.ToInt32(treeViewItem.Tag.ToString());
+
+                        tagItemInfo itemInfo = (tagItemInfo)treeViewItem.Tag;
+                        RClicked_ID = Convert.ToInt32(itemInfo.ID.ToString());
+
                         RClicked_Name = treeViewItem.Header.ToString();
 
                         treeViewItem.ContextMenu.PlacementTarget = treeViewItem;
@@ -1890,6 +2052,7 @@ namespace Financial_WPF_App
                 if (menuItem != null)
                 {
                     int cityId = Convert.ToInt32(menuItem.Tag.ToString());
+
                     string cityName = menuItem.Header.ToString();
 
                     Approval_Window Approval = new Approval_Window(cityId, this);

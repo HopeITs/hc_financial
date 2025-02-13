@@ -235,7 +235,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                         <Border Background="Transparent" Height="16" Padding="5,5,5,5" Width="16">
-                            <Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}" Fill="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Exchange|Cash|Bond'}" Stroke="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Exchange|Cash|Bond'}">
+                            <Path x:Name="ExpandPath" Data="{StaticResource TreeArrow}" Fill="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Budget|Exchange|Cash|Personal|Default'}" Stroke="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Budget|Exchange|Cash|Personal|Default'}">
                                 <Path.RenderTransform>
                                     <RotateTransform Angle="135" CenterX="3" CenterY="3"/>
                                 </Path.RenderTransform>
@@ -248,8 +248,8 @@
                                         <RotateTransform Angle="180" CenterX="3" CenterY="3"/>
                                     </Setter.Value>
                                 </Setter>
-                                <Setter Property="Fill" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Exchange|Cash|Bond'}"/>
-                                <Setter Property="Stroke" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Exchange|Cash|Bond'}"/>
+                                <Setter Property="Fill" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Budget|Exchange|Cash|Personal|Default'}"/>
+                                <Setter Property="Stroke" TargetName="ExpandPath" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=TreeViewItem}, Converter={StaticResource HeaderWordConverter}, ConverterParameter='Micro|Budget|Exchange|Cash|Personal|Default'}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Stroke" TargetName="ExpandPath" Value="{StaticResource TreeViewItem.TreeArrow.MouseOver.Stroke}"/>
@@ -545,24 +545,11 @@ Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
                                 <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity=".3" Color="{StaticResource Color_MidGray}" />
                             </Border.Effect>
                             <TreeView ScrollViewer.HorizontalScrollBarVisibility="Visible"
-          ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource {x:Type TreeViewItem}}" x:Name="MyTreeView" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource {x:Type TreeViewItem}}" x:Name="MyTreeView" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                       PreviewMouseRightButtonDown="MyTreeView_PreviewMouseRightButtonDown"
                       FontFamily="Rubik" FontSize="14" Foreground="{StaticResource MidGray}"
                       Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="-5,0,0,0" Padding="3">
-                                <!-- TreeView Item Style -->
-                                <!--<TreeView.ItemContainerStyle>
-                                    <Style TargetType="{x:Type TreeViewItem}">
-                                        <Setter Property="FontWeight" Value="Normal" />
-                                        <Setter Property="Foreground" Value="{StaticResource MidGray}" />
-                                        <Setter Property="Padding" Value="5,15,5,5" />
-                                        <Setter Property="FontSize" Value="14" />
-                                        -->
-                                <!--<Setter Property="BorderBrush" Value="{StaticResource MidGray}" />
-                                        <Setter Property="BorderThickness" Value="0,0,0,1" />-->
-                                <!--
-                                        <Setter Property="Background" Value="Transparent" />
-                                    </Style>
-                                </TreeView.ItemContainerStyle>-->
+                 
                                 <TreeView.ContextMenu>
                                     <ContextMenu x:Name="cm">
                                         <ContextMenu.Resources>

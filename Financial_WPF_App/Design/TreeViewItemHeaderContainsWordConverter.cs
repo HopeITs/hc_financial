@@ -9,51 +9,63 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Diagnostics;
 using System.Windows.Controls;
+using Financial_WPF_App.Design;
+
+
 namespace Financial_WPF_App
 {
     internal class TreeViewItemHeaderContainsWordConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || parameter == null)
+            if (value == null)
             {
-                return (SolidColorBrush)Application.Current.Resources["DarkGray"]; // Default color
+                return (SolidColorBrush)Application.Current.Resources["DarkGray"];
             }
 
-            string header = ExtractTextFromHeader(value); // 🔥 Extract text properly
-            string[] keywords = parameter.ToString().Split('|'); // Supports multiple keywords
+            // Try to get the TreeViewItem from the value
+            TreeViewItem currentItem = FindParentTreeViewItem(value as DependencyObject);
 
-            var keywordColors = new Dictionary<string, SolidColorBrush>
-            {
-                { "Micro", (SolidColorBrush)Application.Current.Resources["HopeRed"] },
-                { "Exchange", (SolidColorBrush)Application.Current.Resources["Orange"] },
-                { "Cash", (SolidColorBrush)Application.Current.Resources["DarkBlue"] },
-                { "Bond", (SolidColorBrush)Application.Current.Resources["GreenBlue"] }
-            };
-
-            // Get the current TreeViewItem
-            TreeViewItem currentItem = GetTreeViewItemFromHeader(value);
             if (currentItem == null)
             {
                 return (SolidColorBrush)Application.Current.Resources["DarkGray"];
             }
 
-            // Step 1: Check all ancestors for keywords
-            if (HasKeywordInAncestors(currentItem, keywords, keywordColors, out SolidColorBrush foundColor))
+            if (currentItem.Tag is tagItemInfo itemInfo)
             {
-                return foundColor;
-            }
+                string category = itemInfo.Category;
+                string header = ExtractTextFromHeader(currentItem.Header);
 
-            // Step 2: If no parent has a keyword, check the current item
-            foreach (var keyword in keywords)
-            {
-                if (header.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                // Example: Map the category to a color
+                var categoryColors = new Dictionary<string, SolidColorBrush>
+                    {
+                        { "Micro", (SolidColorBrush)Application.Current.Resources["HopeRed"] },
+                        { "Budget", (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"] },
+                        { "Exchange", (SolidColorBrush)Application.Current.Resources["Orange"] },
+                        { "Cash", (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"] },
+                        { "Personal", (SolidColorBrush)Application.Current.Resources["PastelGreen"] },
+                        { "Default", (SolidColorBrush)Application.Current.Resources["DarkGray"] }
+                    };
+
+                if (categoryColors.TryGetValue(category, out SolidColorBrush color))
                 {
-                    return keywordColors[keyword];
+                    return color;
                 }
             }
+
+
             return (SolidColorBrush)Application.Current.Resources["DarkGray"];
         }
+
+        private TreeViewItem FindParentTreeViewItem(DependencyObject obj)
+        {
+            while (obj != null && !(obj is TreeViewItem))
+            {
+                obj = VisualTreeHelper.GetParent(obj);
+            }
+            return obj as TreeViewItem;
+        }
+
 
         private string ExtractTextFromHeader(object header)
         {
@@ -65,18 +77,24 @@ namespace Financial_WPF_App
             {
                 return contentText; // Extract content from a Label, Button, etc.
             }
-            else if (header is Panel panel) // 🔥 If Header is a DockPanel/StackPanel
+            else if (header is TextBlock textBlock)
+            {
+                return textBlock.Text; // Extract text from a TextBlock
+            }
+            else if (header is Panel panel) // If Header is a DockPanel/StackPanel
             {
                 foreach (var child in panel.Children)
                 {
-                    if (child is TextBlock textBlock)
+                    if (child is TextBlock childTextBlock) // Rename the variable to avoid conflicts
                     {
-                        return textBlock.Text; // Extract text from a TextBlock
+                        return childTextBlock.Text; // Extract text from the child TextBlock
                     }
                 }
             }
             return string.Empty;
         }
+
+
 
         private bool HasKeywordInAncestors(System.Windows.Controls.TreeViewItem item, string[] keywords, Dictionary<string, SolidColorBrush> keywordColors, out SolidColorBrush foundColor)
         {
@@ -101,7 +119,7 @@ namespace Financial_WPF_App
             foundColor = null;
             return false;
         }
-        
+
         // Get TreeViewItem from Header
         private System.Windows.Controls.TreeViewItem GetTreeViewItemFromHeader(object header)
         {
@@ -130,25 +148,25 @@ namespace Financial_WPF_App
 
         // Helper: Find all TreeViewItems
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj == null) yield break;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
             {
-                if (depObj == null) yield break;
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                if (child != null && child is T tChild)
                 {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T tChild)
-                    {
-                        yield return tChild;
-                    }
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
-                    {
-                        yield return childOfChild;
-                    }
+                    yield return tChild;
+                }
+                foreach (T childOfChild in FindVisualChildren<T>(child))
+                {
+                    yield return childOfChild;
                 }
             }
+        }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
-        }
     }
+}
