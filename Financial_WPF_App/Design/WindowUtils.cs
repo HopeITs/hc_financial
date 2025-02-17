@@ -50,16 +50,20 @@ namespace Financial_WPF_App
             }
         }
 
-        public static void UpdateTextBlocksForeground(object content, Brush foreground)
+        public static void UpdateTextBlocksForeground(object content, Brush color)
         {
-            if (!(content is DependencyObject parent) || foreground == null)
+            if (!(content is DependencyObject parent) || color == null)
                 return;
 
             // Define the target style key
             string targetStyleKey = "statistic_textBlockStyle";
+            string buttonStyleKey = "ButtonColoredStyle";
 
             // Update TextBlocks in the main content
-            UpdateTextBlocksInContainer(parent, foreground, targetStyleKey);
+            UpdateTextBlocksInContainer(parent, color, targetStyleKey);
+
+            // Update Buttons in the main content
+            UpdateButtonsInContainer(parent, color, color, buttonStyleKey);
 
             // Find all TabControls inside the window
             foreach (var tabControl in FindVisualChildren<TabControl>(parent))
@@ -69,7 +73,8 @@ namespace Financial_WPF_App
                 {
                     if (tabItem is TabItem tab && tab.Content is DependencyObject tabContent)
                     {
-                        UpdateTextBlocksInContainer(tabContent, foreground, targetStyleKey);
+                        UpdateTextBlocksInContainer(tabContent, color, targetStyleKey);
+                        UpdateButtonsInContainer(tabContent, new SolidColorBrush(Colors.White), color, buttonStyleKey);
                     }
                 }
             }
@@ -86,7 +91,16 @@ namespace Financial_WPF_App
                 }
             }
         }
-
+        private static void UpdateButtonsInContainer(DependencyObject parent, Brush foreground, Brush background, string styleKey)
+        {
+            foreach (var button in FindVisualChildren<Button>(parent))
+            {
+                if (button.Style != null && button.Style.Equals(Application.Current.TryFindResource(styleKey)))
+                {
+                    button.Background = background;
+                }
+            }
+        }
         // Generic method to find all elements of a specific type in a given UI structure
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
         {

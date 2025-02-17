@@ -32,7 +32,7 @@
             <RowDefinition Height="5"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+        <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0" Padding="0,5,50,5">
             <WrapPanel  Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />

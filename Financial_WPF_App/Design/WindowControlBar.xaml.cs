@@ -26,7 +26,9 @@ namespace Financial_WPF_App
     
     public partial class WindowControlBar : UserControl
     {
-        public event Action<double> ResizeExpanderRequested;
+        public event Action<WindowState> WindowStateChanged; // Event to notify MainWindow
+        private WindowState _customWindowState = WindowState.Normal;
+
         public WindowControlBar()
         {
             InitializeComponent();
@@ -42,32 +44,13 @@ namespace Financial_WPF_App
 
         private void Resize_Click(object sender, RoutedEventArgs e)
         {
-            var window = Window.GetWindow(this);
+            // Toggle window state
+            _customWindowState = (_customWindowState == WindowState.Normal) ?
+                                  WindowState.Maximized :
+                                  WindowState.Normal;
 
-            if (window != null)
-            {
-                window.WindowState = window.WindowState == WindowState.Maximized
-                ? WindowState.Normal
-                : WindowState.Maximized;
-                if (window.WindowState == WindowState.Normal)
-                {
-                    // Raise the event and pass the new width (e.g., 300)
-                    ResizeExpanderRequested?.Invoke(50);
-                }
-                // Check if the window is minimized
-                //if (window.WindowState == WindowState.Minimized)
-                //{
-                //    // Resize the window when minimized
-                //    this.Width = 1330;  // Set desired width
-                //    this.Height = 700; // Set desired height
-                //}
-                //else if (window.WindowState == WindowState.Normal)
-                //{
-                //    // Restore the original size when window is restored
-                //    this.Width = 1920;  // Original width
-                //    this.Height = 1021; // Original height
-                //}
-            }
+            // Raise event for MainWindow
+            WindowStateChanged?.Invoke(_customWindowState);
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

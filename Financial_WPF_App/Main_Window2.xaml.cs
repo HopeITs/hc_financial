@@ -25,11 +25,14 @@ namespace Financial_WPF_App
 {
     public partial class Main_Window_2 : Window
     {
+        public static event Action<WindowState> WindowStateChanged; // Notify AccountWindow
+        private WindowState _currentWindowState = WindowState.Normal; // Store state
 
         public Main_Window_2()
         {
             InitializeComponent();
-
+            // Subscribe to UserControl event
+            ControlBar.WindowStateChanged += OnUserControlWindowStateChanged;
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMinutes(30);
@@ -38,8 +41,15 @@ namespace Financial_WPF_App
             //this.WindowState = WindowState.Minimized;
             myExpander.IsExpanded = false;
             On_Load();
-            // Subscribe to the event
-            ControlBar.ResizeExpanderRequested += OnResizeExpanderRequested;
+            
+        }
+        private void OnUserControlWindowStateChanged(WindowState newState)
+        {
+            _currentWindowState = newState;
+            this.WindowState = newState; // Apply state change
+
+            // Notify AccountWindow
+            WindowStateChanged?.Invoke(_currentWindowState);
         }
 
         private void On_Load()
@@ -161,14 +171,14 @@ namespace Financial_WPF_App
             this.MaxHeight = workArea.Height + 5;
         }
 
-        public void Create_tabItem(Window window, string header, System.Windows.Media.Brush foreground)
+        public void Create_tabItem(Window window, string header, System.Windows.Media.Brush main_color)
         {
             TabItemExt oTab = new TabItemExt();
             oTab.Content = window.Content;
             oTab.Header = header;
-            oTab.Foreground = foreground;
+            oTab.Foreground = main_color;
             // Store the original Foreground color in the Tag property
-            oTab.Tag = foreground;
+            oTab.Tag = main_color;
             oTab.FontFamily = new System.Windows.Media.FontFamily("Rubik");
             oTab.FlowDirection = FlowDirection.LeftToRight;
             // Add the TabItemExt to the TabControlExt
@@ -177,7 +187,7 @@ namespace Financial_WPF_App
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
-                WindowUtils.UpdateTextBlocksForeground(oTab.Content, foreground);
+                WindowUtils.UpdateTextBlocksForeground(oTab.Content, main_color);
             }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -232,8 +242,6 @@ namespace Financial_WPF_App
                     }
                 }
             }
-
-
         }
 
         private void Online_Button_Click(object sender, RoutedEventArgs e)
