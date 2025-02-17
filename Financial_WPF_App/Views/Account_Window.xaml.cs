@@ -1,6 +1,7 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
+using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +11,7 @@ using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -22,10 +24,14 @@ namespace Financial_WPF_App
         public Account_Window(string Category, string AccType, string Project_ID, string SubProject_ID, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
+
+            First_col.Width = new GridLength(85, GridUnitType.Star);
+            Second_col.Width = new GridLength(45, GridUnitType.Star);
+            EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
+            
 
             this.main_Window = main_Window;
-            First_col.Width = new GridLength(70, GridUnitType.Star);
-            Second_col.Width = new GridLength(30, GridUnitType.Star);
             this.Acc_ID = -1;
 
             this.Category = Category;
@@ -53,9 +59,27 @@ namespace Financial_WPF_App
             }
         }
 
+        private void OnMainWindowStateChanged(WindowState newState)
+        {
+            _currentWindowState = newState;
+            if (newState == WindowState.Normal && myExpander.IsExpanded)
+            {
+                First_col.Width = new GridLength(200, GridUnitType.Star);
+                Second_col.Width = new GridLength(140, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            {
+                First_col.Width = new GridLength(85, GridUnitType.Star);
+                Second_col.Width = new GridLength(45, GridUnitType.Star);
+            }
+        }
+
         public Account_Window(int Account_ID, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
+
+            EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
             First_col.Width = new GridLength(97, GridUnitType.Star);
             Second_col.Width = new GridLength(2.3, GridUnitType.Star);
             this.main_Window = main_Window;
@@ -77,6 +101,9 @@ namespace Financial_WPF_App
         public Account_Window(int Account_ID, string AccType, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
+
+            EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
             First_col.Width = new GridLength(97, GridUnitType.Star);
             Second_col.Width = new GridLength(2.3, GridUnitType.Star);
             this.main_Window = main_Window;
@@ -108,7 +135,7 @@ namespace Financial_WPF_App
         bool UserMode;
         bool IsAdminAccount = false;
         Main_Window_2 main_Window;
-
+        private WindowState _currentWindowState = WindowState.Maximized; // Track window state
 
         List<SubProject_Donor> objDonorList;
         List<SubProject_Donor> FilteredobjDonorList;
@@ -357,66 +384,67 @@ namespace Financial_WPF_App
 
         private void Show_Hide_Component()
         {
-            City_lable.Visibility = City_comboBox.Visibility = City_clear_btn.Visibility =
-                Project_lable.Visibility = Project_comboBox.Visibility = Project_clear_btn.Visibility =
-                SubProject_label.Visibility = SubProject_comboBox.Visibility = SubProject_clear_btn.Visibility =
-                PersonalAccount_label.Visibility = PersonalAccount_comboBox.Visibility = PersonalAccount_clear_btn.Visibility =
-                ExchangeAccount_label.Visibility = ExchangeAccount_comboBox.Visibility = ExchangeAccount_clear_btn.Visibility =
-                Donor_label.Visibility = Donor_comboBox.Visibility = Donor_clear_btn.Visibility =
-                ProjectNumber_label.Visibility = ProjectNumber_txtBox.Visibility =
-                BeginDate_label.Visibility = BeginDate_datepicker.Visibility =
-                EndDate_label.Visibility = EndDate_datepicker.Visibility = EndDate_CheckBox.Visibility =
-                TotalAmount_label.Visibility = TotalAmount_txtBox.Visibility = AmountType_comboBox.Visibility =
-                IsClosed_label.Visibility = IsClosed_btn.Visibility = AmountType_comboBox.Visibility = Visibility.Visible;
+            City_lable.IsEnabled = City_comboBox.IsEnabled = City_clear_btn.IsEnabled =
+                Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled =
+                SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled =
+                PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
+                ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled =
+                Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
+                ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
+                BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
+                EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled =
+                TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
+                IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = true;
 
             if (AccType == "Project")
             {
-                City_lable.Visibility = City_comboBox.Visibility = City_clear_btn.Visibility =
-                    PersonalAccount_label.Visibility = PersonalAccount_comboBox.Visibility = PersonalAccount_clear_btn.Visibility =
-                    ExchangeAccount_label.Visibility = ExchangeAccount_comboBox.Visibility = ExchangeAccount_clear_btn.Visibility = Visibility.Collapsed;
+                City_lable.IsEnabled = City_comboBox.IsEnabled = City_clear_btn.IsEnabled =
+                    PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
+                    ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled = false;
             }
             if (AccType == "Exchange")
             {
-                Project_lable.Visibility = Project_comboBox.Visibility = Project_clear_btn.Visibility =
-                    SubProject_label.Visibility = SubProject_comboBox.Visibility = SubProject_clear_btn.Visibility =
-                    PersonalAccount_label.Visibility = PersonalAccount_comboBox.Visibility = PersonalAccount_clear_btn.Visibility =
-                    ExchangeAccount_label.Visibility = ExchangeAccount_comboBox.Visibility = ExchangeAccount_clear_btn.Visibility =
-                    Donor_label.Visibility = Donor_comboBox.Visibility = Donor_clear_btn.Visibility =
-                    ProjectNumber_label.Visibility = ProjectNumber_txtBox.Visibility =
-                    BeginDate_label.Visibility = BeginDate_datepicker.Visibility =
-                    EndDate_label.Visibility = EndDate_datepicker.Visibility = EndDate_CheckBox.Visibility =
-                    TotalAmount_label.Visibility = TotalAmount_txtBox.Visibility = AmountType_comboBox.Visibility =
-                    IsClosed_label.Visibility = IsClosed_btn.Visibility = AmountType_comboBox.Visibility = Visibility.Collapsed;
+                Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled =
+                    SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled =
+                    PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
+                    ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled =
+                    Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
+                    ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
+                    BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
+                    EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled =
+                    TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
+                    IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = false;
             }
             else if (AccType == "Cash")
             {
-                Project_lable.Visibility = Project_comboBox.Visibility = Project_clear_btn.Visibility =
+                Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled =
 
-                Donor_label.Visibility = Donor_comboBox.Visibility = Donor_clear_btn.Visibility =
-                ProjectNumber_label.Visibility = ProjectNumber_txtBox.Visibility =
-                BeginDate_label.Visibility = BeginDate_datepicker.Visibility =
-                EndDate_label.Visibility = EndDate_datepicker.Visibility = EndDate_CheckBox.Visibility =
-                TotalAmount_label.Visibility = TotalAmount_txtBox.Visibility = AmountType_comboBox.Visibility =
-                IsClosed_label.Visibility = IsClosed_btn.Visibility = AmountType_comboBox.Visibility = Visibility.Collapsed;
+                Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
+                ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
+                BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
+                EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled =
+                TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
+                IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = false;
 
-                PersonalAccount_label.Visibility = PersonalAccount_comboBox.Visibility = PersonalAccount_clear_btn.Visibility =
-                ExchangeAccount_label.Visibility = ExchangeAccount_comboBox.Visibility = ExchangeAccount_clear_btn.Visibility = Visibility.Visible;
+                PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
+                ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled = true;
 
-                SubProject_label.Visibility = SubProject_comboBox.Visibility = SubProject_clear_btn.Visibility = Visibility.Visible;
+                SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled = true;
             }
             else if (AccType == "Personal")
             {
-                Project_lable.Visibility = Project_comboBox.Visibility = Project_clear_btn.Visibility =
-                    SubProject_label.Visibility = SubProject_comboBox.Visibility = SubProject_clear_btn.Visibility =
-                    PersonalAccount_label.Visibility = PersonalAccount_comboBox.Visibility = PersonalAccount_clear_btn.Visibility =
-                    ExchangeAccount_label.Visibility = ExchangeAccount_comboBox.Visibility = ExchangeAccount_clear_btn.Visibility =
-                    Donor_label.Visibility = Donor_comboBox.Visibility = Donor_clear_btn.Visibility =
-                    ProjectNumber_label.Visibility = ProjectNumber_txtBox.Visibility =
-                    TotalAmount_label.Visibility = TotalAmount_txtBox.Visibility = AmountType_comboBox.Visibility =
-                    AmountType_comboBox.Visibility = Visibility.Collapsed;
+                Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled =
+                    SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled =
+                    PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
+                    ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled =
+                    Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
+                    ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
+                    TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
+                    AmountType_comboBox.IsEnabled = false;
 
             }
         }
+
 
         private void Fill_Account(int Account_ID)
         {
@@ -679,14 +707,14 @@ namespace Financial_WPF_App
                     if (dt.Rows[i].Field<string>("IsClosed").ToLower() == "Open".ToLower())
                     {
                         IsClosed_btn.Content = "Open";
-                        SolidColorBrush brush2 = (SolidColorBrush)App.Current.Resources["HopeBlue4"];
-                        IsClosed_btn.Foreground = brush2;
+                        //SolidColorBrush brush2 = (SolidColorBrush)App.Current.Resources["HopeBlue4"];
+                        //IsClosed_btn.Foreground = brush2;
                     }
                     else if (dt.Rows[i].Field<string>("IsClosed").ToLower() == "Closed".ToLower())
                     {
-                        IsClosed_btn.Content = "CLOSED";
-                        SolidColorBrush brush2 = (SolidColorBrush)App.Current.Resources["HopeRed2"];
-                        IsClosed_btn.Foreground = brush2;
+                        IsClosed_btn.Content = "Closed";
+                        //SolidColorBrush brush2 = (SolidColorBrush)App.Current.Resources["HopeRed2"];
+                        //IsClosed_btn.Foreground = brush2;
                     }
 
                     if (dt.Rows[i].Field<int>("is_administrative") == 1)
@@ -2190,10 +2218,21 @@ namespace Financial_WPF_App
         //    // Toggle the visibility of the Popup
         //    ExpanderPopup.IsOpen = !ExpanderPopup.IsOpen;
         //}
+       
+
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
         {
-            First_col.Width = new GridLength(70, GridUnitType.Star);
-            Second_col.Width = new GridLength(30, GridUnitType.Star);
+            if (_currentWindowState == WindowState.Normal)
+            {
+                First_col.Width = new GridLength(200, GridUnitType.Star);
+                Second_col.Width = new GridLength(140, GridUnitType.Star);
+            }
+            else if (_currentWindowState == WindowState.Maximized)
+            {
+                First_col.Width = new GridLength(85, GridUnitType.Star);
+                Second_col.Width = new GridLength(45, GridUnitType.Star);
+            }
+
         }
 
         private void myExpander_Collapsed(object sender, RoutedEventArgs e)
@@ -2213,16 +2252,16 @@ namespace Financial_WPF_App
             {
                 if (IsClosed_btn.Content.ToString() == "Open")
                 {
-                    IsClosed_btn.Content = "CLOSED";
-                    SolidColorBrush brush2 = (SolidColorBrush)App.Current.Resources["HopeRed2"];
-                    IsClosed_btn.Foreground = brush2;
+                    IsClosed_btn.Content = "Closed";
+                    //SolidColorBrush brush2 = (SolidColorBrush)App.Current.Resources["HopeRed2"];
+                    //IsClosed_btn.Foreground = brush2;
                     IsClosed = 1;
                 }
                 else
                 {
                     IsClosed_btn.Content = "Open";
-                    SolidColorBrush brush2 = (SolidColorBrush)App.Current.Resources["HopeBlue4"];
-                    IsClosed_btn.Foreground = brush2;
+                    //SolidColorBrush brush2 = (SolidColorBrush)App.Current.Resources["HopeBlue4"];
+                    //IsClosed_btn.Foreground = brush2;
                     IsClosed = 0;
                 }
             }
@@ -2269,6 +2308,30 @@ namespace Financial_WPF_App
             EndDate_CheckBox.IsChecked = true;
             TotalAmount_txtBox.Text = "";
             AmountType_comboBox.SelectedIndex = -1;
+        }
+
+        private void ComboBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+
+            // Prevent closing the dropdown when an item is selected
+            if (comboBox != null && !comboBox.IsDropDownOpen)
+            {
+                // Keep dropdown open when an item is selected
+                comboBox.IsDropDownOpen = true;
+            }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+
+            // Prevent closing the dropdown when an item is selected
+            if (comboBox != null && !comboBox.IsDropDownOpen)
+            {
+                // Keep dropdown open when an item is selected
+                comboBox.IsDropDownOpen = true;
+            }
         }
 
         #region disable combobox text edit
