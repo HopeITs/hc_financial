@@ -224,7 +224,7 @@
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="Margin" Value="1,0,1,0"/>
                 <Setter Property="Foreground" Value="{StaticResource White}" />
-                <Setter Property="Background" Value="{StaticResource HopeRed}" />
+                <Setter Property="Background" Value="{StaticResource GreenBlue}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">

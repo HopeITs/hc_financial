@@ -79,12 +79,7 @@
             </ContextMenu>
         </Grid.ContextMenu>
 
-        <TabControl x:Name="Main_tabControl" Grid.Column="0" Style="{StaticResource TabControlStyle}" >
-        </TabControl>
-                    HorizontalContentAlignment="Stretch"  >
-            <TabControl.Background>
-                <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-            </TabControl.Background>
-        </TabControl>
+        <TabControl x:Name="Main_tabControl" Grid.Column="0" Style="{StaticResource TabControlStyle}" />
+
     </Grid>
 </Window>

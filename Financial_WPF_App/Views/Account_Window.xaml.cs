@@ -1,17 +1,13 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
-using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 

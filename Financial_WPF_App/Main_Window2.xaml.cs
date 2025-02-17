@@ -189,10 +189,6 @@ namespace Financial_WPF_App
             main_tabControl.Items.Add(oTab);
             main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
 
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateTextBlocksForeground(oTab.Content, foreground);
-            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
