@@ -100,6 +100,7 @@ namespace Financial_WPF_App
                     button.Background = background;
                 }
             }
+
         }
         // Generic method to find all elements of a specific type in a given UI structure
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject

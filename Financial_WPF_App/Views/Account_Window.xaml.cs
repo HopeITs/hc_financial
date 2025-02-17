@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 
 namespace Financial_WPF_App
@@ -256,7 +257,10 @@ namespace Financial_WPF_App
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
                 WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.Loaded);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+
+          
         }
 
         private void Set_privileges()
