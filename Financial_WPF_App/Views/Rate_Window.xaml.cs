@@ -102,7 +102,7 @@ namespace Financial_WPF_App.Views
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
-                WindowUtils.UpdateTextBlocksForeground(this.Content, Theme_Color);
+                WindowUtils.UIElementColoring(this.Content, Theme_Color);
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 

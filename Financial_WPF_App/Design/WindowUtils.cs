@@ -50,7 +50,7 @@ namespace Financial_WPF_App
             }
         }
 
-        public static void UpdateTextBlocksForeground(object content, Brush color)
+        public static void UIElementColoring(object content, Brush color)
         {
             if (!(content is DependencyObject parent) || color == null)
                 return;
