@@ -9,61 +9,6 @@
     FontFamily="Myriad Arabic"
     FontSize="18" 
     WindowState="Maximized" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <Style x:Key="tabItemStyle" TargetType="{x:Type TabItem}" >
-            <Setter Property="Width" Value="Auto" />
-            <Setter Property="Height" Value="25" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="MinWidth" Value="120" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="BorderBrush" >
-                <Setter.Value>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Foreground" >
-                <Setter.Value>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" >
-                <Setter.Value>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="FontFamily" Value="Arial" />
-            <Setter Property="FontSize" Value="16" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" >
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="Foreground" >
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeYellow2}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="FontFamily" Value="Arial Bold" />
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" >
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeBlue3}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="Foreground" >
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeYellow2}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="FontFamily" Value="Arial Bold" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-    </Window.Resources>
     <Grid>
         <Grid>
             <Grid.ContextMenu>

@@ -2333,6 +2333,10 @@ namespace Financial_WPF_App
                 comboBox.IsDropDownOpen = true;
             }
         }
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            EndDate_CheckBox.IsChecked = !EndDate_CheckBox.IsChecked;
+        }
 
         #region disable combobox text edit
         private void comboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
