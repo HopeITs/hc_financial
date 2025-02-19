@@ -20,7 +20,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Financial_WPF_App.Helper.TreeViewItemViewModel;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App
@@ -503,10 +502,12 @@ namespace Financial_WPF_App
             AllAccounts_ds = c.Select_Tree_View();
             if (AllAccounts_ds != null)
             {
-                List<TreeViewItemState> expandedItems = MyTreeView.GetExpandedItems();
+
+                List<TreeViewItemState> expandedItems = TreeViewExpandedState.GetExpandedItems(MyTreeView);
 
                 PopulateTreeView();
-                MyTreeView.RestoreExpandedState(expandedItems);
+
+                TreeViewExpandedState.RestoreTreeViewExpandedState(MyTreeView, expandedItems);
 
             }
             RClicked_ID = -1; RClicked_Name = "";
@@ -523,21 +524,28 @@ namespace Financial_WPF_App
             PersonalAccounts = AllAccounts_ds.Tables[4];
 
             var projects_itemInfo = new tagItemInfo { ID = -1, Category = "Default" };
-
             var projects = CreateParentTreeViewItem("Projects Accounts", projects_itemInfo);
             projects.IsExpanded = false;
 
             var CaAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Cash" };
             var CaAccounts = CreateParentTreeViewItem("Cash Tills", CaAccounts_itemInfo);
+            CaAccounts.IsExpanded = false;
+
 
             var ExcAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Exchange" };
             var ExcAccounts = CreateParentTreeViewItem("Exchange Accounts", ExcAccounts_itemInfo);
+            ExcAccounts.IsExpanded = false;
+
 
             var PerAccounts_itemInfo = new tagItemInfo { ID = -1, Category = "Personal" };
             var PerAccounts = CreateParentTreeViewItem("Personal Accounts", PerAccounts_itemInfo);
+            PerAccounts.IsExpanded = false;
+
 
             var fiscalbonds_itemInfo = new tagItemInfo { ID = -1, Category = "Default" };
             var fiscalbonds = CreateParentTreeViewItem("Bonds", fiscalbonds_itemInfo);
+            fiscalbonds.IsExpanded = false;
+
 
 
             if (role == "Head Office")
@@ -972,6 +980,7 @@ namespace Financial_WPF_App
             Fill_Approval_Cities();
         }
 
+
         private System.Windows.Controls.TreeViewItem CreateTreeViewItem(string text, string imagePath = null, tagItemInfo tagInfo = null)
         {
             // Create a DockPanel for the header
@@ -1001,6 +1010,7 @@ namespace Financial_WPF_App
             var treeViewItem = new System.Windows.Controls.TreeViewItem
             {
                 Header = panel,
+                IsExpanded = false,
                 Tag = tagInfo // Attach the ItemInfo object
             };
 

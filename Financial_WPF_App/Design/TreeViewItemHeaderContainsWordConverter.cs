@@ -154,8 +154,6 @@ namespace Financial_WPF_App
             return string.Empty;
         }
 
-
-
         private bool HasKeywordInAncestors(System.Windows.Controls.TreeViewItem item, string[] keywords, Dictionary<string, SolidColorBrush> keywordColors, out SolidColorBrush foundColor)
         {
             System.Windows.Controls.TreeViewItem parentItem = GetParentTreeViewItem(item);
