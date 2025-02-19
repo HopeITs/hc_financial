@@ -1516,7 +1516,7 @@ namespace Financial_WPF_App
 
                     else if (SubFound > 1)
                     {
-                        MessageBox.Show("You cannot select more than one center for this type of projects.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                        MessageBox.Show("You can not select more than one center for this type of projects.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
                         return;
                         //throw new Exception("You cannot select more than one center for this type of projects.");
                     }
@@ -1543,7 +1543,7 @@ namespace Financial_WPF_App
 
                     else if (DononrFound > 1 && Category == "Micro Projects")
                     {
-                        MessageBox.Show("You cannot select more than one donor for this type of projects.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                        MessageBox.Show("You can not select more than one donor for this type of projects.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
                         return;
                         //throw new Exception("You cannot select more than one donor for this type of projects.");
 
@@ -1584,18 +1584,18 @@ namespace Financial_WPF_App
                                 PersonalFound++;
                             }
                         }
-                    int CashFound = 0;
+                    int ExchangeFound = 0;
                     if (objExchangeAccList != null)
-                        foreach (var CashAcc in objExchangeAccList)
+                        foreach (var ExchangeAcc in objExchangeAccList)
                         {
-                            if (CashAcc.ExchangeAcc_Check_Status == true)
+                            if (ExchangeAcc.ExchangeAcc_Check_Status == true)
                             {
-                                PersonalFound++;
+                                ExchangeFound++;
                             }
                         }
-                    if (SubFound == 0 && PersonalFound == 0 && CashFound == 0)
+                    if (SubFound == 0 && PersonalFound == 0 && ExchangeFound == 0)
                     {
-                        MessageBox.Show("Please select a center, personal account, or cash till at least", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                        MessageBox.Show("Please select a center, personal account, or exchange account at least", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
                         return;
                         //throw new Exception("Please select a center, personal account, or cash till at least");
                     }
