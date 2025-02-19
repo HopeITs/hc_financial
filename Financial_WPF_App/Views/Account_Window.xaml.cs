@@ -56,21 +56,6 @@ namespace Financial_WPF_App
             }
         }
 
-        private void OnMainWindowStateChanged(WindowState newState)
-        {
-            _currentWindowState = newState;
-            if (newState == WindowState.Normal && myExpander.IsExpanded)
-            {
-                First_col.Width = new GridLength(200, GridUnitType.Star);
-                Second_col.Width = new GridLength(140, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
-            {
-                First_col.Width = new GridLength(85, GridUnitType.Star);
-                Second_col.Width = new GridLength(45, GridUnitType.Star);
-            }
-        }
-
         public Account_Window(int Account_ID, Main_Window_2 main_Window)
         {
             InitializeComponent();
@@ -208,6 +193,7 @@ namespace Financial_WPF_App
                 Show_Hide_Component();
                 Apply_Color_Theme();
 
+
                 return true;
 
             }
@@ -225,6 +211,22 @@ namespace Financial_WPF_App
                 //main_Window.main_tabControl.Items.RemoveAt(main_Window.main_tabControl.SelectedIndex);
             }
         }
+
+        private void OnMainWindowStateChanged(WindowState newState)
+        {
+            _currentWindowState = newState;
+            if (newState == WindowState.Normal && myExpander.IsExpanded)
+            {
+                First_col.Width = new GridLength(200, GridUnitType.Star);
+                Second_col.Width = new GridLength(140, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            {
+                First_col.Width = new GridLength(85, GridUnitType.Star);
+                Second_col.Width = new GridLength(45, GridUnitType.Star);
+            }
+        }
+
 
         private void Apply_Color_Theme()
         {
@@ -369,7 +371,6 @@ namespace Financial_WPF_App
 
                 if (SubProject_ID != -1)
                     SubProject_comboBox.SelectedValue = this.SubProject_ID;
-
                 UserMode = false;
                 BeginDate_datepicker.Text = BeginDate_datepicker.DisplayDate.ToString("yyyy/MM/dd");
 
@@ -377,7 +378,6 @@ namespace Financial_WPF_App
                 EndDate_datepicker.IsEnabled = false;
                 EndDate_datepicker.Text = "";
                 UserMode = true;
-
                 tabControl1.Visibility = Visibility.Hidden; //Create New//
             }
         }
@@ -441,7 +441,6 @@ namespace Financial_WPF_App
                     ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
                     TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
                     AmountType_comboBox.IsEnabled = false;
-
             }
         }
 
@@ -1929,8 +1928,8 @@ namespace Financial_WPF_App
 
                             if (dt.Rows[i]["Name"] != DBNull.Value)
                             {
-                                //TabItem oTab = main_Window.main_tabControl.Items[main_Window.main_tabControl.SelectedIndex] as TabItem;
-                                //oTab.Header = dt.Rows[i].Field<string>("Name");
+                                TabItem oTab = main_Window.main_tabControl.Items[main_Window.main_tabControl.SelectedIndex] as TabItem;
+                                oTab.Header = dt.Rows[i].Field<string>("Name");
                             }
                         }
 
@@ -2333,6 +2332,7 @@ namespace Financial_WPF_App
                 comboBox.IsDropDownOpen = true;
             }
         }
+
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             EndDate_CheckBox.IsChecked = !EndDate_CheckBox.IsChecked;
