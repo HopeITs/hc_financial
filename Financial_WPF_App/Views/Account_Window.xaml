@@ -335,7 +335,7 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                         <ColumnDefinition Width="15*"/>
                     </Grid.ColumnDefinitions>
                     <DatePicker  x:Name="EndDate_datepicker" Grid.Column="0" TabIndex="15" FirstDayOfWeek="Monday" Margin="1,0,1,0"/>
-                    <Border Width="27" Height="30" MouseDown="Border_MouseDown" Grid.Column="1" Background="{StaticResource LightGray1}" ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
+                    <Border x:Name="EndDate_Border" Width="27" Height="30" MouseDown="Border_MouseDown" Grid.Column="1" Background="{StaticResource LightGray1}" ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
                             ToolTipService.ShowDuration="5000"
                             ToolTipService.BetweenShowDelay="200" Margin="3,0,0,0">
                         <CheckBox x:Name="EndDate_CheckBox" TabIndex="16"  ToolTip="TBD" ToolTipService.InitialShowDelay="100" 

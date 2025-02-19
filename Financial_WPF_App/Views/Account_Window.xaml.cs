@@ -392,7 +392,7 @@ namespace Financial_WPF_App
                 Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
                 ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
                 BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
-                EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled =
+                EndDate_label.IsEnabled  = EndDate_CheckBox.IsEnabled = EndDate_Border.IsEnabled =
                 TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
                 IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = true;
 
@@ -411,7 +411,7 @@ namespace Financial_WPF_App
                     Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
                     ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
                     BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
-                    EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled =
+                    EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled = EndDate_Border.IsEnabled =
                     TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
                     IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = false;
             }
@@ -422,7 +422,7 @@ namespace Financial_WPF_App
                 Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
                 ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
                 BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
-                EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled =
+                EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled = EndDate_Border.IsEnabled =
                 TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
                 IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = false;
 
