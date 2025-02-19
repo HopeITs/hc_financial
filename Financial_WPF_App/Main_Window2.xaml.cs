@@ -351,6 +351,48 @@ namespace Financial_WPF_App
             Thread.Sleep(500);
             Application.Current.Shutdown();
         }
+
+        private void main_tabControl_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Middle)
+            {
+                // Find the tab item under the mouse cursor
+                var tabItem = GetTabItemUnderMouse(e.OriginalSource);
+                if (tabItem != null && tabItem.Parent == main_tabControl)
+                {
+                    // Ask for confirmation
+                    if (MessageBox.Show("Are you sure you want to close this page?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.No)
+                    {
+                        e.Handled = true; // Prevent tab from closing
+                    }
+                    else
+                    {
+                        // Remove the tab manually if needed
+                        main_tabControl.Items.Remove(tabItem);
+                    }
+                }
+            }
+        }
+
+        // Helper function to find the TabItem from the clicked UI element
+        private TabItem GetTabItemUnderMouse(object source)
+        {
+            DependencyObject obj = source as DependencyObject;
+            while (obj != null && !(obj is TabItem))
+            {
+                obj = VisualTreeHelper.GetParent(obj);
+            }
+
+            var tabItem = obj as TabItem;
+            if (tabItem != null && tabItem.Parent == main_tabControl) // Ensure it's part of the correct TabControl
+            {
+                return tabItem;
+            }
+            return null;
+        }
+
+
+
         private void myExpander_Loaded(object sender, RoutedEventArgs e)
         {
             _expanderToggleButton = FindChild<ToggleButton>(myExpander);
