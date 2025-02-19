@@ -26,7 +26,7 @@ namespace Financial_WPF_App
             First_col.Width = new GridLength(85, GridUnitType.Star);
             Second_col.Width = new GridLength(45, GridUnitType.Star);
             EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
-            
+
 
             this.main_Window = main_Window;
             this.Acc_ID = -1;
@@ -187,6 +187,17 @@ namespace Financial_WPF_App
                 Original_ExchangeAccList = new List<Local_ExchangeAcc>();
 
 
+                City_lable.IsEnabled = City_comboBox.IsEnabled = City_clear_btn.IsEnabled =
+                        Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled =
+                        SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled =
+                        PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
+                        ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled =
+                        Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
+                        ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
+                        BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
+                        EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled = EndDate_Border.IsEnabled =
+                        TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
+                        IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = true;
 
                 Load_Data();
 
@@ -262,7 +273,7 @@ namespace Financial_WPF_App
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
 
-          
+
         }
 
         private void Set_privileges()
@@ -384,18 +395,6 @@ namespace Financial_WPF_App
 
         private void Show_Hide_Component()
         {
-            City_lable.IsEnabled = City_comboBox.IsEnabled = City_clear_btn.IsEnabled =
-                Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled =
-                SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled =
-                PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
-                ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled =
-                Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
-                ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
-                BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
-                EndDate_label.IsEnabled  = EndDate_CheckBox.IsEnabled = EndDate_Border.IsEnabled =
-                TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
-                IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = true;
-
             if (AccType == "Project")
             {
                 City_lable.IsEnabled = City_comboBox.IsEnabled = City_clear_btn.IsEnabled =
@@ -2217,7 +2216,7 @@ namespace Financial_WPF_App
         //    // Toggle the visibility of the Popup
         //    ExpanderPopup.IsOpen = !ExpanderPopup.IsOpen;
         //}
-       
+
 
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
         {
