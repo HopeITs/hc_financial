@@ -337,9 +337,13 @@ namespace Financial_WPF_App
                 Fill_Account(Acc_ID);
 
                 Set_privileges();
-                if (!Edit_privileges)
-                    myExpander.IsEnabled = false;
 
+                if (!Edit_privileges)
+                {
+                    //myExpander.IsEnabled = false;
+                    myExpander.Visibility = Visibility.Collapsed;
+                }
+                   
                 if (Category == "Budget")
                 {
                     if (Administrative_Account_privileges && !IsAdminAccount)
@@ -2239,10 +2243,6 @@ namespace Financial_WPF_App
             Second_col.Width = new GridLength(2.3, GridUnitType.Star);
         }
 
-        private void myExpander_Loaded(object sender, RoutedEventArgs e)
-        {
-            myExpander.IsExpanded = false;
-        }
 
         private void IsClosed_btn_Click(object sender, RoutedEventArgs e)
         {
