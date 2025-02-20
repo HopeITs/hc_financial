@@ -352,28 +352,6 @@ namespace Financial_WPF_App
             Application.Current.Shutdown();
         }
 
-        private void main_tabControl_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Middle)
-            {
-                // Find the tab item under the mouse cursor
-                var tabItem = GetTabItemUnderMouse(e.OriginalSource);
-                if (tabItem != null && tabItem.Parent == main_tabControl)
-                {
-                    // Ask for confirmation
-                    if (MessageBox.Show("Are you sure you want to close this page?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.No)
-                    {
-                        e.Handled = true; // Prevent tab from closing
-                    }
-                    else
-                    {
-                        // Remove the tab manually if needed
-                        main_tabControl.Items.Remove(tabItem);
-                    }
-                }
-            }
-        }
-
         // Helper function to find the TabItem from the clicked UI element
         private TabItem GetTabItemUnderMouse(object source)
         {
@@ -515,27 +493,6 @@ namespace Financial_WPF_App
             return null;
         }
 
-
-        private void main_tabControl_TabClosing(object sender, CancelingRoutedEventArgs e)
-        {
-            try
-            {
-                if (MessageBox.Show("Are you sure you want to close this page?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.No)
-                {
-                    e.Cancel = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
 
         #region TreeView
 
@@ -2264,7 +2221,68 @@ namespace Financial_WPF_App
             }
         }
 
+        private void main_tabControl_OnCloseAllTabs(object sender, CloseTabEventArgs e)
+        {
+            try
+            {
+                if (MessageBox.Show("Are you sure you want to close all pages?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
 
+        private void main_tabControl_OnCloseOtherTabs(object sender, CloseTabEventArgs e)
+        {
+            try
+            {
+                if (MessageBox.Show("Are you sure you want to close all other pages?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void main_tabControl_OnCloseButtonClick(object sender, CloseTabEventArgs e)
+        {
+            try
+            {            
+                if (MessageBox.Show("Are you sure you want to close this page?", "", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                }         
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
     }
 }
 

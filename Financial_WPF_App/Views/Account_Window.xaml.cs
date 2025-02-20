@@ -443,7 +443,6 @@ namespace Financial_WPF_App
             }
         }
 
-
         private void Fill_Account(int Account_ID)
         {
             UserMode = false;
@@ -698,7 +697,7 @@ namespace Financial_WPF_App
 
 
                     if (dt.Rows[i].Field<object>("TotalAmount") != null)
-                        TotalAmount_txtBox.Text = dt.Rows[i].Field<Double>("TotalAmount").ToString();
+                        TotalAmount_txtBox.Text = Login.ConvertToDouble(dt.Rows[i].Field<Double>("TotalAmount").ToString());
 
                     if (dt.Rows[i]["AmountType_ID"] != DBNull.Value) AmountType_comboBox.SelectedValue = dt.Rows[i].Field<int>("AmountType_ID").ToString();
 
