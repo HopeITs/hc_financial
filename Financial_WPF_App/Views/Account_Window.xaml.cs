@@ -466,10 +466,10 @@ namespace Financial_WPF_App
                     List<string> AllPersonalAcc_ID = new List<string>();
                     List<string> AllExchangeAcc_ID = new List<string>();
 
+                    Original_SubProjectList = new List<Local_SubProject>();
                     if (dt.Rows[i]["SubProject_ID"] != DBNull.Value && dt.Rows[i]["SubProject_ID"] != null)
                     {
                         AllSubProject_ID = dt.Rows[i]["SubProject_ID"].ToString().Split(',').ToList();
-                        Original_SubProjectList = new List<Local_SubProject>();
                         for (int j = 0; j < AllSubProject_ID.Count; j++)
                         {
                             if (objSubProjectList != null && objSubProjectList.Count > 0)
@@ -499,10 +499,10 @@ namespace Financial_WPF_App
                         }
                     }
 
+                    Original_PersonalAccList = new List<Local_PersonalAcc>();
                     if (dt.Rows[i]["PersonalAccount_ID"] != DBNull.Value && dt.Rows[i]["PersonalAccount_ID"] != null)
                     {
                         AllPersonalAcc_ID = dt.Rows[i]["PersonalAccount_ID"].ToString().Split(',').ToList();
-                        Original_PersonalAccList = new List<Local_PersonalAcc>();
                         for (int j = 0; j < AllPersonalAcc_ID.Count; j++)
                         {
                             if (objPersonalAccList != null && objPersonalAccList.Count > 0)
@@ -529,10 +529,10 @@ namespace Financial_WPF_App
                         }
                     }
 
+                    Original_ExchangeAccList = new List<Local_ExchangeAcc>();
                     if (dt.Rows[i]["ExchangeAccount_ID"] != DBNull.Value && dt.Rows[i]["ExchangeAccount_ID"] != null)
                     {
                         AllExchangeAcc_ID = dt.Rows[i]["ExchangeAccount_ID"].ToString().Split(',').ToList();
-                        Original_ExchangeAccList = new List<Local_ExchangeAcc>();
                         for (int j = 0; j < AllExchangeAcc_ID.Count; j++)
                         {
                             if (objExchangeAccList != null && objExchangeAccList.Count > 0)
@@ -1058,9 +1058,10 @@ namespace Financial_WPF_App
             //SubProject_comboBox.Text = "0 Selected";
             if (AccType == "Cash")
             {
+                objSubProjectList = new List<Local_SubProject>();
+
                 if (sub_dt != null && sub_dt.Rows.Count > 0)
                 {
-                    objSubProjectList = new List<Local_SubProject>();
                     for (int i = 0; i < sub_dt.Rows.Count; i++)
                     {
                         Local_SubProject obj = new Local_SubProject();
@@ -1087,9 +1088,9 @@ namespace Financial_WPF_App
                 PersonalAccount_comboBox.Text = "0 Selected";
                 PersonalAcc_dt = a.Select_Personal_Accounts();
                 //PersonalAccount_comboBox.Text = "0 Selected";
+                objPersonalAccList = new List<Local_PersonalAcc>();
                 if (PersonalAcc_dt != null && PersonalAcc_dt.Rows.Count > 0)
                 {
-                    objPersonalAccList = new List<Local_PersonalAcc>();
                     for (int i = 0; i < PersonalAcc_dt.Rows.Count; i++)
                     {
                         Local_PersonalAcc obj = new Local_PersonalAcc();
@@ -1106,9 +1107,9 @@ namespace Financial_WPF_App
                 ExchangeAccount_comboBox.Text = "0 Selected";
                 ExchangeAcc_dt = a.Select_Exchange_Accounts();
                 //ExchangeAccount_comboBox.Text = "0 Selected";
+                objExchangeAccList = new List<Local_ExchangeAcc>();
                 if (ExchangeAcc_dt != null && ExchangeAcc_dt.Rows.Count > 0)
                 {
-                    objExchangeAccList = new List<Local_ExchangeAcc>();
                     for (int i = 0; i < ExchangeAcc_dt.Rows.Count; i++)
                     {
                         Local_ExchangeAcc obj = new Local_ExchangeAcc();
