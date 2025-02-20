@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
 
+
 namespace Financial_WPF_App.Helper
 {
     public static class TreeViewExpandedState
@@ -14,7 +15,7 @@ namespace Financial_WPF_App.Helper
                 {
                     var treeViewItemState = new TreeViewItemState
                     {
-                        Header = ExtractTextFromHeader(treeViewItem.Header),
+                        Header = HeaderTextExtractor.ExtractText(treeViewItem.Header),
                         IsExpanded = treeViewItem.IsExpanded,
                         Children = GetExpandedItems(treeViewItem)
                     };
@@ -33,7 +34,7 @@ namespace Financial_WPF_App.Helper
                 {
                     var treeViewItemState = new TreeViewItemState
                     {
-                        Header = ExtractTextFromHeader(treeViewItem.Header),
+                        Header = HeaderTextExtractor.ExtractText(treeViewItem.Header),
                         IsExpanded = treeViewItem.IsExpanded,
                         Children = GetExpandedItems(treeViewItem)
                     };
@@ -56,10 +57,10 @@ namespace Financial_WPF_App.Helper
         {
             foreach (var item in items)
             {
-                string expandedItem_Header = ExtractTextFromHeader(expandedItem.Header);
+                string expandedItem_Header = HeaderTextExtractor.ExtractText(expandedItem.Header);
                 if (item is TreeViewItem treeViewItem)
                 {
-                    string treeViewItem_Header = ExtractTextFromHeader(treeViewItem.Header);
+                    string treeViewItem_Header = HeaderTextExtractor.ExtractText(treeViewItem.Header);
                     if(treeViewItem_Header == expandedItem_Header)
                     {
                         treeViewItem.IsExpanded = expandedItem.IsExpanded;
@@ -76,33 +77,6 @@ namespace Financial_WPF_App.Helper
             {
                 RestoreExpandedState(items, expandedItem);
             }
-        }
-
-        private static string ExtractTextFromHeader(object header)
-        {
-            if (header is string text)
-            {
-                return text; // Already a string
-            }
-            else if (header is ContentControl contentControl && contentControl.Content is string contentText)
-            {
-                return contentText; // Extract content from a Label, Button, etc.
-            }
-            else if (header is TextBlock textBlock)
-            {
-                return textBlock.Text; // Extract text from a TextBlock
-            }
-            else if (header is Panel panel) // If Header is a DockPanel/StackPanel
-            {
-                foreach (var child in panel.Children)
-                {
-                    if (child is TextBlock childTextBlock) // Rename the variable to avoid conflicts
-                    {
-                        return childTextBlock.Text; // Extract text from the child TextBlock
-                    }
-                }
-            }
-            return string.Empty;
         }
     }
 }

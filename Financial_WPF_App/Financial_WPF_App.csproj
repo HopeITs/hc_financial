@@ -234,6 +234,7 @@
     <Compile Include="Helper\Commands.cs" />
     <Compile Include="Helper\CustomRowStyleSelector.cs" />
     <Compile Include="Helper\DatePickerCalendar.cs" />
+    <Compile Include="Helper\ExtractTextFromHeader.cs" />
     <Compile Include="Helper\GridCustomStackedRenderer.cs" />
     <Compile Include="Helper\MultiAttachments_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiBeneficiares_CustomCopyPaste.cs" />
@@ -242,7 +243,6 @@
     <Compile Include="Helper\MultiSalaries_CustomCopyPaste.cs" />
     <Compile Include="Helper\ScrollViewerHelper.cs" />
     <Compile Include="Helper\TreeViewExpandedState.cs" />
-    <Compile Include="Helper\TreeViewExtensions.cs" />
     <Compile Include="Helper\TreeViewItemState.cs" />
     <Compile Include="Design\MenuIcon.cs" />
     <Compile Include="Models\Budget.cs" />

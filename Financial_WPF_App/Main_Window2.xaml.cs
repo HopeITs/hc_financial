@@ -1460,7 +1460,7 @@ namespace Financial_WPF_App
                         tagItemInfo itemInfo = (tagItemInfo)treeViewItem.Tag;
                         RClicked_ID = Convert.ToInt32(itemInfo.ID.ToString());
 
-                        RClicked_Name = treeViewItem.Header.ToString();
+                        RClicked_Name = HeaderTextExtractor.ExtractText(treeViewItem.Header);
 
                         treeViewItem.ContextMenu.PlacementTarget = treeViewItem;
                         treeViewItem.ContextMenu.IsOpen = true;
