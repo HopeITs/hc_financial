@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Design;
+﻿using ControlzEx.Controls;
+using Financial_WPF_App.Design;
 using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
@@ -7,6 +8,7 @@ using Syncfusion.Data.Extensions;
 using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -185,9 +187,28 @@ namespace Financial_WPF_App
             oTab.FontFamily = new System.Windows.Media.FontFamily("Rubik");
             oTab.FlowDirection = FlowDirection.LeftToRight;
             // Add the TabItemExt to the TabControlExt
+
+
+            // Attach property change listener for IsPinned
+            DependencyPropertyDescriptor descriptor = DependencyPropertyDescriptor.FromProperty(
+                TabItemExt.IsPinnedProperty, typeof(TabItemExt));
+
+            if (descriptor != null)
+            {
+                descriptor.AddValueChanged(oTab, TabItem_IsPinnedChanged);
+            }
+
             main_tabControl.Items.Add(oTab);
             main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
 
+        }
+
+        private void TabItem_IsPinnedChanged(object sender, EventArgs e)
+        {
+            if (sender is TabItemExt tabItem)
+            {
+                tabItem.CanClose = !tabItem.IsPinned; // Disable closing when pinned
+            }
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
