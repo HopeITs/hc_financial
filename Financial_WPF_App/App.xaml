@@ -554,7 +554,48 @@
                 <Setter Property="SelectionBrush" Value="{StaticResource LightGray2}"/>
                 <Setter Property="SelectionTextBrush" Value="{StaticResource LightGray2}"/>
             </Style>
-            
+
+            <!-- TextBox-Action bar Style -->
+            <Style x:Key="TextBoxActionStyle" TargetType="TextBox" BasedOn="{StaticResource FloatingBoxesStyle}">
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="SelectionTextBrush" Value="{StaticResource DarkGray}"/>
+                <!-- Ensure consistent padding -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Grid>
+                                <!-- Background Border -->
+                                <Border Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}"/>
+
+                                <!-- Search Icon (Image) -->
+                                <Image x:Name="SearchIcon"
+                                        Source="/Images/Icons/Search.png"
+                                        Width="13" Height="13"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Margin="8,0,0,0"
+                                        RenderOptions.BitmapScalingMode="HighQuality"/>
+
+                                <!-- Placeholder Text -->
+                                <TextBlock x:Name="PlaceholderText"
+                                               Text="Search"
+                                               Foreground="{StaticResource DarkGray}"
+                                               FontSize="13"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Visibility="Visible"
+                                               IsHitTestVisible="False"/>
+
+                                <!-- Actual TextBox Content -->
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="45,0,0,0"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <Style TargetType="ComboBox" x:Key="FloatingComboboxStyle">
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -1184,6 +1225,67 @@
                 </Setter>
             </Style>
 
+            
+            <!--Action Bar Checkox Style-->
+            <Style TargetType="CheckBox" x:Key="ComboBoxActionStyle" BasedOn="{StaticResource ComboBoxCheckBoxStyle}">
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
+                <Setter Property="Padding" Value="5,2,2,2" />
+                <!--<Setter Property="FontWeight" Value="SemiBold" />-->
+                <Setter Property="FontSize" Value="14" />
+                <!-- Custom CheckBox Template -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="CheckBox">
+                            <Grid Background="{TemplateBinding Background}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                 <!--CheckMark Box--> 
+                                <Border x:Name="CheckMarkBorder"
+                Width="12" Height="12"
+                BorderThickness="0"
+                BorderBrush="Transparent"
+                Background="White"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
+
+                                 <!--CheckMark Icon--> 
+                                <Path x:Name="CheckMark"
+              Grid.Column="0"
+              Data="M2,6 L5,9 L10,3"
+              Stroke="{StaticResource DarkGray}"
+              StrokeThickness="1.5"
+              Visibility="Collapsed"
+              VerticalAlignment="Center"
+              HorizontalAlignment="Center"/>
+
+                                 <!--CheckBox Label--> 
+                                <ContentPresenter Grid.Column="1"
+                          VerticalAlignment="Center"
+                          Margin="2,0,0,0"
+                          TextBlock.Foreground="{TemplateBinding Foreground}" />
+                            </Grid>
+
+                             <!--Triggers for CheckBox states-->
+                            <ControlTemplate.Triggers>
+
+                                <!--Hover Effect: Keep Background the Same-->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                                <!-- Trigger for IsChecked state: Show the check mark when checked -->
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
             <Style x:Key="CustomDatePickerTextBoxStyle" TargetType="DatePickerTextBox">
                 <Setter Property="BorderBrush" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="0"/>
@@ -1349,6 +1451,35 @@
                             <Border Background="{TemplateBinding Background}">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RadioButton}">
+                            <Grid Background="Transparent" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Ellipse x:Name="OuterCircle" Stroke="{TemplateBinding BorderBrush}" Fill="Transparent" Width="15" Height="15" />
+                                <Ellipse x:Name="InnerCircle" Fill="{StaticResource DarkGray}" Width="10" Height="10" Visibility="Collapsed" Grid.Column="0" />
+
+                                <ContentPresenter Grid.Column="1" Margin="5,0,0,0" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="InnerCircle" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1537,33 +1668,7 @@
                 <Setter Property="Label.VerticalAlignment" Value="Center" />
                 <Setter Property="Label.VerticalContentAlignment" Value="Center" />
             </Style>-->
-            <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
-                <Setter Property="FontSize" Value="20" />
-                <Setter Property="FontFamily" Value="Myriad Arabic" />
-                <Setter Property="Foreground" Value="{StaticResource HopeBlue4}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type RadioButton}">
-                            <Grid Background="Transparent" Margin="5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Ellipse x:Name="OuterCircle" Stroke="{TemplateBinding BorderBrush}" Fill="Transparent" Width="20" Height="20" />
-                                <Ellipse x:Name="InnerCircle" Fill="{StaticResource HopeBlue4}" Width="10" Height="10" Visibility="Collapsed" Grid.Column="0" />
-
-                                <ContentPresenter Grid.Column="1" Margin="5,0,0,0" />
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="InnerCircle" Property="Visibility" Value="Visible" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+            
 
             <!--<Style x:Key="statistic_lableStyle" TargetType="{x:Type Label}"  >
                 <Setter Property="Label.FontSize" Value="15" />
@@ -2097,7 +2202,7 @@
             </Style>
             <Style x:Key="Export_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="25" />
-                <Setter Property="Button.Height" Value="25" />
+                <Setter Property="Button.Height" Value="40" />
                 <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
                 <Setter Property="Button.HorizontalAlignment" Value="Center" />
                 <Setter Property="Button.VerticalContentAlignment" Value="Center" />
@@ -2105,7 +2210,7 @@
                 <Setter Property="Button.BorderThickness" Value="0" />
                 <Setter Property="Button.Background">
                     <Setter.Value>
-                        <ImageBrush ImageSource="Images/Buttons/excel.png" Stretch="Uniform" />
+                        <ImageBrush ImageSource="Images/Buttons/DownloadExcel.png" Stretch="Uniform" />
                     </Setter.Value>
                 </Setter>
                 <Setter Property="Template">

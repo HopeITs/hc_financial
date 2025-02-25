@@ -1046,6 +1046,18 @@
   <ItemGroup>
     <Resource Include="Images\Buttons\AddButton.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\DownloadExcel.png" />
+    <Resource Include="Images\Buttons\newEntry.png" />
+    <Resource Include="Images\Buttons\newEntryExcel.png" />
+    <Resource Include="Images\Buttons\showHide.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\new_attachment_excel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Search.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
