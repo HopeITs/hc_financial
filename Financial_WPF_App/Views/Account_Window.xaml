@@ -167,7 +167,7 @@
 
         <Expander Style="{StaticResource AccountExpander}" IsExpanded="False" Grid.Column="1" x:Name="myExpander" ExpandDirection="Right"
          HorizontalContentAlignment="Stretch"
-         Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" >
+         Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalAlignment="Right" >
             <Grid x:Name="FloatingExpanderContent" Margin="20,7,20,30" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="117"/>
@@ -376,7 +376,11 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
 
                 <StackPanel Height="30" Grid.Row="12" x:Name="AddAdminAcc_StackPanel" Grid.Column="1" Grid.ColumnSpan="1" Orientation="Horizontal"  Margin="3,2,1,2" FlowDirection="RightToLeft">
                     <Button Style="{DynamicResource AddButtonStyle}" 
-                            x:Name="AddAdminAcc_btn" TabIndex="15" Click="AddAdminAcc_btn_Click" Width="26"  />
+                            x:Name="AddAdminAcc_btn" TabIndex="15" Click="AddAdminAcc_btn_Click" Width="26">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
                     <Label x:Name="AddAdminAcc_Label" Style="{DynamicResource FloatingExpanderlableStyle}" 
                             Content="Add administrative account" Width="Auto" Margin="7,0,1,0"  />
                 </StackPanel>

@@ -412,13 +412,13 @@
                                 <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
                             </MenuItem>
                         </Menu>
-                        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Width="35" Height="25" ToolTip="Excel download" ToolTipService.InitialShowDelay="100">
+                        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel" VerticalAlignment="Center" HorizontalAlignment="Center"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Margin="0,0,1,0">
                             <Button.Background>
                                 <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
                             </Button.Background>
                         </Button>
                         <StackPanel Margin="5,2,5,2" x:Name="AddNewAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Entry" ToolTipService.InitialShowDelay="100">
-                            <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click" Margin="5,0,1,0">
+                            <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click" Margin="0,0,1,0" HorizontalAlignment="Center">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
                                 </Button.Background>
@@ -426,7 +426,7 @@
                         </StackPanel>
                         <StackPanel Margin="5,8,5,8" x:Name="AddMultiAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
                             <Button ToolTip="New Entry From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}"  Width="30" Height="25"
-x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,1,0">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/newEntryExcel.png" Stretch="Uniform"/>
                                 </Button.Background>
@@ -434,7 +434,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                         </StackPanel>
                         <StackPanel Margin="5,0,5,0" x:Name="AddMultiAttachments_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
                             <Button ToolTip="New Attachement From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
-                x:Name="AddMultiAttachments_btn" TabIndex="15" Height="25" Width="30" Click="AddMultiAttachments_btn_Click"  >
+                x:Name="AddMultiAttachments_btn" TabIndex="15" Height="25" Width="30" Click="AddMultiAttachments_btn_Click" Margin="0,0,1,0"  >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/new_attachment_excel.png" Stretch="Uniform"/>
                                 </Button.Background>

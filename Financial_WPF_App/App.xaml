@@ -483,7 +483,7 @@
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Stretch"/>
                 <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                <Setter Property="Margin" Value="1,0,1,0"/>
+                <Setter Property="Margin" Value="-5,0,1,0"/>
                 <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
                 <Setter Property="FontFamily" Value="Rubik"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
@@ -1440,11 +1440,6 @@
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Background">
-                    <Setter.Value>
-                        <ImageBrush ImageSource="/Images/Buttons/addButton.png" Stretch="Uniform" />
-                    </Setter.Value>
-                </Setter>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
