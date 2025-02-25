@@ -8,10 +8,8 @@
     x:Class="Financial_WPF_App.Views.Till_Window"
         mc:Ignorable="d"
         Title="Till_Window" Width="1280" Height="620" FontSize="18" WindowStartupLocation="CenterScreen">
-
-
-
-    <Grid >
+    <Window.Resources></Window.Resources>
+    <Grid>
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
                 <MenuItem Header="Refresh Till" Click = "Refresh_Click" >
@@ -127,13 +125,13 @@
         <Grid Grid.Row="3" Margin="2,5,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="45"/>
-                <RowDefinition Height="45"/>
                 <RowDefinition Height="64*"/>
                 <RowDefinition Height="5*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
+                
                 <ColumnDefinition Name="Grid_col" Width="70*" ></ColumnDefinition>
+                <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="6"                                            
                 Style="{DynamicResource SfDataGrid_body}"
@@ -144,7 +142,7 @@
                 MouseDoubleClick="myDataGrid_MouseDoubleClick" 
                 Loaded="myDataGrid_Loaded" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                Margin="2,1,2,2" Grid.Column="1" Grid.Row="2" FilterChanged="myDataGrid_FilterChanged" >
+                Margin="2,1,2,2" Grid.Column="0" Grid.Row="1" FilterChanged="myDataGrid_FilterChanged" >
 
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" MappingName="ID" HeaderText="Operation ID"/>
@@ -297,10 +295,162 @@
 
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
+            <TextBlock x:Name="Delete_Selected" Grid.Column="0" Margin="2,3,746,3" Grid.Row="3" TextWrapping="Wrap">      
+        <Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click">Delete Selected</Hyperlink>
+            </TextBlock>
+            <Grid Grid.Column="0" Background="{StaticResource LightGray1}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DockPanel LastChildFill="True">
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
+                            <Menu.Resources>
+                                <!-- Custom Menu Style -->
+                                <Style TargetType="Menu">
+                                    <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Menu">
+                                                <Border Background="{TemplateBinding Background}" Padding="0">
+                                                    <ItemsPresenter />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
 
-            <Expander x:Name="myExpander" Grid.Column="0" IsExpanded="True"
-            ExpandDirection="Left" 
-            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,1,0,0" Grid.RowSpan="4" Background="{x:Null}">
+                                <!-- Custom MenuItem Style -->
+                                <Style x:Key="CustomMenuItemStyle" TargetType="MenuItem">
+                                    <Setter Property="FontFamily" Value="Rubik"/>
+                                    <Setter Property="FontSize" Value="13.5"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DarkGray}"/>
+                                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                                    <Setter Property="Padding" Value="10,5"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="MenuItem">
+                                                <Grid>
+                                                    <!-- Main Item -->
+                                                    <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="10,5">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <!-- Arrow Column -->
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <ContentPresenter Grid.Column="0" 
+                                                           HorizontalAlignment="Left" 
+                                                           VerticalAlignment="Center" 
+                                                           ContentSource="Header"/>
+
+                                                            <!-- Submenu Arrow -->
+                                                            <Path x:Name="Arrow"
+                                                          Grid.Column="1"
+                                                          Data="M 0 0 L 6 4 L 0 8 Z" 
+                                                          Fill="{DynamicResource DarkGray}"
+                                                          VerticalAlignment="Center"
+                                                          Margin="5,0,0,0"
+                                                          Visibility="Collapsed"/>
+                                                        </Grid>
+                                                    </Border>
+
+                                                    <!-- Submenu Popup -->
+                                                    <Popup x:Name="Popup"
+                                                   Placement="Bottom"
+                                                   PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                                   IsOpen="{TemplateBinding IsSubmenuOpen}"
+                                                   AllowsTransparency="True"
+                                                   Focusable="False"
+                                                   PopupAnimation="Fade">
+                                                        <Border Background="White" CornerRadius="5" BorderBrush="{StaticResource LightGray1}" BorderThickness="1">
+                                                            <StackPanel>
+                                                                <ItemsPresenter />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </Popup>
+                                                </Grid>
+
+                                                <!-- Triggers -->
+                                                <ControlTemplate.Triggers>
+                                                    <!-- Show Arrow Only if the MenuItem has sub-items (is a submenu) -->
+                                                    <Trigger Property="HasItems" Value="True">
+                                                        <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
+                                                    </Trigger>
+
+                                                    <!-- Submenu Hover Effect -->
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <!--<Setter TargetName="Border" Property="Background" Value="transparent"/>-->
+                                                        <!--<Setter Property="Foreground" Value="{DynamicResource LightGray1}"/>-->
+                                                    </Trigger>
+
+                                                    <!-- Submenu Open Effect -->
+                                                    <Trigger Property="IsSubmenuOpen" Value="True">
+                                                        <Setter TargetName="Popup" Property="IsOpen" Value="True"/>
+                                                    </Trigger>
+
+                                                    <!-- Disabled Effect -->
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter Property="Foreground" Value="{DynamicResource MidGray}"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+
+                            </Menu.Resources>
+                            <!-- MenuItems with Custom Style -->
+                            <MenuItem Width="20" Height="20" StaysOpenOnClick="True" Header=""  Style="{StaticResource CustomMenuItemStyle}" Margin="6,8,0,0" ToolTip="Show/Hide Columns" ToolTipService.InitialShowDelay="100">
+                                <MenuItem.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/showHide.png" Stretch="Uniform"/>
+                                </MenuItem.Background>
+                                <!-- Submenu Items (Will Keep Hover Effect) -->
+                                <MenuItem StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                                <MenuItem StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                                <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
+                            </MenuItem>
+                        </Menu>
+                        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Width="35" Height="25" ToolTip="Excel download" ToolTipService.InitialShowDelay="100">
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                            </Button.Background>
+                        </Button>
+                        <StackPanel Margin="5,2,5,2" x:Name="AddNewAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Entry" ToolTipService.InitialShowDelay="100">
+                            <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click" Margin="5,0,1,0">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Margin="5,8,5,8" x:Name="AddMultiAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
+                            <Button ToolTip="New Entry From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}"  Width="30" Height="25"
+x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/newEntryExcel.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Margin="5,0,5,0" x:Name="AddMultiAttachments_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
+                            <Button ToolTip="New Attachement From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
+                x:Name="AddMultiAttachments_btn" TabIndex="15" Height="25" Width="30" Click="AddMultiAttachments_btn_Click"  >
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/new_attachment_excel.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                    </WrapPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,30,0">
+                        <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Click="NotApproved_RadioButton_Click" Tag="False" Margin="0,9,0,9" VerticalAlignment="Stretch" Width="163"/>
+                        <CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource ComboBoxActionStyle}" x:Name="ExactSearch_checkBox" Content="Full Match"  Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch" Width="89" Margin="0,0,10,0"/>
+                        <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TabIndex="10" Width="175"/>
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+            <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True"
+            ExpandDirection="Right" 
+            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,1,0,0" Grid.RowSpan="3" Background="{x:Null}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
@@ -345,113 +495,191 @@
                 </Grid>
 
             </Expander>
-            <Grid Grid.Column="1" Margin="2,1,2,1">
+            
+
+            <!--<Grid Grid.Column="1" Background="{StaticResource LightGray1}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="90"/>
-                    <ColumnDefinition Width="160"/>
-                    <ColumnDefinition Width="Auto" MinWidth="90" />
-                    <ColumnDefinition Width="62" />
-                    <ColumnDefinition Width="107"/>
-                    <ColumnDefinition Width="86*" />
-                    <ColumnDefinition Width="55*"/>
+                    <ColumnDefinition Width="42"/>
+                    <ColumnDefinition Width="42"/>
+                    <ColumnDefinition Width="42"/>
+                    <ColumnDefinition Width="42"/>
+                    <ColumnDefinition Width="42"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="181*"/>
+                    <ColumnDefinition Width="600*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="4" Content="Search:" Style="{DynamicResource lableStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="1,4,1,6" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                <Border Grid.Column="3" BorderThickness="1" CornerRadius="10" Padding="0" Width="auto" Margin="4,4,4,4" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBox x:Name="Search_txtBox" TabIndex="10" 
-                        Style="{DynamicResource textBoxStyle}"
-                        Width="auto" TextAlignment="Center" BorderThickness="0"
-                        TextChanged="Search_txtBox_TextChanged" >
-                        <TextBox.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </TextBox.BorderBrush>
-                    </TextBox>
-                </Border>
-                <CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource checkBoxStyle}" x:Name="ExactSearch_checkBox" Margin="1,4,1,4" HorizontalAlignment="Stretch" Content="Full match" Grid.Column="2" Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch"/>
-                <Menu
-        x:Name="ShowHideMenu" Margin="10,1,12,2">
-                    <Menu.Background
-        >
-                        <ImageBrush
-                />
-                    </Menu.Background>
-                    <MenuItem
-        Width="28" StaysOpenOnClick="True" Header="" Height="40">
-                        <MenuItem.Background
-        >
-                            <ImageBrush
-        ImageSource="/Images/2072010 (100x100).png" Stretch="Uniform" TileMode="Tile"
-                />
+                <Menu x:Name="ShowHideMenu" Grid.Column="0" Margin="5,2,5,2">
+                    <Menu.Resources>
+                        -->
+            <!-- Custom Menu Style -->
+            <!--
+                        <Style TargetType="Menu">
+                            <Setter Property="OverridesDefaultStyle" Value="True"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Menu">
+                                        <Border Background="{TemplateBinding Background}" Padding="0">
+                                            <ItemsPresenter />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                        -->
+            <!-- Custom MenuItem Style -->
+            <!--
+                        <Style x:Key="CustomMenuItemStyle" TargetType="MenuItem">
+                            <Setter Property="FontFamily" Value="Rubik"/>
+                            <Setter Property="FontSize" Value="13.5"/>
+                            <Setter Property="Foreground" Value="{DynamicResource DarkGray}"/>
+                            <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                            <Setter Property="Padding" Value="10,5"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="MenuItem">
+                                        <Grid>
+                                            -->
+            <!-- Main Item -->
+            <!--
+                                            <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="10,5">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        -->
+            <!-- Arrow Column -->
+            <!--
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <ContentPresenter Grid.Column="0" 
+                              HorizontalAlignment="Left" 
+                              VerticalAlignment="Center" 
+                              ContentSource="Header"/>
+
+                                                    -->
+            <!-- Submenu Arrow -->
+            <!--
+                                                    <Path x:Name="Arrow"
+                  Grid.Column="1"
+                  Data="M 0 0 L 6 4 L 0 8 Z" 
+                  Fill="{DynamicResource DarkGray}"
+                  VerticalAlignment="Center"
+                  Margin="5,0,0,0"
+                  Visibility="Collapsed"/>
+                                                </Grid>
+                                            </Border>
+
+                                            -->
+            <!-- Submenu Popup -->
+            <!--
+                                            <Popup x:Name="Popup"
+                                   Placement="Bottom"
+                                   PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                   IsOpen="{TemplateBinding IsSubmenuOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Fade">
+                                                <Border Background="White" CornerRadius="5" BorderBrush="{StaticResource LightGray1}" BorderThickness="1">
+                                                    <StackPanel>
+                                                        <ItemsPresenter />
+                                                    </StackPanel>
+                                                </Border>
+                                            </Popup>
+                                        </Grid>
+
+                                        -->
+            <!-- Triggers -->
+            <!--
+                                        <ControlTemplate.Triggers>
+                                            -->
+            <!-- Show Arrow Only if the MenuItem has sub-items (is a submenu) -->
+            <!--
+                                            <Trigger Property="HasItems" Value="True">
+                                                <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
+                                            </Trigger>
+
+                                            -->
+            <!-- Submenu Hover Effect -->
+            <!--
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                -->
+            <!--<Setter TargetName="Border" Property="Background" Value="transparent"/>-->
+            <!--<Setter Property="Foreground" Value="{DynamicResource LightGray1}"/>-->
+            <!--
+                                            </Trigger>
+
+                                            -->
+            <!-- Submenu Open Effect -->
+            <!--
+                                            <Trigger Property="IsSubmenuOpen" Value="True">
+                                                <Setter TargetName="Popup" Property="IsOpen" Value="True"/>
+                                            </Trigger>
+
+                                            -->
+            <!-- Disabled Effect -->
+            <!--
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Foreground" Value="{DynamicResource MidGray}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                    </Menu.Resources>
+                    -->
+            <!-- MenuItems with Custom Style -->
+            <!--
+                    <MenuItem Width="20" Height="20" StaysOpenOnClick="True" Header=""  Style="{StaticResource CustomMenuItemStyle}" Margin="6,9,0,0" ToolTip="Show/Hide Columns" ToolTipService.InitialShowDelay="100">
+                        <MenuItem.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/showHide.png" Stretch="Uniform"/>
                         </MenuItem.Background>
-                        <MenuItem
-        StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="White"
-                />
-                        <MenuItem
-        StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="White"
-                />
-                        <Separator
-        Background="Black"
-                />
-                        <MenuItem
-        Background="White" Click="ShowAll_MenuItem_Click" Header="ShowAll"
-                />
+                        -->
+            <!-- Submenu Items (Will Keep Hover Effect) -->
+            <!--
+                        <MenuItem StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                        <MenuItem StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                        <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
                     </MenuItem>
                 </Menu>
-                <Button
-        TabIndex="5" Style="{DynamicResource Export_Style}" x:Name="Export_btn" Margin="12,8,12,10" Grid.Column="1" Command="local:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RenderTransformOrigin="0.536,0.355"
-                />
-                <StackPanel x:Name="AddMultiAction_StackPanel" Grid.Column="7" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="3,1,2,1">
-                    <Button Style="{DynamicResource Add_Style}" 
-                        x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Height="25" Width="25"  />
-                    <Label x:Name="AddMultiAction_Label" Style="{DynamicResource lableStyle}" 
-                        Content="New entry from excel"  />
+                <Button Margin="5,10,5,10" Grid.Column="1" TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Width="NaN" Height="NaN" ToolTip="Excel download" ToolTipService.InitialShowDelay="100">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <StackPanel Margin="5,2,5,2"  Grid.Column="2"  x:Name="AddNewAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Entry" ToolTipService.InitialShowDelay="100">
+                    <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click" Margin="5,0,1,0">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
                 </StackPanel>
-                <StackPanel x:Name="AddNewAction_StackPanel" Grid.Column="8" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,0,3,2">
-                    <Button Style="{DynamicResource Add_Style}" 
-              x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click"  />
-                    <Label x:Name="AddNewAction_Label" Style="{DynamicResource lableStyle}" 
-                   Content="New entry"  />
+                <StackPanel Grid.Column="3" Margin="5,8,5,8" x:Name="AddMultiAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <Button ToolTip="New Entry From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}"  Width="30" Height="25"
+                        x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/newEntryExcel.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
                 </StackPanel>
-                <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Grid.ColumnSpan="2" Margin="4,6,2,5" Grid.Column="5" Click="NotApproved_RadioButton_Click" Tag="False"/>
-            </Grid>
-            <TextBlock x:Name="Delete_Selected" Grid.Column="1" Margin="2,3,782,3" Grid.Row="3" TextWrapping="Wrap">      
-                    <Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click">Delete Selected</Hyperlink>
-            </TextBlock>
-            <Grid Margin="2,0,2,5" Grid.Row="1" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="90"/>
-                    <ColumnDefinition Width="160"/>
-                    <ColumnDefinition Width="Auto" MinWidth="90" />
-                    <ColumnDefinition Width="62" />
-                    <ColumnDefinition Width="107"/>
-                    <ColumnDefinition Width="86*" />
-                    <ColumnDefinition Width="55*"/>
-                </Grid.ColumnDefinitions>
-                <Menu
-                    x:Name="ShowHideMenu1" Margin="10,1,12,2">
-                    <Menu.Background
-        >
-                        <ImageBrush
-                />
-                    </Menu.Background>
-                </Menu>
-                <StackPanel x:Name="AddMultiAttachments_StackPanel" Grid.Column="7" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,2,1,0" Grid.ColumnSpan="2">
-                    <Button Style="{DynamicResource Add_Style}" 
-                        x:Name="AddMultiAttachments_btn" TabIndex="15" Height="25" Width="25" Click="AddMultiAttachments_btn_Click"  />
-                    <Label x:Name="AddMultiAttachments_Label" Style="{DynamicResource lableStyle}" 
-                        Content="New Attachments from excel" Width="248"  />
-                </StackPanel>
-            </Grid>
+                <StackPanel Margin="5,0,5,0" Grid.Column="4" x:Name="AddMultiAttachments_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <Button ToolTip="New Attachement From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
+                        x:Name="AddMultiAttachments_btn" TabIndex="15" Height="25" Width="30" Click="AddMultiAttachments_btn_Click"  >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/new_attachment_excel.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
 
+                </StackPanel>
+
+                <RadioButton Grid.Column="8" x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Click="NotApproved_RadioButton_Click" Tag="False" Margin="0,9,319,9" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="163"/>
+                <CheckBox Grid.Column="8" Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource ComboBoxActionStyle}" x:Name="ExactSearch_checkBox" Content="Full Match"  Checked="ExactSearch_checkBox_Checked" Margin="0,14,230,14" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="89"/>
+                <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" Grid.Column="8" x:Name="Search_txtBox" TabIndex="10" Margin="0,7,40,8" HorizontalAlignment="Right" Width="175"/>
+            </Grid>-->
+            
         </Grid>
     </Grid>
 </Window>

@@ -267,9 +267,9 @@ namespace Financial_WPF_App.Views
 
             if (!Add_privileges)
             {
-                AddNewAction_btn.Visibility = AddNewAction_Label.Visibility = Visibility.Collapsed;
-                AddMultiAction_btn.Visibility = AddMultiAction_Label.Visibility = Visibility.Collapsed;
-                AddMultiAttachments_btn.Visibility = AddMultiAttachments_Label.Visibility = Visibility.Collapsed;
+                AddNewAction_btn.Visibility =  Visibility.Collapsed;
+                AddMultiAction_btn.Visibility =  Visibility.Collapsed;
+                AddMultiAttachments_btn.Visibility = Visibility.Collapsed;
 
             }
             if (!Edit_privileges)
@@ -994,6 +994,14 @@ namespace Financial_WPF_App.Views
         {
             try
             {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)Search_txtBox.Template.FindName("PlaceholderText", Search_txtBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
                 //this.myDataGrid.SearchHelper.Search(Search_txtBox.Text);
                 //this.myDataGrid.SearchHelper.AllowFiltering = true;
                 Search_DataGrid();
