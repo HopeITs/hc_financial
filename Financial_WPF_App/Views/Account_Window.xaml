@@ -166,9 +166,9 @@
         <TabControl Grid.ColumnSpan="2" x:Name="tabControl1" Style="{StaticResource TabControlStyle}" Grid.Column="0"></TabControl>
 
         <Expander Style="{StaticResource AccountExpander}" IsExpanded="False" Grid.Column="1" x:Name="myExpander" ExpandDirection="Right"
-         HorizontalContentAlignment="Stretch"
+         HorizontalContentAlignment="Left"
          Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalAlignment="Right" >
-            <Grid x:Name="FloatingExpanderContent" Margin="20,7,20,30" >
+            <Grid x:Name="FloatingExpanderContent" Margin="20,7,20,30" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="117"/>
                     <ColumnDefinition Width="210"/>
