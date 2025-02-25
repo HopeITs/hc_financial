@@ -177,10 +177,10 @@
                         </TextBox.BorderBrush>
                     </TextBox>
                 </Border>
-                <CheckBox Grid.Column="3" x:Name="ExactSearch_checkBox" Content="Full Match"                        
+                <!--<CheckBox Grid.Column="3" x:Name="ExactSearch_checkBox" Content="Full Match"                        
                           Foreground = "{DynamicResource HopeBlue4}"
                     Checked="ExactSearch_checkBox_Checked" Unchecked="ExactSearch_checkBox_Unchecked" VerticalContentAlignment="Center" 
-                    HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,15,0,9" Width="90" />
+                    HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,15,0,9" Width="90" />-->
                 <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Column="6" Margin="9,1,10,1" >
                     <Label x:Name="AddMultiBeneficiary_Label"  Style="{DynamicResource lableStyle}" Content="Add beneficiaries from excel:" Height="34" Width="190" />
                     <Button Style="{DynamicResource Add_Style}" 

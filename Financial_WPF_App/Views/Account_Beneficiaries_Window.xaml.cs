@@ -901,24 +901,30 @@ namespace Financial_WPF_App.Views
 
                     foreach (System.Data.DataRow r in selected_dt.Rows)
                     {
+
                         for (var i = 0; i < selected_dt.Columns.Count; i++)
                         {
-                            if (ExactSearch_checkBox.IsChecked == true)
+                            if (r.ItemArray.ElementAt(i).ToString().ToLower().Contains(Search_txtBox.Text.ToLower()))
                             {
-                                if (r.ItemArray.ElementAt(i).ToString().ToLower() == Search_txtBox.Text.ToLower())
-                                {
-                                    new_dt.Rows.Add(r.ItemArray);
-                                    break;
-                                }
+                                new_dt.Rows.Add(r.ItemArray);
+                                break;
                             }
-                            else
-                            {
-                                if (r.ItemArray.ElementAt(i).ToString().ToLower().Contains(Search_txtBox.Text.ToLower()))
-                                {
-                                    new_dt.Rows.Add(r.ItemArray);
-                                    break;
-                                }
-                            }
+                            //if (ExactSearch_checkBox.IsChecked == true)
+                            //{
+                            //    if (r.ItemArray.ElementAt(i).ToString().ToLower() == Search_txtBox.Text.ToLower())
+                            //    {
+                            //        new_dt.Rows.Add(r.ItemArray);
+                            //        break;
+                            //    }
+                            //}
+                            //else
+                            //{
+                            //    if (r.ItemArray.ElementAt(i).ToString().ToLower().Contains(Search_txtBox.Text.ToLower()))
+                            //    {
+                            //        new_dt.Rows.Add(r.ItemArray);
+                            //        break;
+                            //    }
+                            //}
                         }
                     }
                     selected_dt = new_dt.Copy();

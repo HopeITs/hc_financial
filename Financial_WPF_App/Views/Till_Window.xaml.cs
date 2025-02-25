@@ -267,8 +267,8 @@ namespace Financial_WPF_App.Views
 
             if (!Add_privileges)
             {
-                AddNewAction_btn.Visibility =  Visibility.Collapsed;
-                AddMultiAction_btn.Visibility =  Visibility.Collapsed;
+                AddNewAction_btn.Visibility = Visibility.Collapsed;
+                AddMultiAction_btn.Visibility = Visibility.Collapsed;
                 AddMultiAttachments_btn.Visibility = Visibility.Collapsed;
 
             }
@@ -944,52 +944,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        #region search
-        private void Search_DataGrid()
-        {
-            DataTable selected_dt = new DataTable();
-            selected_dt = dt.Copy();
-
-            if (Search_txtBox.Text != "")
-            {
-                if (selected_dt != null)
-                {
-                    DataTable new_dt = selected_dt.Copy();
-                    new_dt.Rows.Clear();
-
-                    foreach (System.Data.DataRow r in selected_dt.Rows)
-                    {
-                        for (var i = 0; i < selected_dt.Columns.Count; i++)
-                        {
-                            if (ExactSearch_checkBox.IsChecked == true)
-                            {
-                                if (r.ItemArray.ElementAt(i).ToString().ToLower() == Search_txtBox.Text.ToLower())
-                                {
-                                    new_dt.Rows.Add(r.ItemArray);
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                if (r.ItemArray.ElementAt(i).ToString().ToLower().Contains(Search_txtBox.Text.ToLower()))
-                                {
-                                    new_dt.Rows.Add(r.ItemArray);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    selected_dt = new_dt.Copy();
-                }
-            }
-            myDataGrid.ItemsSource = null;
-
-            if (selected_dt != null)
-            {
-                myDataGrid.ItemsSource = selected_dt.DefaultView;
-            }
-        }
-
         private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -1002,9 +956,14 @@ namespace Financial_WPF_App.Views
                     // Hide placeholder when user types, show when empty
                     placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
                 }
-                //this.myDataGrid.SearchHelper.Search(Search_txtBox.Text);
-                //this.myDataGrid.SearchHelper.AllowFiltering = true;
-                Search_DataGrid();
+
+                if (dt != null)
+                {
+                    SearchDataGrid searchHelper = new SearchDataGrid(dt);
+
+                    // Call the search method when text changes
+                    searchHelper.Search(Search_txtBox.Text, myDataGrid);
+                }
             }
             catch (Exception ex)
             {
@@ -1018,42 +977,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void ExactSearch_checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Search_DataGrid();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void ExactSearch_checkBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Search_DataGrid();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-        #endregion
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {

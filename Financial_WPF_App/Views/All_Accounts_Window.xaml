@@ -153,10 +153,10 @@
                         </TextBox.BorderBrush>
                     </TextBox>
                 </Border>
-                <CheckBox Grid.Column="4" x:Name="ExactSearch_checkBox" 
+                <!--<CheckBox Grid.Column="4" x:Name="ExactSearch_checkBox" 
                               Content="Full Match" 
                               Checked="ExactSearch_checkBox_Checked" Unchecked="ExactSearch_checkBox_Unchecked" 
-                              VerticalAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Margin="17,0,0,0" Width="96" Height="25" />
+                              VerticalAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Margin="17,0,0,0" Width="96" Height="25" />-->
             </Grid>
         </Grid>
 

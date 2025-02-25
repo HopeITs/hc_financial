@@ -79,10 +79,10 @@
                     </TextBox.BorderBrush>
                 </TextBox>
             </Border>
-            <CheckBox Grid.Column="3" x:Name="ExactSearch_checkBox" Content="Full match"                        
+            <!--<CheckBox Grid.Column="3" x:Name="ExactSearch_checkBox" Content="Full match"                        
                 Foreground = "{DynamicResource HopeBlue4}"
                 Checked="ExactSearch_checkBox_Checked" Unchecked="ExactSearch_checkBox_Unchecked" VerticalContentAlignment="Center" 
-                HorizontalAlignment="Right" HorizontalContentAlignment="Center" Margin="0,15,0,9" Width="91" />
+                HorizontalAlignment="Right" HorizontalContentAlignment="Center" Margin="0,15,0,9" Width="91" />-->
         </Grid>
 
     </Grid>

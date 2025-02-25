@@ -170,9 +170,9 @@
                 <ColumnDefinition Width="101*" />
                 <ColumnDefinition Width="292*" />
             </Grid.ColumnDefinitions>
-            <CheckBox x:Name="ExactSearch_checkBox" Content="Full match"
+            <!--<CheckBox x:Name="ExactSearch_checkBox" Content="Full match"
                 Checked="ExactSearch_checkBox_Checked" Unchecked="ExactSearch_checkBox_Unchecked"
-                Style="{DynamicResource checkBoxStyle}" Height="30" Margin="3,0,0,0" Width="88" Grid.Column="5" HorizontalAlignment="Left"/>
+                Style="{DynamicResource checkBoxStyle}" Height="30" Margin="3,0,0,0" Width="88" Grid.Column="5" HorizontalAlignment="Left"/>-->
             <Label Grid.Column="7" Content="Search:" Style="{DynamicResource lableStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="1,1,1,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             <Border Grid.Column="6" BorderThickness="1" CornerRadius="10" Padding="0" VerticalAlignment="Center" Width="auto" Margin="9,0,9,0" Height="34" >
                 <Border.BorderBrush>

@@ -168,7 +168,7 @@
                             </TextBox.BorderBrush>
                         </TextBox>
                     </Border>
-                    <CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource checkBoxStyle}" x:Name="ExactSearch_checkBox" Margin="2,3,3,5" HorizontalAlignment="Stretch" Content="Full match" Grid.Column="3" Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch"/>
+                    <!--<CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource checkBoxStyle}" x:Name="ExactSearch_checkBox" Margin="2,3,3,5" HorizontalAlignment="Stretch" Content="Full match" Grid.Column="3" Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch"/>-->
                     <Menu
                         x:Name="ShowHideMenu" Margin="10,1,12,2">
                         <Menu.Background

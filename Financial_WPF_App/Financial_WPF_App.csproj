@@ -242,6 +242,7 @@
     <Compile Include="Helper\MultiPayments_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiSalaries_CustomCopyPaste.cs" />
     <Compile Include="Helper\ScrollViewerHelper.cs" />
+    <Compile Include="Helper\SearchDataGrid.cs" />
     <Compile Include="Helper\TreeViewExpandedState.cs" />
     <Compile Include="Helper\TreeViewItemState.cs" />
     <Compile Include="Design\MenuIcon.cs" />
