@@ -129,7 +129,7 @@
                 <RowDefinition Height="5*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                
+
                 <ColumnDefinition Name="Grid_col" Width="70*" ></ColumnDefinition>
                 <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
             </Grid.ColumnDefinitions>
@@ -303,7 +303,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <DockPanel LastChildFill="True">
-                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <WrapPanel Orientation="Horizontal" Width="187">
                         <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                             <Menu.Resources>
                                 <!-- Custom Menu Style -->
@@ -412,11 +412,21 @@
                                 <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
                             </MenuItem>
                         </Menu>
-                        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel" VerticalAlignment="Center" HorizontalAlignment="Center"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Margin="0,0,1,0">
-                            <Button.Background>
-                                <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
-                            </Button.Background>
-                        </Button>
+                        <StackPanel x:Name="XeportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
+                            <StackPanel.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="-1"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </StackPanel.RenderTransform>
+                            <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
                         <StackPanel Margin="5,2,5,2" x:Name="AddNewAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Entry" ToolTipService.InitialShowDelay="100">
                             <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click" Margin="0,0,1,0" HorizontalAlignment="Center">
                                 <Button.Background>
@@ -495,7 +505,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                 </Grid>
 
             </Expander>
-            
+
 
             <!--<Grid Grid.Column="1" Background="{StaticResource LightGray1}">
                 <Grid.ColumnDefinitions>
@@ -679,7 +689,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                 <CheckBox Grid.Column="8" Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource ComboBoxActionStyle}" x:Name="ExactSearch_checkBox" Content="Full Match"  Checked="ExactSearch_checkBox_Checked" Margin="0,14,230,14" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="89"/>
                 <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" Grid.Column="8" x:Name="Search_txtBox" TabIndex="10" Margin="0,7,40,8" HorizontalAlignment="Right" Width="175"/>
             </Grid>-->
-            
+
         </Grid>
     </Grid>
 </Window>
