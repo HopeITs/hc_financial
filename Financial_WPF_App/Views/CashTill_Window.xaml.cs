@@ -242,7 +242,10 @@ namespace Financial_WPF_App.Views
                 NewItem.Header = CHeader;
                 NewItem.Background = MyWhite;
                 NewItem.StaysOpenOnClick = true;
-                if (!CHeader.Contains("ID") && !CHeader.Contains("Delete") && !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") && !CHeader.Contains("#") && !Originally_HiddenColumns.Contains(CHeader))
+                if (!CHeader.Contains("ID") && !CHeader.Contains("Delete") &&
+                        !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") &&
+                        !CHeader.Contains("Select") && !CHeader.Contains("#") &&
+                        !Originally_HiddenColumns.Contains(CHeader))
                     if (myDataGrid.Columns[i].IsHidden == false)
                     {
                         NewItem.Click += new RoutedEventHandler(HideColumn);
