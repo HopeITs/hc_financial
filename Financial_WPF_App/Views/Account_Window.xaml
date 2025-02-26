@@ -372,20 +372,16 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
         <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
     </ToggleButton.Background>
 </ToggleButton>-->
-
-
-                <StackPanel Height="30" Grid.Row="12" x:Name="AddAdminAcc_StackPanel" Grid.Column="1" Grid.ColumnSpan="1" Orientation="Horizontal"  Margin="3,2,1,2" FlowDirection="RightToLeft">
+                <Button Grid.Row="14" Grid.ColumnSpan="2" x:Name="Save_btn" Grid.Column="0" Style="{DynamicResource ButtonColoredStyle}" TabIndex="11" 
+                    Click="Save_btn_Click" Margin="0,8,0,3" Content="Save" VerticalAlignment="Stretch" Grid.RowSpan="2" HorizontalAlignment="Stretch"  />
+                <Label x:Name="AddAdminAcc_Label" Style="{DynamicResource FloatingExpanderlableStyle}" 
+                            Content="Add administrative account:" Margin="-5,3,80,2" Grid.ColumnSpan="2" Grid.Row="12"  />
                     <Button Style="{DynamicResource AddButtonStyle}" 
-                            x:Name="AddAdminAcc_btn" TabIndex="15" Click="AddAdminAcc_btn_Click" Width="26">
+                            x:Name="AddAdminAcc_btn" TabIndex="15" Click="AddAdminAcc_btn_Click" Width="26" Grid.Column="1" HorizontalAlignment="Left" Margin="183,0,0,0" Grid.Row="12">
                         <Button.Background>
                             <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
-                    <Label x:Name="AddAdminAcc_Label" Style="{DynamicResource FloatingExpanderlableStyle}" 
-                            Content="Add administrative account" Width="Auto" Margin="7,0,1,0"  />
-                </StackPanel>
-                <Button Grid.Row="14" Grid.ColumnSpan="2" x:Name="Save_btn" Grid.Column="0" Style="{DynamicResource ButtonColoredStyle}" TabIndex="11" 
-                    Click="Save_btn_Click" Margin="0,8,0,3" Content="Save" VerticalAlignment="Stretch" Grid.RowSpan="2" HorizontalAlignment="Stretch"  />
             </Grid>
         </Expander>
     </Grid>
