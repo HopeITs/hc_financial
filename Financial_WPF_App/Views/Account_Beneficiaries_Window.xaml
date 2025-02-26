@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
+        xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         mc:Ignorable="d" 
         Title="Till_Window" Width="1280" Height="620"
         FontFamily="Myriad Arabic" FontSize="22" WindowStartupLocation="CenterScreen">
@@ -121,86 +122,176 @@
                     <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
                 </Border>
             </StackPanel>
-            <Grid Margin="10,0,10,0" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="11*"/>
-                    <ColumnDefinition Width="101"/>
-                    <ColumnDefinition Width="187"/>
-                    <ColumnDefinition Width="65.255"/>
-                    <ColumnDefinition Width="241"/>
-                    <ColumnDefinition Width="143.745"/>
-                    <ColumnDefinition Width="17*"/>
-                </Grid.ColumnDefinitions>
-                <Menu x:Name="ShowHideMenu" Margin="3,4,2,4" >
-                    <Menu.Background>
-                        <ImageBrush/>
-                    </Menu.Background>
-                    <MenuItem Header="" StaysOpenOnClick="True" Grid.Column="1" Width="39" Height="40" >
-                        <MenuItem.Background>
-                            <ImageBrush ImageSource="/Images/2072010 (100x100).png" Stretch="Uniform" TileMode="Tile"/>
-                        </MenuItem.Background>
-                        <MenuItem x:Name="ShowMenu" Header="Show" StaysOpenOnClick="True" Background="White" />
-                        <MenuItem x:Name="HideMenu" Header="Hide" StaysOpenOnClick="True" Background="White"/>
-                        <Separator Background="Black"/>
-                        <MenuItem Header="ShowAll" Click="ShowAll_MenuItem_Click" Background="White"/>
-                    </MenuItem>
-                </Menu>
-                <Button Grid.Column="1" Style="{DynamicResource Export_Style}" x:Name="Export_btn"
-                    TabIndex="5"
-                    Command="Helper:Commands.ExportToExcel" Height="26" Width="25"
-                />
-                <Button Grid.Column="7" x:Name="Add_btn"  
-                    Style="{DynamicResource SaveButton_Style}" 
-                    TabIndex="4" Click="NewBeneficiary_Click" 
-                    FlowDirection="LeftToRight"  Width="auto" VerticalContentAlignment="Center" 
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,10,3,8" VerticalAlignment="Stretch" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/add_beneficiary_btn.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-                <Label VerticalContentAlignment="Center" Style="{DynamicResource lableStyle}" HorizontalContentAlignment="Center" Content="Search:" Grid.Column="5" Width="52" VerticalAlignment="Stretch" Margin="0,12,0,6" HorizontalAlignment="Center"/>
-                <Border Grid.Column="4" BorderThickness="1" CornerRadius="10" Padding="0" Margin="8,8,8,8" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBox x:Name="Search_txtBox" Width="auto" TextChanged="Search_txtBox_TextChanged" TextWrapping="Wrap"  
-                        TabIndex="1" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch"
-                        FlowDirection="RightToLeft" TextAlignment="Center"
-                        Background="{DynamicResource HopeGrey}" BorderThickness="0" >
-                        <TextBox.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </TextBox.BorderBrush>
-                    </TextBox>
-                </Border>
+            <Grid Margin="10,0,10,0" Grid.ColumnSpan="2" >
+                <DockPanel Grid.Row="0" LastChildFill="True" Background="{StaticResource LightGray1}">
+                    <WrapPanel Orientation="Horizontal" Width="Auto">
+                        <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
+                            <Menu.Resources>
+                                <!-- Custom Menu Style -->
+                                <Style TargetType="Menu">
+                                    <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Menu">
+                                                <Border Background="{TemplateBinding Background}" Padding="0">
+                                                    <ItemsPresenter />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+
+                                <!-- Custom MenuItem Style -->
+                                <Style x:Key="CustomMenuItemStyle" TargetType="MenuItem">
+                                    <Setter Property="FontFamily" Value="Rubik"/>
+                                    <Setter Property="FontSize" Value="13.5"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DarkGray}"/>
+                                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                                    <Setter Property="Padding" Value="10,5"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="MenuItem">
+                                                <Grid>
+                                                    <!-- Main Item -->
+                                                    <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="10,5">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <!-- Arrow Column -->
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <ContentPresenter Grid.Column="0" 
+                                                           HorizontalAlignment="Left" 
+                                                           VerticalAlignment="Center" 
+                                                           ContentSource="Header"/>
+
+                                                            <!-- Submenu Arrow -->
+                                                            <Path x:Name="Arrow"
+                                                          Grid.Column="1"
+                                                          Data="M 0 0 L 6 4 L 0 8 Z" 
+                                                          Fill="{DynamicResource DarkGray}"
+                                                          VerticalAlignment="Center"
+                                                          Margin="5,0,0,0"
+                                                          Visibility="Collapsed"/>
+                                                        </Grid>
+                                                    </Border>
+
+                                                    <!-- Submenu Popup -->
+                                                    <Popup x:Name="Popup"
+                                                   Placement="Bottom"
+                                                   PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                                   IsOpen="{TemplateBinding IsSubmenuOpen}"
+                                                   AllowsTransparency="True"
+                                                   Focusable="False"
+                                                   PopupAnimation="Fade">
+                                                        <Border Background="White" CornerRadius="5" BorderBrush="{StaticResource LightGray1}" BorderThickness="1">
+                                                            <StackPanel>
+                                                                <ItemsPresenter />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </Popup>
+                                                </Grid>
+
+                                                <!-- Triggers -->
+                                                <ControlTemplate.Triggers>
+                                                    <!-- Show Arrow Only if the MenuItem has sub-items (is a submenu) -->
+                                                    <Trigger Property="HasItems" Value="True">
+                                                        <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
+                                                    </Trigger>
+
+                                                    <!-- Submenu Hover Effect -->
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <!--<Setter TargetName="Border" Property="Background" Value="transparent"/>-->
+                                                        <!--<Setter Property="Foreground" Value="{DynamicResource LightGray1}"/>-->
+                                                    </Trigger>
+
+                                                    <!-- Submenu Open Effect -->
+                                                    <Trigger Property="IsSubmenuOpen" Value="True">
+                                                        <Setter TargetName="Popup" Property="IsOpen" Value="True"/>
+                                                    </Trigger>
+
+                                                    <!-- Disabled Effect -->
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter Property="Foreground" Value="{DynamicResource MidGray}"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+
+                            </Menu.Resources>
+                            <!-- MenuItems with Custom Style -->
+                            <MenuItem Width="20" Height="20" StaysOpenOnClick="True" Header=""  Style="{StaticResource CustomMenuItemStyle}" Margin="6,11,0,0" ToolTip="Show/Hide Columns" ToolTipService.InitialShowDelay="100">
+                                <MenuItem.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/showHide.png" Stretch="Uniform"/>
+                                </MenuItem.Background>
+                                <!-- Submenu Items (Will Keep Hover Effect) -->
+                                <MenuItem StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                                <MenuItem StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                                <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
+                            </MenuItem>
+                        </Menu>
+                        <StackPanel x:Name="XeportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
+                            <StackPanel.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="-1"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </StackPanel.RenderTransform>
+                            <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,12,1,1">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Margin="5,2,5,2" x:Name="AddNewAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Entry" ToolTipService.InitialShowDelay="100">
+                            <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="Add_btn" TabIndex="15" Click="NewBeneficiary_Click" Margin="0,0,1,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Margin="5,8,5,8" x:Name="AddMultiAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
+                            <Button ToolTip="New Entry From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}"  Width="30" Height="25"
+                              x:Name="AddMultiBeneficiary_btn" TabIndex="15" Click="AddMultiBeneficiary_btn_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,1,0">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/newEntryExcel.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel x:Name="Delete_Selected" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
+                            <TextBlock Style="{StaticResource HyperlinkWithImageStyle}" ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Height="29" Width="24.5" VerticalAlignment="Bottom">
+                                <Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click">
+                                    <Run Text=" " /> <!-- Empty text since we are using an image -->
+                            </Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
+                            <TextBox x:Name="monthes_txtBox" TextChanged="monthes_txtBox_TextChanged"
+                                Style="{DynamicResource CustomTextBoxActionStyle}" PreviewTextInput="NumberValidationTextBox" VerticalAlignment="Stretch" />
+                            <Border Background="White" Margin="3,0,0,0">
+                                <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Save" ToolTipService.InitialShowDelay="100"
+                                     x:Name="delaypayment_btn" TabIndex="15" Click="delaypayment_btn_Click" Height="17" Width="24" >
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/postpon_payments.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                            </Border>
+                        </StackPanel>
+                    </WrapPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                        <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
+                    </StackPanel>
+                </DockPanel>
                 <!--<CheckBox Grid.Column="3" x:Name="ExactSearch_checkBox" Content="Full Match"                        
                           Foreground = "{DynamicResource HopeBlue4}"
                     Checked="ExactSearch_checkBox_Checked" Unchecked="ExactSearch_checkBox_Unchecked" VerticalContentAlignment="Center" 
                     HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,15,0,9" Width="90" />-->
-                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Column="6" Margin="9,1,10,1" >
-                    <Label x:Name="AddMultiBeneficiary_Label"  Style="{DynamicResource lableStyle}" Content="Add beneficiaries from excel:" Height="34" Width="190" />
-                    <Button Style="{DynamicResource Add_Style}" 
-                        x:Name="AddMultiBeneficiary_btn" TabIndex="15" Height="26" Width="22" Click="AddMultiBeneficiary_btn_Click"  />
-                </StackPanel>
             </Grid>
-            <Grid x:Name="delay_payments_grid_Copy" Grid.Row="1" Margin="1,9,-7,10" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="174*"/>
-                    <ColumnDefinition Width="13*"/>
-                    <ColumnDefinition Width="30*"/>
-                    <ColumnDefinition Width="77*"/>
-                </Grid.ColumnDefinitions>
-                <Label x:Name="delaypayment_Label" Grid.Column="3" Style="{DynamicResource lableStyle}" Content="Postponing payments Duration(Months):" Margin="1,1,0,1" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" FontSize="17" VerticalAlignment="Stretch" />
-                <TextBox x:Name="monthes_txtBox" TabIndex="7" 
-                    Style="{DynamicResource textBoxStyle}" Margin="2,1,2,2" Grid.Column="2" PreviewTextInput="NumberValidationTextBox" VerticalAlignment="Stretch" />
-                <Button Style="{DynamicResource Add_Style}" 
-                    x:Name="delaypayment_btn" TabIndex="15" Margin="1,3,0,0" Height="26" Width="24" HorizontalAlignment="Left" Click="delaypayment_btn_Click" Grid.Column="1" VerticalAlignment="Top"  />
-            </Grid>
-            <TextBlock x:Name="Delete_Selected" Margin="10,7,110,9" Grid.Row="3" TextWrapping="Wrap"><Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click"><Run Text="Delete Selected"/></Hyperlink></TextBlock>
         </Grid>
         <Expander x:Name="myExpander" Grid.Column="0" IsExpanded="True"
             ExpandDirection="Left" 
