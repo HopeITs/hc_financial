@@ -295,15 +295,15 @@
 
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-            <TextBlock x:Name="Delete_Selected" Grid.Column="0" Margin="2,3,746,3" Grid.Row="3" TextWrapping="Wrap">      
-        <Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click">Delete Selected</Hyperlink>
-            </TextBlock>
-            <Grid Grid.Column="0" Background="{StaticResource LightGray1}">
+
+
+
+            <Grid Grid.Column="0" Grid.ColumnSpan="2" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <DockPanel LastChildFill="True">
-                    <WrapPanel Orientation="Horizontal" Width="187">
+                <DockPanel Grid.Row="0" LastChildFill="True" Background="{StaticResource LightGray1}">
+                    <WrapPanel Orientation="Horizontal" Width="218">
                         <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                             <Menu.Resources>
                                 <!-- Custom Menu Style -->
@@ -442,7 +442,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                 </Button.Background>
                             </Button>
                         </StackPanel>
-                        <StackPanel Margin="5,0,5,0" x:Name="AddMultiAttachments_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
+                        <StackPanel Margin="5,8,5,8" x:Name="AddMultiAttachments_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
                             <Button ToolTip="New Attachement From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
                 x:Name="AddMultiAttachments_btn" TabIndex="15" Height="25" Width="30" Click="AddMultiAttachments_btn_Click" Margin="0,0,1,0"  >
                                 <Button.Background>
@@ -450,9 +450,16 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                 </Button.Background>
                             </Button>
                         </StackPanel>
+                        <StackPanel x:Name="Delete_Selected" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
+                            <TextBlock Style="{StaticResource HyperlinkWithImageStyle}" ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Height="23" Width="24.5" VerticalAlignment="Bottom">
+                                <Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click">
+                                    <Run Text=" " /> <!-- Empty text since we are using an image -->
+                            </Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
                     </WrapPanel>
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,30,0">
-                        <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Click="NotApproved_RadioButton_Click" Tag="False" Margin="0,9,0,9" VerticalAlignment="Stretch" Width="163"/>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                        <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Click="NotApproved_RadioButton_Click" Tag="False" Margin="0,9,0,9" VerticalAlignment="Stretch" Width="170"/>
                         <!--<CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource ComboBoxActionStyle}" x:Name="ExactSearch_checkBox" Content="Full Match"  Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch" Width="89" Margin="0,0,10,0"/>-->
                         <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TabIndex="10" Width="175"/>
                     </StackPanel>
@@ -460,7 +467,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
             </Grid>
             <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True"
             ExpandDirection="Right" 
-            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,1,0,0" Grid.RowSpan="3" Background="{x:Null}">
+            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,5,0,0" Grid.RowSpan="2" Background="{x:Null}" Grid.Row="1">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>

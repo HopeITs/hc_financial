@@ -1480,6 +1480,17 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="HyperlinkWithImageStyle" TargetType="TextBlock">
+                <Setter Property="Width" Value="23"/>
+                <!-- Adjust as needed -->
+                <Setter Property="Height" Value="23"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="/Images/Buttons/delete_selected.png" Stretch="Uniform"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <!--End New Style-->
 
             <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>
