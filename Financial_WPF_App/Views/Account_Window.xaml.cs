@@ -326,7 +326,8 @@ namespace Financial_WPF_App
 
         private void Load_Data()
         {
-            AddAdminAcc_StackPanel.Visibility = Visibility.Collapsed;
+            AddAdminAcc_Label.Visibility = AddAdminAcc_btn.Visibility = Visibility.Collapsed;
+            //AddAdminAcc_StackPanel.Visibility = Visibility.Collapsed;
 
             Load_Comboboxes_Data();
             if (Acc_ID != -1)
@@ -347,7 +348,10 @@ namespace Financial_WPF_App
                 if (Category == "Budget")
                 {
                     if (Administrative_Account_privileges && !IsAdminAccount)
-                        AddAdminAcc_StackPanel.Visibility = Visibility.Visible;
+                    {
+                        AddAdminAcc_Label.Visibility = AddAdminAcc_btn.Visibility = Visibility.Collapsed;
+                        //AddAdminAcc_StackPanel.Visibility = Visibility.Visible;
+                    }
                 }
 
                 if (AccType == "Project")
