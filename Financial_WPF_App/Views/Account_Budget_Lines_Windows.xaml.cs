@@ -45,7 +45,7 @@ namespace Financial_WPF_App.Views
         List<string> HiddenColumns = new List<string>();
         List<string> Originally_HiddenColumns = new List<string>();
         bool PassException = false;
-        bool ShowTotals;
+        bool ShowTotals = true;
         bool UserMode;
 
         double HOffset = 0;
@@ -74,7 +74,8 @@ namespace Financial_WPF_App.Views
                 myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
                 myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
             }
-            Panel1.Visibility = Visibility.Collapsed;
+            Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Collapsed;
+            //Panel1.Visibility = Visibility.Collapsed;
             Load_Data();
             Apply_Color_Theme();
             UserMode = true;
@@ -198,16 +199,16 @@ namespace Financial_WPF_App.Views
 
                 if (Donor_dt.Rows.Count > 1)
                 {
-                    Panel1.Visibility = Visibility.Visible;
+                    //Panel1.Visibility = Visibility.Visible;
+                    Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Visible;
+
                 }
                 else
                 {
-                    Panel1.Visibility = Visibility.Collapsed;
-                    Total_RadioButton.IsChecked = true;
+                    //Panel1.Visibility = Visibility.Collapsed;
+                    Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Collapsed;
+
                 }
-
-  
-
             }
 
             if (BudgetLines_dt != null && BudgetLines_dt.Rows.Count > 0)

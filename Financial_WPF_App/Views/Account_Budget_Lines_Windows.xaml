@@ -7,7 +7,7 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         mc:Ignorable="d"
-        Title="Account_Lines_Windows" Height="615" Width="900" 
+        Title="Account_Lines_Windows" Width="1280" Height="620" 
         FontFamily="Myriad Arabic" FontSize="18" WindowState="Maximized" WindowStartupLocation="CenterScreen">
 
 
@@ -226,7 +226,7 @@
                     </WrapPanel>
                     <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
                         <RadioButton x:Name="PerDonor_RadioButton" Content="Show Per Donor" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Checked="PerDonor_RadioButton_Checked" Tag="False" Margin="0,9,0,9"/>
-                        <RadioButton x:Name="Total_RadioButton" Content="Show Total" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Checked="Total_RadioButton_Checked" Tag="False" Margin="0,9,0,9"/>
+                        <RadioButton x:Name="Total_RadioButton" Content="Show Total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Checked="Total_RadioButton_Checked" Tag="False" Margin="0,9,0,9"/>
                         <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                     </StackPanel>
                 </DockPanel>
