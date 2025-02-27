@@ -497,7 +497,7 @@
                             </Label>
 
                             <!-- Profile Button -->
-                            <Button x:Name="Profile_btn" ToolTip="Login" Grid.Column="1" Style="{DynamicResource ButtonHoverStyle}" Tag="/images/Buttons/user_hover.png" Cursor="Hand"
+                            <Button x:Name="Profile_btn" ToolTip="Logout" ToolTipService.InitialShowDelay="100" Grid.Column="1" Style="{DynamicResource ButtonHoverStyle}" Tag="/images/Buttons/user_hover.png" Cursor="Hand"
                                 Width="25" Height="25" RenderTransformOrigin="0.5,0.5" BorderBrush="{x:Null}" Click="Profile_btn_Click" Margin="0,0,7,0">
                                 <Button.RenderTransform>
                                     <TransformGroup>
