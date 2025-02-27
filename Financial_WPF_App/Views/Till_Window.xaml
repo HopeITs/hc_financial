@@ -303,7 +303,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0" LastChildFill="True" Background="{StaticResource LightGray1}">
-                    <WrapPanel Orientation="Horizontal" Width="218">
+                    <WrapPanel Orientation="Horizontal" Width="290">
                         <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                             <Menu.Resources>
                                 <!-- Custom Menu Style -->
@@ -444,18 +444,26 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                         </StackPanel>
                         <StackPanel Margin="5,8,5,8" x:Name="AddMultiAttachments_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
                             <Button ToolTip="New Attachement From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
-                x:Name="AddMultiAttachments_btn" TabIndex="15" Height="25" Width="30" Click="AddMultiAttachments_btn_Click" Margin="0,0,1,0"  >
+                                        x:Name="AddMultiAttachments_btn" TabIndex="15" Height="25" Width="30" Click="AddMultiAttachments_btn_Click" Margin="0,0,1,0"  >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/new_attachment_excel.png" Stretch="Uniform"/>
                                 </Button.Background>
                             </Button>
                         </StackPanel>
                         <StackPanel x:Name="Delete_Selected" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
-                            <TextBlock Style="{StaticResource HyperlinkWithImageStyle}" ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Height="23" Width="24.5" VerticalAlignment="Bottom">
+                            <Button ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
+                                        x:Name="Dekete_Selected_btn" TabIndex="15" Height="25" Width="30" Margin="0,0,1,0" Click="Dekete_Selected_btn_Click"  >
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/delete_selected.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                            <!--<TextBlock Style="{StaticResource HyperlinkWithImageStyle}" ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Height="23" Width="24.5" VerticalAlignment="Bottom">
                                 <Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click">
-                                    <Run Text=" " /> <!-- Empty text since we are using an image -->
+                                    <Run Text=" " /> -->
+                            <!-- Empty text since we are using an image -->
+                            <!--
                             </Hyperlink>
-                            </TextBlock>
+                            </TextBlock>-->
                         </StackPanel>
                     </WrapPanel>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">

@@ -1197,6 +1197,181 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void Dekete_Selected_btn_Click(object sender, RoutedEventArgs e)
+        {
+            Dekete_Selected_btn.IsEnabled = false;
+            try
+            {
+                var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+
+                if (dialogResult == MessageBoxResult.Yes)
+                {
+                    Login.DeleteMultiActions_sc.Parameters.Clear();
+                    Login.DeleteMultiActions_List.Clear();
+
+                    if (NotApproved_RadioButton.IsChecked == false)
+                    {
+                        DataView newView = new DataView(dt);
+                        newView.RowFilter = "IsSelected = 1";
+
+                        if (newView.Count == 0)
+                        {
+                            MessageBox.Show("No item has been selected.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                            return;
+                        }
+
+                        DataView SourceActions = new DataView(dt);
+                        SourceActions.RowFilter = "IsSelected = 1 AND SourceAction <> 1";
+                        if (SourceActions.Count > 0)
+                        {
+                            MessageBox.Show("Some operations were created from another till" + Environment.NewLine + "This operations can be modified and deleted from the corresponding till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                            return;
+                        }
+
+
+                        for (int k = 0; k < newView.Count; k++)
+                        {
+                            string temp_query = "";
+                            string log_query = "";
+
+
+
+                            var Action_ID = newView[k]["ID"];
+                            string AType = "";
+
+                            if (newView[k]["Income"].ToString() != "0")
+                                AType = "I";
+                            if (newView[k]["Outcome"].ToString() != "0")
+                                AType = "O";
+                            if (newView[k]["Returned"].ToString() != "0")
+                                AType = "R";
+                            if (newView[k]["Exchange"].ToString() != "0")
+                                AType = "Ex";
+                            if (newView[k]["Expand"].ToString() != "0")
+                                AType = "E";
+
+
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Till_ID" + k, Till_ID);
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@AType" + k, AType);
+
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Till_Window");
+
+                            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
+
+
+                            temp_query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID" + k + " OR action.ObserveAcion_ID = @ID" + k + ";";
+
+                            temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
+
+                            temp_query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID" + k + ";";
+
+                            temp_query += "DELETE FROM action WHERE action.id  = @ID" + k + ";";
+
+                            Login.DeleteMultiActions_List.Add(temp_query);
+                            temp_query = "";
+
+                        }
+
+                        a.Delete_Multi_Actions();
+
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                        LoadGrid();
+                    }
+                    else
+                    {
+                        DataView newView = new DataView(not_approved_dt);
+                        newView.RowFilter = "IsSelected = 1";
+
+                        if (newView.Count == 0)
+                        {
+                            MessageBox.Show("No item has been selected.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                            return;
+                        }
+
+                        DataView SourceActions = new DataView(not_approved_dt);
+                        SourceActions.RowFilter = "IsSelected = 1 AND SourceAction <> 1";
+                        if (SourceActions.Count > 0)
+                        {
+                            MessageBox.Show("Some operations were created from another till" + Environment.NewLine + "This operations can be modified and deleted from the corresponding till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                            return;
+                        }
+
+
+                        for (int k = 0; k < newView.Count; k++)
+                        {
+                            string temp_query = "";
+                            string log_query = "";
+
+                            var Action_ID = newView[k]["ID"];
+                            string AType = "";
+
+                            if (newView[k]["Income"].ToString() != "0")
+                                AType = "I";
+                            if (newView[k]["Outcome"].ToString() != "0")
+                                AType = "O";
+                            if (newView[k]["Returned"].ToString() != "0")
+                                AType = "R";
+                            if (newView[k]["Exchange"].ToString() != "0")
+                                AType = "Ex";
+                            if (newView[k]["Expand"].ToString() != "0")
+                                AType = "E";
+
+
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Till_ID" + k, Till_ID);
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@AType" + k, AType);
+
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Till_Window");
+
+                            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
+                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
+
+                            temp_query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID" + k + " OR action_not_approved.ObserveAcion_ID = @ID" + k + ";";
+
+                            temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
+
+                            temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID" + k + ";";
+
+                            temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.id  = @ID" + k + ";";
+
+                            Login.DeleteMultiActions_List.Add(temp_query);
+                            temp_query = "";
+                        }
+
+                        a.Delete_Multi_Actions();
+
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                        LoadGrid();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
+                {
+                    Login.MyConn.Close();
+                }
+                if (ex.Message.Contains("Cannot delete or update a parent row"))
+                { MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+            finally
+            {
+                Dekete_Selected_btn.IsEnabled = true;
+            }
+        }
+
         private void Exchpand_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (Exchpand_textBlock1.ActualWidth > Exchpand_textBlock.ActualWidth)
@@ -1467,177 +1642,7 @@ namespace Financial_WPF_App.Views
 
         private void Delete_Selected_TextBlock_Click(object sender, RoutedEventArgs e)
         {
-            Delete_Selected_TextBlock.IsEnabled = false;
-            try
-            {
-                var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
 
-                if (dialogResult == MessageBoxResult.Yes)
-                {
-                    Login.DeleteMultiActions_sc.Parameters.Clear();
-                    Login.DeleteMultiActions_List.Clear();
-
-                    if (NotApproved_RadioButton.IsChecked == false)
-                    {
-                        DataView newView = new DataView(dt);
-                        newView.RowFilter = "IsSelected = 1";
-
-                        if (newView.Count == 0)
-                        {
-                            MessageBox.Show("No item has been selected.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                            return;
-                        }
-
-                        DataView SourceActions = new DataView(dt);
-                        SourceActions.RowFilter = "IsSelected = 1 AND SourceAction <> 1";
-                        if (SourceActions.Count > 0)
-                        {
-                            MessageBox.Show("Some operations were created from another till" + Environment.NewLine + "This operations can be modified and deleted from the corresponding till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                            return;
-                        }
-
-
-                        for (int k = 0; k < newView.Count; k++)
-                        {
-                            string temp_query = "";
-                            string log_query = "";
-
-
-
-                            var Action_ID = newView[k]["ID"];
-                            string AType = "";
-
-                            if (newView[k]["Income"].ToString() != "0")
-                                AType = "I";
-                            if (newView[k]["Outcome"].ToString() != "0")
-                                AType = "O";
-                            if (newView[k]["Returned"].ToString() != "0")
-                                AType = "R";
-                            if (newView[k]["Exchange"].ToString() != "0")
-                                AType = "Ex";
-                            if (newView[k]["Expand"].ToString() != "0")
-                                AType = "E";
-
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Till_ID" + k, Till_ID);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@AType" + k, AType);
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Till_Window");
-
-                            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
-
-
-                            temp_query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID" + k + " OR action.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action WHERE action.id  = @ID" + k + ";";
-
-                            Login.DeleteMultiActions_List.Add(temp_query);
-                            temp_query = "";
-
-                        }
-
-                        a.Delete_Multi_Actions();
-
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                        LoadGrid();
-                    }
-                    else
-                    {
-                        DataView newView = new DataView(not_approved_dt);
-                        newView.RowFilter = "IsSelected = 1";
-
-                        if (newView.Count == 0)
-                        {
-                            MessageBox.Show("No item has been selected.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                            return;
-                        }
-
-                        DataView SourceActions = new DataView(not_approved_dt);
-                        SourceActions.RowFilter = "IsSelected = 1 AND SourceAction <> 1";
-                        if (SourceActions.Count > 0)
-                        {
-                            MessageBox.Show("Some operations were created from another till" + Environment.NewLine + "This operations can be modified and deleted from the corresponding till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                            return;
-                        }
-
-
-                        for (int k = 0; k < newView.Count; k++)
-                        {
-                            string temp_query = "";
-                            string log_query = "";
-
-                            var Action_ID = newView[k]["ID"];
-                            string AType = "";
-
-                            if (newView[k]["Income"].ToString() != "0")
-                                AType = "I";
-                            if (newView[k]["Outcome"].ToString() != "0")
-                                AType = "O";
-                            if (newView[k]["Returned"].ToString() != "0")
-                                AType = "R";
-                            if (newView[k]["Exchange"].ToString() != "0")
-                                AType = "Ex";
-                            if (newView[k]["Expand"].ToString() != "0")
-                                AType = "E";
-
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Till_ID" + k, Till_ID);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@AType" + k, AType);
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Till_Window");
-
-                            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
-
-                            temp_query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID" + k + " OR action_not_approved.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.id  = @ID" + k + ";";
-
-                            Login.DeleteMultiActions_List.Add(temp_query);
-                            temp_query = "";
-                        }
-
-                        a.Delete_Multi_Actions();
-
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                        LoadGrid();
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
-                {
-                    Login.MyConn.Close();
-                }
-                if (ex.Message.Contains("Cannot delete or update a parent row"))
-                { MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-            finally
-            {
-                Delete_Selected_TextBlock.IsEnabled = true;
-            }
         }
 
     }
