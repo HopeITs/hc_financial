@@ -208,7 +208,7 @@
                 </Hyperlink>
                             </TextBlock>-->
                         </StackPanel>
-                        <StackPanel Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
+                        <StackPanel x:Name="Postpone_StackPanel" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
                             <TextBox x:Name="monthes_txtBox" TextChanged="monthes_txtBox_TextChanged"
                     Style="{DynamicResource CustomTextBoxActionStyle}" PreviewTextInput="NumberValidationTextBox" VerticalAlignment="Stretch" />
                             <Border Background="White" Margin="3,0,0,0">

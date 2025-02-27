@@ -136,6 +136,7 @@ namespace Financial_WPF_App.Views
             }
             if (!Edit_privileges)
             {
+                Postpone_StackPanel.Visibility = Visibility.Collapsed;
                 foreach (var C in myDataGrid.Columns)
                     if (C.HeaderText.ToString() == "Approved" || C.HeaderText.ToString() == "Attachment" || C.HeaderText.ToString() == "Edit")
                     {
