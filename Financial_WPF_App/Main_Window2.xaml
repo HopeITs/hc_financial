@@ -573,6 +573,7 @@
                         </Border>
                     </Grid>
                 </Expander>
+                <Label x:Name="Version_Label" Content="Version" Style="{StaticResource Version_Label}" Margin="10,621,30,0" Grid.Row="1" HorizontalContentAlignment="Right" Grid.Column="1" VerticalAlignment="Bottom"/>
             </Grid>
         </Grid>
     </Grid>

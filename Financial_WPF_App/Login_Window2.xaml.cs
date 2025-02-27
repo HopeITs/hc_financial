@@ -18,7 +18,8 @@ namespace Financial_WPF_App
         {
             InitializeComponent();
 
-            Version_Label.Content = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Version_Label.Content = $"Version: {Assembly.GetExecutingAssembly().GetName().Version}";
+            
             this.main_Window = main_Window;
             On_Load();
         }

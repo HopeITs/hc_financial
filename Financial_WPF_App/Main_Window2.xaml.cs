@@ -37,6 +37,8 @@ namespace Financial_WPF_App
             // Subscribe to UserControl event
             ControlBar.WindowStateChanged += OnUserControlWindowStateChanged;
 
+            Version_Label.Content = $"Version: {Assembly.GetExecutingAssembly().GetName().Version}";
+
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMinutes(30);
             timer.Tick += Timer_Tick;
