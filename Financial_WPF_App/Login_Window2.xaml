@@ -10,6 +10,7 @@
         WindowStartupLocation="CenterScreen" SnapsToDevicePixels="True"
         KeyDown="LoginWindow_KeyDown" AllowsTransparency="True" Icon="Logo.ico" 
         Style="{DynamicResource WindowStyle}">
+    
     <Window.Resources>
         <Storyboard x:Key="WEB Click">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="WEB_Butten">
@@ -17,10 +18,9 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
             </DoubleAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
+        
+        
         <Storyboard x:Key="Login_Click_Animation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Login_Butten">
                 <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
@@ -31,25 +31,30 @@
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Welcome">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
             </ObjectAnimationUsingKeyFrames>
+            
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Login__Please">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
             </ObjectAnimationUsingKeyFrames>
 
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
+
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_On">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
 
-
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Power_on">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Power_On">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="25"/>
+            </DoubleAnimationUsingKeyFrames>
+            
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Power_On">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Connecting >"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="Connecting >>"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.583" Value="Connecting >>>"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.967" Value="Connecting >>>>"/>
             </ObjectAnimationUsingKeyFrames>
-
-
-
+            
         </Storyboard>
+        
+        
         <Storyboard x:Key="Remember_Me_Pressed">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Remember_Me_Butten">
                 <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
@@ -71,10 +76,9 @@
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Collapsed}"/>
             </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
+        
+        
         <Storyboard x:Key="Remembe_me_unpressed">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Remember_Me_Butten">
                 <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
@@ -96,10 +100,9 @@
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
+        
+        
         <Storyboard x:Key="Online_Pressed">
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Online_Butten">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
@@ -117,10 +120,9 @@
                     </DiscreteObjectKeyFrame.Value>
                 </DiscreteObjectKeyFrame>
             </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
+        
+        
         <Storyboard x:Key="Online_Unpressed">
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Online_Butten">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
@@ -138,31 +140,50 @@
                     </DiscreteObjectKeyFrame.Value>
                 </DiscreteObjectKeyFrame>
             </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Key="Online_Icon_Animation">
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="Online_Working_Loop">
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.55" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
-        </Storyboard>
+        
+        
+        <Storyboard x:Key="Online_Icon_Animation"/>
+        <Storyboard x:Key="Online_Working_Loop"/>
+
+
         <Storyboard x:Key="Power_On">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Power_On">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="Power On"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Power_On">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Power_On">
+                <EasingColorKeyFrame KeyTime="0" Value="#17778D"/>
+            </ColorAnimationUsingKeyFrames>
+
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Welcome">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="Welcome"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Welcome">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Welcome">
+                <EasingColorKeyFrame KeyTime="0" Value="#17778D"/>
+            </ColorAnimationUsingKeyFrames>
+
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Login__Please">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="Login Please"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
+                <EasingColorKeyFrame KeyTime="0" Value="#17778D"/>
+            </ColorAnimationUsingKeyFrames>
+     
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Power_On">
                 <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="1"/>
             </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="rectangle">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
+
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_On">
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.8" Value="{x:Static Visibility.Visible}"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:1" Value="{x:Static Visibility.Hidden}"/>
@@ -171,106 +192,33 @@
                 <DiscreteObjectKeyFrame KeyTime="0:0:1.6" Value="{x:Static Visibility.Visible}"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="{x:Static Visibility.Hidden}"/>
             </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontFamily)" Storyboard.TargetName="Welcome">
-                <DiscreteObjectKeyFrame KeyTime="0:0:1.8">
-                    <DiscreteObjectKeyFrame.Value>
-                        <FontFamily>Digital-7</FontFamily>
-                    </DiscreteObjectKeyFrame.Value>
-                </DiscreteObjectKeyFrame>
-            </ObjectAnimationUsingKeyFrames>
+            
 
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.HorizontalContentAlignment)" Storyboard.TargetName="Welcome">
-                <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="{x:Static HorizontalAlignment.Center}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.VerticalContentAlignment)" Storyboard.TargetName="Welcome">
-                <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="{x:Static VerticalAlignment.Center}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.2" Value="{x:Static VerticalAlignment.Center}"/>
-            </ObjectAnimationUsingKeyFrames>
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Welcome">
-                <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="{x:Static Visibility.Hidden}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.2" Value="{x:Static Visibility.Visible}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontFamily)" Storyboard.TargetName="Login__Please">
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.3">
-                    <DiscreteObjectKeyFrame.Value>
-                        <FontFamily>Digital-7</FontFamily>
-                    </DiscreteObjectKeyFrame.Value>
-                </DiscreteObjectKeyFrame>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Login__Please">
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.3" Value=" Login Please"/>
+                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.3" Value="{x:Static Visibility.Visible}"/>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2.467" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
 
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
-                <EasingColorKeyFrame KeyTime="0:0:2.3" Value="#17778D"/>
-            </ColorAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.HorizontalContentAlignment)" Storyboard.TargetName="Login__Please">
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.3" Value="{x:Static HorizontalAlignment.Center}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.VerticalContentAlignment)" Storyboard.TargetName="Login__Please">
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.3" Value="{x:Static VerticalAlignment.Center}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="Login__Please">
-                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="20"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="Login__Please">
-                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="-5"/>
-            </DoubleAnimationUsingKeyFrames>
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Login__Please">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:2.3" Value="{x:Static Visibility.Visible}"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:2.467" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="Welcome">
-                <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:2.2" Value="-20"/>
-            </DoubleAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontFamily)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0">
-                    <DiscreteObjectKeyFrame.Value>
-                        <FontFamily>Digital-7</FontFamily>
-                    </DiscreteObjectKeyFrame.Value>
-                </DiscreteObjectKeyFrame>
-            </ObjectAnimationUsingKeyFrames>
-
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.VerticalContentAlignment)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static VerticalAlignment.Center}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.HorizontalContentAlignment)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static HorizontalAlignment.Center}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Power_on">
-                <EasingColorKeyFrame KeyTime="0" Value="#17778D"/>
-            </ColorAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="Power-On"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.35" Value="{x:Static Visibility.Visible}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.467" Value="{x:Static Visibility.Collapsed}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="{x:Static Visibility.Visible}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.733" Value="{x:Static Visibility.Collapsed}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.85" Value="{x:Static Visibility.Visible}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.233" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Welcome">
-                <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="Server-Erorr"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:2.2" Value="Welcome"/>
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
 
 
         <Storyboard x:Key="User_False">
-
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_On">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
             </ObjectAnimationUsingKeyFrames>
-
-
+            
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Welcome">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Incorrect"/>
             </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Welcome">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
+            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Welcome">
                 <EasingColorKeyFrame KeyTime="0" Value="#BE1F24"/>
             </ColorAnimationUsingKeyFrames>
@@ -287,6 +235,9 @@
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Login__Please">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Username/Password"/>
             </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
+            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0:0:0.283" Value="#BE1F24"/>
                 <EasingColorKeyFrame KeyTime="0:0:0.4" Value="#BE1F24"/>
@@ -303,14 +254,16 @@
 
         <Storyboard x:Key="Network_False">
 
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_On">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
             </ObjectAnimationUsingKeyFrames>
-
-
+            
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Welcome">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Error"/>
             </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Welcome">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Welcome">
                 <EasingColorKeyFrame KeyTime="0" Value="#BE1F24"/>
             </ColorAnimationUsingKeyFrames>
@@ -327,6 +280,9 @@
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Login__Please">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Network"/>
             </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0:0:0.283" Value="#BE1F24"/>
                 <EasingColorKeyFrame KeyTime="0:0:0.4" Value="#BE1F24"/>
@@ -342,15 +298,16 @@
         </Storyboard>
 
         <Storyboard x:Key="Server_False">
-
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_On">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
             </ObjectAnimationUsingKeyFrames>
-
-
+            
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Welcome">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Error"/>
             </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Welcome">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
+            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Welcome">
                 <EasingColorKeyFrame KeyTime="0" Value="#BE1F24"/>
             </ColorAnimationUsingKeyFrames>
@@ -367,6 +324,9 @@
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Login__Please">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Server/Database"/>
             </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
+            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0:0:0.283" Value="#BE1F24"/>
                 <EasingColorKeyFrame KeyTime="0:0:0.4" Value="#BE1F24"/>
@@ -382,15 +342,16 @@
         </Storyboard>
 
         <Storyboard x:Key="Other_False">
-
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_on">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Power_On">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
             </ObjectAnimationUsingKeyFrames>
-
 
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Welcome">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Error"/>
             </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Welcome">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Welcome">
                 <EasingColorKeyFrame KeyTime="0" Value="#BE1F24"/>
             </ColorAnimationUsingKeyFrames>
@@ -407,6 +368,9 @@
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Login__Please">
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Other"/>
             </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+            </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0:0:0.283" Value="#BE1F24"/>
                 <EasingColorKeyFrame KeyTime="0:0:0.4" Value="#BE1F24"/>
@@ -420,8 +384,8 @@
                 <DiscreteObjectKeyFrame KeyTime="0:0:1.2" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
-        
-        
+
+
         <Storyboard x:Key="Shutdown_Pressed">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Shutdown_btn">
                 <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
@@ -554,51 +518,6 @@
                 </Button.Background>
             </Button>
             <Rectangle x:Name="rectangle" Margin="94,306,370,309" StrokeThickness="0"/>
-            <Label x:Name="Welcome" Content="Server-Error" Margin="94,306,372,311" Foreground="#FF17778D" RenderTransformOrigin="0.5,0.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Visibility="Collapsed">
-                <Label.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Label.RenderTransform>
-                <Label.ContentTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" FontFamily="Digital-7" FontSize="22" />
-                    </DataTemplate>
-                </Label.ContentTemplate>
-            </Label>
-            <Label x:Name="Login__Please" HorizontalAlignment="Left" Height="83" Margin="94,306,0,0" VerticalAlignment="Top" Width="199" RenderTransformOrigin="0.5,0.5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                <Label.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Label.RenderTransform>
-
-                <Label x:Name="Power_On" Content="POWER ON" HorizontalAlignment="Center" Height="83" VerticalAlignment="Top" Width="199" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#FF17778D">
-                    <Label.ContentTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" FontFamily="Digital-7" FontSize="22" />
-                        </DataTemplate>
-                    </Label.ContentTemplate>
-                </Label>
-                <Label.ContentTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" FontFamily="Digital-7" FontSize="22" />
-                    </DataTemplate>
-                </Label.ContentTemplate>
-            </Label>
-            <Label x:Name="Power_on" Content="Power-on" Height="83" Margin="94,306,372,311" Width="199" Foreground="#FF17778D" Visibility="Hidden">
-                <Label.ContentTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" FontFamily="Digital-7" FontSize="22"/>
-                    </DataTemplate>
-                </Label.ContentTemplate>
-            </Label>
             <Button x:Name="Shutdown_btn_Copy" Content="" Margin="357,357,283,311" BorderBrush="{x:Null}" Height="32"   Click="Close_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/power2.png"/>
@@ -650,6 +569,45 @@
                     </TransformGroup>
                 </CheckBox.RenderTransform>
             </CheckBox>
+            <Grid Margin="94,306,372,311">
+                <Label x:Name="Welcome" Content="Welcome" FontSize="22" Foreground="#FF17778D" Height="83"  Width="199" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" Padding="5,5,5,31">
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+                    <Label.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" FontFamily="Digital-7"/>
+                        </DataTemplate>
+                    </Label.ContentTemplate>
+                </Label>
+                <Label x:Name="Power_On" Content="POWER ON" FontSize="22" HorizontalAlignment="Center" Height="83" VerticalAlignment="Center" Width="200" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#FF17778D" RenderTransformOrigin="0.5,0.5">
+                    <Label.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" FontFamily="Digital-7"/>
+                        </DataTemplate>
+                    </Label.ContentTemplate>
+                </Label>
+                <Label x:Name="Login__Please" FontSize="22" Height="83"  Width="199" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Please Login" Foreground="#FF17778D" RenderTransformOrigin="0.5,0.5" Padding="5,31,5,5">
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+                    <Label.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" FontFamily="Digital-7"/>
+                        </DataTemplate>
+                    </Label.ContentTemplate>
+                </Label>
+            </Grid>
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
