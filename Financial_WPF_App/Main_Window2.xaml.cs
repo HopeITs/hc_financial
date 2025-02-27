@@ -72,6 +72,8 @@ namespace Financial_WPF_App
                 if (result ?? true)
                 {
                     Username_label.Content = Settings.Default.username;
+                    UserRole_label.Content = Settings.Default.Role;
+
                     Update_Online_Button();
                     window.WindowState = WindowState.Maximized;
                     Login.Shutdown_Mode = ShutdownMode.OnMainWindowClose;
@@ -315,6 +317,7 @@ namespace Financial_WPF_App
                     {
 
                         Username_label.Content = Settings.Default.username;
+                        UserRole_label.Content = Settings.Default.Role;
                         Update_Online_Button();
                         loginWindow.WindowState = WindowState.Maximized;
                         Login.Shutdown_Mode = ShutdownMode.OnMainWindowClose;

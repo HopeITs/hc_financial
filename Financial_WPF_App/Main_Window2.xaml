@@ -197,7 +197,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <!-- Override TabControlExt Style -->
         <Style TargetType="{x:Type syncfusion:TabControlExt}">
             <Setter Property="TabItemSelectedForeground" Value="{x:Null}" />
@@ -487,8 +487,8 @@
       Margin="30,-5,0,0" IsEnabled="False" />-->
                             <!--</Grid>-->
                             <!-- Username Label -->
-                            <Label x:Name="Username_label" Content="UserName" 
-Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
+                            <Label x:Name="Username_label" Content="UserName"  Margin="-111,0,0,0"
+                                Grid.Column="0" FontFamily="Rubik"  Height="28" Padding="5,1,5,5" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="233">
                                 <Label.Style>
                                     <Style TargetType="{x:Type Label}">
                                         <Setter Property="Foreground" Value="{DynamicResource GreenBlue}" />
@@ -520,6 +520,13 @@ Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
                                     <ImageBrush ImageSource="/Images/Buttons/online.png" Stretch="Uniform" />
                                 </Button.Background>
                             </Button>
+                            <Label x:Name="UserRole_label" Content="Role" FontFamily="Rubik"  Height="28" Padding="5,0,5,1.5" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right" FontSize="10" Margin="-111,0,0,0">
+                                <Label.Style>
+                                    <Style TargetType="{x:Type Label}">
+                                        <Setter Property="Foreground" Value="{DynamicResource GreenBlue}" />
+                                    </Style>
+                                </Label.Style>
+                            </Label>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -549,7 +556,7 @@ Grid.Column="0" FontFamily="Rubik" VerticalAlignment="Bottom">
                       PreviewMouseRightButtonDown="MyTreeView_PreviewMouseRightButtonDown"
                       FontFamily="Rubik" FontSize="14" Foreground="{StaticResource MidGray}"
                       Background="Transparent" BorderBrush="Transparent" BorderThickness="0" Margin="-5,0,0,0" Padding="3">
-                 
+
                                 <TreeView.ContextMenu>
                                     <ContextMenu x:Name="cm">
                                         <ContextMenu.Resources>
