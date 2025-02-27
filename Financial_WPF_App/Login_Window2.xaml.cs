@@ -4,6 +4,7 @@ using Financial_WPF_App.Properties;
 using System;
 using System.Data;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -17,6 +18,7 @@ namespace Financial_WPF_App
         {
             InitializeComponent();
 
+            Version_Label.Content = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.main_Window = main_Window;
             On_Load();
         }

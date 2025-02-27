@@ -104,6 +104,15 @@
 
             <DropShadowEffect x:Key="ShadowEffect" BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
 
+
+            <Style x:Key="Version_Label" TargetType="Label">
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="FontSize" Value="9"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+            </Style>
+            
+            
             <Style x:Key="BorderStyle" TargetType="Border">
                 <Setter Property="CornerRadius" Value="{StaticResource CornerRadius}"/>
                 <Setter Property="Background" Value="{StaticResource White}"/>
