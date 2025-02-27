@@ -1095,9 +1095,9 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Dekete_Selected_btn_Click(object sender, RoutedEventArgs e)
+        private void Delete_Selected_btn_Click(object sender, RoutedEventArgs e)
         {
-            Dekete_Selected_btn.IsEnabled = false;
+            Delete_Selected_btn.IsEnabled = false;
 
             try
             {
@@ -1176,7 +1176,7 @@ namespace Financial_WPF_App.Views
             }
             finally
             {
-                Dekete_Selected_btn.IsEnabled = true;
+                Delete_Selected_btn.IsEnabled = true;
             }
         }
 
