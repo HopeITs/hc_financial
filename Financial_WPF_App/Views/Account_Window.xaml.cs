@@ -349,7 +349,7 @@ namespace Financial_WPF_App
                 {
                     if (Administrative_Account_privileges && !IsAdminAccount)
                     {
-                        AddAdminAcc_Label.Visibility = AddAdminAcc_btn.Visibility = Visibility.Collapsed;
+                        AddAdminAcc_Label.Visibility = AddAdminAcc_btn.Visibility = Visibility.Visible;
                         //AddAdminAcc_StackPanel.Visibility = Visibility.Visible;
                     }
                 }
