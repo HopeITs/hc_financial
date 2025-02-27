@@ -417,9 +417,9 @@
                             <!-- First column: Fixed width, remains static -->
                             <ColumnDefinition Width="200" MinWidth="100"/>
                             <!-- Second column: Proportional width, adapts to the available space -->
-                            <ColumnDefinition Width="*" MinWidth="300" />
+                            <ColumnDefinition MinWidth="300" />
                             <!-- Third column: Proportional width but smaller than the second column -->
-                            <ColumnDefinition Width="Auto" MinWidth="120"/>
+                            <ColumnDefinition Width="Auto" MinWidth="286"/>
                         </Grid.ColumnDefinitions>
                         <!-- Logo -->
                         <Image Grid.Column="0" Source="/Images/MainForm/navlogo.png" Height="39" VerticalAlignment="Top"/>
@@ -465,7 +465,7 @@
                             <MenuItem x:Name="Log_MenuItem" Header="Log" Click="Log_MenuItemAdv_Click" Style="{StaticResource MenuItemStyle1}" DataContext="{Binding Source={StaticResource MenuIcon6}}" VerticalAlignment="Bottom"/>
                         </Menu>
                         <!-- Add a Grid for user-related controls -->
-                        <Grid Grid.Column="2" FlowDirection="RightToLeft" Margin="0,0,140,0" VerticalAlignment="Top">
+                        <Grid Grid.Column="2" FlowDirection="RightToLeft" Margin="0,0,70,0" VerticalAlignment="Top" Height="28">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
@@ -487,8 +487,8 @@
       Margin="30,-5,0,0" IsEnabled="False" />-->
                             <!--</Grid>-->
                             <!-- Username Label -->
-                            <Label x:Name="Username_label" Content="UserName"  Margin="-111,0,0,0"
-                                Grid.Column="0" FontFamily="Rubik"  Height="28" Padding="5,1,5,5" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="233">
+                            <Label x:Name="Username_label" Content="UserName"  Margin="-45,0,0,0"
+                                Grid.Column="0" FontFamily="Rubik"  Height="28" Padding="5,1,5,5" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="167">
                                 <Label.Style>
                                     <Style TargetType="{x:Type Label}">
                                         <Setter Property="Foreground" Value="{DynamicResource GreenBlue}" />
@@ -520,7 +520,7 @@
                                     <ImageBrush ImageSource="/Images/Buttons/online.png" Stretch="Uniform" />
                                 </Button.Background>
                             </Button>
-                            <Label x:Name="UserRole_label" Content="Role" FontFamily="Rubik"  Height="28" Padding="5,0,5,1.5" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right" FontSize="10" Margin="-111,0,0,0">
+                            <Label x:Name="UserRole_label" Content="Role" FontFamily="Rubik"  Height="28" Padding="5,0,5,1.5" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right" FontSize="10" Margin="-45,0,0,0">
                                 <Label.Style>
                                     <Style TargetType="{x:Type Label}">
                                         <Setter Property="Foreground" Value="{DynamicResource GreenBlue}" />
