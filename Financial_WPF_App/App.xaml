@@ -1075,6 +1075,143 @@
                 </Setter>
             </Style>
 
+            <Style TargetType="ComboBox" x:Key="ActionComboboxStyle" BasedOn="{StaticResource FloatingComboboxStyle}">
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="White"/>
+                <Setter Property="Width" Value="175"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="ItemContainerStyle">
+                    <Setter.Value>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                            <Setter Property="Margin" Value="0,5,0,5"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ComboBoxItem">
+                                        <Border Name="Border" Background="Transparent" Padding="25,2,2,2">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <!-- Hover Effect -->
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                                <Setter Property="Cursor" Value="Hand"/>
+                                            </Trigger>
+
+                                            <!-- Selected Effect -->
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="{StaticResource MidGray}"/>
+                                                <!-- Change if needed -->
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+
+                                            <!-- Disabled Effect -->
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Foreground" Value="{StaticResource LightGray1}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <!-- Clickable Border (Now opens dropdown when clicking anywhere in the ComboBox) -->
+                                <Border Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}"
+                        Cursor="Hand">
+                                    <!-- Add event here -->
+                                    <Grid>
+                                        <!-- Selected Item Display -->
+                                        <ContentPresenter Name="ContentSite"
+                              Content="{Binding SelectedItem.Name, RelativeSource={RelativeSource TemplatedParent}}"
+                              Margin="10,0,30,0"
+                              VerticalAlignment="Center"/>
+
+                                        <!-- DropDown Button -->
+                                        <ToggleButton Name="DropDownToggle"
+                                      Focusable="False"
+                                      IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                      ClickMode="Press"
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top"
+                                      Width="30">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                    <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                                    <Setter Property="Margin" Value="-20,0,0,0"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                <Border Background="Transparent"
+                BorderBrush="Transparent">
+                                                                    <ContentPresenter HorizontalAlignment="Center"
+                              VerticalAlignment="Center"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                            <TextBlock Text="▼"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       FontSize="9"
+                                       FontWeight="Bold"/>
+                                        </ToggleButton>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Popup for DropDown -->
+                                <Popup Name="Popup" Width="180"
+                        Placement="Bottom"
+                        IsOpen="{TemplateBinding IsDropDownOpen}"
+                        AllowsTransparency="True"
+                        Focusable="False">
+                                    <Border Background="{StaticResource LightGray1}"
+                        Name="DropDownBorder"
+                        BorderThickness="1"
+                        CornerRadius="0">
+                                        <ScrollViewer>
+                                            <ItemsPresenter/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+
+                            <!-- Triggers -->
+                            <ControlTemplate.Triggers>
+                                <!-- MouseOver Effect -->
+                                <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" TargetName="Border" Value="White"/>
+                                </Trigger>
+
+                                <!-- Disabled Effect -->
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Border" Property="Background" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Foreground" Value="{StaticResource LightGray1}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Setter.Value>
+                </Setter>
+
+            </Style>
+
             <Style x:Key="DeleteButtonStyle" TargetType="Button">
                 <Setter Property="OverridesDefaultStyle" Value="true"/>
                 <Setter Property="Width" Value="Auto"/>
@@ -1094,7 +1231,6 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-
                 <!-- Trigger for Disabled State -->
                 <Style.Triggers>
                     <Trigger Property="IsEnabled" Value="False">
@@ -1111,7 +1247,22 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            
+
+            <Style x:Key="ActionDeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource DeleteButtonStyle}">
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                                <Image Name="DeleteImage" 
+           Source="/Images/Buttons/delete_actionbar.png" 
+           Stretch="Fill"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <!-- Global Combobox CheckBox Style -->
             <Style TargetType="CheckBox" x:Key="ComboBoxCheckBoxStyle">
                 <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
@@ -1254,8 +1405,8 @@
                 </Setter>
             </Style>
 
-            
-            <!--Action Bar Checkox Style-->
+
+            <!--Action Bar ComboBox Style-->
             <Style TargetType="CheckBox" x:Key="ComboBoxActionStyle" BasedOn="{StaticResource ComboBoxCheckBoxStyle}">
                 <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
                 <Setter Property="Padding" Value="5,2,2,2" />

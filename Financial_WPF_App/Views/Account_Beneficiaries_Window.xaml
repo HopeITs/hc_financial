@@ -33,7 +33,7 @@
 
         <Grid  Grid.Column="0" Margin="10,0,10,0" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="233*"/>
@@ -165,7 +165,7 @@
                                 <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
                             </MenuItem>
                         </Menu>
-                        <StackPanel x:Name="XeportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
+                        <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
                             <StackPanel.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform ScaleX="-1"/>
@@ -197,7 +197,7 @@
                         </StackPanel>
                         <StackPanel x:Name="Delete_Selected" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
                             <Button ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
-                       x:Name="Dekete_Selected_btn" TabIndex="15" Height="22" Width="30" Margin="0,2,1,0" Click="Dekete_Selected_btn_Click"  >
+                       x:Name="Delete_Selected_btn" TabIndex="15" Height="22" Width="30" Margin="0,2,1,0" Click="Delete_Selected_btn_Click"  >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/delete_selected.png" Stretch="Uniform"/>
                                 </Button.Background>

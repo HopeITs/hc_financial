@@ -412,7 +412,7 @@
                                 <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
                             </MenuItem>
                         </Menu>
-                        <StackPanel x:Name="XeportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
+                        <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
                             <StackPanel.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform ScaleX="-1"/>
