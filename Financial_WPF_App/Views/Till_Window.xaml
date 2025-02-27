@@ -452,7 +452,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                         </StackPanel>
                         <StackPanel x:Name="Delete_Selected" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
                             <Button ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
-                                        x:Name="Dekete_Selected_btn" TabIndex="15" Height="25" Width="30" Margin="0,0,1,0" Click="Dekete_Selected_btn_Click"  >
+                                        x:Name="Dekete_Selected_btn" TabIndex="15" Height="22" Width="30" Margin="0,2,1,0" Click="Dekete_Selected_btn_Click"  >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/delete_selected.png" Stretch="Uniform"/>
                                 </Button.Background>
