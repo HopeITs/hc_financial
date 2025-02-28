@@ -38,7 +38,8 @@ namespace Financial_WPF_App.Views
         double HOffset = 0;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-
+        List<string> HiddenColumns = new List<string>();
+        List<string> Originally_HiddenColumns = new List<string>();
 
         #region privileges
         bool Add_privileges, Delete_privileges;
@@ -123,11 +124,30 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
+        {
+            try
+            {
+                int count = myDataGrid.SelectedItems.Count;
+                Selected_textBlock.Text = count.ToString("N0");
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void Show_Hide()
         {
             if (!Add_privileges)
             {
-                AddMultiSalaries_btn.Visibility = AddMultiSalaries_Label.Visibility = Visibility.Collapsed;
+                AddMultiSalaries_btn.Visibility =  Visibility.Collapsed;
             }
             if (!Delete_privileges)
             {
@@ -206,6 +226,7 @@ namespace Financial_WPF_App.Views
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
                 Export_btn.CommandTarget = myDataGrid;
+                All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
 
             }
         }
@@ -329,9 +350,42 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Delete_Selected_TextBlock_Click(object sender, RoutedEventArgs e)
+        private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Delete_Selected_TextBlock.IsEnabled = false;
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)Search_txtBox.Template.FindName("PlaceholderText", Search_txtBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                if (dt != null)
+                {
+                    SearchDataGrid searchHelper = new SearchDataGrid(dt);
+
+                    // Call the search method when text changes
+                    searchHelper.Search(Search_txtBox.Text, myDataGrid);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Delete_Selected_btn_Click(object sender, RoutedEventArgs e)
+        {
+            Delete_Selected_btn.IsEnabled = false;
             try
             {
                 var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
@@ -401,7 +455,126 @@ namespace Financial_WPF_App.Views
             }
             finally
             {
-                Delete_Selected_TextBlock.IsEnabled = true;
+                Delete_Selected_btn.IsEnabled = true;
+            }
+        }
+
+        private void HideColumn(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string CHeader = ((MenuItem)sender).Header.ToString();
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    if (myDataGrid.Columns[i].HeaderText.ToString() == CHeader)
+                    {
+                        myDataGrid.Columns[i].IsHidden = true;
+                        HiddenColumns.Add(CHeader);
+
+                        break;
+                    }
+                }
+                Bind_Show_Hide_Menu();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        
+
+        private void Bind_Show_Hide_Menu()
+        {
+
+            SolidColorBrush MyWhite = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+            this.ShowMenu.Items.Clear();
+            this.HideMenu.Items.Clear();
+            for (int i = 0; i < myDataGrid.Columns.Count; i++)
+            {
+                string CHeader = myDataGrid.Columns[i].HeaderText.ToString();
+                MenuItem NewItem = new MenuItem();
+                NewItem.Header = CHeader;
+                NewItem.Background = MyWhite;
+                NewItem.StaysOpenOnClick = true;
+                if (!CHeader.Contains("ID") && !CHeader.Contains("Delete") &&
+                    !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") &&
+                    !CHeader.Contains("Select") && !CHeader.Contains("#") &&
+                    !Originally_HiddenColumns.Contains(CHeader))
+                    if (myDataGrid.Columns[i].IsHidden == false)
+                    {
+                        NewItem.Click += new RoutedEventHandler(HideColumn);
+                        this.HideMenu.Items.Add(NewItem);
+                    }
+                    else
+                    {
+                        NewItem.Click += new RoutedEventHandler(ShowColumn);
+                        this.ShowMenu.Items.Add(NewItem);
+                    }
+            }
+        }
+
+        private void ShowColumn(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string CHeader = ((MenuItem)sender).Header.ToString();
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    if (myDataGrid.Columns[i].HeaderText.ToString() == CHeader)
+                    {
+                        myDataGrid.Columns[i].IsHidden = false;
+
+                        HiddenColumns.RemoveAt(HiddenColumns.IndexOf(CHeader));
+
+                        break;
+                    }
+                }
+                Bind_Show_Hide_Menu();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void ShowAll_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    string CHeader = myDataGrid.Columns[i].HeaderText.ToString();
+                    if (!CHeader.Contains("ID") && !CHeader.Contains("Delete") && !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") && !CHeader.Contains("#") && !Originally_HiddenColumns.Contains(CHeader))
+                    {
+                        myDataGrid.Columns[i].IsHidden = false;
+                    }
+                }
+                HiddenColumns.Clear();
+                Bind_Show_Hide_Menu();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
     }
