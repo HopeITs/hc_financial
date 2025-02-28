@@ -156,8 +156,8 @@
             </ContextMenu>
         </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="First_col"  Width="70*"/>
-            <ColumnDefinition x:Name="Second_col" Width="30*"/>
+            <ColumnDefinition x:Name="First_col"  Width="68*"/>
+            <ColumnDefinition x:Name="Second_col" Width="32*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="100*" />
@@ -170,7 +170,7 @@
          Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalAlignment="Right" >
             <Grid x:Name="FloatingExpanderContent" Margin="20,7,20,30" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="117"/>
+                    <ColumnDefinition Width="137"/>
                     <ColumnDefinition Width="210"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
