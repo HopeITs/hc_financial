@@ -3,6 +3,7 @@ using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
 using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -49,11 +50,14 @@ namespace Financial_WPF_App.Views
 
                 if (CashAccount_ID != -1)
                 {
-                    Total_Panel.Visibility = Visibility.Visible;
+                    //Total_Panel.Visibility = Visibility.Visible;
+                    Balances_StackPanel.Visibility = Net_StackPanel.Visibility = Differace_StackPanel.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    Total_Panel.Visibility = Visibility.Collapsed;
+                    Balances_StackPanel.Visibility = Net_StackPanel.Visibility = Differace_StackPanel.Visibility = Visibility.Collapsed;
+
+                    //Total_Panel.Visibility = Visibility.Collapsed;
                     myDataGrid.TableSummaryRows.Clear();
                 }
 
@@ -116,6 +120,8 @@ namespace Financial_WPF_App.Views
 
             if (Report_dt != null && Report_dt.Rows.Count > 0)
             {
+                All_textBlock.Text = Report_dt.Rows.Count.ToString();
+
                 myDataGrid.ItemsSource = Report_dt.DefaultView;
                 if (HOffset != 0)
                     this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
@@ -142,6 +148,8 @@ namespace Financial_WPF_App.Views
             if (myDataGrid.View != null)
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
+
+                All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
 
                 Export_btn.CommandTarget = myDataGrid;
             }
@@ -240,6 +248,34 @@ namespace Financial_WPF_App.Views
             try
             {
                 Selected_DataRow = (DataRowView)this.myDataGrid.View.Records.GetItemAt(e.RowColumnIndex.RowIndex-1);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
+            else
+                Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+
+        private void myDataGrid_SelectionChanged(object sender, GridSelectionChangedEventArgs e)
+        {
+            try
+            {
+                int count = myDataGrid.SelectedItems.Count;
+                Selected_textBlock.Text = count.ToString("N0");
+ 
             }
             catch (Exception ex)
             {

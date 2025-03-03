@@ -35,41 +35,27 @@
                     <StackPanel Orientation="Horizontal">
                         <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
                         <Border Style="{StaticResource BorderStackPanelStyle}">
-                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
                         </Border>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel x:Name="Balances_StackPanel" Orientation="Horizontal">
                         <Label x:Name="Income_Label" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" Margin="13,3,5,2.909"  >
-                            <Label.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="0.772"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Label.RenderTransform>
                         </Label>
                         <Border Style="{StaticResource BorderStackPanelStyle}"
                             VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
                             <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                         </Border>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel x:Name="Net_StackPanel" Orientation="Horizontal">
                         <Label x:Name="Outcome_Label" Content="Net Accounts:" Style="{DynamicResource statistic_lableStyle}" RenderTransformOrigin="0.5,0.5" >
-                            <Label.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="0.953"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Label.RenderTransform>
+                       
+              
                         </Label>
                         <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}">
                             <TextBlock x:Name="AccountsNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
                         </Border>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel x:Name="Differace_StackPanel" Orientation="Horizontal">
                         <Label x:Name="Returned_Label" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
                         <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
                             <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
@@ -82,7 +68,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                        <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
                     </Border>
                 </StackPanel>
             </Border>
@@ -107,8 +93,7 @@
                     </WrapPanel>
                 </DockPanel>
             </Grid>
-            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="4">
-            </Border>
+     
             <syncfusion:SfDataGrid x:Name="myDataGrid"
                 Style="{DynamicResource SfDataGrid_body}"
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
@@ -117,7 +102,7 @@
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AutoGenerateColumns="True"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-                Margin="1,3,1,4" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Loaded="myDataGrid_Loaded" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" SelectionMode="Extended" GridContextMenuOpening="myDataGrid_GridContextMenuOpening">
+                Margin="1,3,1,4" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Loaded="myDataGrid_Loaded" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" SelectionMode="Extended" GridContextMenuOpening="myDataGrid_GridContextMenuOpening" SelectionChanged="myDataGrid_SelectionChanged">
                 <syncfusion:SfDataGrid.TableSummaryRows>
                     <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                         Title="Total:">
