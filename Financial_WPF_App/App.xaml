@@ -1680,6 +1680,15 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="NoteStyle" TargetType="Label">
+                <Setter Property="Margin" Value="2,1,2,1"/>
+                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="Foreground" Value="{StaticResource HopeRed}"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+            </Style>
+
             <!--End New Style-->
 
             <SolidColorBrush x:Key="HopeBlue1" Color="#FF84ABCD"/>
