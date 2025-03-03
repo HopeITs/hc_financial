@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Views.CashBalances_Window"
         mc:Ignorable="d"
         Title="CashBalances_Window" Width="1280" Height="620"      
@@ -21,71 +21,79 @@
             </ContextMenu>
         </Grid.ContextMenu>
 
-        <Grid Margin="10,0,10,0" >
+        <Grid  Grid.Column="0" Margin="10,0,10,0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="95*"/>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="233*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-
-            <Grid Margin="10,1,3,5" Grid.Row="2" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="Auto"/>
-
-                </Grid.ColumnDefinitions>
-                <Menu x:Name="ShowHideMenu" Margin="3,7,2,2" >
-                    <Menu.Background>
-                        <ImageBrush/>
-                    </Menu.Background>
-                </Menu>
-                <Button Style="{DynamicResource Export_Style}" x:Name="Export_btn"
-                    TabIndex="5"
-                    Command="Helper:Commands.ExportToExcel" Height="46" Width="37"
-                />
-            </Grid>
             <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
                 <WrapPanel x:Name="Total_Panel" Orientation="Horizontal">
                     <StackPanel Orientation="Horizontal">
-                        <Label x:Name="Income_Label" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" Margin="0,3,5,2.909"  >
-                            <Label.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="0.772"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Label.RenderTransform>
+                        <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel x:Name="Balances_StackPanel" Orientation="Horizontal">
+                        <Label x:Name="Income_Label" Content="Cash Till Balance:" Style="{DynamicResource statistic_lableStyle}" Margin="13,3,5,2.909"  >
                         </Label>
                         <Border Style="{StaticResource BorderStackPanelStyle}"
                             VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="auto" Margin="0,2,0,1.909" >
                             <TextBlock x:Name="CashNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                         </Border>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel x:Name="Net_StackPanel" Orientation="Horizontal">
                         <Label x:Name="Outcome_Label" Content="Net Accounts:" Style="{DynamicResource statistic_lableStyle}" RenderTransformOrigin="0.5,0.5" >
-                            <Label.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="0.953"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Label.RenderTransform>
+                       
+              
                         </Label>
                         <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}">
                             <TextBlock x:Name="AccountsNet_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
                         </Border>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel x:Name="Differace_StackPanel" Orientation="Horizontal">
                         <Label x:Name="Returned_Label" Content="Difference:" Style="{DynamicResource statistic_lableStyle}" />
                         <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
                             <TextBlock x:Name="Difference_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}"/>
                         </Border>
                     </StackPanel>
                 </WrapPanel>
+
             </Border>
+            <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
+                <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
+                    <WrapPanel Orientation="Horizontal" Width="Auto">
+                        <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31" Margin="10,0,0,0">
+                            <StackPanel.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="-1"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </StackPanel.RenderTransform>
+                            <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                    </WrapPanel>
+                </DockPanel>
+            </Grid>
+     
             <syncfusion:SfDataGrid x:Name="myDataGrid"
                 Style="{DynamicResource SfDataGrid_body}"
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
@@ -94,7 +102,7 @@
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AutoGenerateColumns="True"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-                Margin="1,3,1,4" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Loaded="myDataGrid_Loaded" Grid.Row="1" FilterChanged="myDataGrid_FilterChanged" SelectionMode="Extended" GridContextMenuOpening="myDataGrid_GridContextMenuOpening">
+                Margin="1,3,1,4" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Loaded="myDataGrid_Loaded" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" SelectionMode="Extended" GridContextMenuOpening="myDataGrid_GridContextMenuOpening" SelectionChanged="myDataGrid_SelectionChanged">
                 <syncfusion:SfDataGrid.TableSummaryRows>
                     <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                         Title="Total:">
@@ -121,9 +129,8 @@
                         <MenuItem x:Name="View_Acount" Header="View Acount" Click="View_Acount_Click"/>
                     </ContextMenu>
                 </syncfusion:SfDataGrid.RecordContextMenu>
-                
+
             </syncfusion:SfDataGrid>
         </Grid>
-
     </Grid>
 </Window>
