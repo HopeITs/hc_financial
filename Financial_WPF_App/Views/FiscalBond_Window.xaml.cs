@@ -700,8 +700,10 @@ namespace Financial_WPF_App.Views
             if (myDataGrid.View != null)
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
+                int count = myDataGrid.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
 
-                All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
+                //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
                 Export_btn.CommandTarget = myDataGrid;
             }
         }

@@ -271,7 +271,11 @@ namespace Financial_WPF_App.Views
             {
                 Export_btn.CommandTarget = myDataGrid;
                 Bind_Show_Hide_Menu();
-                All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
+
+                int count = myDataGrid.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
+
+                // All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
             }
         }
 

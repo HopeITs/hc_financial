@@ -120,7 +120,11 @@ namespace Financial_WPF_App
                     }
 
                     myDataGrid.ItemsSource = dt.DefaultView;
-                    All_textBlock.Text = dt.Rows.Count.ToString("#,##0");
+
+                    int count = dt.Rows.Count;
+                    All_textBlock.Text = count.ToString("N0");
+
+                    //All_textBlock.Text = dt.Rows.Count.ToString("#,##0");
                 }
                 else
                 {

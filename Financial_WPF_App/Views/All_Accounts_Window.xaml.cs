@@ -555,7 +555,10 @@ namespace Financial_WPF_App
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
 
-                All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
+                int count = myDataGrid.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
+
+                //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
                 Export_btn.CommandTarget = myDataGrid;
             }
         }

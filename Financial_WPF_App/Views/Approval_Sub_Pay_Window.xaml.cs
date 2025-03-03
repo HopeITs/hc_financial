@@ -133,7 +133,10 @@ namespace Financial_WPF_App.Views
 
                     if (Payments_dt != null && Payments_dt.Rows.Count > 0)
                     {
-                        All_textBlock.Text = Payments_dt.Rows.Count.ToString();
+                        int count = Payments_dt.Rows.Count;
+                        All_textBlock.Text = count.ToString("N0");
+
+                        //All_textBlock.Text = Payments_dt.Rows.Count.ToString();
                         myDataGrid.ItemsSource = Payments_dt.DefaultView;
                     }
                     else
@@ -156,7 +159,10 @@ namespace Financial_WPF_App.Views
 
                     if (Deleted_Payments_dt != null && Deleted_Payments_dt.Rows.Count > 0)
                     {
-                        All_textBlock.Text = Deleted_Payments_dt.Rows.Count.ToString();
+                        int count = Deleted_Payments_dt.Rows.Count;
+                        All_textBlock.Text = count.ToString("N0");
+
+                        //All_textBlock.Text = Deleted_Payments_dt.Rows.Count.ToString();
                         myDataGrid.ItemsSource = Deleted_Payments_dt.DefaultView;
                     }
                     else
@@ -326,7 +332,10 @@ namespace Financial_WPF_App.Views
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
 
-                All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
+                int count = myDataGrid.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
+
+                //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
                 Export_btn.CommandTarget = myDataGrid;
             }
         }

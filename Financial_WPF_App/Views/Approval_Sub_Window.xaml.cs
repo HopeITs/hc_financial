@@ -367,7 +367,10 @@ namespace Financial_WPF_App.Views
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
 
-                All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
+                int count = myDataGrid.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
+
+                //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
                 Export_btn.CommandTarget = myDataGrid;
             }
         }
@@ -795,7 +798,10 @@ namespace Financial_WPF_App.Views
 
                     if (Actions_dt != null && Actions_dt.Rows.Count > 0)
                     {
-                        All_textBlock.Text = Actions_dt.Rows.Count.ToString();
+                        int count = Actions_dt.Rows.Count;
+                        All_textBlock.Text = count.ToString("N0");
+
+                        //All_textBlock.Text = Actions_dt.Rows.Count.ToString();
                         myDataGrid.ItemsSource = Actions_dt.DefaultView;
                     }
                     else
@@ -821,7 +827,10 @@ namespace Financial_WPF_App.Views
 
                     if (Deleted_Actions_dt != null && Deleted_Actions_dt.Rows.Count > 0)
                     {
-                        All_textBlock.Text = Deleted_Actions_dt.Rows.Count.ToString();
+                        int count = Deleted_Actions_dt.Rows.Count;
+                        All_textBlock.Text = count.ToString("N0");
+
+                        //All_textBlock.Text = Deleted_Actions_dt.Rows.Count.ToString();
                         myDataGrid.ItemsSource = Deleted_Actions_dt.DefaultView;
                     }
                     else
