@@ -1197,9 +1197,9 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Dekete_Selected_btn_Click(object sender, RoutedEventArgs e)
+        private void Delete_Selected_btn_Click(object sender, RoutedEventArgs e)
         {
-            Dekete_Selected_btn.IsEnabled = false;
+            Delete_Selected_btn.IsEnabled = false;
             try
             {
                 var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
@@ -1368,7 +1368,7 @@ namespace Financial_WPF_App.Views
             }
             finally
             {
-                Dekete_Selected_btn.IsEnabled = true;
+                Delete_Selected_btn.IsEnabled = true;
             }
         }
 

@@ -86,7 +86,7 @@ namespace Financial_WPF_App.Views
         {
             if (!Add_privileges)
             {
-                AddNewAction_btn.Visibility = AddNewAction_Label.Visibility = Visibility.Collapsed;
+                AddNewAction_btn.Visibility = Visibility.Collapsed;
             }
             if (!Edit_privileges)
             {
@@ -699,9 +699,9 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Delete_Selected_TextBlock_Click(object sender, RoutedEventArgs e)
+        private void Delete_Selected_btn_Click(object sender, RoutedEventArgs e)
         {
-            Delete_Selected_TextBlock.IsEnabled = false;
+            Delete_Selected_btn.IsEnabled = false;
             try
             {
                 var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
@@ -766,7 +766,7 @@ namespace Financial_WPF_App.Views
             }
             finally
             {
-                Delete_Selected_TextBlock.IsEnabled = true;
+                Delete_Selected_btn.IsEnabled = true;
             }
         }
     }
