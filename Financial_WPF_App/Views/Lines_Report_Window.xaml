@@ -3,12 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Views.Lines_Report_Window"
         mc:Ignorable="d"
         Title="Lines_Report_Window" Width="1280" Height="620" FontFamily="Myriad Arabic" FontSize="18" WindowStartupLocation="CenterScreen">
     <Grid>
-
         <Grid>
             <Grid.ContextMenu>
                 <ContextMenu x:Name="cm">
@@ -19,175 +18,280 @@
                     </MenuItem>
                 </ContextMenu>
             </Grid.ContextMenu>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="65"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid Margin="10,2,5,3" Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="50"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="90"/>
-                    <ColumnDefinition Width="250" />
-                    <ColumnDefinition Width="62.014" />
-                    <ColumnDefinition Width="215.579" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="5" Content="Search:" Style="{DynamicResource lableStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="3,4,3,6" VerticalAlignment="Stretch" Height="33" Width="56" HorizontalAlignment="Stretch" />
-                <Border Grid.Column="4" BorderThickness="1" CornerRadius="10" Padding="0" Width="auto" Margin="3,4,5,4" Height="35" >
-                    <Border.BorderBrush>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                    </Border.Background>
-                    <TextBox x:Name="Search_txtBox" TabIndex="10" 
-                            Style="{DynamicResource textBoxStyle}"
-                            Width="auto" TextAlignment="Center" BorderThickness="0"
-                            TextChanged="Search_txtBox_TextChanged" >
-                        <TextBox.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-                        </TextBox.BorderBrush>
-                    </TextBox>
+            <Grid  Grid.Column="0" Margin="10,0,10,0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="233*"/>
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                        </Border>
+                    </StackPanel>
                 </Border>
-                <!--<CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource checkBoxStyle}" x:Name="ExactSearch_checkBox" Margin="2,3,3,5" HorizontalAlignment="Stretch" Content="Full match" Grid.Column="3" Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch"/>-->
-                <Menu x:Name="ShowHideMenu" Margin="5,3,7,5">
-                    <Menu.Background>
-                        <ImageBrush/>
-                    </Menu.Background>
-                    <MenuItem Width="38" StaysOpenOnClick="True" Header="" Height="52">
-                        <MenuItem.Background>
-                            <ImageBrush ImageSource="/Images/2072010 (100x100).png" Stretch="Uniform" TileMode="Tile"/>
-                        </MenuItem.Background>
-                        <MenuItem StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="White" />
-                        <MenuItem StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="White"/>
-                        <Separator Background="Black"/>
-                        <MenuItem Background="White" Click="ShowAll_MenuItem_Click" Header="ShowAll"/>
-                    </MenuItem>
-                </Menu>
-                <Button TabIndex="5" Style="{DynamicResource Export_Style}" x:Name="Export_btn" Margin="12,8,12,10" Grid.Column="1" Command="Helper:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RenderTransformOrigin="0.536,0.355" />
-            </Grid>
-            <syncfusion:SfDataGrid x:Name="myDataGrid"
-                    Style="{DynamicResource SfDataGrid_body}"
-                    HeaderStyle="{DynamicResource SfDataGrid_header}"
-                    RowStyle="{DynamicResource SfDataGrid_RowStyle}"
-                    AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
-                    TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
-                    GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
-                    Loaded="myDataGrid_Loaded" 
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                    Margin="1,2,1,0" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" >
+                <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                        <Border Style="{StaticResource BorderStackPanelStyle}">
+                            <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+                <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
+                    <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
+                        <WrapPanel Orientation="Horizontal" Width="Auto">
+                            <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
+                                <Menu.Resources>
+                                    <!-- Custom Menu Style -->
+                                    <Style TargetType="Menu">
+                                        <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Menu">
+                                                    <Border Background="{TemplateBinding Background}" Padding="0">
+                                                        <ItemsPresenter />
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
 
-                <syncfusion:SfDataGrid.Columns>
-                    <syncfusion:GridTextColumn x:Name="City_DataGridColumn" MappingName="City_Name" HeaderText="City"/>
-                    <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" MappingName="Project_Name" HeaderText="Project"/>
-                    <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Center"/>
-                    <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="Account_Name" HeaderText="Account"/>
-                    <syncfusion:GridTextColumn x:Name="Budget_DataGridColumn" HeaderText="Budget"  MappingName="Budget" />
-                    <syncfusion:GridTextColumn x:Name="LineType_DataGridColumn" HeaderText="Line Type"  MappingName="Line Type" />
-                    <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Line"  MappingName="Line" />
-                    <syncfusion:GridDateTimeColumn x:Name="Action_DataGridColumn" HeaderText="Operation Date" MappingName="ActionDate"
-                            CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
-                    <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>
-                    <syncfusion:GridTextColumn x:Name="ActionYear_DataGridColumn" MappingName="ActionYear" HeaderText="Operation Year"/>
-                          
-                    <syncfusion:GridNumericColumn  x:Name="Expand_DataGridColumn" HeaderText="Export/Expense"  MappingName="Expand"
-                            NumberDecimalDigits="2"
-                            NumberDecimalSeparator="."
-                            NumberGroupSizes="3"
-                            NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
-                                                      NumberDecimalDigits="2"
-                                                   NumberDecimalSeparator="."
-                                                   NumberGroupSizes="3"
-                                                   NumberGroupSeparator=","/>
+                                    <!-- Custom MenuItem Style -->
+                                    <Style x:Key="CustomMenuItemStyle" TargetType="MenuItem">
+                                        <Setter Property="FontFamily" Value="Rubik"/>
+                                        <Setter Property="FontSize" Value="13.5"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource DarkGray}"/>
+                                        <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                                        <Setter Property="Padding" Value="10,5"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="MenuItem">
+                                                    <Grid>
+                                                        <!-- Main Item -->
+                                                        <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="10,5">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <!-- Arrow Column -->
+                                                                </Grid.ColumnDefinitions>
 
-                    <syncfusion:GridTextColumn x:Name="Note_DataGridColumn" HeaderText="Description (Ar)"  MappingName="Note"  />
-                    <syncfusion:GridTextColumn x:Name="E_Note_DataGridColumn" HeaderText="Description (Eng)"  MappingName="E_Note"  />
-                    <syncfusion:GridTextColumn x:Name="IsReceipt_DataGridColumn" HeaderText="Document type"  MappingName="IsReceipt"  />
-                    <syncfusion:GridTextColumn x:Name="ReceiptNote_DataGridColumn" HeaderText="Document Number"  MappingName="ReceiptNote"  />
-                    <syncfusion:GridTextColumn x:Name="Employee_DataGridColumn" HeaderText="Volunteer"  MappingName="Employee_Name"  />
+                                                                <ContentPresenter Grid.Column="0" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Center" 
+        ContentSource="Header"/>
 
-                    <syncfusion:GridNumericColumn x:Name="Rate_DataGridColumn" HeaderText="Rate" MappingName="Rate"
-                                                  NumberDecimalDigits="2"
-                                                   NumberDecimalSeparator="."
-                                                   NumberGroupSizes="3"
-                                                   NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn x:Name="Exchanged_DataGridColumn" HeaderText="Exchanged" MappingName="Exchanged"     
-                                                  NumberDecimalDigits="2"
-                                                   NumberDecimalSeparator="."
-                                                   NumberGroupSizes="3"
-                                                   NumberGroupSeparator=","/>
-                    <syncfusion:GridTextColumn x:Name="AvgRateName_DataGridColumn" HeaderText="Original AvgRate"  MappingName="AvgRateName"  />
-                    <syncfusion:GridNumericColumn x:Name="AvgRate_DataGridColumn" HeaderText="Original AvgRate value" MappingName="AvgRateValue"
-                            NumberDecimalDigits="2"
-                            NumberDecimalSeparator="."
-                            NumberGroupSizes="3"
-                            NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn x:Name="USD_Value_DataGridColumn" HeaderText="Value" MappingName="USD_Value" 
-                            NumberDecimalDigits="2"
-                            NumberDecimalSeparator="."
-                            NumberGroupSizes="3"
-                            NumberGroupSeparator=","/>
-                    <syncfusion:GridTextColumn x:Name="CashAccount_DataGridColumn" HeaderText="Cash account"  MappingName="CashAccount" />
-                    <syncfusion:GridTextColumn x:Name="ObserveTill_DataGridColumn" HeaderText="Corresponding till" MappingName="ObserveTill" />
-                    <syncfusion:GridTextColumn x:Name="ObserveAccount_DataGridColumn" HeaderText="Corresponding account" MappingName="ObserveAccount"/>
-                    <syncfusion:GridTextColumn x:Name="ObserveCashAccount_DataGridColumn" HeaderText="Corresponding cash"  MappingName="ObserveCashAccount" />
-                    <syncfusion:GridDateTimeColumn x:Name="created_at_DataGridColumn" HeaderText="Date created" MappingName="created_at" 
-                            CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"  />
-                    <syncfusion:GridDateTimeColumn x:Name="updated_at_DataGridColumn" HeaderText="Modification date" MappingName="updated_at"
-                            CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
-                </syncfusion:SfDataGrid.Columns>
-                <syncfusion:SfDataGrid.GroupSummaryRows>
-                    <syncfusion:GridSummaryRow ShowSummaryInRow="False" TitleColumnCount="1"  Title="Total:">
-                        <syncfusion:GridSummaryRow.SummaryColumns>
+                                                                <!-- Submenu Arrow -->
+                                                                <Path x:Name="Arrow"
+       Grid.Column="1"
+       Data="M 0 0 L 6 4 L 0 8 Z" 
+       Fill="{DynamicResource DarkGray}"
+       VerticalAlignment="Center"
+       Margin="5,0,0,0"
+       Visibility="Collapsed"/>
+                                                            </Grid>
+                                                        </Border>
+
+                                                        <!-- Submenu Popup -->
+                                                        <Popup x:Name="Popup"
+Placement="Bottom"
+PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+IsOpen="{TemplateBinding IsSubmenuOpen}"
+AllowsTransparency="True"
+Focusable="False"
+PopupAnimation="Fade">
+                                                            <Border Background="White" CornerRadius="5" BorderBrush="{StaticResource LightGray1}" BorderThickness="1">
+                                                                <StackPanel>
+                                                                    <ItemsPresenter />
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+
+                                                    <!-- Triggers -->
+                                                    <ControlTemplate.Triggers>
+                                                        <!-- Show Arrow Only if the MenuItem has sub-items (is a submenu) -->
+                                                        <Trigger Property="HasItems" Value="True">
+                                                            <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
+                                                        </Trigger>
+
+                                                        <!-- Submenu Hover Effect -->
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <!--<Setter TargetName="Border" Property="Background" Value="transparent"/>-->
+                                                            <!--<Setter Property="Foreground" Value="{DynamicResource LightGray1}"/>-->
+                                                        </Trigger>
+
+                                                        <!-- Submenu Open Effect -->
+                                                        <Trigger Property="IsSubmenuOpen" Value="True">
+                                                            <Setter TargetName="Popup" Property="IsOpen" Value="True"/>
+                                                        </Trigger>
+
+                                                        <!-- Disabled Effect -->
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Foreground" Value="{DynamicResource MidGray}"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+
+                                </Menu.Resources>
+                                <!-- MenuItems with Custom Style -->
+                                <MenuItem Width="20" Height="20" StaysOpenOnClick="True" Header=""  Style="{StaticResource CustomMenuItemStyle}" Margin="6,9,0,0" ToolTip="Show/Hide Columns" ToolTipService.InitialShowDelay="100">
+                                    <MenuItem.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/showHide.png" Stretch="Uniform"/>
+                                    </MenuItem.Background>
+                                    <!-- Submenu Items (Will Keep Hover Effect) -->
+                                    <MenuItem StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                                    <MenuItem StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                                    <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
+                                </MenuItem>
+                            </Menu>
+                            <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
+                                <StackPanel.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="-1"/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </StackPanel.RenderTransform>
+                                <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
+                        </WrapPanel>
+                        <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                            <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+                <syncfusion:SfDataGrid x:Name="myDataGrid"
+        Style="{DynamicResource SfDataGrid_body}" SelectionChanged="myDataGrid_SelectionChanged"
+        HeaderStyle="{DynamicResource SfDataGrid_header}"
+        RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+        AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
+        TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
+        GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
+        Loaded="myDataGrid_Loaded" 
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+        Margin="1,2,1,0" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" >
+
+                    <syncfusion:SfDataGrid.Columns>
+                        <syncfusion:GridTextColumn x:Name="City_DataGridColumn" MappingName="City_Name" HeaderText="City"/>
+                        <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" MappingName="Project_Name" HeaderText="Project"/>
+                        <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Center"/>
+                        <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="Account_Name" HeaderText="Account"/>
+                        <syncfusion:GridTextColumn x:Name="Budget_DataGridColumn" HeaderText="Budget"  MappingName="Budget" />
+                        <syncfusion:GridTextColumn x:Name="LineType_DataGridColumn" HeaderText="Line Type"  MappingName="Line Type" />
+                        <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Line"  MappingName="Line" />
+                        <syncfusion:GridDateTimeColumn x:Name="Action_DataGridColumn" HeaderText="Operation Date" MappingName="ActionDate"
+                CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
+                        <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>
+                        <syncfusion:GridTextColumn x:Name="ActionYear_DataGridColumn" MappingName="ActionYear" HeaderText="Operation Year"/>
+
+                        <syncfusion:GridNumericColumn  x:Name="Expand_DataGridColumn" HeaderText="Export/Expense"  MappingName="Expand"
+                NumberDecimalDigits="2"
+                NumberDecimalSeparator="."
+                NumberGroupSizes="3"
+                NumberGroupSeparator=","/>
+                        <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
+                                          NumberDecimalDigits="2"
+                                       NumberDecimalSeparator="."
+                                       NumberGroupSizes="3"
+                                       NumberGroupSeparator=","/>
+
+                        <syncfusion:GridTextColumn x:Name="Note_DataGridColumn" HeaderText="Description (Ar)"  MappingName="Note"  />
+                        <syncfusion:GridTextColumn x:Name="E_Note_DataGridColumn" HeaderText="Description (Eng)"  MappingName="E_Note"  />
+                        <syncfusion:GridTextColumn x:Name="IsReceipt_DataGridColumn" HeaderText="Document type"  MappingName="IsReceipt"  />
+                        <syncfusion:GridTextColumn x:Name="ReceiptNote_DataGridColumn" HeaderText="Document Number"  MappingName="ReceiptNote"  />
+                        <syncfusion:GridTextColumn x:Name="Employee_DataGridColumn" HeaderText="Volunteer"  MappingName="Employee_Name"  />
+
+                        <syncfusion:GridNumericColumn x:Name="Rate_DataGridColumn" HeaderText="Rate" MappingName="Rate"
+                                      NumberDecimalDigits="2"
+                                       NumberDecimalSeparator="."
+                                       NumberGroupSizes="3"
+                                       NumberGroupSeparator=","/>
+                        <syncfusion:GridNumericColumn x:Name="Exchanged_DataGridColumn" HeaderText="Exchanged" MappingName="Exchanged"     
+                                      NumberDecimalDigits="2"
+                                       NumberDecimalSeparator="."
+                                       NumberGroupSizes="3"
+                                       NumberGroupSeparator=","/>
+                        <syncfusion:GridTextColumn x:Name="AvgRateName_DataGridColumn" HeaderText="Original AvgRate"  MappingName="AvgRateName"  />
+                        <syncfusion:GridNumericColumn x:Name="AvgRate_DataGridColumn" HeaderText="Original AvgRate value" MappingName="AvgRateValue"
+                NumberDecimalDigits="2"
+                NumberDecimalSeparator="."
+                NumberGroupSizes="3"
+                NumberGroupSeparator=","/>
+                        <syncfusion:GridNumericColumn x:Name="USD_Value_DataGridColumn" HeaderText="Value" MappingName="USD_Value" 
+                NumberDecimalDigits="2"
+                NumberDecimalSeparator="."
+                NumberGroupSizes="3"
+                NumberGroupSeparator=","/>
+                        <syncfusion:GridTextColumn x:Name="CashAccount_DataGridColumn" HeaderText="Cash account"  MappingName="CashAccount" />
+                        <syncfusion:GridTextColumn x:Name="ObserveTill_DataGridColumn" HeaderText="Corresponding till" MappingName="ObserveTill" />
+                        <syncfusion:GridTextColumn x:Name="ObserveAccount_DataGridColumn" HeaderText="Corresponding account" MappingName="ObserveAccount"/>
+                        <syncfusion:GridTextColumn x:Name="ObserveCashAccount_DataGridColumn" HeaderText="Corresponding cash"  MappingName="ObserveCashAccount" />
+                        <syncfusion:GridDateTimeColumn x:Name="created_at_DataGridColumn" HeaderText="Date created" MappingName="created_at" 
+                CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"  />
+                        <syncfusion:GridDateTimeColumn x:Name="updated_at_DataGridColumn" HeaderText="Modification date" MappingName="updated_at"
+                CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
+                    </syncfusion:SfDataGrid.Columns>
+                    <syncfusion:SfDataGrid.GroupSummaryRows>
+                        <syncfusion:GridSummaryRow ShowSummaryInRow="False" TitleColumnCount="1"  Title="Total:">
+                            <syncfusion:GridSummaryRow.SummaryColumns>
                                 <syncfusion:GridSummaryColumn Name="Total_E"                                                      
-                                       Format="'{Sum:N2}'"
-                                       MappingName="Expand"
-                                       SummaryType="DoubleAggregate" />
+                           Format="'{Sum:N2}'"
+                           MappingName="Expand"
+                           SummaryType="DoubleAggregate" />
                                 <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
-                                       Format="'{Sum:N2}'"
-                                       MappingName="Exchange"
-                                       SummaryType="DoubleAggregate" />
+                           Format="'{Sum:N2}'"
+                           MappingName="Exchange"
+                           SummaryType="DoubleAggregate" />
                                 <syncfusion:GridSummaryColumn Name="Total_E_USD"                                                      
-                                       Format="'{Sum:N2}'"
-                                       MappingName="USD_Value"
-                                       SummaryType="DoubleAggregate" />
+                           Format="'{Sum:N2}'"
+                           MappingName="USD_Value"
+                           SummaryType="DoubleAggregate" />
                                 <syncfusion:GridSummaryColumn Name="Total_Exchanged"                                                      
-                                       Format="'{Sum:N2}'"
-                                       MappingName="Exchanged"
-                                       SummaryType="DoubleAggregate" />
+                           Format="'{Sum:N2}'"
+                           MappingName="Exchanged"
+                           SummaryType="DoubleAggregate" />
                             </syncfusion:GridSummaryRow.SummaryColumns>
-                    </syncfusion:GridSummaryRow>
-                </syncfusion:SfDataGrid.GroupSummaryRows>
-                
-                <syncfusion:SfDataGrid.TableSummaryRows>
-                    <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
-                                       Title="Total:">
-                        <syncfusion:GridSummaryRow.SummaryColumns>
-                            <syncfusion:GridSummaryColumn Name="Total_E"                                                      
-                                                Format="'{Sum:N2}'"
-                                                MappingName="Expand"
-                                                SummaryType="DoubleAggregate" />
-                            <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
-                                                Format="'{Sum:N2}'"
-                                                MappingName="Exchange"
-                                                SummaryType="DoubleAggregate" />
-                            <syncfusion:GridSummaryColumn Name="Total_E_USD"                                                      
-                                                Format="'{Sum:N2}'"
-                                                MappingName="USD_Value"
-                                                SummaryType="DoubleAggregate" />
-                            <syncfusion:GridSummaryColumn Name="Total_Exchanged"                                                      
-                                                Format="'{Sum:N2}'"
-                                                MappingName="Exchanged"
-                                                SummaryType="DoubleAggregate" />
-                        </syncfusion:GridSummaryRow.SummaryColumns>
-                    </syncfusion:GridTableSummaryRow>
-                </syncfusion:SfDataGrid.TableSummaryRows>
-            </syncfusion:SfDataGrid>
-        </Grid>
+                        </syncfusion:GridSummaryRow>
+                    </syncfusion:SfDataGrid.GroupSummaryRows>
 
+                    <syncfusion:SfDataGrid.TableSummaryRows>
+                        <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
+                           Title="Total:">
+                            <syncfusion:GridSummaryRow.SummaryColumns>
+                                <syncfusion:GridSummaryColumn Name="Total_E"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="Expand"
+                                    SummaryType="DoubleAggregate" />
+                                <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="Exchange"
+                                    SummaryType="DoubleAggregate" />
+                                <syncfusion:GridSummaryColumn Name="Total_E_USD"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="USD_Value"
+                                    SummaryType="DoubleAggregate" />
+                                <syncfusion:GridSummaryColumn Name="Total_Exchanged"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="Exchanged"
+                                    SummaryType="DoubleAggregate" />
+                            </syncfusion:GridSummaryRow.SummaryColumns>
+                        </syncfusion:GridTableSummaryRow>
+                    </syncfusion:SfDataGrid.TableSummaryRows>
+                </syncfusion:SfDataGrid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
