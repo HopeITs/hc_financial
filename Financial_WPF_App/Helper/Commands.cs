@@ -43,6 +43,7 @@ namespace Financial_WPF_App.Helper
                         || column.HeaderText == "Edit"
                         || column.HeaderText == "Delete"
                         || column.HeaderText == "Check"
+                        || column.HeaderText == "Select"
                         || column.HeaderText == "Monthly Salary")
                         options.ExcludeColumns.Add(column.MappingName);
                 }
@@ -83,7 +84,8 @@ namespace Financial_WPF_App.Helper
                             if (column.IsHidden || column.HeaderText == "Attachment"
                                 || column.HeaderText == "Edit"
                                 || column.HeaderText == "Delete"
-                                || column.HeaderText == "Check")
+                                || column.HeaderText == "Check"
+                                || column.HeaderText == "Select")
                                 options.ExcludeColumns.Add(column.MappingName);
                         }
 
