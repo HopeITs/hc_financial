@@ -58,12 +58,15 @@ namespace Financial_WPF_App
             // Define the target style key
             string targetStyleKey = "statistic_textBlockStyle";
             string buttonStyleKey = "ButtonColoredStyle";
+            string labelStyleKey = "NoteStyle";
 
             // Update TextBlocks in the main content
             UpdateTextBlocksInContainer(parent, color, targetStyleKey);
 
             // Update Buttons in the main content
             UpdateButtonsInContainer(parent, color, color, buttonStyleKey);
+
+            UpdateLabelsInContainer(parent, color, labelStyleKey);
 
             // Find all TabControls inside the window
             foreach (var tabControl in FindVisualChildren<TabControl>(parent))
@@ -75,6 +78,7 @@ namespace Financial_WPF_App
                     {
                         UpdateTextBlocksInContainer(tabContent, color, targetStyleKey);
                         UpdateButtonsInContainer(tabContent, new SolidColorBrush(Colors.White), color, buttonStyleKey);
+                        UpdateLabelsInContainer(tabContent, color, labelStyleKey);
                     }
                 }
             }
@@ -101,6 +105,17 @@ namespace Financial_WPF_App
                 }
             }
 
+        }
+        private static void UpdateLabelsInContainer(DependencyObject parent, Brush foreground, string styleKey)
+        {
+            foreach (var label in FindVisualChildren<Label>(parent))
+            {
+                if (label.Style != null && label.Style.Equals(Application.Current.TryFindResource(styleKey)))
+                {
+                    label.ClearValue(Label.ForegroundProperty); // Remove style-based Foreground
+                    label.Foreground = foreground; // Apply new color
+                }
+            }
         }
         // Generic method to find all elements of a specific type in a given UI structure
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
