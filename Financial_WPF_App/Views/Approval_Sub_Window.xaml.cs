@@ -780,6 +780,8 @@ namespace Financial_WPF_App.Views
                 if (DeletedActions_RadioButton.IsChecked == false)
                 {
                     Deleted_Actions = false;
+                    Save_btn.Content = "Approve";
+
                     Restore_btn.Visibility = Visibility.Collapsed;
 
                     foreach (var C in myDataGrid.Columns)
@@ -804,6 +806,8 @@ namespace Financial_WPF_App.Views
                 else
                 {
                     Deleted_Actions = true;
+                    Save_btn.Content = "Permanently delete";
+
                     Restore_btn.Visibility = Visibility.Visible;
 
                     foreach (var C in myDataGrid.Columns)

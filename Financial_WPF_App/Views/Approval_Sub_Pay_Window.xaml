@@ -248,7 +248,7 @@ PopupAnimation="Fade">
 
         <Grid Grid.Row="4" VerticalAlignment="Center">
             <Button   Style="{DynamicResource ButtonColoredStyle}"
-             x:Name="Save_btn" Content="Save" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" />
+             x:Name="Save_btn" Content="Approve" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" />
             <Label x:Name="Exchange_Note_lable" Style="{DynamicResource NoteStyle}" Content="Red-highlighted row refers to an edited action."/>
         </Grid>
     </Grid>
