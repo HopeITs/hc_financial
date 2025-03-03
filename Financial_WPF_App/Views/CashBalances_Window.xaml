@@ -89,7 +89,7 @@
             <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
                 <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
                     <WrapPanel Orientation="Horizontal" Width="Auto">
-                        <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
+                        <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31" Margin="10,0,0,0">
                             <StackPanel.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform ScaleX="-1"/>
