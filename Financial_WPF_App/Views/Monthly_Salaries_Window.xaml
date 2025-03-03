@@ -167,9 +167,9 @@
                         </Button>
                     </StackPanel>
                     <StackPanel Margin="5,2,5,2" Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="Add Monthly Salaries" ToolTipService.InitialShowDelay="100">
-                        <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddMultiSalaries_btn" TabIndex="15" Click="AddMultiSalaries_btn_Click" Margin="0,0,1,0" HorizontalAlignment="Center">
+                        <Button  Style="{DynamicResource AddButtonStyle}"  Width="30" Height="22" x:Name="AddMultiSalaries_btn" TabIndex="15" Click="AddMultiSalaries_btn_Click" Margin="0,0,1,0" HorizontalAlignment="Center">
                             <Button.Background>
-                                <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                                <ImageBrush ImageSource="/Images/Buttons/newEntryExcel.png" Stretch="Uniform"/>
                             </Button.Background>
                         </Button>
                     </StackPanel>
