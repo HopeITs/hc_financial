@@ -31,7 +31,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
                         <Border Style="{StaticResource BorderStackPanelStyle}">
-                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
                         </Border>
                     </StackPanel>
                 </Border>
@@ -39,7 +39,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
                         <Border Style="{StaticResource BorderStackPanelStyle}">
-                            <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                            <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
                         </Border>
                     </StackPanel>
                 </Border>

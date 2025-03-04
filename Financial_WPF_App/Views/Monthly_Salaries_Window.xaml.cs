@@ -581,5 +581,13 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
+            else
+                Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
     }
 }

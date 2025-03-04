@@ -1106,7 +1106,6 @@ namespace Financial_WPF_App.Views
                 All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
             else
                 Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
-
         }
 
         private void Income_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
