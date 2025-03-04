@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -252,7 +253,8 @@ namespace Financial_WPF_App.Views
             if (myDataGrid.View != null)
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
-
+                int count = myDataGrid.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
                 Export_btn.CommandTarget = myDataGrid;
 
                 Bind_Show_Hide_Menu();
@@ -565,7 +567,24 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
-
+        private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
+        {
+            try
+            {
+                int count = myDataGrid.SelectedItems.Count;
+                Selected_textBlock.Text = count.ToString("N0");
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
 
         private void myDataGrid_FilterChanged(object sender, GridFilterEventArgs e)
         {
@@ -671,6 +690,47 @@ namespace Financial_WPF_App.Views
                     Title = "Total:",
                     SummaryColumns = SummaryColumns
                 });
+            }
+        }
+
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
+            else
+                Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+
+        private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)Search_txtBox.Template.FindName("PlaceholderText", Search_txtBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                if (dt != null)
+                {
+                    SearchDataGrid searchHelper = new SearchDataGrid(dt);
+
+                    // Call the search method when text changes
+                    searchHelper.Search(Search_txtBox.Text, myDataGrid);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
     }
