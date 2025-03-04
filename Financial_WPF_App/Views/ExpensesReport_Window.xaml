@@ -221,11 +221,14 @@
                                 <Button x:Name="View_clear_btn" Style="{DynamicResource ActionDeleteButtonStyle}" BorderBrush="{x:Null}" Width="25" Click="View_clear_btn_Click" Height="28" ></Button>
                             </StackPanel>
                         </WrapPanel>
-                        <StackPanel  x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0" VerticalAlignment="Center">
-                             <RadioButton x:Name="Total_RadioButton" Content="Show total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Height="25" Width="126" HorizontalAlignment="Right" Checked="Total_RadioButton_Checked"/>
-                             <RadioButton x:Name="PerDonor_RadioButton" Content="Show per donor" Height="25" Width="150" Style="{DynamicResource RadioButtonStyle}" HorizontalAlignment="Right" Checked="PerDonor_RadioButton_Checked" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0" VerticalAlignment="Center">
+                            <StackPanel  x:Name="Panel1" Orientation="Horizontal" >
+                                <RadioButton x:Name="Total_RadioButton" Content="Show total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Height="25" Width="126" HorizontalAlignment="Right" Checked="Total_RadioButton_Checked"/>
+                                <RadioButton x:Name="PerDonor_RadioButton" Content="Show per donor" Height="25" Width="150" Style="{DynamicResource RadioButtonStyle}" HorizontalAlignment="Right" Checked="PerDonor_RadioButton_Checked" VerticalAlignment="Center"/>
+                            </StackPanel>
                             <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TabIndex="10"/>
                         </StackPanel>
+
                     </DockPanel>
                 </Grid>
                 <Expander Grid.RowSpan="2" Background="{x:Null}" Grid.Column="1" Grid.Row="1"  x:Name="myExpander" 
@@ -312,11 +315,6 @@
                     </Grid>
                 </Expander>
             </Grid>
-
-
-            </Grid>
-
-        
-        
+        </Grid>
     </Grid>
 </Window>
