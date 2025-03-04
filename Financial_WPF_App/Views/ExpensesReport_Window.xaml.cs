@@ -442,7 +442,8 @@ namespace Financial_WPF_App.Views
             if (Expenses_DataGridView.View != null)
             {
                 Export_btn.CommandTarget = Expenses_DataGridView;
-
+                int count = Expenses_DataGridView.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
                 AddSums();
             }
         }
