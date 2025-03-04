@@ -1384,7 +1384,6 @@ namespace Financial_WPF_App.Views
         }
         #endregion
 
-
         private void Cash_DataGrid_AutoGeneratingColumn(object sender, AutoGeneratingColumnArgs e)
         {
             try

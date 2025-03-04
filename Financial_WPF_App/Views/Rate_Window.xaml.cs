@@ -144,6 +144,10 @@ namespace Financial_WPF_App.Views
         {
             if (!Add_privileges)
             {
+
+                Add_btn.Visibility = Visibility.Collapsed;
+
+
                 Grid1.Visibility = Visibility.Collapsed;
 
                 var converter = new GridLengthConverter();
@@ -207,7 +211,7 @@ namespace Financial_WPF_App.Views
             LoadGrid(false);
         }
 
-        private void LoadGrid(bool Update)
+        public void LoadGrid(bool Update)
         {
             myDataGrid.ItemsSource = null;
             if (!Update)
@@ -218,7 +222,7 @@ namespace Financial_WPF_App.Views
                 }
                 else if (Category == "Micro Projects")
                 {
-                    dt = r.Select(Account_ID);
+                    dt = r.Select(Account_ID, -1);
                 }
             }
 
@@ -479,21 +483,29 @@ namespace Financial_WPF_App.Views
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                 ID = Convert.ToInt32(dataRow["ID"]);
 
-                if (dataRow["Rate Group name"] != DBNull.Value || dataRow["Rate Group name"] != null)
-                    Name_txtBox.Text = dataRow["Rate Group name"].ToString();
+                Add_Account_Rate_Window _Window = new Add_Account_Rate_Window(Account_ID, ID, IsAdminAccount, Account_Type, Category, dt, this, main_Window);
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
+                {
+                    Load_Data();
+                }
 
-                BeginDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow["Start date"].ToString());
-                EndDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow["End date"].ToString());
 
-                From_comboBox.SelectedValue = Convert.ToInt32(dataRow["fromtp_id"].ToString());
-                To_comboBox.SelectedValue = Convert.ToInt32(dataRow["totp_id"].ToString());
+                //if (dataRow["Rate Group name"] != DBNull.Value || dataRow["Rate Group name"] != null)
+                //    Name_txtBox.Text = dataRow["Rate Group name"].ToString();
 
-                if (dataRow["Value"] != DBNull.Value) Value_txtBox.Text = dataRow["Value"].ToString();
+                //BeginDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow["Start date"].ToString());
+                //EndDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow["End date"].ToString());
 
-                LoadObserveRate_comboBox();
+                //From_comboBox.SelectedValue = Convert.ToInt32(dataRow["fromtp_id"].ToString());
+                //To_comboBox.SelectedValue = Convert.ToInt32(dataRow["totp_id"].ToString());
 
-                if (dataRow["ObserveRate_ID"] != DBNull.Value)
-                    ObserveRate_comboBox.SelectedValue = Convert.ToInt32(dataRow["ObserveRate_ID"].ToString());
+                //if (dataRow["Value"] != DBNull.Value) Value_txtBox.Text = dataRow["Value"].ToString();
+
+                //LoadObserveRate_comboBox();
+
+                //if (dataRow["ObserveRate_ID"] != DBNull.Value)
+                //    ObserveRate_comboBox.SelectedValue = Convert.ToInt32(dataRow["ObserveRate_ID"].ToString());
             }
             catch (Exception ex)
             {
@@ -802,6 +814,30 @@ namespace Financial_WPF_App.Views
             MyDatagrid.CellRenderers.Add("StackedHeader", new GridCustomStackedRenderer());
         }
 
+        private void AddNewAction_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Add_Account_Rate_Window _Window = new Add_Account_Rate_Window(Account_ID, IsAdminAccount, Account_Type, Category, dt, this, main_Window);
+
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
+                {
+                    Load_Data();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private int stack_and_goup_columns(int i, string StacHeader, StackedColumn CurrentStack, SfDataGrid MyDatagrid)
         {
             int moved = 0;
@@ -810,25 +846,25 @@ namespace Financial_WPF_App.Views
             {
                 if (MyDatagrid.Columns[j].MappingName.Contains(StacHeader))
                 {
-                    if(StacHeader.Contains("In Foreign currency") || StacHeader.Contains("in Foreign currency"))
+                    if (StacHeader.Contains("In Foreign currency") || StacHeader.Contains("in Foreign currency"))
                     {
-                                                    // Add column to StackedColumn
-                            if (CurrentStack.ChildColumns == "")
-                                CurrentStack.ChildColumns = MyDatagrid.Columns[j].HeaderText;
-                            else
-                                CurrentStack.ChildColumns += "," + MyDatagrid.Columns[j].HeaderText;
+                        // Add column to StackedColumn
+                        if (CurrentStack.ChildColumns == "")
+                            CurrentStack.ChildColumns = MyDatagrid.Columns[j].HeaderText;
+                        else
+                            CurrentStack.ChildColumns += "," + MyDatagrid.Columns[j].HeaderText;
 
-                            // Rename column header
-                            if (MyDatagrid.Columns[j].MappingName != StacHeader)
-                            {
-                                MyDatagrid.Columns[j].HeaderText = MyDatagrid.Columns[j].MappingName.Replace(StacHeader, "");
-                                MyDatagrid.Columns.MoveTo(j, i);
-                                moved++;
-                            }
-                            else
-                            {
-                                MyDatagrid.Columns[j].HeaderText = "Total";
-                            }
+                        // Rename column header
+                        if (MyDatagrid.Columns[j].MappingName != StacHeader)
+                        {
+                            MyDatagrid.Columns[j].HeaderText = MyDatagrid.Columns[j].MappingName.Replace(StacHeader, "");
+                            MyDatagrid.Columns.MoveTo(j, i);
+                            moved++;
+                        }
+                        else
+                        {
+                            MyDatagrid.Columns[j].HeaderText = "Total";
+                        }
                     }
                     else
                     {
@@ -852,7 +888,7 @@ namespace Financial_WPF_App.Views
                                 MyDatagrid.Columns[j].HeaderText = "Total";
                             }
                         }
-                    }            
+                    }
                 }
             }
             StackedHeaderRow1.StackedColumns.Add(CurrentStack);
@@ -924,6 +960,7 @@ namespace Financial_WPF_App.Views
                 }
             }
         }
+
         private void ShowColumn(object sender, RoutedEventArgs e)
         {
             try
@@ -954,6 +991,7 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
         private void HideColumn(object sender, RoutedEventArgs e)
         {
             try
@@ -980,6 +1018,7 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
         private void ShowAll_MenuItem_Click(object sender, RoutedEventArgs e)
         {
             try

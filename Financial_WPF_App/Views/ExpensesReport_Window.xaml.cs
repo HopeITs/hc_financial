@@ -89,7 +89,7 @@ namespace Financial_WPF_App.Views
             UserMode = false;
 
             AvgRate_comboBox.ItemsSource = null;
-            AvgRate_dt = r.Select(Account_ID);
+            AvgRate_dt = r.Select(Account_ID, -1);
 
 
             Budgets_comboBox.ItemsSource = null;

@@ -14,7 +14,7 @@ namespace Financial_WPF_App.Models
 
         }
 
-        public DataTable Select(int Account_ID)
+        public DataTable Select(int Account_ID, int Rate_ID)
         {
             //check user from database
             string query = @"select all_avgrates.`ID` as 'ID',
@@ -44,6 +44,8 @@ namespace Financial_WPF_App.Models
 
             if (Account_ID != -1) condition += " and all_avgrates.Account_ID = @Account_ID";
 
+            if (Rate_ID != -1) condition += " and all_avgrates.ID = @Rate_ID";
+
             query += condition;
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -52,6 +54,7 @@ namespace Financial_WPF_App.Models
 
                 sc.Parameters.AddWithValue("@Account_ID", Account_ID);
 
+                sc.Parameters.AddWithValue("@Rate_ID", Rate_ID);
 
                 sc.CommandTimeout = 120;sc.CommandText = query;
                 sc.Connection = Login.MyConn;

@@ -63,10 +63,10 @@
                     TabIndex="10" Click="Save_btn_Click" Margin="4,0,0,0" Height="38" Width="88" Grid.ColumnSpan="2"   />
             <Label x:Name="EndDate_lable_Copy" Grid.Column="6" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="From till:" Margin="1,12,1,12" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  />
             <Label x:Name="EndDate_lable_Copy1" Grid.Column="4" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="To till:" Margin="1,12,181,12" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2"  />
-            <ComboBox x:Name="To_comboBox" Grid.Column="3" DisplayMemberPath="Name" SelectedValuePath="ID" 
+            <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="To_comboBox" Grid.Column="3" DisplayMemberPath="Name" SelectedValuePath="ID" 
             	FlowDirection="RightToLeft" Height="29" TabIndex="1" FontSize="14" Margin="14,0,10,0" Grid.Row="1" SelectionChanged="BeginDate_datepicker_SelectedDateChanged" />
             <Label x:Name="EndDate_lable_Copy2" Grid.Column="2" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Corresponding rate:" Margin="1,12,1,12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-            <ComboBox x:Name="ObserveRate_comboBox" Grid.Column="1" DisplayMemberPath="Rate group name" SelectedValuePath="ID" 
+            <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="ObserveRate_comboBox" Grid.Column="1" DisplayMemberPath="Rate group name" SelectedValuePath="ID" 
             	FlowDirection="RightToLeft" Height="33" TabIndex="1" FontSize="14" Margin="13,0,10,0" Grid.Row="1" />
             <Button x:Name="ObserveRate_clear_btn" Grid.Row="1"
                 HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -77,10 +77,9 @@
                 </Button.Background>
             </Button>
             <StackPanel Grid.Column="5" Grid.Row="1" x:Name="From_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,8,2,11" >
-                <ComboBox x:Name="From_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" 
-            	FlowDirection="RightToLeft" Height="29" TabIndex="1" FontSize="14" SelectionChanged="From_comboBox_SelectionChanged" Width="156" VerticalAlignment="Stretch" />
+                <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="From_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" SelectionChanged="From_comboBox_SelectionChanged"
+            	FlowDirection="RightToLeft" Height="29" TabIndex="1" FontSize="14"  Width="156" VerticalAlignment="Stretch" />
                 <Button x:Name="From_help" Width="20" Height="29" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
-
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
                     </Button.Background>
@@ -146,10 +145,10 @@
             <Grid Grid.ColumnSpan="2" Margin="0,0,0,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="70"/>
-                    <ColumnDefinition Width="190*"/>
-                    <ColumnDefinition Width="320*"/>
-                    <ColumnDefinition Width="151*"/>
-                    <ColumnDefinition Width="489*"/>
+                    <ColumnDefinition Width="104*"/>
+                    <ColumnDefinition Width="433*"/>
+                    <ColumnDefinition Width="159*"/>
+                    <ColumnDefinition Width="515*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel x:Name="Panel1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="35,0,5,0" Grid.Column="4" >
                     <RadioButton x:Name="Total_RadioButton" Content="Show total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Height="34" Width="126" HorizontalAlignment="Right" Checked="Total_RadioButton_Checked"/>
@@ -179,9 +178,16 @@
                     </MenuItem>
                 </Menu>
                 <Button Grid.Column="1" Style="{DynamicResource Export_Style}" x:Name="Export_btn"
-                TabIndex="5" HorizontalAlignment="Stretch" Margin="2,10,166,10"
-                Command="local:Commands.ExportToExcel" Height="26" Width="32" VerticalAlignment="Stretch"
+                TabIndex="5" HorizontalAlignment="Stretch" Margin="2,10,65,8"
+                Command="local:Commands.ExportToExcel" Height="NaN" Width="NaN" VerticalAlignment="Stretch"
                 />
+                <StackPanel Margin="0,4,410,3" x:Name="Add_btn"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Entry" ToolTipService.InitialShowDelay="100" Grid.Column="2">
+                    <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click" Margin="0,0,1,0" HorizontalAlignment="Center">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
             </Grid>
 
         </Grid>
