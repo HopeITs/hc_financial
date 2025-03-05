@@ -68,7 +68,7 @@ namespace Financial_WPF_App.Views
         private void Apply_Color_Theme()
         {
 
-   
+
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
@@ -255,11 +255,13 @@ namespace Financial_WPF_App.Views
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
                 int count = myDataGrid.View.Records.Count();
                 All_textBlock.Text = count.ToString("N0");
-                Export_btn.CommandTarget = myDataGrid;
 
                 Bind_Show_Hide_Menu();
                 AddSums();
                 move_Columns();
+
+                Export_btn.CommandTarget = myDataGrid;
+
             }
         }
 
@@ -270,6 +272,7 @@ namespace Financial_WPF_App.Views
                 HOffset = e.HorizontalOffset;
             }
         }
+
         private void myDataGrid_AutoGeneratingColumn(object sender, Syncfusion.UI.Xaml.Grid.AutoGeneratingColumnArgs e)
         {
             try
@@ -433,7 +436,7 @@ namespace Financial_WPF_App.Views
                 {
                     MessageBox.Show("Please specify the date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
                     return;
-  
+
                 }
 
                 if (String.IsNullOrWhiteSpace(Value_txtBox.Text))
@@ -505,6 +508,8 @@ namespace Financial_WPF_App.Views
                 {
                     To_comboBox.SelectedIndex = -1;
                 }
+
+                LoadGrid();
             }
             catch (Exception ex)
             {
@@ -523,11 +528,9 @@ namespace Financial_WPF_App.Views
             try
             {
                 ShowHide();
-                if (To_comboBox.SelectedIndex != -1 && From_comboBox.SelectedIndex != -1)
-                {
-                    ClearBoxes();
-                    LoadGrid();
-                }
+                ClearBoxes();
+                LoadGrid();
+
             }
             catch (Exception ex)
             {
