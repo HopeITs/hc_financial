@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -123,6 +124,14 @@ namespace Financial_WPF_App.Controls
         {
             try
             {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)autoTextBox.Template.FindName("PlaceholderText", autoTextBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(autoTextBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
                 // Verification.  
                 if (string.IsNullOrEmpty(this.autoTextBox.Text))
                 {
@@ -148,6 +157,29 @@ namespace Financial_WPF_App.Controls
         }
 
         #endregion
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            try
+            {
+                if (e.Text != "")
+                {
+                    Regex regex = new Regex("[^0-9.]+");
+                    e.Handled = regex.IsMatch(e.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+
+        }
 
         #region Auto list selection changed method  
 

@@ -914,12 +914,6 @@
     <Resource Include="Images\qm1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\qm1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Views\Payments_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Buttons\restore.png" />
   </ItemGroup>
   <ItemGroup>
@@ -1078,6 +1072,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Icons\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\save_payment.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets')" />
