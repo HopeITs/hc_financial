@@ -88,18 +88,19 @@ namespace Financial_WPF_App.Views
         {
             UserMode = false;
 
+
             AvgRate_comboBox.ItemsSource = null;
             AvgRate_dt = r.Select(Account_ID, -1);
 
 
             Budgets_comboBox.ItemsSource = null;
-            Budgets_dt = bl.Select_AllAvilableBudgetLines(Account_ID);
+            Budgets_dt = bl.Select_AllAvilableBudgetLines_ForCombobox(Account_ID);
 
             if (Budgets_dt != null && Budgets_dt.Rows.Count > 0)
             {
                 DataView view = new DataView(Budgets_dt);
                 DataTable selected_dt = new DataTable();
-                selected_dt = view.ToTable(true, "budget_ID", "budget_Name");
+                selected_dt = view.ToTable(true, "ID", "Name");
 
                 if (selected_dt != null && selected_dt.Rows.Count > 0)
                 {
@@ -109,6 +110,22 @@ namespace Financial_WPF_App.Views
                     Budgets_comboBox_SelectionChanged(Budgets_comboBox, null);
                 }
             }
+
+
+            View_comboBox.ItemsSource = null;
+
+            DataTable View_dt = new DataTable();
+            View_dt.Columns.AddRange(new System.Data.DataColumn[] {
+            new System.Data.DataColumn("ID", typeof(int)),
+            new System.Data.DataColumn("Name", typeof(string))});
+
+            View_dt.Rows.Add(-1, "Lines");
+            View_dt.Rows.Add(-2, "Line Types");
+
+
+            View_comboBox.ItemsSource = View_dt.DefaultView;
+
+
         }
 
         private void Load_Budget_AvgRate_Datagridview()
@@ -234,18 +251,25 @@ namespace Financial_WPF_App.Views
 
                     AvgRate_comboBox.ItemsSource = null;
 
-                    System.Data.DataRow[] row = Budgets_dt.Select("budget_ID=" + Convert.ToInt32(Budget_ID));
+                    System.Data.DataRow[] row = Budgets_dt.Select("ID=" + Convert.ToInt32(Budget_ID));
 
-                    int Budet_Type_ID = Convert.ToInt32(row[0]["BudgetType_ID"].ToString());
+                    int Budet_Type_ID = -1;
+                    if (row.Length > 0)
+                        Budet_Type_ID = Convert.ToInt32(row[0]["BudgetType_ID"].ToString());
 
-                    System.Data.DataRow[] rows = AvgRate_dt.Select("totp_id = " + Budet_Type_ID + "");
-                    DataTable selected_dt = new DataTable();
-                    if (rows.Length != 0)
+                    if(Budet_Type_ID > 0)
                     {
-                        selected_dt = rows.CopyToDataTable();
-                        if (selected_dt != null && selected_dt.Rows.Count > 0)
-                            AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
+                        System.Data.DataRow[] rows = AvgRate_dt.Select("totp_id = " + Budet_Type_ID + "");
+
+                        DataTable selected_dt = new DataTable();
+                        if (rows.Length != 0)
+                        {
+                            selected_dt = rows.CopyToDataTable();
+                            if (selected_dt != null && selected_dt.Rows.Count > 0)
+                                AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
+                        }
                     }
+             
                 }
             }
             catch (Exception ex)
@@ -259,6 +283,25 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 if (PassException)
                     throw;
+            }
+        }
+
+        private void Expenses_DataGridView_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
+        {
+            try
+            {
+                int count = Expenses_DataGridView.SelectedItems.Count;
+                Selected_textBlock.Text = count.ToString("N0");
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
 
@@ -423,7 +466,8 @@ namespace Financial_WPF_App.Views
             if (Expenses_DataGridView.View != null)
             {
                 Export_btn.CommandTarget = Expenses_DataGridView;
-
+                int count = Expenses_DataGridView.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
                 AddSums();
             }
         }
@@ -557,7 +601,7 @@ namespace Financial_WPF_App.Views
             {
                 if (MyDatagrid.Columns[j].MappingName.Contains(StacHeader) &&
                     !BudgetAvgs.Any(name => MyDatagrid.Columns[j].MappingName.Contains(name)))
-                
+
                 {
                     // Add column to StackedColumn
                     if (CurrentStack.ChildColumns == "")
@@ -614,7 +658,6 @@ namespace Financial_WPF_App.Views
 
             return moved;
         }
-
 
         private void Bind_Show_Hide_Menu()
         {
@@ -780,7 +823,7 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
-        
+
         private void AddSums()
         {
             if (Expenses_DataGridView.TableSummaryRows.Count > 0)
@@ -789,7 +832,7 @@ namespace Financial_WPF_App.Views
                 Expenses_DataGridView.TableSummaryRows.RemoveAt(0);
             }
 
-            if(Expenses_DataGridView.GroupSummaryRows.Count > 0)
+            if (Expenses_DataGridView.GroupSummaryRows.Count > 0)
             {
                 Expenses_DataGridView.GroupSummaryRows[0].SummaryColumns.Clear();
                 Expenses_DataGridView.GroupSummaryRows.RemoveAt(0);
@@ -838,7 +881,48 @@ namespace Financial_WPF_App.Views
                 });
             }
         }
-        
+
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
+            else
+                Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+
+        private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)Search_txtBox.Template.FindName("PlaceholderText", Search_txtBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                if (Report_dt != null)
+                {
+                    SearchDataGrid searchHelper = new SearchDataGrid(Report_dt);
+
+                    // Call the search method when text changes
+                    searchHelper.Search(Search_txtBox.Text, Expenses_DataGridView);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
     }
 
 

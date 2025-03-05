@@ -282,13 +282,5 @@
             <Button Grid.Row="4"  Style="{DynamicResource ButtonColoredStyle}"
                 x:Name="Save_btn" Content="Save" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" />
         </Grid>
-
-
-
-
-
-
-
-
     </Grid>
 </Window>

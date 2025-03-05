@@ -149,6 +149,7 @@ namespace Financial_WPF_App.Views
                     }
             }
         }
+
         private void Load_Data()
         {
             Name_txtBox.Text = "";
@@ -216,24 +217,29 @@ namespace Financial_WPF_App.Views
             if (all_budget_donor_dt != null && all_budget_donor_dt.Rows.Count > 0)
             {
                 var duplicateBudgetIds = all_budget_donor_dt.AsEnumerable()
-          .GroupBy(row => row.Field<int>("budget_id"))
-          .Where(group => group.Count() > 1)
-          .Select(group => group.Key)
-          .ToList();
+                          .GroupBy(row => row.Field<int>("budget_id"))
+                          .Where(group => group.Count() > 1)
+                          .Select(group => group.Key)
+                          .ToList();
 
                 if (duplicateBudgetIds.Count > 0)
                 {
-                    Panel1.Visibility = Visibility.Visible;
+                    Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Visible;
+                    //Panel1.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    Panel1.Visibility = Visibility.Collapsed;
+                    Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Collapsed;
+
+                    //Panel1.Visibility = Visibility.Collapsed;
                     Total_RadioButton.IsChecked = true;
                 }
             }
             else
             {
-                Panel1.Visibility = Visibility.Collapsed;
+                Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Collapsed;
+
+                //Panel1.Visibility = Visibility.Collapsed;
                 Total_RadioButton.IsChecked = true;
             }
         }
@@ -1082,6 +1088,45 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
 
+        }
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
+            else
+                Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+        private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)Search_txtBox.Template.FindName("PlaceholderText", Search_txtBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                if (Budgets_dt != null)
+                {
+                    SearchDataGrid searchHelper = new SearchDataGrid(Budgets_dt);
+
+                    // Call the search method when text changes
+                    searchHelper.Search(Search_txtBox.Text, myDataGrid);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
         }
     }
 

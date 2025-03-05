@@ -619,7 +619,7 @@
 
                                 <!-- Placeholder Text -->
                                 <TextBlock x:Name="PlaceholderText"
-                               Text="Postpone Payments"
+                               Text="{TemplateBinding Tag}"
                                Foreground="{StaticResource DarkGray}"
                                FontSize="13"
                                HorizontalAlignment="Center"
@@ -1502,6 +1502,7 @@
                 </Setter>
             </Style>
 
+            
             <!-- Style for CalendarItem (Removes Inner Border but Keeps Functionality) -->
             <Style x:Key="CustomCalendarItemStyle" TargetType="CalendarItem">
                 <Setter Property="BorderThickness" Value="0"/>
@@ -1593,6 +1594,75 @@
                                     <Border Background="{StaticResource LightGray1}"
                                 BorderBrush="{StaticResource LightGray1}"
                                 BorderThickness="0">
+                                        <!-- Ensures Border Width Matches Calendar -->
+                                        <Calendar x:Name="PART_Calendar" Style="{StaticResource CustomCalendarStyle}"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                            <!-- Triggers for Disabled State -->
+                            <ControlTemplate.Triggers>
+                                <!-- Change Background and Image when Disabled -->
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="PART_Border" Property="Background" Value="White"/>
+                                    <Setter TargetName="PART_TextBox" Property="Foreground" Value="{StaticResource LightGray1}"/>
+                                    <!-- Change Button Image when Disabled -->
+                                    <Setter TargetName="PART_Button" Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="/Images/Buttons/calendar_disabled.png"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <!-- Change BorderThickness and BorderBrush for Disabled -->
+                                    <Setter TargetName="PART_Border" Property="BorderThickness" Value="1"/>
+                                    <Setter TargetName="PART_Border" Property="BorderBrush" Value="{StaticResource LightGray1}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="DatePickerActionBar" TargetType="DatePicker">
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                <Setter Property="Background" Value="{StaticResource White}"/>
+                <Setter Property="CalendarStyle" Value="{StaticResource CustomCalendarStyle}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource LightGray1}"/>
+                <Setter Property="Margin" Value="1,0,1,0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DatePicker">
+                            <Grid>
+                                <!-- Border for Background -->
+                                <Border x:Name="PART_Border" Background="{TemplateBinding Background}" Padding="5">
+                                    <DatePickerTextBox x:Name="PART_TextBox"
+                               Style="{StaticResource CustomDatePickerTextBoxStyle}"
+                               Padding="8,0,0,0"
+                               VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                                </Border>
+
+                                <!-- Calendar Button -->
+                                <Button x:Name="PART_Button"
+                            HorizontalAlignment="Left"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            VerticalAlignment="Center"
+                            Width="12" Height="12"
+                            Margin="5,0" Content="">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/calendar.png"/>
+                                    </Button.Background>
+                                </Button>
+
+                                <!-- Popup for Calendar -->
+                                <Popup x:Name="PART_Popup"
+               Placement="Bottom"
+               StaysOpen="False"
+               AllowsTransparency="True"
+               HorizontalOffset="-8"
+                           VerticalOffset="1"
+               PlacementTarget="{Binding ElementName=PART_TextBox}">
+                                    <Border Background="{StaticResource LightGray1}"
+                    BorderBrush="{StaticResource LightGray1}"
+                    BorderThickness="0">
                                         <!-- Ensures Border Width Matches Calendar -->
                                         <Calendar x:Name="PART_Calendar" Style="{StaticResource CustomCalendarStyle}"/>
                                     </Border>
