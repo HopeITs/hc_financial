@@ -387,11 +387,13 @@ namespace Financial_WPF_App.Views
                     if (Rate_ID != -1)//Edit
                     {
                         r.Update(Rate_ID, Account_ID, Name, beginDate, endDate, from, to, ObserveRate_ID, "Rate_Window");
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
                         this.Close();
                     }
                     else//Add new
                     {
                         r.Insert(Account_ID, Name, beginDate, endDate, from, to, ObserveRate_ID, "Rate_Window");
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
                         ClearBoxes();
                     }
 
