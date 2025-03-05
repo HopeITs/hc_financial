@@ -58,14 +58,14 @@
 TabIndex="1"   VerticalAlignment="Stretch" SelectionChanged="To_comboBox_SelectionChanged" Margin="1,0,40,0" />
 
                         </WrapPanel>
-                        <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0">
                             <Label Style="{StaticResource statistic_lableStyle}" x:Name="Date_lable" Content="Date:"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Margin="7,0,1,0"/>
                             <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="Date_datepicker" Grid.Column="10" Margin="1,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
                             <Label Style="{StaticResource statistic_lableStyle}" x:Name="Value_Lable" Grid.Column="9"  Content="Value:" Margin="10,0,1,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
                             <TextBox x:Name="Value_txtBox"  TabIndex="6" Tag=""
                                     Style="{DynamicResource CustomTextBoxActionStyle}" Margin="0,0,2,0" Grid.Column="8" Height="30" PreviewTextInput="NumberValidationTextBox" VerticalAlignment="Stretch" />
                             <Button Style="{DynamicResource AddButtonStyle}" 
-                                x:Name="Insert_btn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="InsertAction_btn_Click" Grid.Column="7" ToolTip="Insert" ToolTipService.InitialShowDelay="100" Margin="1,0,19,0">
+                                x:Name="Insert_btn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="InsertAction_btn_Click" Grid.Column="7" ToolTip="Insert" ToolTipService.InitialShowDelay="100" Margin="1,0,0,0">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
                                 </Button.Background>
@@ -203,7 +203,7 @@ PopupAnimation="Fade">
                                 </Button>
                             </StackPanel>
                         </WrapPanel>
-                        <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                        <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,61,0">
                             <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                         </StackPanel>
                     </DockPanel>
