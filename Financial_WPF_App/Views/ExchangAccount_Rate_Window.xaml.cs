@@ -184,6 +184,11 @@ namespace Financial_WPF_App.Views
                         myDataGrid.Columns[i].IsHidden = true;
                     }
                 }
+
+                if (myDataGrid.View != null)
+                {
+                    Export_btn.CommandTarget = myDataGrid;
+                }
             }
         }
 
