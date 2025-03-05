@@ -88,6 +88,7 @@ namespace Financial_WPF_App.Views
         {
             UserMode = false;
 
+
             AvgRate_comboBox.ItemsSource = null;
             AvgRate_dt = r.Select(Account_ID);
 
@@ -109,6 +110,22 @@ namespace Financial_WPF_App.Views
                     Budgets_comboBox_SelectionChanged(Budgets_comboBox, null);
                 }
             }
+
+
+            View_comboBox.ItemsSource = null;
+
+            DataTable View_dt = new DataTable();
+            View_dt.Columns.AddRange(new System.Data.DataColumn[] {
+            new System.Data.DataColumn("ID", typeof(int)),
+            new System.Data.DataColumn("Name", typeof(string))});
+
+            View_dt.Rows.Add(-1, "Lines");
+            View_dt.Rows.Add(-2, "Line Types");
+
+
+            View_comboBox.ItemsSource = View_dt.DefaultView;
+
+
         }
 
         private void Load_Budget_AvgRate_Datagridview()
