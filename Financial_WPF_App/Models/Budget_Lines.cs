@@ -68,6 +68,39 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        public DataTable Select_AllAvilableBudgetLines_ForCombobox(int Account_ID)
+        {
+            //check user from database
+            string query = @"SELECT all_budgetlines.budget_ID as `ID`,all_budgetlines.budget_Name as `Name`,
+                                all_budgetlines.BudgetType_ID 
+                                FROM all_budgetlines";
+
+            string condition = " where 1 ";
+
+            if (Account_ID != -1)
+                condition += " and Account_ID = @Account_ID";
+
+            query += condition;
+            query += " Group By all_budgetlines.line_ID, all_budgetlines.budget_ID";
+
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+
+                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.MyConn.Close();
+            }
+            return dt;
+        }
+
         public DataTable Select_AllAvilableBudgetLines(int Account_ID)
         {
             //check user from database
@@ -128,8 +161,6 @@ namespace Financial_WPF_App.Models
             }
             return dt;
         }
-
-
 
         public void Insert_Multi_Lines()
         {

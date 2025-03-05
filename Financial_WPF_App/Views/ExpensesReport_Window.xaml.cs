@@ -93,13 +93,13 @@ namespace Financial_WPF_App.Views
 
 
             Budgets_comboBox.ItemsSource = null;
-            Budgets_dt = bl.Select_AllAvilableBudgetLines(Account_ID);
+            Budgets_dt = bl.Select_AllAvilableBudgetLines_ForCombobox(Account_ID);
 
             if (Budgets_dt != null && Budgets_dt.Rows.Count > 0)
             {
                 DataView view = new DataView(Budgets_dt);
                 DataTable selected_dt = new DataTable();
-                selected_dt = view.ToTable(true, "budget_ID", "budget_Name");
+                selected_dt = view.ToTable(true, "ID", "Name");
 
                 if (selected_dt != null && selected_dt.Rows.Count > 0)
                 {
@@ -234,18 +234,25 @@ namespace Financial_WPF_App.Views
 
                     AvgRate_comboBox.ItemsSource = null;
 
-                    System.Data.DataRow[] row = Budgets_dt.Select("budget_ID=" + Convert.ToInt32(Budget_ID));
+                    System.Data.DataRow[] row = Budgets_dt.Select("ID=" + Convert.ToInt32(Budget_ID));
 
-                    int Budet_Type_ID = Convert.ToInt32(row[0]["BudgetType_ID"].ToString());
+                    int Budet_Type_ID = -1;
+                    if (row.Length > 0)
+                        Budet_Type_ID = Convert.ToInt32(row[0]["BudgetType_ID"].ToString());
 
-                    System.Data.DataRow[] rows = AvgRate_dt.Select("totp_id = " + Budet_Type_ID + "");
-                    DataTable selected_dt = new DataTable();
-                    if (rows.Length != 0)
+                    if(Budet_Type_ID > 0)
                     {
-                        selected_dt = rows.CopyToDataTable();
-                        if (selected_dt != null && selected_dt.Rows.Count > 0)
-                            AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
+                        System.Data.DataRow[] rows = AvgRate_dt.Select("totp_id = " + Budet_Type_ID + "");
+
+                        DataTable selected_dt = new DataTable();
+                        if (rows.Length != 0)
+                        {
+                            selected_dt = rows.CopyToDataTable();
+                            if (selected_dt != null && selected_dt.Rows.Count > 0)
+                                AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
+                        }
                     }
+             
                 }
             }
             catch (Exception ex)
@@ -577,7 +584,7 @@ namespace Financial_WPF_App.Views
             {
                 if (MyDatagrid.Columns[j].MappingName.Contains(StacHeader) &&
                     !BudgetAvgs.Any(name => MyDatagrid.Columns[j].MappingName.Contains(name)))
-                
+
                 {
                     // Add column to StackedColumn
                     if (CurrentStack.ChildColumns == "")
@@ -634,7 +641,6 @@ namespace Financial_WPF_App.Views
 
             return moved;
         }
-
 
         private void Bind_Show_Hide_Menu()
         {
@@ -800,7 +806,7 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
-        
+
         private void AddSums()
         {
             if (Expenses_DataGridView.TableSummaryRows.Count > 0)
@@ -809,7 +815,7 @@ namespace Financial_WPF_App.Views
                 Expenses_DataGridView.TableSummaryRows.RemoveAt(0);
             }
 
-            if(Expenses_DataGridView.GroupSummaryRows.Count > 0)
+            if (Expenses_DataGridView.GroupSummaryRows.Count > 0)
             {
                 Expenses_DataGridView.GroupSummaryRows[0].SummaryColumns.Clear();
                 Expenses_DataGridView.GroupSummaryRows.RemoveAt(0);
