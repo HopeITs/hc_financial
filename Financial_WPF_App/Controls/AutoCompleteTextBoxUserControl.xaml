@@ -4,29 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Financial_WPF_App.Controls"
-             mc:Ignorable="d" Height="40" Width="200">
+             mc:Ignorable="d">
     <Grid>
-        <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <!-- Text Box -->
-            <TextBox x:Name="autoTextBox"     
-                    MinWidth="100"
-                    Background="White"     
+            <TextBox x:Name="autoTextBox" PreviewTextInput="NumberValidationTextBox"    
+                    Width="175"
                     TextChanged="AutoTextBox_TextChanged"  
-                    Style="{DynamicResource textBoxStyle}" Text="" />
+                    Style="{DynamicResource CustomTextBoxActionStyle}" Tag="Project Number" />
  
             <!-- Auto Suggestion box -->
             <Popup x:Name="autoListPopup"     
                    Visibility="Collapsed"                    
-                   Height="200"    
+                   Height="200" Width="175"
                    StaysOpen="True"    
                    AllowsTransparency="True"  
                    Placement="Bottom" IsOpen="False">
 
-                <ListBox x:Name="autoList"    
-                         Visibility="Collapsed"    
-                         Width="220" 
-                         SelectionChanged="AutoList_SelectionChanged" Background="White"  />
+                <ListBox x:Name="autoList"  Style="{StaticResource AutoCompleteDropdownItemStyle}"
+                         Visibility="Collapsed"
+                         SelectionChanged="AutoList_SelectionChanged">
+                </ListBox>
             </Popup>
         </StackPanel>
     </Grid>

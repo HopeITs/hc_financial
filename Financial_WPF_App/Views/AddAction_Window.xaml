@@ -87,7 +87,7 @@
                 <Button x:Name="DestinationTill_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
 
                     <Button.Background>
-                        <ImageBrush ImageSource="/Views/qm1.png" Stretch="Uniform"/>
+                        <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
                     </Button.Background>
                     <Button.ToolTip>
                         <TextBlock><Run Text="The account only appears if it contains a till of the same currency."/><LineBreak /><Run Text="In foreign currency till, The account only appears if it contains a till of the same currency and the account has the selected donor"/></TextBlock>

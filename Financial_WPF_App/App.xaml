@@ -606,6 +606,8 @@
                 </Setter>
             </Style>
 
+
+
             <Style x:Key="CustomTextBoxActionStyle" TargetType="TextBox" BasedOn="{StaticResource TextBoxActionStyle}">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -1219,6 +1221,56 @@
                     </Setter.Value>
                 </Setter>
 
+            </Style>
+
+            <Style x:Key="AutoCompleteDropdownItemStyle" TargetType="ListBox">
+                <Setter Property="Padding" Value="8,4"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="ItemContainerStyle">
+                    <Setter.Value>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                            <Setter Property="Margin" Value="0,5,0,5"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Name="Border" Background="{StaticResource LightGray1}" Padding="25,2,2,2">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <!-- Hover Effect -->
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                                <Setter Property="Cursor" Value="Hand"/>
+                                            </Trigger>
+
+                                            <!-- Selected Effect -->
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="{StaticResource MidGray}"/>
+                                                <!-- Change if needed -->
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+
+                                            <!-- Disabled Effect -->
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Foreground" Value="{StaticResource LightGray1}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <Style x:Key="DeleteButtonStyle" TargetType="Button">
