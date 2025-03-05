@@ -216,24 +216,29 @@ namespace Financial_WPF_App.Views
             if (all_budget_donor_dt != null && all_budget_donor_dt.Rows.Count > 0)
             {
                 var duplicateBudgetIds = all_budget_donor_dt.AsEnumerable()
-          .GroupBy(row => row.Field<int>("budget_id"))
-          .Where(group => group.Count() > 1)
-          .Select(group => group.Key)
-          .ToList();
+                          .GroupBy(row => row.Field<int>("budget_id"))
+                          .Where(group => group.Count() > 1)
+                          .Select(group => group.Key)
+                          .ToList();
 
                 if (duplicateBudgetIds.Count > 0)
                 {
-                    Panel1.Visibility = Visibility.Visible;
+                    Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Visible;
+                    //Panel1.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    Panel1.Visibility = Visibility.Collapsed;
+                    Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Collapsed;
+
+                    //Panel1.Visibility = Visibility.Collapsed;
                     Total_RadioButton.IsChecked = true;
                 }
             }
             else
             {
-                Panel1.Visibility = Visibility.Collapsed;
+                Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Collapsed;
+
+                //Panel1.Visibility = Visibility.Collapsed;
                 Total_RadioButton.IsChecked = true;
             }
         }
