@@ -34,7 +34,7 @@ namespace Financial_WPF_App.Views
         Till t;
         Budget b;
         Account acc;
-        DataTable dt, p_dt, Account_Budgets_dt, Donor_dt;
+        DataTable dt, p_dt, Donor_dt;
         Main_Window_2 main_Window;
         bool UserMode = false;
         bool IsAdminAccount;
@@ -144,15 +144,7 @@ namespace Financial_WPF_App.Views
         {
             if (!Add_privileges)
             {
-
                 Add_btn.Visibility = Visibility.Collapsed;
-
-
-                Grid1.Visibility = Visibility.Collapsed;
-
-                var converter = new GridLengthConverter();
-                Row1.Height = (GridLength)converter.ConvertFromString("0*");
-
             }
             if (!Edit_privileges)
             {
@@ -178,16 +170,10 @@ namespace Financial_WPF_App.Views
         {
             ID = -1;
 
-
-            EndDate_lable_Copy2.Visibility = ObserveRate_comboBox.Visibility = ObserveRate_clear_btn.Visibility = Visibility.Collapsed;
-            From_help.Visibility = Visibility.Collapsed;
             if (Account_Type == "Project")
             {
                 if (Category == "Budget")
                 {
-                    Account_Budgets_dt = b.Select(Account_ID);
-                    From_help.Visibility = Visibility.Visible;
-
                     Donor_dt = acc.Select_Account_Donors(Account_ID);
                     if (Donor_dt.Rows.Count > 1)
                     {
@@ -205,9 +191,6 @@ namespace Financial_WPF_App.Views
                     Total_RadioButton.IsChecked = true;
                 }
             }
-
-
-            LoadFromToComboBoxs();
             LoadGrid(false);
         }
 
@@ -242,240 +225,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void LoadFromToComboBoxs()
-        {
-            From_comboBox.ItemsSource = null;
-            To_comboBox.ItemsSource = null;
-            p_dt = t.Select_Account_TillTypes(Account_ID, "");
-            if (p_dt != null && p_dt.Rows.Count > 0)
-            {
-                From_comboBox.ItemsSource = p_dt.DefaultView;
-                To_comboBox.ItemsSource = p_dt.DefaultView;
-            }
-        }
-
-        private void LoadObserveRate_comboBox()
-        {
-            ObserveRate_comboBox.ItemsSource = null;
-
-            if (From_comboBox.SelectedValue != null)
-            {
-                System.Data.DataRow[] rows = dt.Select("totp_id=" + Convert.ToInt32(From_comboBox.SelectedValue));
-                DataTable selected_dt = new DataTable();
-                if (rows.Length != 0)
-                {
-                    selected_dt = rows.CopyToDataTable();
-                    if (selected_dt != null && selected_dt.Rows.Count > 0)
-                        ObserveRate_comboBox.ItemsSource = selected_dt.DefaultView;
-                }
-            }
-        }
-
-        private void BeginDate_datepicker_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            // Calculate Value //
-            try
-            {
-                if (BeginDate_datepicker.SelectedDate != null && EndDate_datepicker.SelectedDate != null
-                    && From_comboBox.SelectedIndex != -1 && To_comboBox.SelectedIndex != -1)
-                {
-                    string BeginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    string EndDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    int from = Convert.ToInt32(From_comboBox.SelectedValue);
-                    int to = Convert.ToInt32(To_comboBox.SelectedValue);
-                    Double value = r.Calculate_Value(Account_ID.ToString(), BeginDate, EndDate, from, to);
-                    Value_txtBox.Text = value.ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void From_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            // Calculate Value //
-            try
-            {
-                if (BeginDate_datepicker.SelectedDate != null && EndDate_datepicker.SelectedDate != null
-                    && From_comboBox.SelectedIndex != -1 && To_comboBox.SelectedIndex != -1)
-                {
-                    string BeginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    string EndDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    int from = Convert.ToInt32(From_comboBox.SelectedValue);
-                    int to = Convert.ToInt32(To_comboBox.SelectedValue);
-                    Double value = r.Calculate_Value(Account_ID.ToString(), BeginDate, EndDate, from, to);
-                    Value_txtBox.Text = value.ToString();
-                }
-
-                if (From_comboBox.SelectedIndex != -1)
-                {
-                    LoadObserveRate_comboBox();
-                    EndDate_lable_Copy2.Visibility = ObserveRate_comboBox.Visibility = ObserveRate_clear_btn.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    ObserveRate_comboBox.ItemsSource = null;
-                    EndDate_lable_Copy2.Visibility = ObserveRate_comboBox.Visibility = ObserveRate_clear_btn.Visibility = Visibility.Collapsed;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Save_btn_Click(object sender, RoutedEventArgs e)
-        {
-            Save_btn.IsEnabled = false;
-            try
-            {
-                //SubProject_comboBox.SelectedIndex == -1
-
-                foreach (System.Data.DataRow R in dt.Rows)
-                {
-                    if (ID == -1 || R.Field<int>("ID") != ID)
-                    {
-                        if (From_comboBox.Text == R["From till"].ToString() && To_comboBox.Text == R["To till"].ToString())
-                        {
-                            if (BeginDate_datepicker.SelectedDate <= Convert.ToDateTime(R.Field<DateTime>("End date").ToString()) && EndDate_datepicker.SelectedDate >= Convert.ToDateTime(R.Field<DateTime>("Start date").ToString()))
-                            {
-                                MessageBox.Show("There is an overlap between the entered dates and previously specified dates.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                                return;
-                                //throw new Exception("There is an overlap between the entered dates and previously specified dates.");
-                            }
-                        }
-                    }
-                }
-                if (Name_txtBox.Text == "")
-                {
-                    MessageBox.Show("Please enter the name.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                    return;
-                }
-
-                if (EndDate_datepicker.SelectedDate == null || BeginDate_datepicker.SelectedDate == null)
-                {
-                    MessageBox.Show("Please specify the start and end date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                    return;
-                }
-
-                if (EndDate_datepicker.SelectedDate < BeginDate_datepicker.SelectedDate)
-                {
-                    MessageBox.Show("Please make sure the end date is after the start date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                    return;
-                }
-
-                if (From_comboBox.SelectedIndex == -1 || To_comboBox.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select the Currencies (from - to)", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                    return;
-                }
-
-
-                if (Account_Type == "Project")
-                {
-                    if (Category == "Budget")
-                    {
-                        if (To_comboBox.Text.ToLower() == "syr")
-                        {
-                            System.Data.DataRow[] row = null;
-                            if (Account_Budgets_dt != null && Account_Budgets_dt.Rows.Count > 0)
-                            {
-                                row = Account_Budgets_dt.Select("Budget_Type_ID=" + Convert.ToInt32(From_comboBox.SelectedValue));
-                            }
-
-                            if (row == null || row.Count() <= 0)
-                            {
-                                MessageBox.Show("Exchange to SYR can only be made from the budget currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                                return;
-
-                            }
-                        }
-                    }
-                }
-
-
-                if (Login.BuildConnection())
-                {
-                    string Name = Login.ReplaceQuotation(Name_txtBox.Text);
-
-                    string beginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    string endDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                    string text = Value_txtBox.Text.Replace(",", "");
-
-                    int from = Convert.ToInt32(From_comboBox.SelectedValue);
-                    int to = Convert.ToInt32(To_comboBox.SelectedValue);
-
-                    int ObserveRate_ID;
-                    if (Convert.ToInt32(ObserveRate_comboBox.SelectedIndex) != -1 && Convert.ToInt32(To_comboBox.SelectedIndex) != -1)
-                        ObserveRate_ID = Convert.ToInt32(ObserveRate_comboBox.SelectedValue);
-                    else
-                        ObserveRate_ID = -1;
-
-
-                    if (ID != -1)//Edit
-                    {
-
-                        r.Update(ID, Account_ID, Name, beginDate, endDate, from, to, ObserveRate_ID, "Rate_Window");
-                    }
-                    else//Add new
-                    {
-                        if (!Add_privileges)
-                        {
-                            MessageBox.Show("Sorry … You do not have add permissions.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
-                            return;
-                            //throw new Exception("Sorry … You do not have add permissions.");
-                        }
-                        r.Insert(Account_ID, Name, beginDate, endDate, from, to, ObserveRate_ID, "Rate_Window");
-                    }
-
-                    LoadGrid(false);
-                    ClearBoxes();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
-                {
-                    Login.MyConn.Close();
-                }
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-            finally
-            {
-                Save_btn.IsEnabled = true;
-            }
-        }
-
-        private void ClearBoxes()
-        {
-            ID = -1;
-            Name_txtBox.Text = Value_txtBox.Text = "";
-            From_comboBox.SelectedIndex = -1; To_comboBox.SelectedIndex = -1;
-            BeginDate_datepicker.SelectedDate = null; EndDate_datepicker.SelectedDate = null;
-            ObserveRate_comboBox.SelectedIndex = -1;
-        }
-
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -489,23 +238,6 @@ namespace Financial_WPF_App.Views
                 {
                     Load_Data();
                 }
-
-
-                //if (dataRow["Rate Group name"] != DBNull.Value || dataRow["Rate Group name"] != null)
-                //    Name_txtBox.Text = dataRow["Rate Group name"].ToString();
-
-                //BeginDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow["Start date"].ToString());
-                //EndDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow["End date"].ToString());
-
-                //From_comboBox.SelectedValue = Convert.ToInt32(dataRow["fromtp_id"].ToString());
-                //To_comboBox.SelectedValue = Convert.ToInt32(dataRow["totp_id"].ToString());
-
-                //if (dataRow["Value"] != DBNull.Value) Value_txtBox.Text = dataRow["Value"].ToString();
-
-                //LoadObserveRate_comboBox();
-
-                //if (dataRow["ObserveRate_ID"] != DBNull.Value)
-                //    ObserveRate_comboBox.SelectedValue = Convert.ToInt32(dataRow["ObserveRate_ID"].ToString());
             }
             catch (Exception ex)
             {
@@ -525,24 +257,6 @@ namespace Financial_WPF_App.Views
             {
                 int count = myDataGrid.SelectedItems.Count;
                 Selected_textBlock.Text = count.ToString("N0");
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void ObserveRate_clear_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ObserveRate_comboBox.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -597,7 +311,6 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                ClearBoxes();
                 Load_Data();
             }
             catch (Exception ex)
@@ -610,25 +323,6 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ClearBoxes();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
         }
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)

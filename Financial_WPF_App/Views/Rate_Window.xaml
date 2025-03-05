@@ -24,77 +24,11 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="Grid1" Grid.Row="0" Margin="4,3,3,1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="45*"></ColumnDefinition>
-                <ColumnDefinition Width="165*"></ColumnDefinition>
-                <ColumnDefinition Width="160*"></ColumnDefinition>
-                <ColumnDefinition Width="182*"></ColumnDefinition>
-                <ColumnDefinition Width="85*"></ColumnDefinition>
-                <ColumnDefinition Width="182*"></ColumnDefinition>
-                <ColumnDefinition Width="114*"></ColumnDefinition>
-                <ColumnDefinition Width="182*"></ColumnDefinition>
-                <ColumnDefinition Width="114*"></ColumnDefinition>
-                <ColumnDefinition Width="45*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="10*"></RowDefinition>
-                <RowDefinition Height="10*"></RowDefinition>
-                <RowDefinition Height="10*"></RowDefinition>
-            </Grid.RowDefinitions>
-
-            <Label Grid.Column="8" Grid.Row="0" Style="{DynamicResource lableStyle}" Content="Rate group name:" Margin="1,10,1,11" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" HorizontalContentAlignment="Right" />
-            <TextBox x:Name="Name_txtBox" Grid.Column="7" TabIndex="2"  Style="{DynamicResource textBoxStyle}" Margin="1,0,1,0" VerticalContentAlignment="Stretch" Height="29"/>
-
-            <Label x:Name="BeginDate_lable" Grid.Column="6" Grid.Row="0" Style="{DynamicResource lableStyle}" Content="Start date:" Margin="1,11,1,11" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right"/>
-            <DatePicker x:Name="BeginDate_datepicker" Grid.Column="5" TabIndex="3"
-                         SelectedDateChanged="BeginDate_datepicker_SelectedDateChanged" Margin="14,0,0,0" Width="158" HorizontalAlignment="Left" Height="32"/>
-
-            <Label x:Name="EndDate_lable" Grid.Column="4" Grid.Row="0" Style="{DynamicResource lableStyle}" Content="End date:" Margin="1,12,181,12" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2"  />
-            <DatePicker x:Name="EndDate_datepicker" Grid.Column="3" TabIndex="4"   
-                        SelectedDateChanged="BeginDate_datepicker_SelectedDateChanged" Margin="14,0,0,0" Width="158" HorizontalAlignment="Left" Height="31"/>
-
-            <Label Grid.Column="2" Grid.Row="0" Style="{DynamicResource lableStyle}" Content="Value:" Margin="1,14,1,13" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
-            <TextBox x:Name="Value_txtBox"  TabIndex="6"
-                    Style="{DynamicResource textBoxStyle}" IsReadOnly="True" Margin="10,0,9,0" Grid.Column="1" Height="28" />
-
-            <Button Grid.Row="2" Grid.Column="4"
-                    Style="{DynamicResource SaveButton_Style}" x:Name="Save_btn"
-                    TabIndex="10" Click="Save_btn_Click" Margin="4,0,0,0" Height="38" Width="88" Grid.ColumnSpan="2"   />
-            <Label x:Name="EndDate_lable_Copy" Grid.Column="6" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="From till:" Margin="1,12,1,12" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  />
-            <Label x:Name="EndDate_lable_Copy1" Grid.Column="4" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="To till:" Margin="1,12,181,12" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2"  />
-            <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="To_comboBox" Grid.Column="3" DisplayMemberPath="Name" SelectedValuePath="ID" 
-            	FlowDirection="RightToLeft" Height="29" TabIndex="1" FontSize="14" Margin="14,0,10,0" Grid.Row="1" SelectionChanged="BeginDate_datepicker_SelectedDateChanged" />
-            <Label x:Name="EndDate_lable_Copy2" Grid.Column="2" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Corresponding rate:" Margin="1,12,1,12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-            <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="ObserveRate_comboBox" Grid.Column="1" DisplayMemberPath="Rate group name" SelectedValuePath="ID" 
-            	FlowDirection="RightToLeft" Height="33" TabIndex="1" FontSize="14" Margin="13,0,10,0" Grid.Row="1" />
-            <Button x:Name="ObserveRate_clear_btn" Grid.Row="1"
-                HorizontalAlignment="Left" VerticalAlignment="Center"
-                Width="25" Height="25" BorderBrush="{x:Null}" 
-                Click="ObserveRate_clear_btn_Click" Margin="17,0,0,0" >
-                <Button.Background>
-                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                </Button.Background>
-            </Button>
-            <StackPanel Grid.Column="5" Grid.Row="1" x:Name="From_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,8,2,11" >
-                <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="From_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" SelectionChanged="From_comboBox_SelectionChanged"
-            	FlowDirection="RightToLeft" Height="29" TabIndex="1" FontSize="14"  Width="156" VerticalAlignment="Stretch" />
-                <Button x:Name="From_help" Width="20" Height="29" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
-                    </Button.Background>
-                    <Button.ToolTip>
-                        <ToolTip Content="Exchange to SYR can only be made from the budget currency."/>
-                    </Button.ToolTip>
-                </Button>
-            </StackPanel>
-        </Grid>
-
         <!--<ScrollViewer 
             FlowDirection="RightToLeft"
             VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Auto" 
             PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">-->
-        <Grid Grid.Row="1" Margin="0,0,0,5"  >
+        <Grid Margin="0,3,0,2" Grid.RowSpan="2"  >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="716*"/>
                 <ColumnDefinition Width="557*"/>
@@ -131,7 +65,7 @@
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="1" FlowDirection="RightToLeft" Grid.ColumnSpan="2" Margin="0,461,0,0" Grid.RowSpan="2" >
+            <StackPanel Orientation="Horizontal" Grid.Row="2" FlowDirection="RightToLeft" Grid.ColumnSpan="2" Margin="0,4,0,0" >
                 <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
