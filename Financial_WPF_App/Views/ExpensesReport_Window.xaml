@@ -205,7 +205,6 @@
                             <StackPanel  x:Name="Budget_panel" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,-6">
                                 <Label Grid.Column="7"  Style="{DynamicResource statistic_lableStyle}" Content="Budget:" Margin="1,3,1,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                                 <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="Budgets_comboBox" DisplayMemberPath="budget_Name" SelectedValuePath="budget_ID" SelectionChanged="Budgets_comboBox_SelectionChanged"/>
-                                <Button x:Name="Budget_clear_btn" Style="{DynamicResource ActionDeleteButtonStyle}" BorderBrush="{x:Null}" Width="25" Click="Budget_clear_btn_Click" Height="28" ></Button>
                                 <Button x:Name="Budget_help" ToolTip="The budget only appears if Lines have been added to it." ToolTipService.InitialShowDelay="100" Width="20" Height="20" BorderBrush="{x:Null}" Margin="4,0,0,0">
                                     <Button.Background>
                                         <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
@@ -218,7 +217,6 @@
                                     <ComboBoxItem x:Name="View_ComboBox_Lines_Item" Content="Lines" />
                                     <ComboBoxItem x:Name="View_ComboBox_LineTypes_Item" Content="Line Types" />
                                 </ComboBox>
-                                <Button x:Name="View_clear_btn" Style="{DynamicResource ActionDeleteButtonStyle}" BorderBrush="{x:Null}" Width="25" Click="View_clear_btn_Click" Height="28" ></Button>
                             </StackPanel>
                         </WrapPanel>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0" VerticalAlignment="Center">
