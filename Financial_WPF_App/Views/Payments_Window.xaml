@@ -7,384 +7,392 @@
         xmlns:Controls="clr-namespace:Financial_WPF_App.Controls" x:Class="Financial_WPF_App.Views.Payments_Window"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
-        mc:Ignorable="d"
+        mc:Ignorable="d" 
         Title="Payments_Window" 
-          FontSize="16" FontFamily="Myriad Arabic"
+          FontSize="14" FontFamily="Rubic"
         Height="620" Width="1280" WindowState="Maximized" WindowStartupLocation="CenterScreen">
 
 
+    <Grid Background="{StaticResource LightGray2}">
+        <Grid>
+            <Grid.ContextMenu>
+                <ContextMenu x:Name="cm">
+                    <MenuItem Header="Refresh Rate" Click = "Refresh_Click" >
+                        <MenuItem.Icon>
+                            <Image Source="/Images/refresh32.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </Grid.ContextMenu>
+            <Grid  Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="233*"/>
+                </Grid.RowDefinitions>
 
-    <Grid Margin="4,4,4,4" >
-        <Grid.ContextMenu>
-            <ContextMenu x:Name="cm">
-                <MenuItem Header="Refresh" Click = "Refresh_Click" >
-                    <MenuItem.Icon>
-                        <Image Source="/Cashing;component/Images/refresh32.png" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </ContextMenu>
-        </Grid.ContextMenu>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100*" ></RowDefinition>
-        </Grid.RowDefinitions>
-
-        <Grid  Grid.Column="0" Margin="10,0,10,0" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="233*"/>
-            </Grid.RowDefinitions>
-
-            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
-                <WrapPanel  Orientation="Horizontal">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="56"/>
-                        <Border Style="{StaticResource BorderStackPanelStyle}">
-                            <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-                        </Border>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
-                        <Border Style="{StaticResource BorderStackPanelStyle}">
-                            <TextBlock x:Name="Amount_textBlock" Text="0.00" 
+                <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+                    <WrapPanel  Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="56" Margin="10,0,13,0"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="Amount_textBlock" Text="0.00" 
                     Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Amount_textBlock_SizeChanged" />
-                        </Border>
-                    </StackPanel>
+                            </Border>
+                        </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}"/>
-                        <Border Style="{StaticResource BorderStackPanelStyle}">
-                            <TextBlock x:Name="ToPayAmount_textBlock"
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ToPayAmount_textBlock"
                         Text="0.00"
                         Style="{DynamicResource statistic_textBlockStyle}" 
                         OverridesDefaultStyle="True" />
-                        </Border>
-                    </StackPanel>
+                            </Border>
+                        </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
-                        <Border Style="{StaticResource BorderStackPanelStyle}">
-                            <TextBlock x:Name="PaidAmount_textBlock"
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="PaidAmount_textBlock"
                     Text="0.00"
                     Style="{DynamicResource statistic_textBlockStyle}" 
                     OverridesDefaultStyle="True" />
-                        </Border>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
-                        <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
-                            <TextBlock x:Name="RemainingAmount_textBlock"
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
+                                <TextBlock x:Name="RemainingAmount_textBlock"
                         Text="0.00"
                         Style="{DynamicResource statistic_textBlockStyle}" 
                         OverridesDefaultStyle="True" />
-                        </Border>
-                    </StackPanel>
-                    
-                </WrapPanel>
-            </Border>
-            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1">
-                <WrapPanel Orientation="Horizontal">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="56"/>
-                        <Border Style="{StaticResource BorderStackPanelStyle}">
-                            <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-                        </Border>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
-                        <Border Style="{StaticResource BorderStackPanelStyle}" >
-                            <TextBlock x:Name="PaidAmount_textBlock1" Text="0.00" 
+                            </Border>
+                        </StackPanel>
+
+                    </WrapPanel>
+                </Border>
+                <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1">
+                    <WrapPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}" >
+                                <TextBlock x:Name="PaidAmount_textBlock1" Text="0.00" 
                         Style="{DynamicResource statistic_textBlockStyle}" FontSize="15" SizeChanged="Amount_textBlock_SizeChanged" />
-                        </Border>
-                    </StackPanel>
-                    
-                </WrapPanel>
-            </Border>
-            <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2">
-                <DockPanel LastChildFill="True" Background="{StaticResource LightGray1}" Height="41">
-                    <WrapPanel Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
-                        <Label x:Name="ActionDate_Label" Style="{DynamicResource statistic_lableStyle}" Content="Operation date:" Margin="7,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                        <Label x:Name="ActionDate_Label_Copy" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="1,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                        <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker"  Margin="1,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
-                        <Label x:Name="ActionDate_Label_Copy1" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="1,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                        <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="1,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
+                            </Border>
+                        </StackPanel>
+
                     </WrapPanel>
-                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                        <Controls:AutoCompleteTextBoxUserControl
-                            x:Name="MircoProject_ID_autoSuggestionUserControl" 
-                            LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus"
-                             VerticalAlignment="Center" Width="175" Margin="0,0,6,0" />
-                        <Button ToolTip="Show Payments" ToolTipService.InitialShowDelay="100"
+                </Border>
+                <Grid Grid.Row="2" Margin="0,5,0,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <DockPanel LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
+                        <WrapPanel Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
+                          
+                                <Controls:AutoCompleteTextBoxUserControl
+                        x:Name="MircoProject_ID_autoSuggestionUserControl" 
+                        LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus"
+                         VerticalAlignment="Center" Width="175" Margin="14,0,6,0" />
+                           
+                                <Label x:Name="ActionDate_Label" Style="{DynamicResource statistic_lableStyle}" Content="Operation date:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+                        
+                                <Label x:Name="ActionDate_Label_Copy" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="2,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+                          
+                                <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker"  Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175" Height="30"/>
+                          
+                                <Label x:Name="ActionDate_Label_Copy1" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+                         
+                                <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
+                          
+                                <Button ToolTip="Show Payments" ToolTipService.InitialShowDelay="100"
                             Style="{DynamicResource AddButtonStyle}"
-                            x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="0,0,35,0" VerticalAlignment="Center" Height="22" Width="22" >
-                            <Button.Background>
-                                <ImageBrush ImageSource="/Images/Buttons/save_payment.png" Stretch="Uniform"/>
-                            </Button.Background>
-                        </Button>
-                    </WrapPanel>
-                </DockPanel>
-            </Grid>
-            <Grid Grid.Row="3" Margin="0,5,0,0" Grid.ColumnSpan="2" >
-                <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}">
-                    <WrapPanel Orientation="Horizontal" Width="Auto">
-                        <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
-                            <Menu.Resources>
-                                <!-- Custom Menu Style -->
-                                <Style TargetType="Menu">
-                                    <Setter Property="OverridesDefaultStyle" Value="True"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Menu">
-                                                <Border Background="{TemplateBinding Background}" Padding="0">
-                                                    <ItemsPresenter />
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
+                            x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="11,0,0,0" VerticalAlignment="Center" Height="25" Width="25" >
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/save_payment.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                        </WrapPanel>
+                    </DockPanel>
+                </Grid>
+                <Grid Grid.Row="3" Margin="0,0,0,5" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" VerticalAlignment="Center" Height="40">
+                        <WrapPanel Orientation="Horizontal" Width="Auto">
+                            <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
+                                <Menu.Resources>
+                                    <!-- Custom Menu Style -->
+                                    <Style TargetType="Menu">
+                                        <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Menu">
+                                                    <Border Background="{TemplateBinding Background}" Padding="0">
+                                                        <ItemsPresenter />
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
 
-                                <!-- Custom MenuItem Style -->
-                                <Style x:Key="CustomMenuItemStyle" TargetType="MenuItem">
-                                    <Setter Property="FontFamily" Value="Rubik"/>
-                                    <Setter Property="FontSize" Value="13.5"/>
-                                    <Setter Property="Foreground" Value="{DynamicResource DarkGray}"/>
-                                    <Setter Property="Background" Value="{StaticResource LightGray1}"/>
-                                    <Setter Property="Padding" Value="10,5"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="MenuItem">
-                                                <Grid>
-                                                    <!-- Main Item -->
-                                                    <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="10,5">
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <!-- Arrow Column -->
-                                                            </Grid.ColumnDefinitions>
+                                    <!-- Custom MenuItem Style -->
+                                    <Style x:Key="CustomMenuItemStyle" TargetType="MenuItem">
+                                        <Setter Property="FontFamily" Value="Rubik"/>
+                                        <Setter Property="FontSize" Value="13.5"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource DarkGray}"/>
+                                        <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                                        <Setter Property="Padding" Value="10,5"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="MenuItem">
+                                                    <Grid>
+                                                        <!-- Main Item -->
+                                                        <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="10,5">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <!-- Arrow Column -->
+                                                                </Grid.ColumnDefinitions>
 
-                                                            <ContentPresenter Grid.Column="0" 
+                                                                <ContentPresenter Grid.Column="0" 
                        HorizontalAlignment="Left" 
                        VerticalAlignment="Center" 
                        ContentSource="Header"/>
 
-                                                            <!-- Submenu Arrow -->
-                                                            <Path x:Name="Arrow"
+                                                                <!-- Submenu Arrow -->
+                                                                <Path x:Name="Arrow"
                       Grid.Column="1"
                       Data="M 0 0 L 6 4 L 0 8 Z" 
                       Fill="{DynamicResource DarkGray}"
                       VerticalAlignment="Center"
                       Margin="5,0,0,0"
                       Visibility="Collapsed"/>
-                                                        </Grid>
-                                                    </Border>
+                                                            </Grid>
+                                                        </Border>
 
-                                                    <!-- Submenu Popup -->
-                                                    <Popup x:Name="Popup"
+                                                        <!-- Submenu Popup -->
+                                                        <Popup x:Name="Popup"
                Placement="Bottom"
                PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                IsOpen="{TemplateBinding IsSubmenuOpen}"
                AllowsTransparency="True"
                Focusable="False"
                PopupAnimation="Fade">
-                                                        <Border Background="White" CornerRadius="5" BorderBrush="{StaticResource LightGray1}" BorderThickness="1">
-                                                            <StackPanel>
-                                                                <ItemsPresenter />
-                                                            </StackPanel>
-                                                        </Border>
-                                                    </Popup>
-                                                </Grid>
+                                                            <Border Background="White" CornerRadius="5" BorderBrush="{StaticResource LightGray1}" BorderThickness="1">
+                                                                <StackPanel>
+                                                                    <ItemsPresenter />
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
 
-                                                <!-- Triggers -->
-                                                <ControlTemplate.Triggers>
-                                                    <!-- Show Arrow Only if the MenuItem has sub-items (is a submenu) -->
-                                                    <Trigger Property="HasItems" Value="True">
-                                                        <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
-                                                    </Trigger>
+                                                    <!-- Triggers -->
+                                                    <ControlTemplate.Triggers>
+                                                        <!-- Show Arrow Only if the MenuItem has sub-items (is a submenu) -->
+                                                        <Trigger Property="HasItems" Value="True">
+                                                            <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
+                                                        </Trigger>
 
-                                                    <!-- Submenu Hover Effect -->
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <!--<Setter TargetName="Border" Property="Background" Value="transparent"/>-->
-                                                        <!--<Setter Property="Foreground" Value="{DynamicResource LightGray1}"/>-->
-                                                    </Trigger>
+                                                        <!-- Submenu Hover Effect -->
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <!--<Setter TargetName="Border" Property="Background" Value="transparent"/>-->
+                                                            <!--<Setter Property="Foreground" Value="{DynamicResource LightGray1}"/>-->
+                                                        </Trigger>
 
-                                                    <!-- Submenu Open Effect -->
-                                                    <Trigger Property="IsSubmenuOpen" Value="True">
-                                                        <Setter TargetName="Popup" Property="IsOpen" Value="True"/>
-                                                    </Trigger>
+                                                        <!-- Submenu Open Effect -->
+                                                        <Trigger Property="IsSubmenuOpen" Value="True">
+                                                            <Setter TargetName="Popup" Property="IsOpen" Value="True"/>
+                                                        </Trigger>
 
-                                                    <!-- Disabled Effect -->
-                                                    <Trigger Property="IsEnabled" Value="False">
-                                                        <Setter Property="Foreground" Value="{DynamicResource MidGray}"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
+                                                        <!-- Disabled Effect -->
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Foreground" Value="{DynamicResource MidGray}"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
 
-                            </Menu.Resources>
-                            <!-- MenuItems with Custom Style -->
-                            <MenuItem Width="20" Height="20" StaysOpenOnClick="True" Header=""  Style="{StaticResource CustomMenuItemStyle}" Margin="6,9,0,0" ToolTip="Show/Hide Columns" ToolTipService.InitialShowDelay="100">
-                                <MenuItem.Background>
-                                    <ImageBrush ImageSource="/Images/Buttons/showHide.png" Stretch="Uniform"/>
-                                </MenuItem.Background>
-                                <!-- Submenu Items (Will Keep Hover Effect) -->
-                                <MenuItem StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
-                                <MenuItem StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
-                                <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
-                            </MenuItem>
-                        </Menu>
-                        <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
-                            <StackPanel.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform ScaleX="-1"/>
-                                    <SkewTransform/>
-                                    <RotateTransform/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </StackPanel.RenderTransform>
-                            <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,9,1,1">
-                                <Button.Background>
-                                    <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
-                                </Button.Background>
-                            </Button>
-                        </StackPanel>
-                        <StackPanel Margin="5,2,5,2" x:Name="AddNewPayment_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Payment" ToolTipService.InitialShowDelay="100">
-                            <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewPayment_btn" TabIndex="15" Click="AddNewPayment_btn_Click" Margin="0,0,1,0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button.Background>
-                                    <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
-                                </Button.Background>
-                            </Button>
-                        </StackPanel>
-                        <StackPanel Margin="5,8,5,8" x:Name="AddMultiPayments_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Button ToolTip="New Payment From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}"  Width="30" Height="25"
+                                </Menu.Resources>
+                                <!-- MenuItems with Custom Style -->
+                                <MenuItem Width="20" Height="20" StaysOpenOnClick="True" Header=""  Style="{StaticResource CustomMenuItemStyle}" Margin="6,9,0,0" ToolTip="Show/Hide Columns" ToolTipService.InitialShowDelay="100">
+                                    <MenuItem.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/showHide.png" Stretch="Uniform"/>
+                                    </MenuItem.Background>
+                                    <!-- Submenu Items (Will Keep Hover Effect) -->
+                                    <MenuItem StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                                    <MenuItem StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                                    <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
+                                </MenuItem>
+                            </Menu>
+                            <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
+                                <StackPanel.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="-1"/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </StackPanel.RenderTransform>
+                                <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,9,1,1">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Margin="5,2,5,2" x:Name="AddNewPayment_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Payment" ToolTipService.InitialShowDelay="100">
+                                <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewPayment_btn" TabIndex="15" Click="AddNewPayment_btn_Click" Margin="0,0,1,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Margin="5,8,5,8" x:Name="AddMultiPayments_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <Button ToolTip="New Payment From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}"  Width="30" Height="25"
                                 x:Name="AddMultiPayments_btn" TabIndex="15" Click="AddMultiPayments_btn_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,1,0">
-                                <Button.Background>
-                                    <ImageBrush ImageSource="/Images/Buttons/newEntryExcel.png" Stretch="Uniform"/>
-                                </Button.Background>
-                            </Button>
-                        </StackPanel>
-                        <StackPanel x:Name="Delete_Selected" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
-                            <Button ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/newEntryExcel.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel x:Name="Delete_Selected" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
+                                <Button ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
                                 x:Name="Delete_Selected_btn" TabIndex="15" Height="22" Width="30" Margin="0,2,1,0" Click="Delete_Selected_btn_Click"  >
-                                <Button.Background>
-                                    <ImageBrush ImageSource="/Images/Buttons/delete_selected.png" Stretch="Uniform"/>
-                                </Button.Background>
-                            </Button>
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/delete_selected.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
+                        </WrapPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,62,0">
+                            <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Tag="False" Click="NotApproved_RadioButton_Click"/>
+                            <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap"/>
                         </StackPanel>
-                    </WrapPanel>
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,62,0">
-                        <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Tag="False" Click="NotApproved_RadioButton_Click"/>
-                        <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap"/>
-                    </StackPanel>
-                    
-                </DockPanel>
-            </Grid>
 
-            <Grid Grid.Row="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Name="Grid_col" Width="70*" ></ColumnDefinition>
-                    <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <syncfusion:SfDataGrid x:Name="myDataGrid" Grid.Column="0"
+                    </DockPanel>
+                </Grid>
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Name="Grid_col" Width="70*" ></ColumnDefinition>
+                        <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <syncfusion:SfDataGrid x:Name="myDataGrid" Grid.Column="0"
             Style="{DynamicResource SfDataGrid_body}"
             HeaderStyle="{DynamicResource SfDataGrid_header}"
             RowStyle="{DynamicResource SfDataGrid_RowStyle}"
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"                              
             SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick">
 
-                    <syncfusion:SfDataGrid.Columns>
-                        <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
-                        <syncfusion:GridNumericColumn  HeaderText="Payment amount"  MappingName="Income"
+                        <syncfusion:SfDataGrid.Columns>
+                            <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
+                            <syncfusion:GridNumericColumn  HeaderText="Payment amount"  MappingName="Income"
                     NumberDecimalDigits="2"
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
                     NumberGroupSeparator=","/>
-                        <syncfusion:GridTextColumn MappingName="MicroProject_ID" HeaderText="Project number"/>
-                        <syncfusion:GridTextColumn MappingName="Name" HeaderText="Beneficiary Name"/>
-                        <syncfusion:GridTextColumn MappingName="beneficiary_ID" HeaderText="beneficiary_ID" IsHidden="True"/>
-                        <syncfusion:GridTextColumn MappingName="Payment_Num" HeaderText="Number of payment"/>
-                        <syncfusion:GridDateTimeColumn HeaderText="Payment date" MappingName="ActionDate"
+                            <syncfusion:GridTextColumn MappingName="MicroProject_ID" HeaderText="Project number"/>
+                            <syncfusion:GridTextColumn MappingName="Name" HeaderText="Beneficiary Name"/>
+                            <syncfusion:GridTextColumn MappingName="beneficiary_ID" HeaderText="beneficiary_ID" IsHidden="True"/>
+                            <syncfusion:GridTextColumn MappingName="Payment_Num" HeaderText="Number of payment"/>
+                            <syncfusion:GridDateTimeColumn HeaderText="Payment date" MappingName="ActionDate"
                     CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
-                        <syncfusion:GridTextColumn  MappingName="ActionMonth" HeaderText="Payment Month"/>
-                        <syncfusion:GridTextColumn  MappingName="ActionYear" HeaderText="Payment Year"/>
+                            <syncfusion:GridTextColumn  MappingName="ActionMonth" HeaderText="Payment Month"/>
+                            <syncfusion:GridTextColumn  MappingName="ActionYear" HeaderText="Payment Year"/>
 
-                        <syncfusion:GridTextColumn MappingName="Note" HeaderText="Description"/>
-                        <syncfusion:GridTextColumn MappingName="beneficiary_Account_ID" HeaderText="beneficiary_Account_ID" IsHidden="True"/>
-                        <syncfusion:GridTextColumn MappingName="beneficiary_Account" HeaderText="Account"/>
-                        <syncfusion:GridTextColumn MappingName="cashaccount_name" HeaderText="Cash till"/>
-                        <syncfusion:GridTextColumn MappingName="beneficiaryDonor_ID" HeaderText="beneficiaryDonor_ID" IsHidden="True"/>
-                        <syncfusion:GridTextColumn MappingName="beneficiaryDonor_Name" HeaderText="Donor"/>
-                        <syncfusion:GridTextColumn x:Name="Created_by_DataGridColumn" MappingName="created_by" HeaderText="Created by"/>
-                        <syncfusion:GridDateTimeColumn HeaderText="Date created" MappingName="created_at"
+                            <syncfusion:GridTextColumn MappingName="Note" HeaderText="Description"/>
+                            <syncfusion:GridTextColumn MappingName="beneficiary_Account_ID" HeaderText="beneficiary_Account_ID" IsHidden="True"/>
+                            <syncfusion:GridTextColumn MappingName="beneficiary_Account" HeaderText="Account"/>
+                            <syncfusion:GridTextColumn MappingName="cashaccount_name" HeaderText="Cash till"/>
+                            <syncfusion:GridTextColumn MappingName="beneficiaryDonor_ID" HeaderText="beneficiaryDonor_ID" IsHidden="True"/>
+                            <syncfusion:GridTextColumn MappingName="beneficiaryDonor_Name" HeaderText="Donor"/>
+                            <syncfusion:GridTextColumn x:Name="Created_by_DataGridColumn" MappingName="created_by" HeaderText="Created by"/>
+                            <syncfusion:GridDateTimeColumn HeaderText="Date created" MappingName="created_at"
                     CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
-                        <syncfusion:GridTextColumn x:Name="Edited_by_DataGridColumn" MappingName="edited_by" HeaderText="Edited by"/>
-                        <syncfusion:GridDateTimeColumn HeaderText="Modification date" MappingName="updated_at"
-                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
-
-                        <syncfusion:GridTextColumn x:Name="Approved_by_DataGridColumn" MappingName="approved_by" HeaderText="Confirmed by"/>
-
-                        <syncfusion:GridDateTimeColumn x:Name="Approved_at_DataGridColumn" HeaderText="Confirmation date" MappingName="Approved_at"
+                            <syncfusion:GridTextColumn x:Name="Edited_by_DataGridColumn" MappingName="edited_by" HeaderText="Edited by"/>
+                            <syncfusion:GridDateTimeColumn HeaderText="Modification date" MappingName="updated_at"
                     CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
 
-                        <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
-                            <syncfusion:GridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click"/>
-                                </DataTemplate>
-                            </syncfusion:GridTemplateColumn.CellTemplate>
-                        </syncfusion:GridTemplateColumn>
+                            <syncfusion:GridTextColumn x:Name="Approved_by_DataGridColumn" MappingName="approved_by" HeaderText="Confirmed by"/>
 
-                        <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
-                            <syncfusion:GridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
-                                </DataTemplate>
-                            </syncfusion:GridTemplateColumn.CellTemplate>
-                        </syncfusion:GridTemplateColumn>
-                        <syncfusion:GridCheckBoxColumn x:Name="Selected_DataGridColumn" HeaderText="Select" MappingName="IsSelected" AllowEditing="True" AllowFiltering="False" AllowGrouping="False">
-                            <syncfusion:GridCheckBoxColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <CheckBox x:Name="chkHeader" Loaded="chkHeader_Loaded" Click="chkHeader_Click"/>
-                                </DataTemplate>
-                            </syncfusion:GridCheckBoxColumn.HeaderTemplate>
-                            <syncfusion:GridCheckBoxColumn.CellStyle>
-                                <Style>
-                                    <Style.Resources>
-                                        <Style TargetType="CheckBox">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="1">
-                                                    <Setter Property="Background" Value="Green" />
-                                                    <Setter Property="FlowDirection" Value="LeftToRight" />
-                                                </DataTrigger>
+                            <syncfusion:GridDateTimeColumn x:Name="Approved_at_DataGridColumn" HeaderText="Confirmation date" MappingName="Approved_at"
+                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
 
-                                                <DataTrigger Binding="{Binding IsSelected}" Value="0">
-                                                    <Setter Property="Background" Value="Transparent" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Style.Resources>
-                                </Style>
-                            </syncfusion:GridCheckBoxColumn.CellStyle>
-                        </syncfusion:GridCheckBoxColumn>
+                            <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                                <syncfusion:GridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click"/>
+                                    </DataTemplate>
+                                </syncfusion:GridTemplateColumn.CellTemplate>
+                            </syncfusion:GridTemplateColumn>
 
-                    </syncfusion:SfDataGrid.Columns>
-                </syncfusion:SfDataGrid>
-                <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True"
+                            <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                                <syncfusion:GridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
+                                    </DataTemplate>
+                                </syncfusion:GridTemplateColumn.CellTemplate>
+                            </syncfusion:GridTemplateColumn>
+                            <syncfusion:GridCheckBoxColumn x:Name="Selected_DataGridColumn" HeaderText="Select" MappingName="IsSelected" AllowEditing="True" AllowFiltering="False" AllowGrouping="False">
+                                <syncfusion:GridCheckBoxColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <CheckBox x:Name="chkHeader" Loaded="chkHeader_Loaded" Click="chkHeader_Click"/>
+                                    </DataTemplate>
+                                </syncfusion:GridCheckBoxColumn.HeaderTemplate>
+                                <syncfusion:GridCheckBoxColumn.CellStyle>
+                                    <Style>
+                                        <Style.Resources>
+                                            <Style TargetType="CheckBox">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSelected}" Value="1">
+                                                        <Setter Property="Background" Value="Green" />
+                                                        <Setter Property="FlowDirection" Value="LeftToRight" />
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding IsSelected}" Value="0">
+                                                        <Setter Property="Background" Value="Transparent" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Style.Resources>
+                                    </Style>
+                                </syncfusion:GridCheckBoxColumn.CellStyle>
+                            </syncfusion:GridCheckBoxColumn>
+
+                        </syncfusion:SfDataGrid.Columns>
+                    </syncfusion:SfDataGrid>
+                    <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True"
                 ExpandDirection="Right" 
                 Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,1,0,0" Grid.RowSpan="2" Background="{x:Null}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="2"/>
-                            <RowDefinition/>
-                            <RowDefinition Height="35"/>
-                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="2"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="35"/>
+                            </Grid.RowDefinitions>
 
-                        <syncfusion:SfDataGrid x:Name="Cash_DataGrid"
+                            <syncfusion:SfDataGrid x:Name="Cash_DataGrid"
                         Style="{DynamicResource SfDataGrid_body}"
                         HeaderStyle="{DynamicResource SfDataGrid_header}"
                         RowStyle="{DynamicResource SfDataGrid_RowStyle}"
@@ -393,34 +401,35 @@
                         AutoGenerateColumns="True"
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
                         Margin="1,1,0,10" Grid.Row="2" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded">
-                            <syncfusion:SfDataGrid.TableSummaryRows>
-                                <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
+                                <syncfusion:SfDataGrid.TableSummaryRows>
+                                    <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                                 Title="Total:">
-                                    <syncfusion:GridTableSummaryRow.SummaryColumns>
-                                        <syncfusion:GridSummaryColumn Name="Total_I"                                                      
+                                        <syncfusion:GridTableSummaryRow.SummaryColumns>
+                                            <syncfusion:GridSummaryColumn Name="Total_I"                                                      
                                         Format="'{Sum:N2}'"
                                         MappingName="Income"
                                         SummaryType="DoubleAggregate" />
-                                        <syncfusion:GridSummaryColumn Name="Total_E"                                                      
+                                            <syncfusion:GridSummaryColumn Name="Total_E"                                                      
                                         Format="'{Sum:N2}'"
                                         MappingName="Outcome"
                                         SummaryType="DoubleAggregate" />
-                                        <syncfusion:GridSummaryColumn Name="Total_Dif"                                                      
+                                            <syncfusion:GridSummaryColumn Name="Total_Dif"                                                      
                                         Format="'{Sum:N2}'"
                                         MappingName="Difference"
                                         SummaryType="DoubleAggregate" />
-                                    </syncfusion:GridTableSummaryRow.SummaryColumns>
-                                </syncfusion:GridTableSummaryRow>
-                            </syncfusion:SfDataGrid.TableSummaryRows>
-                        </syncfusion:SfDataGrid>
-                        <Label Style="{DynamicResource lableStyle}" 
+                                        </syncfusion:GridTableSummaryRow.SummaryColumns>
+                                    </syncfusion:GridTableSummaryRow>
+                                </syncfusion:SfDataGrid.TableSummaryRows>
+                            </syncfusion:SfDataGrid>
+                            <Label Style="{DynamicResource lableStyle}" 
                         Content="Balances" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,-1,0"  />
-                        <Button
+                            <Button
                         TabIndex="5" Style="{DynamicResource Export_Style}" x:Name="Cash_Export_btn" Margin="1,3,0,3" Command="local:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Left" RenderTransformOrigin="0.536,0.355" Width="30" Grid.Row="3"/>
-                    </Grid>
-                </Expander>
+                        </Grid>
+                    </Expander>
+                </Grid>
             </Grid>
-    </Grid>
+        </Grid>
     </Grid>
 </Window>
 

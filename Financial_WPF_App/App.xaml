@@ -1685,7 +1685,7 @@
                             <Grid>
                                 <!-- Border for Background -->
                                 <Border x:Name="PART_Border" Background="{TemplateBinding Background}" Padding="5">
-                                    <DatePickerTextBox x:Name="PART_TextBox"
+                                    <DatePickerTextBox x:Name="PART_TextBox" Width="170"
                                Style="{StaticResource CustomDatePickerTextBoxStyle}"
                                Padding="8,0,0,0"
                                VerticalContentAlignment="Center" HorizontalAlignment="Left"/>

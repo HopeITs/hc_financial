@@ -231,11 +231,15 @@
         HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,15,0,9" Width="90" />-->
             </Grid>
             <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="233*"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Name="Grid_col" Width="70*" ></ColumnDefinition>
                     <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <syncfusion:SfDataGrid  x:Name="myDataGrid"  Grid.Column="0"
+                <syncfusion:SfDataGrid   Grid.Row="0" x:Name="myDataGrid"  Grid.Column="0"
        Style="{DynamicResource SfDataGrid_body}"
        HeaderStyle="{DynamicResource SfDataGrid_header}"
        RowStyle="{DynamicResource SfDataGrid_RowStyle}"
@@ -246,7 +250,7 @@ AutoGenerateColumns="True"
 SelectionChanged="myDataGrid_SelectionChanged"
 MouseDoubleClick="myDataGrid_MouseDoubleClick"
 Loaded="myDataGrid_Loaded" 
-AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="14,1,14,10" FilterChanged="myDataGrid_FilterChanged">
+AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,4,10" FilterChanged="myDataGrid_FilterChanged">
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTemplateColumn HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                             <syncfusion:GridTemplateColumn.CellTemplate>
@@ -299,7 +303,10 @@ AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stre
 
                     </syncfusion:SfDataGrid.Columns>
                 </syncfusion:SfDataGrid>
-                <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True"
+                <Grid Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
+                    <Label x:Name="Exchange_Note_lable" Style="{DynamicResource NoteStyle}" Content="Red-highlighted row refers to an edited action."/>
+                </Grid>
+                <Expander x:Name="myExpander" Grid.Column="1" Grid.RowSpan="2" IsExpanded="True"
     ExpandDirection="Right" 
     Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E">
 

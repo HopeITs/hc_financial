@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Monthly_Salaries_Window" Width="1280" Height="720"
         FontFamily="Myriad Arabic" FontSize="20" WindowStartupLocation="CenterScreen">
-    <Grid >
+    <Grid Background="{StaticResource LightGray2}">
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
                 <MenuItem Header="Refresh" Click = "Refresh_Click" >
