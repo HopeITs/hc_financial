@@ -149,6 +149,7 @@ namespace Financial_WPF_App.Views
                     }
             }
         }
+
         private void Load_Data()
         {
             Name_txtBox.Text = "";
@@ -1108,9 +1109,9 @@ namespace Financial_WPF_App.Views
                     placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
                 }
 
-                if (all_budget_donor_dt != null)
+                if (Budgets_dt != null)
                 {
-                    SearchDataGrid searchHelper = new SearchDataGrid(all_budget_donor_dt);
+                    SearchDataGrid searchHelper = new SearchDataGrid(Budgets_dt);
 
                     // Call the search method when text changes
                     searchHelper.Search(Search_txtBox.Text, myDataGrid);
