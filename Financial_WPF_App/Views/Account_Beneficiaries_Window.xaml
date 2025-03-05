@@ -304,7 +304,7 @@ AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stre
                     </syncfusion:SfDataGrid.Columns>
                 </syncfusion:SfDataGrid>
                 <Grid Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
-                    <Label x:Name="Exchange_Note_lable" Style="{DynamicResource NoteStyle}" Content="Red-highlighted row refers to an edited action."/>
+                    <Label x:Name="Exchange_Note_lable" Style="{DynamicResource NoteStyle}" Content="Red-highlighted row refers to a beneficiary with 3 or more delayed payments."/>
                 </Grid>
                 <Expander x:Name="myExpander" Grid.Column="1" Grid.RowSpan="2" IsExpanded="True"
     ExpandDirection="Right" 

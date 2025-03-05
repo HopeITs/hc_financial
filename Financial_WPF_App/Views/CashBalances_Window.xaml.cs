@@ -226,7 +226,7 @@ namespace Financial_WPF_App.Views
                             int Sub_ID = Convert.ToInt32(Selected_DataRow["Subproject_ID"].ToString());
                             string Sub_Name = Selected_DataRow["Center"].ToString();
                             Window Payments = new Payments_Window(main_Window, Sub_ID.ToString());
-                            main_Window.Create_tabItem(Payments, "Payments Account - " + Sub_Name, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                            main_Window.Create_tabItem(Payments, "Payments Account - " + Sub_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                         }
                         else
                         {
