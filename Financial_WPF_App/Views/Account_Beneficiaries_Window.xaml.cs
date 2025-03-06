@@ -27,6 +27,7 @@ namespace Financial_WPF_App.Views
             this.Account_ID = Account_ID;
             this.main_Window = main_Window;
             this.SubProject_ID = SubProject_ID;
+            
             if (OnLoad())
             {
 
@@ -66,7 +67,8 @@ namespace Financial_WPF_App.Views
                 t = new Till();
                 p = new Payment();
                 myExpander.IsExpanded = false;
-
+                Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                Expander_col.Width = new GridLength(5, GridUnitType.Star);
                 Load_Data();
                 Apply_Color_Theme();
                 return true;
@@ -170,8 +172,6 @@ namespace Financial_WPF_App.Views
 
 
                 myExpander.Visibility = Visibility.Hidden;
-                Grid_col.Width = new GridLength(100, GridUnitType.Star);
-                Expander_col.Width = new GridLength(0, GridUnitType.Star);
 
                 Fill_Till_comboBox();
                 Fill_Grid();
@@ -179,8 +179,8 @@ namespace Financial_WPF_App.Views
                 {
                     Fill_AccountView();
                     myExpander.Visibility = Visibility.Visible;
-                    Grid_col.Width = new GridLength(95, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(5, GridUnitType.Star);
+                    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(30, GridUnitType.Star);
                 }
 
             }
@@ -389,7 +389,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Grid_col.Width = new GridLength(70, GridUnitType.Star);
+                Grid_col.Width = new GridLength(50, GridUnitType.Star);
                 Expander_col.Width = new GridLength(30, GridUnitType.Star);
             }
             catch (Exception ex)
@@ -408,7 +408,8 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Grid_col.Width = new GridLength(95, GridUnitType.Star);
+                //Grid_col.Width = new GridLength(95, GridUnitType.Star);
+                Grid_col.Width = new GridLength(130, GridUnitType.Star);
                 Expander_col.Width = new GridLength(5, GridUnitType.Star);
             }
             catch (Exception ex)
