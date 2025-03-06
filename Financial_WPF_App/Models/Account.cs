@@ -126,7 +126,7 @@ namespace Financial_WPF_App.Models
             if (CashAccount_ID > 0)
             {
                 query = @"SELECT cash_balances.Account_id AS 'Account_ID', cash_balances.City_Name AS 'City', cash_balances.Subproject_Name AS 'Center', 
-                                cash_balances.Account_Name AS 'Account', cash_balances.tilltype_Name as 'tilltype_Name', cash_balances.Subproject_ID as 'Subproject_ID',
+                                cash_balances.Account_Name AS 'Account', cash_balances.Account_Type as 'Account_Type', cash_balances.tilltype_Name as 'tilltype_Name', cash_balances.Subproject_ID as 'Subproject_ID', cash_balances.Category_Name as 'Category',
                                 Case when cash_balances.account_IsColsed = 1 then 'Closed' when cash_balances.account_IsColsed = 0 then 'Open' end as 'Status Account',
                                 cash_balances.Account_I AS 'Income', cash_balances.Account_E AS 'Outcome', cash_balances.Account_Net AS 'Difference'
                                 FROM cash_balances

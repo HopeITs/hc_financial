@@ -180,10 +180,11 @@ namespace Financial_WPF_App.Views
                     (e.Column as GridNumericColumn).NumberGroupSizes = new Int32Collection { 3 };
                     (e.Column as GridNumericColumn).NumberGroupSeparator = ",";
                 }
-                
-                if (e.Column.MappingName.Contains("ID") || e.Column.MappingName == "tilltype_Name")
+
+                if (e.Column.MappingName.Contains("ID") || e.Column.MappingName == "tilltype_Name" 
+                    || e.Column.MappingName == "Category" || e.Column.MappingName == "Account_Type")
                     e.Cancel = true;
-                
+
                 e.Column.TextAlignment = TextAlignment.Left;
                 e.Column.VerticalAlignment = VerticalAlignment.Center;
 
@@ -218,6 +219,8 @@ namespace Financial_WPF_App.Views
                     int Acc_ID = Convert.ToInt32(Selected_DataRow["Account_ID"].ToString());
                     string AccName = Selected_DataRow["Account"].ToString();
                     string tilltype_Name = Selected_DataRow["tilltype_Name"].ToString();
+                    string Account_type = Selected_DataRow["Account_Type"].ToString();
+                    string Acc_Categort = Selected_DataRow["Category"].ToString();
 
                     if (Acc_ID != 0)
                     {
@@ -231,7 +234,33 @@ namespace Financial_WPF_App.Views
                         else
                         {
                             Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
-                            main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+
+                            if(Account_type == "Project")
+                            {
+                                if (Acc_Categort == "Micro Projects")
+                                {
+                                    main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+
+                                }
+                                else if (Acc_Categort == "Budget")
+                                {
+                                    main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+
+                                }
+                            }
+                            else if (Account_type == "Exchange")
+                            {
+                                main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["Orange"]);
+
+                            }
+                            else if (Account_type == "Personal")
+                            {
+                                main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                            }
+                            else
+                            {
+                                main_Window.Create_tabItem(account_Window, AccName, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                            }
                         }
 
                     }
@@ -253,7 +282,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Selected_DataRow = (DataRowView)this.myDataGrid.View.Records.GetItemAt(e.RowColumnIndex.RowIndex-1);
+                Selected_DataRow = (DataRowView)this.myDataGrid.View.Records.GetItemAt(e.RowColumnIndex.RowIndex - 1);
             }
             catch (Exception ex)
             {
@@ -281,7 +310,7 @@ namespace Financial_WPF_App.Views
             {
                 int count = myDataGrid.SelectedItems.Count;
                 Selected_textBlock.Text = count.ToString("N0");
- 
+
             }
             catch (Exception ex)
             {
@@ -312,6 +341,6 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
-        
+
     }
 }
