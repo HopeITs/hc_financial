@@ -18,7 +18,7 @@
             </Grid.RowDefinitions>
             <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="50" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
                     </Border>
@@ -26,7 +26,7 @@
             </Border>
             <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Error:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Label Content="Error:" Style="{DynamicResource statistic_lableStyle}" Width="50" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="Error_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
                     </Border>
