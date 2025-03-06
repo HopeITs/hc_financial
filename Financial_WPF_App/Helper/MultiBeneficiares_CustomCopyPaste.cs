@@ -13,7 +13,12 @@ namespace Financial_WPF_App.Helper
 {
     internal class MultiBeneficiares_CustomCopyPaste : GridCutCopyPaste
     {
+        public event EventHandler PasteCompleted;
+
         private DataTable _Microrojects_dt, _Accounts_dt;
+
+        public int TotalPastedRows { get; private set; } = 0;
+        public int TotalErrorRows { get; private set; } = 0;
 
         string _FirstName = "";
         string _LastName = "";
@@ -102,6 +107,7 @@ namespace Financial_WPF_App.Helper
             });
 
             this.dataGrid.ItemsSource = dt.DefaultView;
+            OnPasteCompleted();
         }
 
         private void clear_vlaues()
@@ -402,6 +408,10 @@ namespace Financial_WPF_App.Helper
 
             if (e.Column.ColumnName == Last_Column_Name)
             {
+                TotalPastedRows++;
+                if (e.Row.RowError == "There are errors in this row.")
+                    TotalErrorRows++;
+
                 if (!Login.MultiBeneficiary_AnyError)
                 {
                     build_insert_query();
@@ -486,6 +496,11 @@ namespace Financial_WPF_App.Helper
             Login.MultiBeneficiary_List.Add(temp_query);
             temp_query = "";
 
+        }
+
+        protected virtual void OnPasteCompleted()
+        {
+            PasteCompleted?.Invoke(this, EventArgs.Empty);
         }
     }
 }

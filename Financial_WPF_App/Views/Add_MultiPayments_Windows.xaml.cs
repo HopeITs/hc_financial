@@ -38,6 +38,7 @@ namespace Financial_WPF_App.Views
         private DataTable dt, CashAccounts_dt, Beneficiaries_dt, Payments_dt;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+        private MultiPayments_CustomCopyPaste copyPasteHandler;
 
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
@@ -59,7 +60,8 @@ namespace Financial_WPF_App.Views
                 Create_Columns();
                 Fill_Datatables();
                 Apply_Color_Theme();
-                this.myDataGrid.GridCopyPaste = new MultiPayments_CustomCopyPaste(myDataGrid, SubProject_ID, CashAccounts_dt, Beneficiaries_dt, Payments_dt);
+                InitializeCopyPaste();
+                //this.myDataGrid.GridCopyPaste = new MultiPayments_CustomCopyPaste(myDataGrid, SubProject_ID, CashAccounts_dt, Beneficiaries_dt, Payments_dt);
 
                 return true;
             }
@@ -74,6 +76,13 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        void InitializeCopyPaste()
+        {
+            copyPasteHandler = new MultiPayments_CustomCopyPaste(myDataGrid, SubProject_ID, CashAccounts_dt, Beneficiaries_dt, Payments_dt);
+            this.myDataGrid.GridCopyPaste = copyPasteHandler;
+            copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
         }
 
         private void Apply_Color_Theme()
@@ -107,6 +116,9 @@ namespace Financial_WPF_App.Views
 
             myDataGrid.ItemsSource = null;
             myDataGrid.ItemsSource = dt.DefaultView;
+
+            All_textBlock.Text = "0";
+            Error_textBlock.Text = "0";
         }
 
         private void Fill_Datatables()
@@ -151,8 +163,8 @@ namespace Financial_WPF_App.Views
             try
             {
                 Create_Columns();
-
-                this.myDataGrid.GridCopyPaste = new MultiPayments_CustomCopyPaste(myDataGrid, SubProject_ID, CashAccounts_dt, Beneficiaries_dt, Payments_dt);
+                InitializeCopyPaste();
+                //this.myDataGrid.GridCopyPaste = new MultiPayments_CustomCopyPaste(myDataGrid, SubProject_ID, CashAccounts_dt, Beneficiaries_dt, Payments_dt);
             }
             catch (Exception ex)
             {
@@ -189,8 +201,8 @@ namespace Financial_WPF_App.Views
 
                             Create_Columns();
                             Fill_Datatables();
-
-                            this.myDataGrid.GridCopyPaste = new MultiPayments_CustomCopyPaste(myDataGrid, SubProject_ID, CashAccounts_dt, Beneficiaries_dt, Payments_dt);
+                            InitializeCopyPaste();
+                            //this.myDataGrid.GridCopyPaste = new MultiPayments_CustomCopyPaste(myDataGrid, SubProject_ID, CashAccounts_dt, Beneficiaries_dt, Payments_dt);
 
 
                             //if (P_W != null)
@@ -226,6 +238,13 @@ namespace Financial_WPF_App.Views
                 All_textBlock.MinWidth = Error_textBlock.ActualWidth;
             else
                 Error_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+
+        private void CopyPasteHandler_PasteCompleted(object sender, EventArgs e)
+        {
+            // Now you can access the copyPasteHandler
+            All_textBlock.Text = copyPasteHandler.TotalPastedRows.ToString("N0");
+            Error_textBlock.Text = copyPasteHandler.TotalErrorRows.ToString("N0");
         }
     }
 }

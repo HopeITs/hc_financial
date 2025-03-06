@@ -96,6 +96,9 @@ namespace Financial_WPF_App.Views
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
+        private MultiAttachments_CustomCopyPaste Attachment_copyPasteHandler;
+        private CustomCopyPaste copyPasteHandler;
+
         #region privileges
         bool Income_privileges, Outcome_privileges, Returned_privileges,
             Exchange_privileges, ExchangeToForeign_privileges,
@@ -181,6 +184,28 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
                 return false;
             }
+        }
+
+        void InitializeCopyPaste()
+        {
+            
+
+            if(!MultiAttachments)
+            {
+                copyPasteHandler = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
+                        Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
+                        Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
+                this.myDataGrid.GridCopyPaste = copyPasteHandler;
+                copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
+
+            }
+            else
+            {
+                Attachment_copyPasteHandler = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
+                this.myDataGrid.GridCopyPaste = Attachment_copyPasteHandler;
+                Attachment_copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
+            }
+  
         }
 
         private void Fill_Main_Comboboxs()
@@ -576,16 +601,19 @@ namespace Financial_WPF_App.Views
                     }
                     Fill_Datatables();
 
-                    if (!MultiAttachments)
-                    {
-                        this.myDataGrid.GridCopyPaste = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
-                        Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
-                        Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
-                    }
-                    else
-                    {
-                        this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
-                    }
+                    InitializeCopyPaste();
+
+                    //if (!MultiAttachments)
+                    //{
+                    //    this.myDataGrid.GridCopyPaste = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
+                    //    Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
+                    //    Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
+                    //}
+                    //else
+                    //{
+
+                    //    this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
+                    //}
 
 
                     Export_btn.CommandTarget = myDataGrid;
@@ -1155,6 +1183,10 @@ namespace Financial_WPF_App.Views
             }
 
 
+
+            All_textBlock.Text = "0";
+            Error_textBlock.Text = "0";
+
         }
 
         private void clear_btn_Click(object sender, RoutedEventArgs e)
@@ -1162,17 +1194,18 @@ namespace Financial_WPF_App.Views
             try
             {
                 Create_Columns();
+                InitializeCopyPaste();
 
-                if (!MultiAttachments)
-                {
-                    this.myDataGrid.GridCopyPaste = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
-                            Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
-                            Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
-                }
-                else
-                {
-                    this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
-                }
+                //if (!MultiAttachments)
+                //{
+                //    this.myDataGrid.GridCopyPaste = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
+                //            Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
+                //            Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
+                //}
+                //else
+                //{
+                //    this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
+                //}
 
 
             }
@@ -1260,7 +1293,8 @@ namespace Financial_WPF_App.Views
 
                             Create_Columns();
 
-                            this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
+                            InitializeCopyPaste();
+                            //this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
 
                             if (TW != null)
                                 TW.Load_Data();
@@ -1541,6 +1575,22 @@ namespace Financial_WPF_App.Views
                 All_textBlock.MinWidth = Error_textBlock.ActualWidth;
             else
                 Error_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+
+        private void CopyPasteHandler_PasteCompleted(object sender, EventArgs e)
+        {
+            if (!MultiAttachments)
+            {
+                // Now you can access the copyPasteHandler
+                All_textBlock.Text = copyPasteHandler.TotalPastedRows.ToString("N0");
+                Error_textBlock.Text = copyPasteHandler.TotalErrorRows.ToString("N0");
+            }
+            else
+            {
+                // Now you can access the copyPasteHandler
+                All_textBlock.Text = Attachment_copyPasteHandler.TotalPastedRows.ToString("N0");
+                Error_textBlock.Text = Attachment_copyPasteHandler.TotalErrorRows.ToString("N0");
+            }
         }
     }
 }
