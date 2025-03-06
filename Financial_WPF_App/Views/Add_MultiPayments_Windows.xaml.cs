@@ -219,5 +219,13 @@ namespace Financial_WPF_App.Views
                 Save_btn.IsEnabled = true;
             }
         }
+
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Error_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Error_textBlock.ActualWidth;
+            else
+                Error_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
     }
 }
