@@ -13,7 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-
+using Syncfusion.UI.Xaml.Grid;
 namespace Financial_WPF_App.Views
 {
     public partial class Account_Beneficiaries_Window : Window
@@ -50,7 +50,8 @@ namespace Financial_WPF_App.Views
         double HOffset = 0;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
-
+        // Subscribe to the QueryCellDropIndicator event in your SfDataGrid initialization
+        
 
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;

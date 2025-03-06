@@ -240,17 +240,18 @@
                     <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <syncfusion:SfDataGrid   Grid.Row="0" x:Name="myDataGrid"  Grid.Column="0"
-       Style="{DynamicResource SfDataGrid_body}"
-       HeaderStyle="{DynamicResource SfDataGrid_header}"
-       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
-       AlternatingRowStyleSelector="{StaticResource AlternatingrowStyleSelector}"
-       RowStyleSelector="{StaticResource rowStyleSelector}"
-       FrozenColumnCount="3"
-AutoGenerateColumns="True"
-SelectionChanged="myDataGrid_SelectionChanged"
-MouseDoubleClick="myDataGrid_MouseDoubleClick"
-Loaded="myDataGrid_Loaded" 
-AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,4,10" FilterChanged="myDataGrid_FilterChanged">
+                    Style="{DynamicResource SfDataGrid_body}"
+                    HeaderStyle="{DynamicResource SfDataGrid_header}"
+                    RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+                    AlternatingRowStyleSelector="{StaticResource AlternatingrowStyleSelector}"
+                    RowStyleSelector="{StaticResource rowStyleSelector}"
+                    FrozenColumnCount="3"
+                    AutoGenerateColumns="True"
+                    SelectionChanged="myDataGrid_SelectionChanged"
+                    MouseDoubleClick="myDataGrid_MouseDoubleClick"
+                    Loaded="myDataGrid_Loaded" 
+                    AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,4,10" FilterChanged="myDataGrid_FilterChanged">
+                   
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTemplateColumn HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                             <syncfusion:GridTemplateColumn.CellTemplate>

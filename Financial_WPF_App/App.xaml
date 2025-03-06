@@ -2131,6 +2131,7 @@
                 <!--<Setter Property="EnableColumnVirtualization" Value="True" />-->
 
             </Style>
+            
             <Style x:Key="DataGrid_header" 
                    BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" 
                    TargetType="{x:Type DataGridColumnHeader}">
@@ -2148,27 +2149,30 @@
                 </Setter>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="BorderBrush" Value="{StaticResource LightGray2}"/>
+                <Setter Property="BorderThickness" Value="1"/>
             </Style>
+            
             <Style TargetType="{x:Type DataGridCell}" >
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="Background" >
                             <Setter.Value>
-                                <SolidColorBrush Color="{DynamicResource Color_HopeYellow2}"/>
+                                <SolidColorBrush Color="{DynamicResource Color_GreenBlue}"/>
                             </Setter.Value>
                         </Setter>
                         <Setter Property="Foreground" >
                             <Setter.Value>
-                                <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                                <SolidColorBrush Color="{DynamicResource Color_LightGray2}"/>
                             </Setter.Value>
                         </Setter>
                         <Setter Property="BorderBrush" >
                             <Setter.Value>
-                                <SolidColorBrush Color="{DynamicResource Color_HopeYellow2}"/>
+                                <SolidColorBrush Color="{DynamicResource Color_GreenBlue}"/>
                             </Setter.Value>
                         </Setter>
-                        <Setter Property="FontFamily" Value="Myriad Arabic" />
-                        <Setter Property="FontSize" Value="18" />
+                        <Setter Property="FontFamily" Value="Rubik" />
+                        <Setter Property="FontSize" Value="14" />
                         <Setter Property="HorizontalAlignment" Value="Stretch"/>
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
                     </Trigger>
@@ -2176,80 +2180,91 @@
 
             </Style>
 
-
-
-
             <Style x:Key="SfDataGrid_body" TargetType="{x:Type syncfusion:SfDataGrid}">
-                <Setter Property="FontFamily" Value="Myriad Arabic" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="GridLinesVisibility" Value="Both" />
-                <Setter Property="Background" >
-                    <Setter.Value>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF84ABCD" Offset="1"/>
-                            <GradientStop Color="White" Offset="0.545"/>
-                        </LinearGradientBrush>
-                    </Setter.Value>
-                </Setter>
+                <Setter Property="Background" Value="{StaticResource LightGray2}" />
+                <Setter Property="Margin" Value="0,0,40,0"></Setter>
                 <Setter Property="Foreground" >
                     <Setter.Value>
-                        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
+                        <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="AutoGenerateColumns" Value="False" />
-                <Setter Property="FlowDirection" Value="RightToLeft" />
+                <Setter Property="FlowDirection" Value="LeftToRight" />
                 <Setter Property="AllowDraggingColumns" Value="False" />
                 <Setter Property ="SelectionMode" Value ="Extended" />
                 <Setter Property ="SelectionUnit" Value ="Row" />
                 <Setter Property ="NavigationMode" Value ="Row" />
-                <Setter Property ="SelectionForegroundBrush" Value ="{DynamicResource HopeDarkBlue2}" />
-                <Setter Property ="RowSelectionBrush" Value ="{DynamicResource HopeYellow2}" />
+                <Setter Property ="SelectionForegroundBrush" Value ="{DynamicResource LightGray2}" />
+                <Setter Property ="RowSelectionBrush" Value ="{DynamicResource GreenBlue}" />
                 <Setter Property ="ItemsSource" Value ="{Binding}" />
                 <Setter Property ="AllowFiltering" Value ="True" />
                 <Setter Property ="ShowGroupDropArea" Value ="True" />
                 <Setter Property ="VerticalAlignment" Value ="Center" />
                 <Setter Property ="HorizontalAlignment" Value ="Center" />
-                <Setter Property ="HeaderRowHeight" Value ="40" />
+                <Setter Property ="HeaderRowHeight" Value ="50" />
                 <Setter Property ="AllowResizingColumns" Value ="True" />
                 <Setter Property ="FrozenRowsCount" Value ="0" />
+                
             </Style>
 
             <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_alternatingRowStyle">
-                <Setter Property="Background" Value="{DynamicResource HopeBlue1}"/>
+                <Setter Property="Background" Value="{DynamicResource LightGray2}"/>
             </Style>
 
             <Style x:Key="SfDataGrid_header"
                     BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}"
                     TargetType="{x:Type syncfusion:GridHeaderCellControl}">
-                <Setter Property="FontFamily" Value="Myriad Arabic" />
-                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="Background">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                        <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="Foreground">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_HopeGrey}"/>
+                        <SolidColorBrush Color="{StaticResource Color_LightGray2}"/>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="syncfusion:GridHeaderCellControl">
+
+                            <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{StaticResource LightGray2}"
+                        BorderThickness="0.4,0.4,0.4,0">
+                                <Grid>
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                                    <!-- Red Bottom Border -->
+                                    <Border Background="{StaticResource DarkGray}"
+                                Height="3"
+                                VerticalAlignment="Bottom"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <Style x:Key="SfDataGrid_StackedHeaderstyle" TargetType="syncfusion:GridStackedHeaderCellControl">
-                <Setter Property="FontFamily" Value="Myriad Arabic" />
-                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="Background">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                        <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="Foreground">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_HopeGrey}"/>
+                        <SolidColorBrush Color="{StaticResource Color_LightGray2}"/>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -2260,24 +2275,22 @@
             </Style>
 
             <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_RowStyle">
-                <Setter Property="Background" Value="{DynamicResource HopeGrey}"/>
+                <Setter Property="Background" Value="{DynamicResource LightGray1}"/>
             </Style>
 
             <Style x:Key="rowStyle1" TargetType="syncfusion:VirtualizingCellsControl">
-                <Setter Property="Background" Value="{DynamicResource HopeRed1}" />
+                <Setter Property="Background" Value="{DynamicResource HopeRed}" />
+                <Setter Property="Foreground" Value="{DynamicResource LightGray2}" />
             </Style>
+            
             <Style x:Key="rowStyle2" TargetType="syncfusion:VirtualizingCellsControl">
-                <Setter Property="Background" Value="{DynamicResource HopeBlue1}" />
+                <Setter Property="Background" Value="{DynamicResource LightGray2}" />
             </Style>
-
 
             <Style x:Key="redCellStyle" TargetType="syncfusion:GridCell">
-                <Setter Property="Foreground" Value="{DynamicResource HopeRed1}" />
+                <Setter Property="Foreground" Value="{DynamicResource HopeRed}" />
             </Style>
 
-
-
-            
             <Style x:Key="Edit_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="25" />
                 <Setter Property="Button.Height" Value="25" />
@@ -2320,6 +2333,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
             <Style x:Key="Delete_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="25" />
                 <Setter Property="Button.Height" Value="25" />
@@ -2362,6 +2376,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
             <Style x:Key="Attachment_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="25" />
                 <Setter Property="Button.Height" Value="25" />
@@ -2448,7 +2463,6 @@
                 </Setter>
             </Style>
 
-
             <Style x:Key="View_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="25" />
                 <Setter Property="Button.Height" Value="25" />
@@ -2491,6 +2505,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
             <Style x:Key="Download_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="25" />
                 <Setter Property="Button.Height" Value="25" />
@@ -2533,6 +2548,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
             <Style x:Key="Export_Style" TargetType="{x:Type Button}">
                 <Setter Property="Button.Width" Value="25" />
                 <Setter Property="Button.Height" Value="40" />
