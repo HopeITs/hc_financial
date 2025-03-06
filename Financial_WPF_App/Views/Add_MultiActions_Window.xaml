@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" 
         x:Class="Financial_WPF_App.Views.Add_MultiActions_Window"
@@ -11,23 +11,99 @@
         Title="Add_MultiActions_Window" Width="1000" Height="600" WindowStartupLocation="CenterScreen" >
 
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="298*"/>
-                <ColumnDefinition Width="197*"/>
-                <ColumnDefinition Width="139*"/>
-                <ColumnDefinition Width="227*"/>
-                <ColumnDefinition Width="139*"/>
-            </Grid.ColumnDefinitions>
+        <Grid  Grid.Column="0" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="47*"/>
-                <RowDefinition Height="47*"/>
-                <RowDefinition Height="431*"/>
-                <RowDefinition Height="59*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="233*"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
+            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Error:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Error_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
+                <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" VerticalAlignment="Center" Height="40">
+                    <WrapPanel Orientation="Horizontal" Width="Auto" ItemHeight="40">
+                        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" Grid.Row="1">
+                            <Label Style="{DynamicResource statistic_lableStyle}" Content="Operation type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                            <ComboBox x:Name="Type_comboBox" Style="{StaticResource ActionComboboxStyle}"
+                                  IsEditable="True" 
+                                SelectionChanged="Type_comboBox_SelectionChanged" >
+                                <ComboBoxItem x:Name="Type_ComboBox_Income_Item" Content="Income" />
+                                <ComboBoxItem x:Name="Type_ComboBox_Outcome_Item" Content="Adv. Payment"/>
+                                <ComboBoxItem x:Name="Type_ComboBox_Returned_Item" Content="Returned"/>
+                                <ComboBoxItem x:Name="Type_ComboBox_Exchange_Item" Content="Exchange"/>
+                                <ComboBoxItem x:Name="Type_ComboBox_Expand_Item" Content="Expenses"/>
+                                <ComboBoxItem x:Name="Type_ComboBox_Move_Item" Content="Move"/>
+                            </ComboBox>
+                            <Button x:Name="clear_type_btn" Style="{StaticResource ActionDeleteButtonStyle}" Width="27" Height="30" BorderBrush="{x:Null}" Click="clear_type_btn_Click" >
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                        
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Account Type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+                        <StackPanel  Orientation="Horizontal" FlowDirection="LeftToRight">
+                            <ComboBox x:Name="AccountType_comboBox" Style="{StaticResource ActionComboboxStyle}" TabIndex="1"
+                                IsEditable="True" SelectionChanged="AccountType_comboBox_SelectionChanged" >
+                                <ComboBoxItem x:Name="ComboBox_MicroProject_Item" Content="Micro Project Account" />
+                                <ComboBoxItem x:Name="ComboBox_Budget_Item" Content="Budget Account"/>
+                                <ComboBoxItem x:Name="ComboBox_Exchange_Item" Content="Exchange Account"/>
+                                <ComboBoxItem x:Name="ComboBox_Personal_Item" Content="Personal Account"/>
+                            </ComboBox>
+                        </StackPanel>
 
-            <Label Grid.Column="4" Style="{DynamicResource lableStyle}" Content="Operation type:" Margin="1,1,1,1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Row="1"  />
 
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="LeftToRight">
+                            <Label Style="{DynamicResource statistic_lableStyle}" Content="Till Type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+                            <ComboBox x:Name="Tilltype_comboBox" Style="{StaticResource ActionComboboxStyle}" 
+                                DisplayMemberPath="Tilltypes_Name" SelectedValuePath="Tilltypes_ID" 
+                                HorizontalContentAlignment="Right"  SelectionChanged="Tilltype_comboBox_SelectionChanged" >
+                            </ComboBox>
+                        </StackPanel>
+                    </WrapPanel>
+                </DockPanel>
+            </Grid>
+            <Grid Grid.Row="3" Margin="0,5,0,0" Grid.ColumnSpan="2" >
+                <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
+                    <WrapPanel Orientation="Horizontal" Width="Auto">
+
+                        <StackPanel x:Name="ExportToExcel_StackPanel" Margin="10,0,0,0">
+                            <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel x:Name="ClearAll_panel" Orientation="Horizontal" Margin="0,8,1,1" VerticalAlignment="Center" >
+                            <Label x:Name="ClearAll_lable" Style="{DynamicResource statistic_lableStyle}" Content="Clear All:" />
+                            <Button Style="{StaticResource ActionDeleteButtonStyle}" x:Name="clear_btn" Click="clear_btn_Click" Width="18" Height="18" >
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/delete_actionbar.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
+                        </StackPanel>
+                    </WrapPanel>
+                </DockPanel>
+            </Grid>
+            
 
             <syncfusion:SfDataGrid x:Name="myDataGrid"  ShowRowHeader="True"
             AutoGenerateColumns="True"
@@ -39,80 +115,14 @@
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"   
             AllowFiltering ="False" ShowGroupDropArea ="False"
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-            Margin="0,2,0,0" Grid.ColumnSpan="5" Loaded="myDataGrid_Loaded" Grid.Row="2"/>
+            Loaded="myDataGrid_Loaded" Grid.Row="4"/>
 
-
-            <StackPanel x:Name="ClearAll_panel" Orientation="Horizontal" Margin="0,1,1,1" Grid.Row="1" >
-                <Label x:Name="ClearAll_lable" Style="{DynamicResource lableStyle}" Content="Clear All:" Height="44" Width="65" FlowDirection="LeftToRight" />
-                <Button x:Name="clear_btn" Width="21" Height="44" BorderBrush="{x:Null}" Click="clear_btn_Click" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-            </StackPanel>
-            <Grid Grid.Row="3" Grid.ColumnSpan="5" Margin="1,1,1,1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="250*"/>
-                    <ColumnDefinition Width="60*"/>
-                    <ColumnDefinition Width="250*"/>
-                </Grid.ColumnDefinitions>
-                <Button 
-                Style="{DynamicResource SaveButton_Style}"
-                x:Name="Save_btn" TabIndex="20" Click="Save_btn_Click" Margin="10,4,10,4" Height="NaN" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                <Button
-                    TabIndex="5" Style="{DynamicResource Export_Style}" x:Name="Export_btn" Margin="10,16,411,16" Command="Helper:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RenderTransformOrigin="0.536,0.355"
-                />
-            </Grid>
-            <StackPanel Grid.Column="3" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,1,1,1" Grid.Row="1">
-                <ComboBox x:Name="Type_comboBox" TabIndex="1"
-                FlowDirection="RightToLeft" FontSize="14" Width="177" MinWidth="100px" IsEditable="True"
-                HorizontalContentAlignment="Right" 
-                SelectionChanged="Type_comboBox_SelectionChanged" Height="37" >
-                    <ComboBoxItem x:Name="Type_ComboBox_Income_Item" Content="Income" />
-                    <ComboBoxItem x:Name="Type_ComboBox_Outcome_Item" Content="Adv. Payment"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Returned_Item" Content="Returned"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Exchange_Item" Content="Exchange"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Expand_Item" Content="Expenses"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Move_Item" Content="Move"/>
-                </ComboBox>
-                <Button x:Name="clear_type_btn" Width="21" Height="44" BorderBrush="{x:Null}" Click="clear_type_btn_Click" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-            </StackPanel>
-            <Label Grid.Column="4" Style="{DynamicResource lableStyle}" Content="Account Type:" Margin="1,1,1,1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-            <StackPanel Grid.Column="3" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,1,1,1">
-                <ComboBox x:Name="AccountType_comboBox" TabIndex="1"
-                    FlowDirection="RightToLeft" FontSize="14" Width="213" MinWidth="100px" IsEditable="True"
-                    HorizontalContentAlignment="Right" 
-                    SelectionChanged="AccountType_comboBox_SelectionChanged" Height="37" >
-                    <ComboBoxItem x:Name="ComboBox_MicroProject_Item" Content="Micro Project Account" />
-                    <ComboBoxItem x:Name="ComboBox_Budget_Item" Content="Budget Account"/>
-                    <ComboBoxItem x:Name="ComboBox_Exchange_Item" Content="Exchange Account"/>
-                    <ComboBoxItem x:Name="ComboBox_Personal_Item" Content="Personal Account"/>
-                </ComboBox>
-            </StackPanel>
-            <Label Grid.Column="2" Style="{DynamicResource lableStyle}" Content="Till Type:" Margin="1,1,1,1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" RenderTransformOrigin="0.5,0.5"  >
-                <Label.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform AngleX="-0.066"/>
-                        <RotateTransform/>
-                        <TranslateTransform X="-0.026"/>
-                    </TransformGroup>
-                </Label.RenderTransform>
-            </Label>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,1,1,1">
-                <ComboBox x:Name="Tilltype_comboBox" TabIndex="1"
-                    FlowDirection="RightToLeft" FontSize="14" Width="193" MinWidth="100px"
-                    DisplayMemberPath="Tilltypes_Name" SelectedValuePath="Tilltypes_ID" 
-                    HorizontalContentAlignment="Right" Height="37" SelectionChanged="Tilltype_comboBox_SelectionChanged" >
-                </ComboBox>
-            </StackPanel>
             <syncfusion:SfCircularProgressBar x:Name="circularProgressBar" IsIndeterminate="False" 
                 ShowProgressValue ="True"
-                Grid.ColumnSpan="2" Margin="98,130,34,177" Grid.Row="2" Grid.Column="1"/>
+                 Grid.Row="4"/>
+
+            <Button Grid.Row="5"  Style="{DynamicResource ButtonColoredStyle}"
+                x:Name="Save_btn" Content="Save" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" Margin="12,0,1,0" />
         </Grid>
 
     </Grid>
