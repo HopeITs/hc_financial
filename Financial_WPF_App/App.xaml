@@ -1888,15 +1888,17 @@
 
 
             <Style x:Key="TableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl">
-                <Setter Property="Foreground" Value="{StaticResource HopeBlue4}" />
-                <Setter Property="FontSize" Value="19" />
-                <Setter Property="FontFamily" Value="Myriad Arabic Bold" />
+                <Setter Property="Foreground" Value="{StaticResource PastelDarkBlue}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="FontFamily" Value="Rubik" />
             </Style>
 
             <Style x:Key="GroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl">
-                <Setter Property="Foreground" Value="{StaticResource HopeBlue4}" />
-                <Setter Property="FontSize" Value="19" />
-                <Setter Property="FontFamily" Value="Myriad Arabic Bold" />
+                <Setter Property="Foreground" Value="{StaticResource PastelDarkBlue}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="FontFamily" Value="Rubik" />
             </Style>
             
             
