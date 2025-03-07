@@ -196,7 +196,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -215,7 +215,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -234,7 +234,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -279,7 +279,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
                 if (PassException)
                     throw;
@@ -300,7 +300,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -318,7 +318,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -365,7 +365,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -376,7 +376,7 @@ namespace Financial_WPF_App.Views
             {
                 //var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirm before save", MessageBoxButton.YesNo);
 
-                var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None);
 
                 if (dialogResult == MessageBoxResult.Yes)
                 {
@@ -399,13 +399,13 @@ namespace Financial_WPF_App.Views
                     Login.MyConn.Close();
                 }
                 if (ex.Message.Contains("Cannot delete or update a parent row"))
-                { MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
                 { MessageBox.Show("please check your network and try again", "Error"); }
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -417,13 +417,13 @@ namespace Financial_WPF_App.Views
             {
                 if (Budgets_comboBox.SelectedIndex == -1 || Budget_ID == -1)
                 {
-                    MessageBox.Show("Please select the budget.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                    MessageBox.Show("Please select the budget.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
 
                 if (AvgRate_comboBox.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Please select the AvgRate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                    MessageBox.Show("Please select the AvgRate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
 
@@ -452,7 +452,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
             finally
@@ -489,7 +489,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
 
@@ -512,7 +512,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -541,7 +541,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -744,7 +744,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -766,7 +766,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -793,7 +793,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -819,7 +819,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -918,7 +918,7 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }

@@ -75,7 +75,7 @@ namespace Financial_WPF_App.Helper
 
             if (!splitRecords.All(values => values.Length == dt.Columns.Count))
             {
-                MessageBox.Show("Please make sure the number of columns are equal.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                MessageBox.Show("Please make sure the number of columns are equal.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                 return;
             }
 
