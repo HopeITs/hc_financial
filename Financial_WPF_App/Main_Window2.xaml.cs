@@ -99,6 +99,10 @@ namespace Financial_WPF_App
 
         private void Show_Hide()
         {
+            AddNew_MenuItem.Visibility =  Reports_MenuItem.Visibility =  Log_MenuItem.Visibility = 
+            Accounting_Entries_MenuItem.Visibility =  Employee_MenuItem.Visibility =  Approval_MenuItem.Visibility = Visibility.Visible;
+
+
             string role = Properties.Settings.Default.Role;
             if (role == "Head Office")
             {
@@ -107,7 +111,6 @@ namespace Financial_WPF_App
             else if (role == "Project Manager")
             {
                 AddNew_MenuItem.Visibility = Visibility.Collapsed;
-                //Employee_MenuItem.Visibility= Visibility.Collapsed;
                 Reports_MenuItem.Visibility = Visibility.Collapsed;
                 Log_MenuItem.Visibility = Visibility.Collapsed;
                 Accounting_Entries_MenuItem.Visibility = Visibility.Collapsed;
@@ -115,14 +118,12 @@ namespace Financial_WPF_App
             else if (role == "Financial Manager")
             {
                 AddNew_MenuItem.Visibility = Visibility.Collapsed;
-                //Employee_MenuItem.Visibility = Visibility.Collapsed;
                 Reports_MenuItem.Visibility = Visibility.Collapsed;
                 Log_MenuItem.Visibility = Visibility.Collapsed;
             }
             else if (role == "Accountant")
             {
                 AddNew_MenuItem.Visibility = Visibility.Collapsed;
-                //Employee_MenuItem.Visibility = Visibility.Collapsed;
                 Reports_MenuItem.Visibility = Visibility.Collapsed;
                 Log_MenuItem.Visibility = Visibility.Collapsed;
             }
@@ -147,7 +148,6 @@ namespace Financial_WPF_App
             else if (role == "Donor")
             {
                 AddNew_MenuItem.Visibility = Visibility.Collapsed;
-                //Employee_MenuItem.Visibility = Visibility.Collapsed;
                 Log_MenuItem.Visibility = Visibility.Collapsed;
                 Accounting_Entries_MenuItem.Visibility = Visibility.Collapsed;
                 Approval_MenuItem.Visibility = Visibility.Collapsed;
