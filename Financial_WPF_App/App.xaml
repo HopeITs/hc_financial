@@ -1876,14 +1876,14 @@
        TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="DataGrid.FontSize" Value="20" />
                 <Setter Property="DataGrid.FontFamily" Value="Myriad Arabic" />
-                <Setter Property="Background" >
+                <Setter Property="Background">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_HopeBlue4}"/>
+                        <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Foreground" >
+                <Setter Property="Foreground">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_HopeGrey}"/>
+                        <SolidColorBrush Color="{StaticResource Color_LightGray2}"/>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
