@@ -1,4 +1,5 @@
 ﻿using Financial_WPF_App.Models;
+using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
 using System.Collections.Generic;
@@ -602,6 +603,53 @@ namespace Financial_WPF_App
             EndDate_CheckBox.IsChecked = true;
             alldonors_listbox.ItemsSource = null;
             donors_listbox.ItemsSource = null;
+        }
+
+        private void myDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                IInputElement element = e.MouseDevice.DirectlyOver;
+                if (element != null && element is FrameworkElement)
+                {
+                    if (((FrameworkElement)element).Parent is GridCell)
+                    {
+                        var grid = sender as SfDataGrid;
+                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        {
+                            DataRowView rowview = grid.SelectedItem as DataRowView;
+                            ID = Convert.ToInt32(rowview[0].ToString());
+                            Name_txtBox.Text = rowview[1].ToString();
+                            beginDate_datepicker.SelectedDate = Convert.ToDateTime(rowview[2].ToString());
+                            if (rowview[3] == DBNull.Value || rowview[3] == null)
+                                EndDate_CheckBox.IsChecked = true;
+                            else
+                            {
+                                EndDate_CheckBox.IsChecked = false;
+                                endDate_datepicker.SelectedDate = Convert.ToDateTime(rowview[3].ToString());
+                            }
+                            if (rowview[4] != DBNull.Value)
+                                Project_comboBox.SelectedValue = Convert.ToInt32(rowview[4].ToString());
+
+
+                            if (rowview[5] != DBNull.Value)
+                                City_comboBox.SelectedValue = Convert.ToInt32(rowview[5].ToString());
+
+                            LoadDonors_ListBox();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
         }
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)

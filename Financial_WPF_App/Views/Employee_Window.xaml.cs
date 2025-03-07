@@ -1,5 +1,6 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
+using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
@@ -304,6 +305,60 @@ namespace Financial_WPF_App.Views
                 if (ex.Message.Contains("Cannot delete or update a parent row"))
                 { MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
                 else if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void myDataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                IInputElement element = e.MouseDevice.DirectlyOver;
+                if (element != null && element is FrameworkElement)
+                {
+                    if (((FrameworkElement)element).Parent is GridCell)
+                    {
+                        var grid = sender as SfDataGrid;
+                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        {
+                            DataRowView rowview = grid.SelectedItem as DataRowView;
+                            Employee_ID = Convert.ToInt32(rowview["Employee_ID"].ToString());
+
+                            if (rowview["FName"] != DBNull.Value || rowview["FName"] != null)
+                                FName_txtBox.Text = rowview["FName"].ToString();
+
+                            if (rowview["FaName"] != DBNull.Value || rowview["FaName"] != null)
+                                FaName_txtBox.Text = rowview["FaName"].ToString();
+
+                            if (rowview["LName"] != DBNull.Value || rowview["LName"] != null)
+                                LName_txtBox.Text = rowview["LName"].ToString();
+
+
+                            Employee_Subproject_Table = Emp.Select_Detailed_Employee(Employee_ID);
+                            Original_Employee_Subproject_Table = Employee_Subproject_Table.Copy();
+
+                            EmployeeDataGrid.ItemsSource = Employee_Subproject_Table;
+
+                            //int B_ID = Convert.ToInt32(rowview[0].ToString());
+
+                            //Beneficiary_Window beneficiary_Window = new Beneficiary_Window(B_ID, SubProject_ID, main_Window);
+                            //bool? dialogResult = beneficiary_Window.ShowDialog();
+                            //if (dialogResult == true)
+                            //{
+                            //    Load_Data();
+                            //}
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
                 { MessageBox.Show("please check your network and try again", "Error"); }
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }

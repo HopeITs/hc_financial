@@ -64,7 +64,7 @@
                RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-               Margin="1,2,2,0"  Grid.Row="4" Grid.ColumnSpan="4" Loaded="myDataGrid_Loaded">
+               Margin="1,2,2,0"  Grid.Row="4" Grid.ColumnSpan="4" Loaded="myDataGrid_Loaded" MouseDoubleClick="myDataGrid_MouseDoubleClick">
 
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID" IsHidden="True"/>
@@ -77,7 +77,7 @@
                 <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                     <syncfusion:GridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click"/>
+                            <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click" />
                         </DataTemplate>
                     </syncfusion:GridTemplateColumn.CellTemplate>
                 </syncfusion:GridTemplateColumn>

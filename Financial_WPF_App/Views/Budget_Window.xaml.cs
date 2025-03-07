@@ -1,5 +1,6 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Views;
+using Syncfusion.UI.Xaml.Grid;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -527,6 +528,81 @@ namespace Financial_WPF_App
             if (myDataGrid.View != null)
             {
                 Export_btn.CommandTarget = myDataGrid;
+            }
+        }
+
+        private void myDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                IInputElement element = e.MouseDevice.DirectlyOver;
+                if (element != null && element is FrameworkElement)
+                {
+                    if (((FrameworkElement)element).Parent is GridCell)
+                    {
+                        var grid = sender as SfDataGrid;
+                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        {
+                            DataRowView rowview = grid.SelectedItem as DataRowView;
+                            ID = Convert.ToInt32(rowview[0].ToString());
+                            Name_txtBox.Text = rowview[2].ToString();
+
+                            if (rowview[3] != DBNull.Value)
+                                Category_comboBox.SelectedValue = Convert.ToInt32(rowview[3].ToString());
+
+                            List<string> AllProject_ID = new List<string>();
+
+                            if (rowview["Projects_id"] != DBNull.Value && rowview["Projects_id"] != null)
+                            {
+                                AllProject_ID = rowview["Projects_id"].ToString().Split(',').ToList();
+
+                                foreach (var Project in objProjectList)
+                                {
+                                    Project.Project_Check_Status = false;
+                                }
+
+                                Original_ProjectList = new List<Local_Project>();
+                                for (int j = 0; j < AllProject_ID.Count; j++)
+                                {
+                                    if (objProjectList != null && objProjectList.Count > 0)
+                                    {
+                                        foreach (var Project in objProjectList)
+                                        {
+                                            if (Project.ProjectID.ToString() == AllProject_ID[j])
+                                            {
+                                                Project.Project_Check_Status = true;
+
+                                                Local_Project obj = new Local_Project();
+                                                obj.ProjectID = Project.ProjectID;
+                                                obj.ProjectName = Project.ProjectName;
+                                                obj.Project_Check_Status = true;
+                                                Original_ProjectList.Add(obj);
+                                            }
+                                        }
+                                    }
+
+                                    Project_comboBox.ItemsSource = null;
+                                    Project_comboBox.Text = "0 Selected";
+                                    Project_comboBox.ItemsSource = objProjectList;
+                                    int count = objProjectList.Count(item => item.Project_Check_Status == true);
+                                    Project_comboBox.Text = count.ToString() + " Selected";
+
+                                    Project_Checkbox_Item_Clicked(Project_comboBox, null);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
 

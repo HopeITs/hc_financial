@@ -1,4 +1,5 @@
 ﻿using Financial_WPF_App.Models;
+
 using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
@@ -213,7 +214,7 @@ namespace Financial_WPF_App.Views
                 if (Subprojects.Count > 0)
                 {
                     string filterExpression = string.Join(" OR ", Subprojects.Select(id => "subproject_id = " + id));
-                    DataRow[] rows = accounts_dt.Select(filterExpression);
+                    System.Data.DataRow[] rows = accounts_dt.Select(filterExpression);
                     DataTable selected_dt = new DataTable();
                     if (rows.Length != 0)
                     {
@@ -335,7 +336,7 @@ namespace Financial_WPF_App.Views
             string Selected_Role = "";
             if (Role_comboBox.SelectedIndex != -1)
             {
-                DataRow[] row = role_dt.Select("ID=" + Convert.ToInt32(Role_comboBox.SelectedValue));
+                System.Data.DataRow[] row = role_dt.Select("ID=" + Convert.ToInt32(Role_comboBox.SelectedValue));
                 Selected_Role = row[0]["Name"].ToString();
             }
 
@@ -597,7 +598,7 @@ namespace Financial_WPF_App.Views
                 else
                 {
                     role_id = Convert.ToInt32(Role_comboBox.SelectedValue);
-                    DataRow[] row = role_dt.Select("ID=" + Convert.ToInt32(Role_comboBox.SelectedValue));
+                    System.Data.DataRow[] row = role_dt.Select("ID=" + Convert.ToInt32(Role_comboBox.SelectedValue));
                     role = row[0]["Name"].ToString();
                 }
 

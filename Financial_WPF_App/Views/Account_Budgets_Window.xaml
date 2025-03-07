@@ -280,7 +280,7 @@
                       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                       AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"  
                                    AutoGenerateColumns="True"
-                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" Grid.Row="3" Margin="2,0,3,5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="5" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" >
+                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" Grid.Row="3" Margin="2,0,3,5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="5" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" >
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                             <syncfusion:GridTemplateColumn.CellTemplate>

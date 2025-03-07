@@ -675,6 +675,7 @@ namespace Financial_WPF_App.Views
 
         private CheckBox headerCheckbox;
 
+
         private void chkHeader_Loaded(object sender, RoutedEventArgs e)
         {
             headerCheckbox = sender as CheckBox;

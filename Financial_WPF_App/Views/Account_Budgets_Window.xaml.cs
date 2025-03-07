@@ -73,7 +73,7 @@ namespace Financial_WPF_App.Views
                 myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
                 myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
             }
-    
+
             Load_Data();
             Apply_Color_Theme();
             UserMode = true;
@@ -325,7 +325,7 @@ namespace Financial_WPF_App.Views
                     Login.MyConn.Close();
                 }
                 if (ex.Message.Contains("Cannot delete or update a parent row"))
-                { MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);}
+                { MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
                 else if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
                 { MessageBox.Show("please check your network and try again", "Error"); }
                 else if (ex.Message.Contains("host"))
@@ -877,6 +877,84 @@ namespace Financial_WPF_App.Views
             if (HOffset != 0)
                 this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
         }
+
+        private void myDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                IInputElement element = e.MouseDevice.DirectlyOver;
+                if (element != null && element is FrameworkElement)
+                {
+                    if (((FrameworkElement)element).Parent is GridCell)
+                    {
+                        var grid = sender as SfDataGrid;
+                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        {
+                            DataRowView rowview = grid.SelectedItem as DataRowView;
+
+                            Budget_ID = Convert.ToInt32(rowview["ID"].ToString());
+
+                            if (rowview["Name"] != DBNull.Value || rowview["Name"] != null)
+                                Name_txtBox.Text = rowview["Name"].ToString();
+
+                            beginDate_datepicker.SelectedDate = Convert.ToDateTime(rowview["BeginDate"].ToString());
+                            endDate_datepicker.SelectedDate = Convert.ToDateTime(rowview["EndDate"].ToString());
+
+                            TillType_comboBox.SelectedValue = Convert.ToInt32(rowview["Budget_Type_ID"].ToString());
+
+
+                            System.Data.DataRow[] rows = all_budget_donor_dt.Select("budget_id = '" + Budget_ID + "'");
+                            if (rows.Length != 0)
+                            {
+                                budget_donor_dt = rows.CopyToDataTable();
+                                original_budget_donor_dt = rows.CopyToDataTable();
+                                if (budget_donor_dt != null && budget_donor_dt.Rows.Count > 0)
+                                    Budget_Dononrs_DataGrid.ItemsSource = budget_donor_dt.DefaultView;
+
+                            }
+
+                            var budget_donor_ids = budget_donor_dt.AsEnumerable().Select(row => row.Field<int>("Donor_ID"));
+
+                            // Select rows from dt1 where id is not in dt2Ids
+                            var result = Donor_dt.AsEnumerable()
+                                            .Where(row => !budget_donor_ids.Contains(row.Field<int>("ID")));
+
+
+                            if (result.Count() > 0)
+                            {
+                                Donor_dt = result.CopyToDataTable();
+                                Donor_comboBox.ItemsSource = Donor_dt.DefaultView;
+                            }
+                            else
+                            {
+                                Donor_dt.Clear();
+                                Donor_comboBox.ItemsSource = null;
+                            }
+
+                            //int B_ID = Convert.ToInt32(rowview[0].ToString());
+
+                            //Beneficiary_Window beneficiary_Window = new Beneficiary_Window(B_ID, SubProject_ID, main_Window);
+                            //bool? dialogResult = beneficiary_Window.ShowDialog();
+                            //if (dialogResult == true)
+                            //{
+                            //    Load_Data();
+                            //}
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void move_Columns()
         {
             if (myDataGrid.Columns.Count > 2)

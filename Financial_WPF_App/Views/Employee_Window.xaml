@@ -36,7 +36,7 @@
     AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"                   
     Loaded="myDataGrid_Loaded" 
     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-    Margin="2,1,0,7" Grid.RowSpan="2" >
+    Margin="2,1,0,7" Grid.RowSpan="2" MouseDoubleClick="myDataGrid_MouseDoubleClick" >
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Employee"  MappingName="Name" />
                     <syncfusion:GridTextColumn x:Name="FatherName_DataGridColumn" HeaderText="Father name"  MappingName="FaName" />
