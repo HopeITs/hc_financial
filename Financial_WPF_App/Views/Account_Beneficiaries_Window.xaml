@@ -311,74 +311,73 @@
                 </Grid>
                 <Expander x:Name="myExpander" Grid.Column="1" Grid.RowSpan="2" IsExpanded="True" Margin="5"
                  Style="{StaticResource AccountExpander}"
-                    Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="{StaticResource DarkGray}">
+                    Expanded="myExpander_Expanded"  Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="{StaticResource DarkGray}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Height="Auto">
+                        <Grid Margin="20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70*" />
+                                <ColumnDefinition Width=".3*" />
+                                <ColumnDefinition Width="30*" />
+                            </Grid.ColumnDefinitions>
 
-                    <Grid Margin="20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="70*" />
-                            <ColumnDefinition Width=".3*" />
-                            <ColumnDefinition Width="30*" />
-                        </Grid.ColumnDefinitions>
+                            <Border Grid.Column="1" Grid.RowSpan="14" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
-                        <Border Grid.Column="1" Grid.RowSpan="14" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        
-                        <Label Grid.Column="0" Grid.Row="0" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total income:" HorizontalAlignment="Right" />
-                        <Label Grid.Column="2" Grid.Row="0" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_imports_lbl" Style="{DynamicResource statistic_lableStyle}"  Content="###,###" HorizontalAlignment="Left" />
+                            <Label Grid.Column="0" Grid.Row="0" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total income:" HorizontalAlignment="Right" />
+                            <Label Grid.Column="2" Grid.Row="0" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_imports_lbl" Style="{DynamicResource statistic_lableStyle}"  Content="###,###" HorizontalAlignment="Left" />
 
-                        <Label Grid.Column="0" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total loans amount:" HorizontalAlignment="Right"/>
-                        <Label Grid.Column="2" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_BAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left" />
+                            <Label Grid.Column="0" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total loans amount:" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="2" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_BAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left" />
 
-                        <Label Grid.Column="0" Grid.Row="2" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total invoices amount:" HorizontalAlignment="Right"/>
-                        <Label Grid.Column="2" Grid.Row="2" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_RAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left"/>
+                            <Label Grid.Column="0" Grid.Row="2" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total invoices amount:" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="2" Grid.Row="2" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_RAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left"/>
 
-                        <Label Grid.Column="0" Grid.Row="3" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total unbilled amounts:" HorizontalAlignment="Right"/>
-                        <Label Grid.Column="2" Grid.Row="3" FontSize="12"   Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_RemainedAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left"  />
+                            <Label Grid.Column="0" Grid.Row="3" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total unbilled amounts:" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="2" Grid.Row="3" FontSize="12"   Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_RemainedAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left"  />
 
-                        <Label Grid.Column="0" Grid.Row="4"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Net account:" HorizontalAlignment="Right"/>
-                        <Label Grid.Column="2" Grid.Row="4" FontSize="12"   Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_NetAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left" />
+                            <Label Grid.Column="0" Grid.Row="4"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Net account:" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="2" Grid.Row="4" FontSize="12"   Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_NetAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left" />
 
-                        <Label Grid.Row="5"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="The remaining after paying all loan amounts:" HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Bottom" />
-                        <Label Grid.Column="2" Grid.Row="5" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_RemainedAfterPay_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left" />
+                            <Label Grid.Row="5"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="The remaining after paying all loan amounts:" HorizontalAlignment="Right" Grid.Column="0" VerticalAlignment="Bottom" />
+                            <Label Grid.Column="2" Grid.Row="5" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_RemainedAfterPay_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left" />
 
-                        <Label Grid.Column="0" Grid.Row="6"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Average micro project cost:" HorizontalAlignment="Right"/>
-                        <Label Grid.Column="2" Grid.Row="6" FontSize="12"  Margin="0,0,0,10"  Foreground="{StaticResource HopeRed}" x:Name="avg_amounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left"  />
+                            <Label Grid.Column="0" Grid.Row="6"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Average micro project cost:" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="2" Grid.Row="6" FontSize="12"  Margin="0,0,0,10"  Foreground="{StaticResource HopeRed}" x:Name="avg_amounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left"  />
 
-                        <Label Grid.Column="0" Grid.Row="7" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Average micro project cost in:" HorizontalAlignment="Right"/>
-                        <StackPanel  Orientation="Horizontal" Grid.Column="2"  Margin="0,0,0,10" Grid.Row="7" Width="Auto" >
-                            <Label FontSize="12"  Foreground="{StaticResource HopeRed}" x:Name="avg_amounts_usd_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left"/>
-                            <ComboBox x:Name="Till_comboBox" Style="{StaticResource SmallComboboxStyle}"   DisplayMemberPath="Type" SelectedValuePath="Type" SelectionChanged="Till_comboBox_SelectionChanged" Width="37" HorizontalAlignment="Right"/>
-                        </StackPanel>
+                            <StackPanel  Orientation="Horizontal" Grid.Column="0"  Margin="0,0,0,10" Grid.Row="7" Width="Auto" HorizontalAlignment="Right" >
+                                <ComboBox x:Name="Till_comboBox" Background="White" Foreground="{StaticResource DarkGray}" Style="{StaticResource SmallComboboxStyle}"   DisplayMemberPath="Type" SelectedValuePath="Type" SelectionChanged="Till_comboBox_SelectionChanged" Width="37" BorderThickness="0,0,.5,0" BorderBrush="{StaticResource DarkGray}"/>
+                                <Label   FontSize="12"   Style="{DynamicResource statistic_lableStyle}" Content="Average micro project cost in:" HorizontalAlignment="Right"/>
+                            </StackPanel>
+                            <Label Grid.Column="2" Grid.Row="7" FontSize="12"  Foreground="{StaticResource HopeRed}" x:Name="avg_amounts_usd_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Left" Margin="0,0,1,0"/>
 
-                        <Label Grid.Column="0" Grid.Row="9" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Financed micro projects:" HorizontalAlignment="Right"/>
-                        <Label Grid.Column="2" Grid.Row="9" FontSize="12"   Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="num_Done_lbl"  Style="{DynamicResource statistic_lableStyle}" Content="0"  HorizontalAlignment="Left" />
+                            <Label Grid.Column="0" Grid.Row="9" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Financed micro projects:" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="2" Grid.Row="9" FontSize="12"   Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="num_Done_lbl"  Style="{DynamicResource statistic_lableStyle}" Content="0"  HorizontalAlignment="Left" />
 
-                        <Label Grid.Row="10" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Ongoing micro projects:" Grid.Column="0" HorizontalAlignment="Right"/>
-                        <Label Grid.Column="2" Grid.Row="10"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" FontSize="12" x:Name="num_Ongoing_lbl"  Style="{DynamicResource statistic_lableStyle}" Content="0" HorizontalAlignment="Left" />
+                            <Label Grid.Row="10" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Ongoing micro projects:" Grid.Column="0" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="2" Grid.Row="10"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" FontSize="12" x:Name="num_Ongoing_lbl"  Style="{DynamicResource statistic_lableStyle}" Content="0" HorizontalAlignment="Left" />
 
-                        <Label Grid.Column="0" Grid.Row="11"  Margin="0,0,0,10" FontSize="12"  Style="{DynamicResource statistic_lableStyle}" Content="Total micro projects:" HorizontalAlignment="Right"/>
-                        <Label Grid.Column="2" Grid.Row="11" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}"  FontSize="12" x:Name="num_Allprojects_lbl" Style="{DynamicResource statistic_lableStyle}" Content="0" HorizontalAlignment="Left" />
-
-
-                    </Grid>
+                            <Label Grid.Column="0" Grid.Row="11"  Margin="0,0,0,10" FontSize="12"  Style="{DynamicResource statistic_lableStyle}" Content="Total micro projects:" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="2" Grid.Row="11" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}"  FontSize="12" x:Name="num_Allprojects_lbl" Style="{DynamicResource statistic_lableStyle}" Content="0" HorizontalAlignment="Left" />
+                        </Grid>
+                    </ScrollViewer>
                 </Expander>
             </Grid>
 

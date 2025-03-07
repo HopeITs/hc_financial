@@ -24,7 +24,6 @@ namespace Financial_WPF_App.Views
         public AddBudgetLines_Windows(string Account_ID, bool IsAdminAccount, Main_Window_2 main_Window)
         {
             InitializeComponent();
-
             this.main_Window = main_Window;
             this.IsAdminAccount = IsAdminAccount;
             if (Account_ID != "") this.Account_ID = Convert.ToInt32(Account_ID);

@@ -22,7 +22,7 @@ namespace Financial_WPF_App.Views
         {
             InitializeComponent();
 
-            //
+            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 
             this.Account_ID = Account_ID;
             this.main_Window = main_Window;
@@ -37,7 +37,7 @@ namespace Financial_WPF_App.Views
                 throw new ArgumentException("This page will not open due to data fetching error.");
             }
         }
-
+        
         private int Account_ID, SubProject_ID;
         private Beneficiary b;
         private Till t;
@@ -51,8 +51,9 @@ namespace Financial_WPF_App.Views
         double HOffset = 0;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
-        // Subscribe to the QueryCellDropIndicator event in your SfDataGrid initialization
-        
+
+        private WindowState _currentWindowState = WindowState.Maximized; // Track window state
+
 
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
@@ -67,8 +68,8 @@ namespace Financial_WPF_App.Views
                 t = new Till();
                 p = new Payment();
                 myExpander.IsExpanded = false;
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(5, GridUnitType.Star);
+                //Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                //Expander_col.Width = new GridLength(5, GridUnitType.Star);
                 Load_Data();
                 Apply_Color_Theme();
                 return true;
@@ -179,8 +180,8 @@ namespace Financial_WPF_App.Views
                 {
                     Fill_AccountView();
                     myExpander.Visibility = Visibility.Visible;
-                    Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+                    //Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                    //Expander_col.Width = new GridLength(30, GridUnitType.Star);
                 }
 
             }
@@ -389,8 +390,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                Expander_col.Width = new GridLength(30, GridUnitType.Star);
+                if (_currentWindowState  == WindowState.Normal && myExpander.IsExpanded)
+                {
+                    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+                }
+                else
+                {
+                    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -408,9 +418,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                //Grid_col.Width = new GridLength(95, GridUnitType.Star);
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(5, GridUnitType.Star);
+                if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
+                {
+                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(10, GridUnitType.Star);
+                }
+                else if (_currentWindowState == WindowState.Maximized)
+                {
+                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(5, GridUnitType.Star);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -1192,6 +1210,30 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void OnMainWindowStateChanged(WindowState newState)
+        {
+            _currentWindowState = newState;
+            if (newState == WindowState.Normal && myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                Expander_col.Width = new GridLength(50, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                Expander_col.Width = new GridLength(30, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                Expander_col.Width = new GridLength(10, GridUnitType.Star);
+            }
+            else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                Expander_col.Width = new GridLength(5, GridUnitType.Star);
+            }
+        }
     }
 }
 
