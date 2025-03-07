@@ -37,7 +37,7 @@ namespace Financial_WPF_App.Views
         Employee Emp;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-
+        private MultiSalaries_CustomCopyPaste copyPasteHandler;
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             if (myDataGrid.View != null)
@@ -53,7 +53,8 @@ namespace Financial_WPF_App.Views
                 Emp = new Employee();
                 Create_Columns();
                 Fill_Datatables();
-                this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
+                InitializeCopyPaste();
+                //this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
                 Apply_Color_Theme();
                 return true;
             }
@@ -70,6 +71,12 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        void InitializeCopyPaste()
+        {
+            copyPasteHandler = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
+            this.myDataGrid.GridCopyPaste = copyPasteHandler;
+            copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
+        }
         private void Apply_Color_Theme()
         {
 
@@ -110,8 +117,8 @@ namespace Financial_WPF_App.Views
             try
             {
                 Create_Columns();
-
-                this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
+                InitializeCopyPaste();
+               // this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
             }
             catch (Exception ex)
             {
@@ -147,8 +154,8 @@ namespace Financial_WPF_App.Views
 
                             Create_Columns();
                             Fill_Datatables();
-
-                            this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
+                            InitializeCopyPaste();
+                            //this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
 
 
                             if (MS_W != null)
@@ -208,5 +215,19 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Error_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Error_textBlock.ActualWidth;
+            else
+                Error_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+
+        private void CopyPasteHandler_PasteCompleted(object sender, EventArgs e)
+        {
+            // Now you can access the copyPasteHandler
+            All_textBlock.Text = copyPasteHandler.TotalPastedRows.ToString("N0");
+            Error_textBlock.Text = copyPasteHandler.TotalErrorRows.ToString("N0");
+        }
     }
 }

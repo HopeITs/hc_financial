@@ -19,9 +19,10 @@ namespace Financial_WPF_App.Helper
 {
     public class CustomCopyPaste : GridCutCopyPaste
     {
-
+        public event EventHandler PasteCompleted;
         private DataTable _all_Original_AvgRate_dt, _all_AvgRate_dt, _all_b_dt, _all_t_dt, _all_ExAcc_dt, _all_Accounts_dt, _all_Lines_dt, _all_budgets_dt, _all_cashAccounts_dt, _all_Donors_dt, _all_Employee_dt, _all_Tills_dt;
-
+        public int TotalPastedRows { get; private set; } = 0;
+        public int TotalErrorRows { get; private set; } = 0;
 
         string _Account_Type, _Till_Type;
 
@@ -158,6 +159,8 @@ namespace Financial_WPF_App.Helper
             });
 
             this.dataGrid.ItemsSource = dt.DefaultView;
+
+            OnPasteCompleted();
         }
 
 
@@ -801,7 +804,7 @@ namespace Financial_WPF_App.Helper
                             System.Data.DataRow[] budgetrow = _Lines_dt.Select("budget_Name = '" + e.Row["Budget"].ToString() + "'");
 
                             int BudgetType_ID = -1;
-                            if(budgetrow.Length > 0)
+                            if (budgetrow.Length > 0)
                                 BudgetType_ID = Convert.ToInt32(budgetrow[0]["BudgetType_ID"].ToString());
 
                             if (_Original_AvgRate_dt.Rows.Count > 0 && BudgetType_ID != -1)
@@ -1043,8 +1046,14 @@ namespace Financial_WPF_App.Helper
             }
 
 
+
+
             if (e.Column.ColumnName == Last_Column_Name)
             {
+                TotalPastedRows++;
+                if (e.Row.RowError == "There are errors in this row.")
+                    TotalErrorRows++;
+
                 if (!Login.MultiAction_AnyError)
                 {
                     if (_inserted_value == "Ex")
@@ -1310,5 +1319,9 @@ namespace Financial_WPF_App.Helper
         }
 
 
+        protected virtual void OnPasteCompleted()
+        {
+            PasteCompleted?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

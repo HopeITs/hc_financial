@@ -10,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Login = Financial_WPF_App.Models.Login;
 
@@ -96,6 +97,9 @@ namespace Financial_WPF_App.Views
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
 
+        private MultiAttachments_CustomCopyPaste Attachment_copyPasteHandler;
+        private CustomCopyPaste copyPasteHandler;
+
         #region privileges
         bool Income_privileges, Outcome_privileges, Returned_privileges,
             Exchange_privileges, ExchangeToForeign_privileges,
@@ -107,6 +111,12 @@ namespace Financial_WPF_App.Views
         string failurText = "";
         int success = 0;
         int totalFiles = 0;
+
+
+
+        DataTable OperationType_dt = new DataTable();
+        DataTable AccountType_dt = new DataTable();
+
 
         private bool OnLoad()
         {
@@ -126,6 +136,7 @@ namespace Financial_WPF_App.Views
                 Set_privileges();
 
                 Fill_Main_Comboboxs();
+
                 if (!Account_Type.IsNullOrWhiteSpace() && !Account_Type.GetIsDynamicBound())
                 {
                     if (Account_Type == "Project")
@@ -133,23 +144,23 @@ namespace Financial_WPF_App.Views
                         if (Category == "Micro Projects")
                         {
                             AccountType_comboBox.IsEnabled = false;
-                            AccountType_comboBox.SelectedItem = ComboBox_MicroProject_Item;
+                            AccountType_comboBox.SelectedValue = "ComboBox_MicroProject_Item";
                         }
                         else if (Category == "Budget")
                         {
                             AccountType_comboBox.IsEnabled = false;
-                            AccountType_comboBox.SelectedItem = ComboBox_Budget_Item;
+                            AccountType_comboBox.SelectedValue = "ComboBox_Budget_Item";
                         }
                     }
                     else if (Account_Type == "Exchange")
                     {
                         AccountType_comboBox.IsEnabled = false;
-                        AccountType_comboBox.SelectedItem = ComboBox_Exchange_Item;
+                        AccountType_comboBox.SelectedValue = "ComboBox_Exchange_Item";
                     }
                     else if (Account_Type == "Personal")
                     {
                         AccountType_comboBox.IsEnabled = false;
-                        AccountType_comboBox.SelectedItem = ComboBox_Personal_Item;
+                        AccountType_comboBox.SelectedValue = "ComboBox_Personal_Item";
                     }
 
                     if (Till_ID > 0)
@@ -157,8 +168,8 @@ namespace Financial_WPF_App.Views
                         Tilltype_comboBox.IsEnabled = false;
 
                         int tillyype_ID = tilltypes_dt.AsEnumerable()
-                         .Where(row => row.Field<string>("Tilltypes_Name")?.ToLower() == TillType.ToLower())
-                         .Select(row => row.Field<int>("Tilltypes_ID"))
+                         .Where(row => row.Field<string>("Name")?.ToLower() == TillType.ToLower())
+                         .Select(row => row.Field<int>("ID"))
                          .DefaultIfEmpty(-1)
                          .FirstOrDefault();
 
@@ -183,11 +194,63 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        void InitializeCopyPaste()
+        {
+
+
+            if (!MultiAttachments)
+            {
+                copyPasteHandler = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
+                        Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
+                        Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
+                this.myDataGrid.GridCopyPaste = copyPasteHandler;
+                copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
+
+            }
+            else
+            {
+                Attachment_copyPasteHandler = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
+                this.myDataGrid.GridCopyPaste = Attachment_copyPasteHandler;
+                Attachment_copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
+            }
+
+        }
+
         private void Fill_Main_Comboboxs()
         {
+
+            OperationType_dt.Columns.AddRange(new System.Data.DataColumn[] {
+                        new System.Data.DataColumn("ID", typeof(string)),
+                        new System.Data.DataColumn("Name", typeof(string))});
+
+            OperationType_dt.Rows.Add("Type_ComboBox_Income_Item", "Income");
+            OperationType_dt.Rows.Add("Type_ComboBox_Outcome_Item", "Adv. Payment");
+            OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
+            OperationType_dt.Rows.Add("Type_ComboBox_Exchange_Item", "Exchange");
+            OperationType_dt.Rows.Add("Type_ComboBox_Expand_Item", "Expenses");
+            OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Move");
+
+
+
+            AccountType_comboBox.ItemsSource = null;
+
+            AccountType_dt.Columns.AddRange(new System.Data.DataColumn[] {
+                        new System.Data.DataColumn("ID", typeof(string)),
+                        new System.Data.DataColumn("Name", typeof(string))});
+
+
+            AccountType_dt.Rows.Add("ComboBox_MicroProject_Item", "Micro Project");
+            AccountType_dt.Rows.Add("ComboBox_Budget_Item", "Budget");
+            AccountType_dt.Rows.Add("ComboBox_Exchange_Item", "Exchange");
+            AccountType_dt.Rows.Add("ComboBox_Personal_Item", "Personal");
+
+            AccountType_comboBox.ItemsSource = AccountType_dt.DefaultView;
+
+
+
             tills_dt = null;
 
-            DataTable temp_tills_dt = t.Select_All_tills();
+            DataTable temp_tills_dt = t.Select_All_tills_ForCombobox();
 
             DataTable Projects_dt = main_Window.AllAccounts_ds.Tables[0];
             DataTable Fiscalbonds = main_Window.AllAccounts_ds.Tables[2];
@@ -234,7 +297,7 @@ namespace Financial_WPF_App.Views
 
                         PersonalAccounts_filterExpression = string.Join(" OR ", User_PersonalAccounts.Select(id => "Account_ID = " + id));
                         PersonalAccounts_filterExpression = "(" + PersonalAccounts_filterExpression + ")";
-                        PersonalAccounts_filterExpression += " AND Tilltypes_Name = 'SYR'";
+                        PersonalAccounts_filterExpression += " AND Name = 'SYR'";
 
                         if (filterExpression == "")
                         {
@@ -269,7 +332,7 @@ namespace Financial_WPF_App.Views
 
                         Accounts_filterExpression = string.Join(" OR ", User_Accounts.Select(id => "Account_ID = " + id));
                         Accounts_filterExpression = "(" + Accounts_filterExpression + ")";
-                        Accounts_filterExpression += " AND Tilltypes_Name = 'SYR'";
+                        Accounts_filterExpression += " AND Name = 'SYR'";
 
 
                         filterExpression = "(" + Accounts_filterExpression + ")";
@@ -284,7 +347,7 @@ namespace Financial_WPF_App.Views
 
                         PersonalAccounts_filterExpression = string.Join(" OR ", User_PersonalAccounts.Select(id => "Account_ID = " + id));
                         PersonalAccounts_filterExpression = "(" + PersonalAccounts_filterExpression + ")";
-                        PersonalAccounts_filterExpression += " AND Tilltypes_Name = 'SYR'";
+                        PersonalAccounts_filterExpression += " AND Name = 'SYR'";
 
                         if (filterExpression == "")
                         {
@@ -321,7 +384,7 @@ namespace Financial_WPF_App.Views
 
                         Fiscalbonds_filterExpression = string.Join(" OR ", User_Fiscalbonds.Select(id => "Fiscalbond_ID = " + id));
                         Fiscalbonds_filterExpression = "(" + Fiscalbonds_filterExpression + ")";
-                        Fiscalbonds_filterExpression += " AND Tilltypes_Name = 'SYR'";
+                        Fiscalbonds_filterExpression += " AND Name = 'SYR'";
 
 
                         filterExpression = "(" + Fiscalbonds_filterExpression + ")";
@@ -426,34 +489,40 @@ namespace Financial_WPF_App.Views
 
         private void Set_Available_Operations()
         {
-            Type_ComboBox_Income_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Outcome_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Returned_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Exchange_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Expand_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
+            OperationType_dt.Clear();
+            OperationType_dt.Rows.Add("Type_ComboBox_Income_Item", "Income");
+            OperationType_dt.Rows.Add("Type_ComboBox_Outcome_Item", "Adv. Payment");
+            OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
+            OperationType_dt.Rows.Add("Type_ComboBox_Exchange_Item", "Exchange");
+            OperationType_dt.Rows.Add("Type_ComboBox_Expand_Item", "Expenses");
+            OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Move");
+
+            var valuesToRemove = new HashSet<string>();
 
             if (Account_Type == "Project" && TillType != null)
             {
                 if (TillType.ToLower() == "syr")
                 {
-                    Type_ComboBox_Income_Item.Visibility = Visibility.Collapsed;
-
+                    valuesToRemove.Add("Type_ComboBox_Income_Item");
+ 
                     if (!Outcome_privileges)
-                        Type_ComboBox_Outcome_Item.Visibility = Visibility.Collapsed;
+                        valuesToRemove.Add("Type_ComboBox_Outcome_Item");
 
                     if (!Returned_privileges)
-                        Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
+                        valuesToRemove.Add("Type_ComboBox_Returned_Item");
 
                     // تم إيقاف هذه العملية لحين دراستها
                     //if (Exchange_privileges)
                     //    Type_ComboBox_Exchange_Item.Visibility = Visibility.Visible;
                     //else
                     //    Type_ComboBox_Exchange_Item.Visibility = Visibility.Collapsed;
-                    Type_ComboBox_Exchange_Item.Visibility = Visibility.Collapsed;
+                    //Type_ComboBox_Exchange_Item.Visibility = Visibility.Collapsed;
+
+                    valuesToRemove.Add("Type_ComboBox_Exchange_Item");
 
                     if (!Expand_privileges)
-                        Type_ComboBox_Expand_Item.Visibility = Visibility.Visible;
+                        valuesToRemove.Add("Type_ComboBox_Expand_Item");
+
 
                     // تم إيقاف هذه العملية لحين دراستها
                     //if (Move_privileges)
@@ -461,21 +530,23 @@ namespace Financial_WPF_App.Views
                     //else
                     //    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
 
-                    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                    //Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+
+                    valuesToRemove.Add("Type_ComboBox_Move_Item");
                 }
                 else
                 {
                     if (!Income_privileges)
-                        Type_ComboBox_Income_Item.Visibility = Visibility.Collapsed;
+                        valuesToRemove.Add("Type_ComboBox_Income_Item");
 
-                    Type_ComboBox_Outcome_Item.Visibility = Visibility.Collapsed;
-
-                    Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
+                    valuesToRemove.Add("Type_ComboBox_Outcome_Item");
+                    valuesToRemove.Add("Type_ComboBox_Returned_Item");
 
                     if (!Exchange_privileges)
-                        Type_ComboBox_Exchange_Item.Visibility = Visibility.Collapsed;
+                        valuesToRemove.Add("Type_ComboBox_Exchange_Item");
 
-                    Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
+                    valuesToRemove.Add("Type_ComboBox_Expand_Item");
+
 
                     // تم إيقاف هذه العملية لحين دراستها
                     //if (Move_privileges)
@@ -483,49 +554,55 @@ namespace Financial_WPF_App.Views
                     //else
                     //    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
 
-                    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                    valuesToRemove.Add("Type_ComboBox_Move_Item");
+
                 }
             }
             else if (Account_Type == "Exchange")
             {
-                Type_ComboBox_Income_Item.Visibility = Visibility.Collapsed;
-
-                Type_ComboBox_Outcome_Item.Visibility = Visibility.Collapsed;
-
-                Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
+                valuesToRemove.Add("Type_ComboBox_Income_Item");
+                valuesToRemove.Add("Type_ComboBox_Outcome_Item");
+                valuesToRemove.Add("Type_ComboBox_Returned_Item");
 
                 if (!Exchange_privileges)
-                    Type_ComboBox_Exchange_Item.Visibility = Visibility.Collapsed;
+                    valuesToRemove.Add("Type_ComboBox_Exchange_Item");
 
-                Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
+                valuesToRemove.Add("Type_ComboBox_Expand_Item");
+                valuesToRemove.Add("Type_ComboBox_Move_Item");
 
-                Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
             }
             else if (Account_Type == "Personal")
             {
                 if (!Income_privileges)
-                    Type_ComboBox_Income_Item.Visibility = Visibility.Collapsed;
+                    valuesToRemove.Add("Type_ComboBox_Income_Item");
 
-                Type_ComboBox_Outcome_Item.Visibility = Visibility.Collapsed;
 
-                Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
-
-                Type_ComboBox_Exchange_Item.Visibility = Visibility.Collapsed;
+                valuesToRemove.Add("Type_ComboBox_Outcome_Item");
+                valuesToRemove.Add("Type_ComboBox_Returned_Item");
+                valuesToRemove.Add("Type_ComboBox_Exchange_Item");
 
                 if (!Expand_privileges)
-                    Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
+                    valuesToRemove.Add("Type_ComboBox_Expand_Item");
 
-                Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+
+                valuesToRemove.Add("Type_ComboBox_Move_Item");
             }
             else
             {
-                Type_ComboBox_Income_Item.Visibility = Visibility.Collapsed;
-                Type_ComboBox_Outcome_Item.Visibility = Visibility.Collapsed;
-                Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
-                Type_ComboBox_Exchange_Item.Visibility = Visibility.Collapsed;
-                Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
-                Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                valuesToRemove.Add("Type_ComboBox_Income_Item");
+                valuesToRemove.Add("Type_ComboBox_Outcome_Item");
+                valuesToRemove.Add("Type_ComboBox_Returned_Item");
+                valuesToRemove.Add("Type_ComboBox_Exchange_Item");
+                valuesToRemove.Add("Type_ComboBox_Expand_Item");
+                valuesToRemove.Add("Type_ComboBox_Move_Item");
             }
+
+            OperationType_dt.AsEnumerable()
+                   .Where(row => valuesToRemove.Contains(row.Field<string>("ID")))
+                   .ToList()
+                   .ForEach(row => OperationType_dt.Rows.Remove(row));
+
+            Type_comboBox.ItemsSource = OperationType_dt.DefaultView;
         }
 
         private void Type_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -576,17 +653,7 @@ namespace Financial_WPF_App.Views
                     }
                     Fill_Datatables();
 
-                    if (!MultiAttachments)
-                    {
-                        this.myDataGrid.GridCopyPaste = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
-                        Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
-                        Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
-                    }
-                    else
-                    {
-                        this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
-                    }
-
+                    InitializeCopyPaste();
 
                     Export_btn.CommandTarget = myDataGrid;
                 }
@@ -841,19 +908,19 @@ namespace Financial_WPF_App.Views
                         {
                             if (TillType.ToLower() == "syr")
                             {
-                                if (Type_ComboBox_Income_Item.IsSelected)
+                               if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
                                     //Not allowed.
                                 }
-                                else if (Type_ComboBox_Outcome_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                                 {
                                     dt.Columns.Add("Micro Project number");
                                 }
-                                else if (Type_ComboBox_Returned_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                                 {
                                     dt.Columns.Add("Micro Project number");
                                 }
-                                else if (Type_ComboBox_Exchange_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                                 {
                                     dt.Columns.Add("Corresponding till");
                                     dt.Columns.Add("Cash till");
@@ -862,7 +929,7 @@ namespace Financial_WPF_App.Views
                                     dt.Columns.Add("Origin Avg Rate");
                                     dt.Columns.Add("Rate");
                                 }
-                                else if (Type_ComboBox_Expand_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                                 {
                                     dt.Columns.Add("Micro Project number");
                                     dt.Columns.Add("Cash till");
@@ -870,7 +937,7 @@ namespace Financial_WPF_App.Views
                                     dt.Columns.Add("Document number");
                                     dt.Columns.Add("Origin Avg Rate");
                                 }
-                                else if (Type_ComboBox_Move_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                                 {
                                     dt.Columns.Add("Corresponding account");
                                     dt.Columns.Add("Cash till");
@@ -880,19 +947,19 @@ namespace Financial_WPF_App.Views
                             }
                             else
                             {
-                                if (Type_ComboBox_Income_Item.IsSelected)
+                               if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
                                     dt.Columns.Add("Donor");
                                 }
-                                else if (Type_ComboBox_Outcome_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                                 {
                                     //Not allowed.
                                 }
-                                else if (Type_ComboBox_Returned_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                                 {
                                     //Not allowed.
                                 }
-                                else if (Type_ComboBox_Exchange_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                                 {
                                     dt.Columns.Add("Corresponding till");
                                     dt.Columns.Add("Corresponding cash till");
@@ -902,11 +969,11 @@ namespace Financial_WPF_App.Views
                                     dt.Columns.Add("Origin Avg Rate");
                                     dt.Columns.Add("Rate");
                                 }
-                                else if (Type_ComboBox_Expand_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                                 {
                                     //Not allowed.
                                 }
-                                else if (Type_ComboBox_Move_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                                 {
                                     dt.Columns.Add("Donor");
                                     dt.Columns.Add("Corresponding account");
@@ -918,21 +985,21 @@ namespace Financial_WPF_App.Views
                         {
                             if (TillType.ToLower() == "syr")
                             {
-                                if (Type_ComboBox_Income_Item.IsSelected)
+                               if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
                                     //Not allowed.
                                 }
-                                else if (Type_ComboBox_Outcome_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                                 {
                                     dt.Columns.Add("Budget");
                                     dt.Columns.Add("Line");
                                 }
-                                else if (Type_ComboBox_Returned_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                                 {
                                     dt.Columns.Add("Budget");
                                     dt.Columns.Add("Line");
                                 }
-                                else if (Type_ComboBox_Exchange_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                                 {
                                     dt.Columns.Add("Corresponding till");
                                     dt.Columns.Add("Corresponding cash till");
@@ -943,7 +1010,7 @@ namespace Financial_WPF_App.Views
                                     dt.Columns.Add("Origin Avg Rate");
                                     dt.Columns.Add("Rate");
                                 }
-                                else if (Type_ComboBox_Expand_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                                 {
                                     dt.Columns.Add("Budget");
                                     dt.Columns.Add("Line");
@@ -953,7 +1020,7 @@ namespace Financial_WPF_App.Views
                                     dt.Columns.Add("Volunteer");
                                     dt.Columns.Add("Origin Avg Rate");
                                 }
-                                else if (Type_ComboBox_Move_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                                 {
                                     dt.Columns.Add("Corresponding account");
                                     dt.Columns.Add("Budget");
@@ -965,19 +1032,19 @@ namespace Financial_WPF_App.Views
                             }
                             else
                             {
-                                if (Type_ComboBox_Income_Item.IsSelected)
+                               if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
                                     dt.Columns.Add("Donor");
                                 }
-                                else if (Type_ComboBox_Outcome_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                                 {
                                     //Not allowed.
                                 }
-                                else if (Type_ComboBox_Returned_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                                 {
                                     //Not allowed.
                                 }
-                                else if (Type_ComboBox_Exchange_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                                 {
                                     dt.Columns.Add("Corresponding till");
                                     dt.Columns.Add("Corresponding cash till");
@@ -987,11 +1054,11 @@ namespace Financial_WPF_App.Views
                                     dt.Columns.Add("Origin Avg Rate");
                                     dt.Columns.Add("Rate");
                                 }
-                                else if (Type_ComboBox_Expand_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                                 {
                                     //Not allowed.
                                 }
-                                else if (Type_ComboBox_Move_Item.IsSelected)
+                                else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                                 {
                                     dt.Columns.Add("Donor");
                                     dt.Columns.Add("Corresponding account");
@@ -1004,58 +1071,58 @@ namespace Financial_WPF_App.Views
                     {
                         if (TillType.ToLower() == "syr")
                         {
-                            if (Type_ComboBox_Income_Item.IsSelected)
+                           if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Outcome_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Returned_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Exchange_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                             {
                                 dt.Columns.Add("Corresponding till");
                                 dt.Columns.Add("Cash till");
                                 dt.Columns.Add("Rate");
                             }
-                            else if (Type_ComboBox_Expand_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Move_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                             {
                                 //Not allowed.
                             }
                         }
                         else
                         {
-                            if (Type_ComboBox_Income_Item.IsSelected)
+                           if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Outcome_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Returned_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Exchange_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                             {
                                 dt.Columns.Add("Corresponding till");
                                 dt.Columns.Add("Corresponding cash till");
                                 dt.Columns.Add("Rate");
                             }
-                            else if (Type_ComboBox_Expand_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Move_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                             {
                                 //Not allowed.
                             }
@@ -1065,58 +1132,58 @@ namespace Financial_WPF_App.Views
                     {
                         if (TillType.ToLower() == "syr")
                         {
-                            if (Type_ComboBox_Income_Item.IsSelected)
+                           if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
                                 dt.Columns.Add("Cash till");
                             }
-                            else if (Type_ComboBox_Outcome_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Returned_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Exchange_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Expand_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                             {
                                 dt.Columns.Add("Cash till");
 
                                 dt.Columns.Add("Document type");
                                 dt.Columns.Add("Document number");
                             }
-                            else if (Type_ComboBox_Move_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                             {
                                 //Not allowed.
                             }
                         }
                         else
                         {
-                            if (Type_ComboBox_Income_Item.IsSelected)
+                           if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
 
                             }
-                            else if (Type_ComboBox_Outcome_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Returned_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Exchange_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                             {
                                 //Not allowed.
                             }
-                            else if (Type_ComboBox_Expand_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                             {
                                 dt.Columns.Add("Document type");
                                 dt.Columns.Add("Document number");
                             }
-                            else if (Type_ComboBox_Move_Item.IsSelected)
+                            else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                             {
                                 //Not allowed.
                             }
@@ -1155,6 +1222,10 @@ namespace Financial_WPF_App.Views
             }
 
 
+
+            All_textBlock.Text = "0";
+            Error_textBlock.Text = "0";
+
         }
 
         private void clear_btn_Click(object sender, RoutedEventArgs e)
@@ -1162,19 +1233,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 Create_Columns();
-
-                if (!MultiAttachments)
-                {
-                    this.myDataGrid.GridCopyPaste = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
-                            Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
-                            Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
-                }
-                else
-                {
-                    this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
-                }
-
-
+                InitializeCopyPaste();
             }
             catch (Exception ex)
             {
@@ -1219,9 +1278,7 @@ namespace Financial_WPF_App.Views
 
                                 Create_Columns();
 
-                                this.myDataGrid.GridCopyPaste = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
-                                Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
-                                Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
+                                InitializeCopyPaste();
 
                                 if (TW != null)
                                     TW.Load_Data();
@@ -1260,7 +1317,7 @@ namespace Financial_WPF_App.Views
 
                             Create_Columns();
 
-                            this.myDataGrid.GridCopyPaste = new MultiAttachments_CustomCopyPaste(myDataGrid, Actions_dt, tills_dt, Account_Type, TillType);
+                            InitializeCopyPaste();
 
                             if (TW != null)
                                 TW.Load_Data();
@@ -1308,7 +1365,7 @@ namespace Financial_WPF_App.Views
                 string[] FullAttachNames = paths.ToArray();
                 //totalFiles += FullAttachNames.Length;
 
-        
+
                 foreach (var FullAttachName in FullAttachNames)
                 {
                     string t;
@@ -1378,7 +1435,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 Tilltype_comboBox.ItemsSource = null;
-                Type_comboBox.SelectedIndex = -1;
+                Type_comboBox.ItemsSource = null;
 
                 if (AccountType_comboBox.IsEnabled == true)
                 {
@@ -1386,21 +1443,21 @@ namespace Financial_WPF_App.Views
                     Category = "";
                     TillType = "";
 
-                    if (ComboBox_MicroProject_Item.IsSelected)
+                    if (AccountType_comboBox.SelectedValue.ToString() == "ComboBox_MicroProject_Item")
                     {
                         Account_Type = "Project";
                         Category = "Micro Projects";
                     }
-                    else if (ComboBox_Budget_Item.IsSelected)
+                    else if (AccountType_comboBox.SelectedValue.ToString() == "ComboBox_Budget_Item")
                     {
                         Account_Type = "Project";
                         Category = "Budget";
                     }
-                    else if (ComboBox_Exchange_Item.IsSelected)
+                    else if (AccountType_comboBox.SelectedValue.ToString() == "ComboBox_Exchange_Item")
                     {
                         Account_Type = "Exchange";
                     }
-                    else if (ComboBox_Personal_Item.IsSelected)
+                    else if (AccountType_comboBox.SelectedValue.ToString() == "ComboBox_Personal_Item")
                     {
                         Account_Type = "Personal";
                     }
@@ -1428,7 +1485,7 @@ namespace Financial_WPF_App.Views
                         {
                             DataView view = new DataView(selected_dt);
                             DataTable selected_dt1 = new DataTable();
-                            selected_dt1 = view.ToTable(true, "Tilltypes_ID", "Tilltypes_Name");
+                            selected_dt1 = view.ToTable(true, "ID", "Name");
 
                             if (selected_dt1 != null && selected_dt1.Rows.Count > 0)
                             {
@@ -1498,8 +1555,8 @@ namespace Financial_WPF_App.Views
                 tilltype_id = Convert.ToInt32(Tilltype_comboBox.SelectedValue);
 
                 TillType = tilltypes_dt.AsEnumerable()
-                   .FirstOrDefault(row => row.Field<int?>("Tilltypes_ID")?.Equals(tilltype_id) ?? false)
-                   ?.Field<string>("Tilltypes_Name")
+                   .FirstOrDefault(row => row.Field<int?>("ID")?.Equals(tilltype_id) ?? false)
+                   ?.Field<string>("Name")
                    ?.ToString();
 
 
@@ -1535,5 +1592,28 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Error_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Error_textBlock.ActualWidth;
+            else
+                Error_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+
+        private void CopyPasteHandler_PasteCompleted(object sender, EventArgs e)
+        {
+            if (!MultiAttachments)
+            {
+                // Now you can access the copyPasteHandler
+                All_textBlock.Text = copyPasteHandler.TotalPastedRows.ToString("N0");
+                Error_textBlock.Text = copyPasteHandler.TotalErrorRows.ToString("N0");
+            }
+            else
+            {
+                // Now you can access the copyPasteHandler
+                All_textBlock.Text = Attachment_copyPasteHandler.TotalPastedRows.ToString("N0");
+                Error_textBlock.Text = Attachment_copyPasteHandler.TotalErrorRows.ToString("N0");
+            }
+        }
     }
 }

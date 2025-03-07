@@ -37,6 +37,7 @@ namespace Financial_WPF_App.Views
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
 
+        private MultiBeneficiares_CustomCopyPaste copyPasteHandler;
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
@@ -56,7 +57,8 @@ namespace Financial_WPF_App.Views
                 Create_Columns();
                 Fill_Datatables();
                 Apply_Color_Theme();
-                this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
+                InitializeCopyPaste();
+                //this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
 
                 return true;
             }
@@ -72,10 +74,16 @@ namespace Financial_WPF_App.Views
                 return false;
             }
         }
+
+        void InitializeCopyPaste()
+        {
+            copyPasteHandler = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
+            this.myDataGrid.GridCopyPaste = copyPasteHandler;
+            copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
+        }
+
         private void Apply_Color_Theme()
         {
-
-
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
@@ -116,6 +124,9 @@ namespace Financial_WPF_App.Views
 
             myDataGrid.ItemsSource = null;
             myDataGrid.ItemsSource = dt.DefaultView;
+
+            All_textBlock.Text = "0";
+            Error_textBlock.Text = "0";
         }
 
         private void Fill_Datatables()
@@ -129,8 +140,8 @@ namespace Financial_WPF_App.Views
             try
             {
                 Create_Columns();
-
-                this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
+                InitializeCopyPaste();
+                //this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
             }
             catch (Exception ex)
             {
@@ -167,7 +178,8 @@ namespace Financial_WPF_App.Views
                             Create_Columns();
                             Fill_Datatables();
 
-                            this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
+                            InitializeCopyPaste();
+                            //this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
 
 
                             if (AB_W != null)
@@ -197,5 +209,19 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Error_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Error_textBlock.ActualWidth;
+            else
+                Error_textBlock.MinWidth = All_textBlock.ActualWidth;
+        }
+
+        private void CopyPasteHandler_PasteCompleted(object sender, EventArgs e)
+        {
+            // Now you can access the copyPasteHandler
+            All_textBlock.Text = copyPasteHandler.TotalPastedRows.ToString("N0");
+            Error_textBlock.Text = copyPasteHandler.TotalErrorRows.ToString("N0");
+        }
     }
 }

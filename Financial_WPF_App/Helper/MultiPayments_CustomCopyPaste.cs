@@ -12,7 +12,12 @@ namespace Financial_WPF_App.Helper
 {
     internal class MultiPayments_CustomCopyPaste : GridCutCopyPaste
     {
+        public event EventHandler PasteCompleted;
         private DataTable _CashAccounts_dt, _Beneficiaries_dt, _Payments_dt;
+
+        public int TotalPastedRows { get; private set; } = 0;
+        public int TotalErrorRows { get; private set; } = 0;
+
         int _Subporject_ID;
 
         Double _Amount = 0;
@@ -87,6 +92,7 @@ namespace Financial_WPF_App.Helper
             });
 
             this.dataGrid.ItemsSource = dt.DefaultView;
+            OnPasteCompleted();
         }
 
         private void clear_vlaues()
@@ -213,6 +219,10 @@ namespace Financial_WPF_App.Helper
 
             if (e.Column.ColumnName == Last_Column_Name)
             {
+                TotalPastedRows++;
+                if (e.Row.RowError == "There are errors in this row.")
+                    TotalErrorRows++;
+
                 if (!Login.MultiPayments_AnyError)
                 {
                     build_insert_query();
@@ -417,6 +427,11 @@ namespace Financial_WPF_App.Helper
             Login.MultiPayments_List.Add(temp_query);
             temp_query = "";
 
+        }
+
+        protected virtual void OnPasteCompleted()
+        {
+            PasteCompleted?.Invoke(this, EventArgs.Empty);
         }
 
     }

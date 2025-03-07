@@ -17,7 +17,12 @@ namespace Financial_WPF_App.Helper
 {
     internal class MultiAttachments_CustomCopyPaste : GridCutCopyPaste
     {
+        public event EventHandler PasteCompleted;
+
         private DataTable _all_Actions_dt, _all_Tills_dt;
+
+        public int TotalPastedRows { get; private set; } = 0;
+        public int TotalErrorRows { get; private set; } = 0;
 
         int _Action_ID = -1;
         int _isApproved = -1;
@@ -95,6 +100,8 @@ namespace Financial_WPF_App.Helper
             });
 
             this.dataGrid.ItemsSource = dt.DefaultView;
+
+            OnPasteCompleted();
         }
 
 
@@ -271,6 +278,10 @@ namespace Financial_WPF_App.Helper
 
             if (e.Column.ColumnName == Last_Column_Name)
             {
+                TotalPastedRows++;
+                if (e.Row.RowError == "There are errors in this row.")
+                    TotalErrorRows++;
+
                 if (!Login.MultiAttachment_AnyError)
                 {
                     Login.MultiAttachment_Dictionary[_Action_ID] = new AttachmentData
@@ -287,6 +298,11 @@ namespace Financial_WPF_App.Helper
                 clear_vlaues();
             }
 
+        }
+
+        protected virtual void OnPasteCompleted()
+        {
+            PasteCompleted?.Invoke(this, EventArgs.Empty);
         }
     }
 }
