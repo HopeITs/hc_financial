@@ -39,44 +39,28 @@
             <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
                 <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" VerticalAlignment="Center" Height="40">
                     <WrapPanel Orientation="Horizontal" Width="Auto" ItemHeight="40">
+                        <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
+                            <Label Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Right" Height="40" Content="Account Type:"/>
+                            <ComboBox TabIndex="1" SelectionChanged="AccountType_comboBox_SelectionChanged" Style="{StaticResource ActionComboboxStyle}" x:Name="AccountType_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsEditable="True" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="LeftToRight">
+                            <Label Style="{DynamicResource statistic_lableStyle}" Content="Till Type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+                            <ComboBox x:Name="Tilltype_comboBox" Style="{StaticResource ActionComboboxStyle}" 
+                                DisplayMemberPath="Name" SelectedValuePath="ID" 
+                                HorizontalContentAlignment="Right"  SelectionChanged="Tilltype_comboBox_SelectionChanged" />
+                        </StackPanel>
+
+
+
                         <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" Grid.Row="1">
                             <Label Style="{DynamicResource statistic_lableStyle}" Content="Operation type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                            <ComboBox x:Name="Type_comboBox" Style="{StaticResource ActionComboboxStyle}"
-                                  IsEditable="True" 
-                                SelectionChanged="Type_comboBox_SelectionChanged" >
-                                <ComboBoxItem x:Name="Type_ComboBox_Income_Item" Content="Income" />
-                                <ComboBoxItem x:Name="Type_ComboBox_Outcome_Item" Content="Adv. Payment"/>
-                                <ComboBoxItem x:Name="Type_ComboBox_Returned_Item" Content="Returned"/>
-                                <ComboBoxItem x:Name="Type_ComboBox_Exchange_Item" Content="Exchange"/>
-                                <ComboBoxItem x:Name="Type_ComboBox_Expand_Item" Content="Expenses"/>
-                                <ComboBoxItem x:Name="Type_ComboBox_Move_Item" Content="Move"/>
-                            </ComboBox>
+                            <ComboBox x:Name="Type_comboBox" Style="{StaticResource ActionComboboxStyle}"  DisplayMemberPath="Name" SelectedValuePath="ID"
+                                IsEditable="True" SelectionChanged="Type_comboBox_SelectionChanged"/>
                             <Button x:Name="clear_type_btn" Style="{StaticResource ActionDeleteButtonStyle}" Width="27" Height="30" BorderBrush="{x:Null}" Click="clear_type_btn_Click" >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
                                 </Button.Background>
                             </Button>
-                        </StackPanel>
-                        
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Account Type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                        <StackPanel  Orientation="Horizontal" FlowDirection="LeftToRight">
-                            <ComboBox x:Name="AccountType_comboBox" Style="{StaticResource ActionComboboxStyle}" TabIndex="1"
-                                IsEditable="True" SelectionChanged="AccountType_comboBox_SelectionChanged" >
-                                <ComboBoxItem x:Name="ComboBox_MicroProject_Item" Content="Micro Project Account" />
-                                <ComboBoxItem x:Name="ComboBox_Budget_Item" Content="Budget Account"/>
-                                <ComboBoxItem x:Name="ComboBox_Exchange_Item" Content="Exchange Account"/>
-                                <ComboBoxItem x:Name="ComboBox_Personal_Item" Content="Personal Account"/>
-                            </ComboBox>
-                        </StackPanel>
-
-
-
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="LeftToRight">
-                            <Label Style="{DynamicResource statistic_lableStyle}" Content="Till Type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                            <ComboBox x:Name="Tilltype_comboBox" Style="{StaticResource ActionComboboxStyle}" 
-                                DisplayMemberPath="Tilltypes_Name" SelectedValuePath="Tilltypes_ID" 
-                                HorizontalContentAlignment="Right"  SelectionChanged="Tilltype_comboBox_SelectionChanged" >
-                            </ComboBox>
                         </StackPanel>
                     </WrapPanel>
                 </DockPanel>
@@ -103,7 +87,7 @@
                     </WrapPanel>
                 </DockPanel>
             </Grid>
-            
+
 
             <syncfusion:SfDataGrid x:Name="myDataGrid"  ShowRowHeader="True"
             AutoGenerateColumns="True"

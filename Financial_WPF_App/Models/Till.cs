@@ -181,6 +181,47 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+
+        public DataTable Select_All_tills_ForCombobox()
+        {
+            string query = @"SELECT 
+                                till.ID AS 'Till_ID', tilltypes.ID AS 'ID', tilltypes.Name AS 'Name',
+                                account.ID AS 'Account_ID', account.Name AS 'Account_Name',
+                                account.is_administrative, account.IsClosed,
+                                fiscalbond.ID AS 'Fiscalbond_ID', fiscalbond.Name AS 'Fiscalbond_Name',
+                                accounttype.id AS 'Accounttype_ID', accounttype.name AS 'Accounttype_Name',
+                                subproject.ID AS 'Subproject_ID', 
+                                CASE WHEN subproject.ID IS null then 'Personal/Exchange' else subproject.Name END AS 'Subproject_Name',
+                                category.ID AS 'Category_ID', category.Name AS 'Category_Name'
+
+                                FROM
+                                till LEFT JOIN tilltypes on till.Type_ID = tilltypes.ID
+                                LEFT JOIN fiscalbond ON fiscalbond.Till_ID = till.ID
+                                LEFT JOIN account on account.ID = till.Account_ID
+                                LEFT JOIN accounttype on account.Accounttype_id = accounttype.id
+                                LEFT JOIN subproject on subproject.ID = account.SubProject_ID
+                                LEFT JOIN project ON project.ID = subproject.Project_ID
+                                LEFT JOIN category on category.ID = project.Category_ID
+
+                                WHERE
+                                lower(tilltypes.Name) <> 'pay';";
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.MyConn.Close();
+            }
+            return dt;
+        }
+
+
         public DataTable Select_All_tills()
         {
             string query = @"SELECT 
