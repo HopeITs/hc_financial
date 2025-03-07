@@ -11,7 +11,7 @@
         <Grid>
             <Grid.ContextMenu>
                 <ContextMenu x:Name="cm">
-                    <MenuItem Header="Refresh Report" Click = "Refresh_Click" >
+                    <MenuItem Header="Refresh Expenses Report" Click = "Refresh_Click" >
                         <MenuItem.Icon>
                             <Image Source="/Images/refresh32.png" />
                         </MenuItem.Icon>

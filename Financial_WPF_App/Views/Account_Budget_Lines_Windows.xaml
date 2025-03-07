@@ -13,7 +13,7 @@
 
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="Refresh" Click = "Refresh_Click" >
+            <MenuItem Header="Refresh Budget Lines" Click = "Refresh_Click" >
                 <MenuItem.Icon>
                     <Image Source="/Cashing;component/Images/refresh32.png" />
                 </MenuItem.Icon>

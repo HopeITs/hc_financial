@@ -16,7 +16,7 @@
      
             <Grid.ContextMenu>
             <ContextMenu Name="cm">
-                <MenuItem Header="Refresh Rate" Click = "Refresh_Click" >
+                <MenuItem Header="Refresh Rates" Click = "Refresh_Click" >
                     <MenuItem.Icon>
                         <Image Source="/Cashing;component/Images/refresh32.png" />
                     </MenuItem.Icon>

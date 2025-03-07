@@ -10,7 +10,7 @@
     <Grid>
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
-                <MenuItem Header="Refresh Till" Click = "Refresh_Click" >
+                <MenuItem Header="Refresh" Click = "Refresh_Click" >
                     <MenuItem.Icon>
                         <Image Source="/Images/refresh32.png" />
                     </MenuItem.Icon>

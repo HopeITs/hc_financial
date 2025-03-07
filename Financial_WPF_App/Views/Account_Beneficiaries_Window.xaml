@@ -18,7 +18,7 @@
     <Grid >
         <Grid.ContextMenu>
             <ContextMenu Name="cm">
-                <MenuItem Header="Refresh Beneficiary" Click = "Refresh_Click" >
+                <MenuItem Header="Refresh Beneficiaries" Click = "Refresh_Click" >
                     <MenuItem.Icon>
                         <Image Source="/Cashing;component/Images/refresh32.png" />
                     </MenuItem.Icon>
