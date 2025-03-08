@@ -264,7 +264,7 @@ namespace Financial_WPF_App.Helper
                 {
                     _Till_ID = _all_Tills_dt.AsEnumerable()
                         .Where(row => row.Field<string>("Account_Name")?.Equals(e.ProposedValue.ToString()) == true
-                        && row.Field<string>("Tilltypes_Name")?.Equals(_Till_Type.ToString()) == true)
+                        && row.Field<string>("Name")?.Equals(_Till_Type.ToString()) == true)
                         .Select(row => row.Field<int>("Till_ID"))
                         .DefaultIfEmpty(-1)
                         .FirstOrDefault();

@@ -1,16 +1,12 @@
 ﻿using Financial_WPF_App.Models;
 using Syncfusion.UI.Xaml.Grid;
-using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Linq;
 using static Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App.Helper
@@ -174,7 +170,7 @@ namespace Financial_WPF_App.Helper
                 {
                     _Till_ID = _all_Tills_dt.AsEnumerable()
                         .Where(row => row.Field<string>("Account_Name")?.Equals(e.ProposedValue.ToString()) == true
-                        && row.Field<string>("Tilltypes_Name")?.Equals(_Till_Type.ToString()) == true)
+                        && row.Field<string>("Name")?.Equals(_Till_Type.ToString()) == true)
                         .Select(row => row.Field<int>("Till_ID"))
                         .DefaultIfEmpty(-1)
                         .FirstOrDefault();
@@ -273,6 +269,12 @@ namespace Financial_WPF_App.Helper
                             e.Row.RowError = "There are errors in this row.";
                         }
                     }
+                }
+                else
+                {
+                    Login.MultiAttachment_AnyError = true;
+                    e.Row.SetColumnError(e.Column.ColumnName, "Some files do not exist.");
+                    e.Row.RowError = "There are errors in this row.";
                 }
             }
 
