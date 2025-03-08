@@ -210,7 +210,7 @@
                         </StackPanel>
                         <StackPanel x:Name="Postpone_StackPanel" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
                             <TextBox x:Name="monthes_txtBox" TextChanged="monthes_txtBox_TextChanged" Tag="Postpone Payments"
-                    Style="{DynamicResource CustomTextBoxActionStyle}" PreviewTextInput="NumberValidationTextBox" VerticalAlignment="Stretch" />
+                    Style="{DynamicResource CustomTextBoxActionStyle}" VerticalAlignment="Stretch" />
                             <Border Background="White" Margin="3,0,0,0">
                                 <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Save" ToolTipService.InitialShowDelay="100"
                          x:Name="delaypayment_btn" TabIndex="15" Click="delaypayment_btn_Click" Height="17" Width="24" >

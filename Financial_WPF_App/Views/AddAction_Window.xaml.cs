@@ -151,6 +151,8 @@ namespace Financial_WPF_App
                 d = new Document();
                 Emp = new Employee();
 
+                Rate_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+                Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 Set_privileges();
 
 
@@ -3331,29 +3333,6 @@ namespace Financial_WPF_App
             }
 
             return sucess;
-
-        }
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9.]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
 
         }
     }

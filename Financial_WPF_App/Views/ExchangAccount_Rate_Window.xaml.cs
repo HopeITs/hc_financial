@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.Data;
 using Syncfusion.Data.Extensions;
@@ -56,6 +57,9 @@ namespace Financial_WPF_App.Views
         {
             t = new Till();
             acc = new Account();
+
+            Value_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+
             for (int i = 0; i < myDataGrid.Columns.Count; i++)
             {
                 myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
@@ -638,29 +642,6 @@ namespace Financial_WPF_App.Views
                             k++;
                     }
                 }
-            }
-        }
-
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9.]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
 

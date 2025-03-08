@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using System;
 using System.Data;
 using System.Linq;
@@ -79,6 +80,7 @@ namespace Financial_WPF_App.Views
                 Acc = new Account();
                 u = new Users();
                 d = new Denominations();
+                Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 AccountName_lable.Content = Account_Name;
                 Load_Form();
                 Apply_Color_Theme();
@@ -420,29 +422,6 @@ namespace Financial_WPF_App.Views
                     Actions_dt.AsEnumerable().Sum(row => row.Field<double>("Expand"));
 
             Net_lable.Content = Login.ConvertToDouble(Net.ToString());
-        }
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9.]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
         }
     }
 }

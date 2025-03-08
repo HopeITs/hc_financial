@@ -63,7 +63,7 @@ TabIndex="1"   VerticalAlignment="Stretch" SelectionChanged="To_comboBox_Selecti
                             <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="Date_datepicker" Grid.Column="10" Margin="1,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
                             <Label Style="{StaticResource statistic_lableStyle}" x:Name="Value_Lable" Grid.Column="9"  Content="Value:" Margin="10,0,1,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
                             <TextBox x:Name="Value_txtBox"  TabIndex="6" Tag=""
-                                    Style="{DynamicResource CustomTextBoxActionStyle}" Margin="0,0,2,0" Grid.Column="8" Height="30" PreviewTextInput="NumberValidationTextBox" VerticalAlignment="Stretch" />
+                                    Style="{DynamicResource CustomTextBoxActionStyle}" Margin="0,0,2,0" Grid.Column="8" Height="30" VerticalAlignment="Stretch" />
                             <Button Style="{DynamicResource AddButtonStyle}" 
                                 x:Name="Insert_btn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="InsertAction_btn_Click" Grid.Column="7" ToolTip="Insert" ToolTipService.InitialShowDelay="100" Margin="1,0,0,0">
                                 <Button.Background>

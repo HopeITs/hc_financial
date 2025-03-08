@@ -22,7 +22,7 @@ namespace Financial_WPF_App.Views
             this.main_Window = main_Window;
             this.Bl_W = Bl_W;
             this.Budget_ID = Budget_ID;
-            this.Budget_Name = Budget_Name;
+            this.Budget_Name = BudgetName;
             this.Project_ID = Project_ID;
 
             if (OnLoad())

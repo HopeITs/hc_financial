@@ -109,7 +109,7 @@
 
             <TextBox x:Name="Amount_txtBox" Style="{DynamicResource textBoxStyle}" 
                 Grid.Column="1" Grid.Row="2" TabIndex="2"
-                LostFocus="Amount_txtBox_LostFocus" Margin="114,6,4,6" Grid.ColumnSpan="2" VerticalAlignment="Stretch" PreviewTextInput="NumberValidationTextBox"   />
+                LostFocus="Amount_txtBox_LostFocus" Margin="114,6,4,6" Grid.ColumnSpan="2" VerticalAlignment="Stretch"   />
 
             <Label x:Name="ActionDate_Label" Grid.Column="4" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Operation date:" Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
             <DatePicker x:Name="ActionDate_datepicker" Grid.Row="2" TabIndex="3"
@@ -173,7 +173,7 @@
             <Label x:Name="Rate_lable" Grid.Column="2" Grid.Row="13" Style="{DynamicResource lableStyle}" Content="Rate:" Margin="2,2,2,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"   />
             <TextBox x:Name="Rate_txtBox" Style="{DynamicResource textBoxStyle}" 
                 Grid.Column="1" Grid.Row="13" TabIndex="19"   
-                LostFocus="Rate_txtBox_LostFocus" Margin="4,6,2,0" VerticalAlignment="Top" PreviewTextInput="NumberValidationTextBox" Height="30"  />
+                LostFocus="Rate_txtBox_LostFocus" Margin="4,6,2,0" VerticalAlignment="Top" Height="30"  />
 
             <Label x:Name="Exchanged_lable" Grid.Column="2" Grid.Row="14" Style="{DynamicResource lableStyle}" Content="Exchanged:"  Margin="2,3,2,3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"   />
             <TextBox x:Name="Exchanged_txtBox" Style="{DynamicResource textBoxStyle}" 

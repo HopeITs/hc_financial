@@ -352,8 +352,7 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                         <ColumnDefinition Width="87*"/>
                         <ColumnDefinition Width="15*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="TotalAmount_txtBox" Style="{DynamicResource FloatingTextBoxStyle}"
-                        PreviewTextInput="NumberValidationTextBox" 
+                    <TextBox x:Name="TotalAmount_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" 
                         TabIndex="9" LostFocus="TotalAmount_txtBox_LostFocus" Grid.Column="0"  />
                     <ComboBox x:Name="AmountType_comboBox" Grid.Column="1" DisplayMemberPath="NAME" SelectedValuePath="ID"
                         Style="{DynamicResource SmallComboboxStyle}" TabIndex="17" Margin="3,0,0,0"/>

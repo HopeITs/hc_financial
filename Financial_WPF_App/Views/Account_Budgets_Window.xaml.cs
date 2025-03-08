@@ -67,6 +67,7 @@ namespace Financial_WPF_App.Views
             acc = new Account();
             b = new Budget();
             t = new Till();
+            Rate_TextBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
             TillType_dt = new DataTable();
             for (int i = 0; i < myDataGrid.Columns.Count; i++)
             {
@@ -1145,28 +1146,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9.]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
         private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)

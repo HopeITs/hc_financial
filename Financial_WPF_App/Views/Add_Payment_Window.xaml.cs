@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,8 @@ namespace Financial_WPF_App.Views
                 //a = new Models.Action();
                 p = new Payment();
                 Acc = new Account();
+
+                Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
 
                 for (int i = 0; i < payDataGrid.Columns.Count; i++)
                 {
@@ -239,29 +242,6 @@ namespace Financial_WPF_App.Views
             {
                 Export_btn2.CommandTarget = payDataGrid;
             }
-        }
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
         }
 
         private void CashAccount_clear_btn_Click(object sender, RoutedEventArgs e)

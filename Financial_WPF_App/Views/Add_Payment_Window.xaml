@@ -138,7 +138,7 @@
             <Label x:Name="MircoProject_ID_lable" Grid.Column="3" Style="{DynamicResource lableStyle}" Content="Project number:" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" FontSize="17" VerticalAlignment="Stretch" Margin="5,2,5,2"  />
             <Controls:AutoCompleteTextBoxUserControl 
                 x:Name="MircoProject_ID_autoSuggestionUserControl" 
-                Grid.Column="2" TabIndex="4" FontFamily="Segoe UI" FontSize="12" PreviewTextInput="NumberValidationTextBox" Margin="0,5,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="104" Height="40" LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
+                Grid.Column="2" TabIndex="4" FontFamily="Segoe UI" FontSize="12" Margin="0,5,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="104" Height="40" LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
             <Label x:Name="BeneficiaryName_lable" Grid.Column="1" Style="{DynamicResource lableStyle}" Content="Beneficiary Name:" Margin="2,2,2,2" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" FontSize="17" VerticalAlignment="Stretch"  />
             <Controls:AutoCompleteTextBoxUserControl 
                 x:Name="BeneficiaryName_autoSuggestionUserControl" 
@@ -147,7 +147,7 @@
             <Label x:Name="Amount_Label" Grid.Column="3" Style="{DynamicResource lableStyle}" Content="Payment amount:" Margin="2,2,2,2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Row="1" FontSize="17" VerticalAlignment="Stretch"   />
             <TextBox x:Name="Amount_txtBox" Grid.Column="1" 
                 Style="{DynamicResource textBoxStyle}" 
-                TabIndex="3"  LostFocus="Amount_txtBox_LostFocus" Margin="2,2,2,3" HorizontalContentAlignment="Stretch" PreviewTextInput="NumberValidationTextBox" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2"   />
+                TabIndex="3"  LostFocus="Amount_txtBox_LostFocus" Margin="2,2,2,3" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2"   />
             <Label x:Name="Notes_Label" Grid.Column="3" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Description:" Margin="2,2,2,2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" FontSize="17" VerticalAlignment="Stretch"   />
             <TextBox x:Name="Notes_txtBox" Grid.Row="2" TabIndex="7" 
                 Style="{DynamicResource textBoxStyle}" Margin="3,2,2,3" VerticalAlignment="Stretch" Grid.ColumnSpan="3" />

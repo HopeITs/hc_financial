@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
 using System;
@@ -186,6 +187,7 @@ namespace Financial_WPF_App
                 Original_PersonalAccList = new List<Local_PersonalAcc>();
                 Original_ExchangeAccList = new List<Local_ExchangeAcc>();
 
+                TotalAmount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
 
                 City_lable.IsEnabled = City_comboBox.IsEnabled = City_clear_btn.IsEnabled =
                         Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled =
@@ -1440,29 +1442,6 @@ namespace Financial_WPF_App
                 if (TotalAmount_txtBox.Text != "")
                 {
                     TotalAmount_txtBox.Text = Login.ConvertToDouble(TotalAmount_txtBox.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9.]+");
-                    e.Handled = regex.IsMatch(e.Text);
                 }
             }
             catch (Exception ex)

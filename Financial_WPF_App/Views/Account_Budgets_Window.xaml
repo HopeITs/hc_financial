@@ -78,7 +78,7 @@
                 <Label  Style="{DynamicResource lableStyle}" Content="%" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1" FontSize="25"/>
                 <Button Style="{DynamicResource Add_Style}" 
                     x:Name="AddDonor_btn" TabIndex="15" HorizontalAlignment="Stretch" Margin="6,0,5,5" VerticalAlignment="Stretch" Width="NaN" Click="AddDonor_btn_Click"  />
-                <TextBox x:Name="Rate_TextBox" Margin="2,2,2,2" TextWrapping="Wrap" Style="{DynamicResource textBoxStyle}" VerticalAlignment="Stretch" Grid.Column="2" LostFocus="Rate_TextBox_LostFocus" PreviewTextInput="NumberValidationTextBox"/>
+                <TextBox x:Name="Rate_TextBox" Margin="2,2,2,2" TextWrapping="Wrap" Style="{DynamicResource textBoxStyle}" VerticalAlignment="Stretch" Grid.Column="2" LostFocus="Rate_TextBox_LostFocus"/>
             </Grid>
             <TextBox x:Name="Exchange_Note_TextBox_Copy" Margin="3,3,3,3" Grid.Row="3" TextWrapping="Wrap" Style="{DynamicResource textBoxStyle}" Text="Please note that the budget's currency is the only currency allowed to be exchanged to Syrian pound." FontSize="20" Foreground="#FFBE121F" VerticalAlignment="Stretch" Grid.ColumnSpan="4" HorizontalContentAlignment="Left"/>
             <syncfusion:SfDataGrid x:Name="Budget_Dononrs_DataGrid" Margin="1,4,1,10" Grid.Row="5" Grid.ColumnSpan="4"

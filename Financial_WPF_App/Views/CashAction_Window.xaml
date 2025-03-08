@@ -79,7 +79,7 @@
 
                 <TextBox x:Name="Amount_txtBox" Style="{DynamicResource textBoxStyle}" 
                     Grid.Column="2" Grid.Row="4" TabIndex="4"
-                    LostFocus="Amount_txtBox_LostFocus" Margin="5,8,5,8" Grid.ColumnSpan="2" VerticalAlignment="Stretch" PreviewTextInput="NumberValidationTextBox"   />
+                    LostFocus="Amount_txtBox_LostFocus" Margin="5,8,5,8" Grid.ColumnSpan="2" VerticalAlignment="Stretch"   />
 
                 <Label x:Name="ActionDate_Label" Grid.Column="5" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Counting date:" Margin="2,3,2,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right"  />
                 <DatePicker x:Name="ActionDate_datepicker" Grid.Row="1" TabIndex="1"

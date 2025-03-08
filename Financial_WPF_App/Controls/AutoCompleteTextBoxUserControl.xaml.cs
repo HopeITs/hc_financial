@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Financial_WPF_App.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,6 +42,7 @@ namespace Financial_WPF_App.Controls
             {
                 // Initialization.  
                 this.InitializeComponent();
+                autoTextBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
             }
             catch (Exception ex)
             {
@@ -157,29 +159,6 @@ namespace Financial_WPF_App.Controls
         }
 
         #endregion
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9.]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
 
         #region Auto list selection changed method  
 

@@ -1,3 +1,4 @@
+using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.Data.Extensions;
@@ -64,6 +65,8 @@ namespace Financial_WPF_App.Views
                 b = new Beneficiary();
                 t = new Till();
                 p = new Payment();
+                monthes_txtBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
+
                 myExpander.IsExpanded = false;
 
                 Load_Data();
@@ -1046,29 +1049,6 @@ namespace Financial_WPF_App.Views
                 All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
             else
                 Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
-        }
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
         }
 
         private CheckBox headerCheckbox;

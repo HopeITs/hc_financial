@@ -57,8 +57,7 @@
             </Grid.RowDefinitions>
 
             <Label Style="{DynamicResource lableStyle}" Content="Project Number:" Height="33" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,2,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <TextBox x:Name="MP_ID_txtBox" Grid.Column="2" 
-                     PreviewTextInput="Number2ValidationTextBox" Style="{DynamicResource textBoxStyle}" TabIndex="1" Height="30" Margin="2,0,2,0"  />
+            <TextBox x:Name="MP_ID_txtBox" Grid.Column="2" Style="{DynamicResource textBoxStyle}" TabIndex="1" Height="30" Margin="2,0,2,0"  />
 
             <Label Grid.Column="3" Style="{DynamicResource lableStyle}" Content="Project Title:" Height="30" HorizontalAlignment="Stretch" Margin="2,0,2,0" HorizontalContentAlignment="Right"  />
             <TextBox x:Name="MP_Name_txtBox" Grid.Column="4"  
@@ -83,11 +82,11 @@
             <TextBox x:Name="Amount_txtBox" Grid.Column="2" Grid.Row="5" 
                      LostFocus="Amount_txtBox_LostFocus"
                         Style="{DynamicResource textBoxStyle}" TabIndex="9" HorizontalContentAlignment="Stretch" Width="Auto" 
-                     FlowDirection="RightToLeft" Height="27" Margin="2,0,2,0" PreviewTextInput="NumberValidationTextBox" />
+                     FlowDirection="RightToLeft" Height="27" Margin="2,0,2,0" />
 
             <Label Grid.Column="3"  Grid.Row="5" Style="{DynamicResource lableStyle}" Content="Amount owed:" Margin="2,0,2,0" Height="30" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
             <TextBox x:Name="ToReturn_Amount_txtBox" Grid.Column="4"  Grid.Row="5" TabIndex="10" LostFocus="ToReturn_Amount_txtBox_LostFocus"
-                       Style="{DynamicResource textBoxStyle}" Width="Auto" HorizontalContentAlignment="Stretch" FlowDirection="RightToLeft" Margin="2,0,2,0" Height="30" PreviewTextInput="NumberValidationTextBox" />
+                       Style="{DynamicResource textBoxStyle}" Width="Auto" HorizontalContentAlignment="Stretch" FlowDirection="RightToLeft" Margin="2,0,2,0" Height="30" />
 
 
             <Label Grid.Column="1" Grid.Row="7" Style="{DynamicResource lableStyle}" Content="Financing date:" Margin="2,0,2,0" Height="33" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch" />
@@ -104,7 +103,7 @@
             <Label Grid.Row="6" Style="{DynamicResource lableStyle}" Content="Payment:" Grid.Column="1" HorizontalAlignment="Stretch" Height="33" Margin="2,0,2,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
             <TextBox x:Name="Payment_txtBox" Grid.Column="2" Grid.Row="6" 
                      LostFocus="Payment_txtBox_LostFocus"
-                     Style="{DynamicResource textBoxStyle}" TabIndex="13" Margin="2,0,4,0" Height="27" PreviewTextInput="NumberValidationTextBox" />
+                     Style="{DynamicResource textBoxStyle}" TabIndex="13" Margin="2,0,4,0" Height="27" />
 
             <Label Grid.Column="1" Grid.Row="8" Style="{DynamicResource lableStyle}" Content="Receipt number:" Margin="2,0,2,0" Height="33" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
             <TextBox x:Name="ReceiptNumber_txtBox" Grid.Column="2" Grid.Row="8"  Style="{DynamicResource textBoxStyle}" TabIndex="14" Margin="2,0,2,0" Height="29" />
@@ -206,7 +205,7 @@
             </Button>
             <Label Grid.Row="6" Style="{DynamicResource lableStyle}" Content="Payments interval (M):" Grid.Column="3" HorizontalAlignment="Stretch" Height="33" HorizontalContentAlignment="Right" Margin="2,0,2,0"  />
             <TextBox x:Name="Payment_interval_TextBox" Grid.Column="4"  Grid.Row="6" TabIndex="10" LostFocus="ToReturn_Amount_txtBox_LostFocus"
-                Style="{DynamicResource textBoxStyle}" Width="Auto" HorizontalContentAlignment="Stretch" FlowDirection="RightToLeft" Margin="3,0,2,0" Height="29" PreviewTextInput="NumberValidationTextBox" />
+                Style="{DynamicResource textBoxStyle}" Width="Auto" HorizontalContentAlignment="Stretch" FlowDirection="RightToLeft" Margin="3,0,2,0" Height="29" />
             <TextBox Grid.Column="4" x:Name="FName_txtBox" TextWrapping="Wrap" FontSize="14"   Margin="2,2,2,2" VerticalContentAlignment="Center" FlowDirection="LeftToRight" TabIndex="3" Grid.Row="1" />
             <TextBlock Grid.Column="4" x:Name="Placeholder1" IsHitTestVisible="False" TextWrapping="Wrap" Text="First name" VerticalAlignment="Center" Margin="52,0,3,0" Foreground="DarkGray" Height="19" Grid.Row="1" FlowDirection="LeftToRight">
                 <TextBlock.Style>

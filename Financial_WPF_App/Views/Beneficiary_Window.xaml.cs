@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using System;
 using System.Data;
 using System.Linq;
@@ -74,6 +75,13 @@ namespace Financial_WPF_App
                 a = new Account();
                 b = new Beneficiary(); p = new Payment();
                 a_dt = new DataTable();
+
+                Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+                ToReturn_Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+                Payment_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+                Payment_interval_TextBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
+                MP_ID_txtBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
+
                 for (int i = 0; i < myDataGrid.Columns.Count; i++)
                 {
                     myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
@@ -95,6 +103,7 @@ namespace Financial_WPF_App
                 return false;
             }
         }
+
         private void Apply_Color_Theme()
         {
 
@@ -104,6 +113,7 @@ namespace Financial_WPF_App
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
+
         private void Load_Data()
         {
             if (SubProject_ID != -1)
@@ -550,51 +560,6 @@ namespace Financial_WPF_App
 
             if (ToReturn_Amount_txtBox.Text == "" || ToReturn_Amount_txtBox.Text == "0") ToReturn_Amountamount = 0;
 
-        }
-
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9.]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Number2ValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            try
-            {
-                if (e.Text != "")
-                {
-                    Regex regex = new Regex("[^0-9]+");
-                    e.Handled = regex.IsMatch(e.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
         }
 
         private void Clear_Boxes()
