@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
         Title="Denominations_Window" Height="480" Width="400" KeyDown="Window_KeyDown" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
     <Grid>
@@ -16,41 +17,30 @@
                 <RowDefinition Height="10*" />
             </Grid.RowDefinitions>
 
-            <!--<ScrollViewer   
-            FlowDirection="RightToLeft"
-            VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Auto" 
-            PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">-->
+         <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
+         Style="{DynamicResource SfDataGrid_body}"
+         HeaderStyle="{DynamicResource SfDataGrid_header}"
+         RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+         AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
+         NavigationMode="Cell"
+         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
+         Margin="1,1,1,5"  AllowFiltering="False" CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AddNewRowPosition="Bottom">
 
-            <DataGrid  
-                x:Name="myDataGrid" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"  
-                ColumnHeaderStyle="{DynamicResource DataGrid_header}"
-                Style="{DynamicResource DataGrid_body}" 
-                AlternatingRowBackground="{DynamicResource HopeBlue1}" 
-                RowBackground="{DynamicResource HopeGrey}" AlternationCount="2" 
-                IsReadOnly="False" CellEditEnding="myDataGrid_CellEditEnding"
-                SelectionChanged="myDataGrid_SelectionChanged" >
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID" IsHidden="True"/>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding id}" Header="#" Visibility="Hidden" />
-                    <DataGridTextColumn Header="Denominations"  Binding="{Binding name}"/>
-                    <!--<DataGridTemplateColumn Header="Edit" >
-                        <DataGridTemplateColumn.CellTemplate>
+                    <syncfusion:GridNumericColumn  x:Name="Denominations_DataGridColumn" HeaderText="Denominations"  MappingName="name" AllowEditing="True"
+                                           NumberDecimalDigits="0" NumberGroupSizes="3" NumberGroupSeparator=","/>
+                    <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{DynamicResource Edit_Style}" Click="EditButton_Click" />
+                                <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>-->
-                    <DataGridTemplateColumn Header="Delete" >
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Style="{DynamicResource Delete_Style}" Click="DeleteButton_Click"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                </DataGrid.Columns>
-
-            </DataGrid>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+                </syncfusion:SfDataGrid.Columns>
+             
+            </syncfusion:SfDataGrid>
 
             <Grid Grid.Column="0" Grid.Row="1" >
                 <Grid.ColumnDefinitions>
@@ -66,23 +56,6 @@
                 </Grid.RowDefinitions>
                 <Button Grid.Column="0" Style="{DynamicResource SaveButton_Style}" 
                     x:Name="Save_btn" TabIndex="3" Click="Save_btn_Click" />
-
-                <!--<Label Grid.Column="1" Style="{DynamicResource lableStyle}" x:Name="Selected_lable" Content="Selected: 0" />-->
-                <!--<Label Grid.Column="2" Style="{DynamicResource lableStyle}" x:Name="All_lable" Content="All: 0" />-->
-
-                <Label Grid.Column="4" Content="All: " Style="{DynamicResource statistic_lableStyle}" />
-                <Border Grid.Column="3" Style="{StaticResource BorderStackPanelStyle}" >
-                    <TextBlock  x:Name="All_textBlock" 
-                        Text="{Binding Items.Count, ElementName=myDataGrid, StringFormat=\{0:N0\}}"  
-                        Style="{DynamicResource statistic_textBlockStyle}"
-                        OverridesDefaultStyle="True"  />
-                </Border>
-
-                <Label Grid.Column="2" Content="Selected: " Style="{DynamicResource statistic_lableStyle}" />
-                <Border Grid.Column="1" Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}"
-                        OverridesDefaultStyle="True"  />
-                </Border>
             </Grid>
 
         </Grid>
