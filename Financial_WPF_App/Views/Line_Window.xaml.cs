@@ -1,5 +1,7 @@
 ﻿using Financial_WPF_App.Models;
+using Syncfusion.UI.Xaml.Grid;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
@@ -146,6 +148,7 @@ namespace Financial_WPF_App.Views
 
                     if (Fixed_checkBox.IsChecked == true) Type = 0;
                     else Type = 1;
+
                     if (Profit_checkBox.IsChecked == true) Kind = 0;
                     else Kind = 1;
 
@@ -389,5 +392,50 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void myDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                IInputElement element = e.MouseDevice.DirectlyOver;
+                if (element != null && element is FrameworkElement)
+                {
+                    if (((FrameworkElement)element).Parent is GridCell)
+                    {
+                        var grid = sender as SfDataGrid;
+                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        {
+                            DataRowView rowview = grid.SelectedItem as DataRowView;
+                            Cat_ID = Convert.ToInt32(rowview[0].ToString());
+
+                            CategoryName_txtBox.Text = rowview[1].ToString();
+
+                            if (rowview[2] != DBNull.Value || rowview[2] != null)
+                            {
+                                if (rowview[2].ToString() == "Equipping the place") Fixed_checkBox.IsChecked = true;
+                                else InFlow_checkBox.IsChecked = true;
+                            }
+
+                            if (rowview[3] != DBNull.Value || rowview[3] != null)
+                            {
+                                if (rowview[3].ToString() == "Profit") Profit_checkBox.IsChecked = true;
+                                else Budget_checkBox.IsChecked = true;
+                            }
+
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
     }
 }

@@ -46,7 +46,7 @@
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID" IsHidden="True"/>
                     <syncfusion:GridTextColumn x:Name="Currency_DataGridColumn" HeaderText="Currency"  MappingName="Name" AllowEditing="True"/>
-                    <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn"  HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
