@@ -120,11 +120,6 @@ namespace Financial_WPF_App
                     }
 
                     myDataGrid.ItemsSource = dt.DefaultView;
-
-                    int count = dt.Rows.Count;
-                    All_textBlock.Text = count.ToString("N0");
-
-                    //All_textBlock.Text = dt.Rows.Count.ToString("#,##0");
                 }
                 else
                 {
@@ -157,9 +152,9 @@ namespace Financial_WPF_App
                         string Name = rows[0]["Name"].ToString();
                         Query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES ('Donors_Window', 'DELETE', 'Donor', '" + Delete_list[i] + "', CONCAT('Donor Name = ', '" + Name + "'), '' , '" + Log_Query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     }
-                    for (int i = 0; i < myDataGrid.Items.Count - 1; i++)
+                    for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        DataRowView row = myDataGrid.Items[i] as DataRowView;
+                        DataRowView row = myDataGrid.View.Records.GetItemAt(i) as DataRowView;
                         if (!string.IsNullOrWhiteSpace(row.Row["Name"].ToString()))
                         {
                             if (row.Row["ID"] == null || row.Row["ID"].ToString() == "") //ID 
@@ -208,7 +203,7 @@ namespace Financial_WPF_App
         {
             try
             {
-                if (myDataGrid.SelectedIndex < myDataGrid.Items.Count - 1)
+                if (myDataGrid.SelectedIndex < dt.Rows.Count)
                 {
                     //var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirm before save", MessageBoxButton.YesNo);
                     var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None);
@@ -313,24 +308,32 @@ namespace Financial_WPF_App
             e.Handled = true;
         }
 
-        private void myDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        private void myDataGrid_CurrentCellEndEdit(object sender, Syncfusion.UI.Xaml.Grid.CurrentCellEndEditEventArgs e)
         {
             try
             {
-                int row_index = e.Row.GetIndex();
                 Donor_IsDirty = true;
+                int rowIndex = e.RowColumnIndex.RowIndex - 1;
 
-                DataRowView row = myDataGrid.Items[row_index] as DataRowView;
-
-                if (row.Row["ID"] == null || row.Row["ID"].ToString() == "")
+                if (rowIndex < 0 || rowIndex >= myDataGrid.View.Records.Count)
                 {
-
-                }
+                    return;
+                } 
                 else
                 {
-                    if (!isDirty_list.Contains(Int32.Parse(row.Row["ID"].ToString())))
-                        isDirty_list.Add(Int32.Parse(row.Row["ID"].ToString()));
+                    DataRowView row = (DataRowView)this.myDataGrid.View.Records.GetItemAt(rowIndex);
+
+                    if (row.Row["ID"] == null || row.Row["ID"].ToString() == "")
+                    {
+
+                    }
+                    else
+                    {
+                        if (!isDirty_list.Contains(Int32.Parse(row.Row["ID"].ToString())))
+                            isDirty_list.Add(Int32.Parse(row.Row["ID"].ToString()));
+                    }
                 }
+  
             }
             catch (Exception ex)
             {
@@ -364,27 +367,6 @@ namespace Financial_WPF_App
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error");
-            }
-        }
-
-        private void Export_btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void myDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                var SelectedRowCount = myDataGrid.SelectedItems.Count;
-                Selected_textBlock.Text = SelectedRowCount.ToString("N0");
-            }
-            catch (Exception ex)
-            { if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL")) 
-                { MessageBox.Show("please check your network and try again", "Error"); } 
-                else if (ex.Message.Contains("host")) 
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
 
