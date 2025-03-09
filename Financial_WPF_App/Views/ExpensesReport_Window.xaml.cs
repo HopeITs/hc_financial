@@ -124,7 +124,7 @@ namespace Financial_WPF_App.Views
 
 
             View_comboBox.ItemsSource = View_dt.DefaultView;
-
+            //View_comboBox_SelectionChanged(View_comboBox, null);
 
         }
 
@@ -132,6 +132,7 @@ namespace Financial_WPF_App.Views
         {
             if (Login.BuildConnection())
             {
+                AvgRate_comboBox.SelectedIndex = -1;
                 Budgetrate_dt = b.Select_Budgt_AvgetRate(Budget_ID.ToString());
                 if (Budgetrate_dt != null && Budgetrate_dt.Rows.Count > 0)
                 {
@@ -176,11 +177,19 @@ namespace Financial_WPF_App.Views
                     }
                 }
             }
-            if (Report_dt != null && Report_dt.Rows.Count > 0)
+            if(Budgets_comboBox.SelectedIndex != -1 && View_comboBox.SelectedIndex != -1)
             {
-                Expenses_DataGridView.ItemsSource = Report_dt.DefaultView;
+                if (Report_dt != null && Report_dt.Rows.Count > 0)
+                {
+                    Expenses_DataGridView.ItemsSource = Report_dt.DefaultView;
+                }
+                else
+                {
+                    Expenses_DataGridView.ItemsSource = null;
+                }
             }
             Expenses_DataGridView.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
+
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
@@ -719,6 +728,7 @@ namespace Financial_WPF_App.Views
                 }
             }
         }
+
         private void ShowColumn(object sender, RoutedEventArgs e)
         {
             try
@@ -797,6 +807,7 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
         private void ShowAll_MenuItem_Click(object sender, RoutedEventArgs e)
         {
             try

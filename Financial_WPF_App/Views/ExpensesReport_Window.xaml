@@ -256,32 +256,41 @@
                 Content="AvgRate:" HorizontalContentAlignment="Right" Width="68" Height="33" Grid.Column="1" HorizontalAlignment="Center" />
                         <Button Grid.Column="2"  Style="{DynamicResource SaveButton_Style}"
                 x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" Height="32" Width="86" Grid.Row="3" Margin="37,0,0,0" />
-                        <DataGrid Grid.ColumnSpan="4"
-                x:Name="Budget_AvgRate_Datagridview"  
-                ColumnHeaderStyle="{DynamicResource DataGrid_header}" 
-                Style="{DynamicResource DataGrid_body}"
-                AlternatingRowBackground="{DynamicResource HopeBlue1}"  
-                
-                RowBackground="{DynamicResource HopeGrey}" AlternationCount="2" Margin="10,10,10,10" Grid.Row="4" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="3">
 
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="budg_avgetrate_id"  Binding="{Binding budget_avgrate_id}" Visibility="Collapsed"/>
-                                <DataGridTextColumn Header="Budge_ID"  Binding="{Binding Budget_ID}" Visibility="Collapsed"/>
-                                <DataGridTextColumn Header="AvgRate"  Binding="{Binding AvgRate}"/>
-                                <DataGridTextColumn Header="AvgRate_ID"  Binding="{Binding AvgRate_ID}" Visibility="Collapsed"/>
-                                <DataGridTextColumn Header="Value"  Binding="{Binding Value, StringFormat=\{0:N2\}}"/>
 
-                                <DataGridTemplateColumn Header="Delete" >
-                                    <DataGridTemplateColumn.CellTemplate>
+                        <syncfusion:SfDataGrid x:Name="Budget_AvgRate_Datagridview" FrozenColumnCount="2"                                            
+Style="{DynamicResource SfDataGrid_body}"
+HeaderStyle="{DynamicResource SfDataGrid_header}"
+RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
+HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
+Margin="16,9,0,1"  AllowFiltering="False" Grid.RowSpan="3" Grid.Row="4" Grid.ColumnSpan="4">
+
+                            <syncfusion:SfDataGrid.Columns>
+                                <syncfusion:GridTextColumn x:Name="budg_avgetrate_id_DataGridColumn" HeaderText="budg_avgetrate_id"  MappingName="budg_avgetrate_id" IsHidden="True"/>
+                                <syncfusion:GridTextColumn x:Name="Budge_ID_DataGridColumn" HeaderText="Budge_ID"  MappingName="Budge_ID" IsHidden="True"/>
+                                <syncfusion:GridTextColumn x:Name="AvgRate_DataGridColumn" HeaderText="AvgRate"  MappingName="AvgRate"/>
+                                <syncfusion:GridTextColumn x:Name="AvgRate_ID_DataGridColumn" HeaderText="AvgRate_ID"  MappingName="AvgRate_ID" IsHidden="True"/>
+                                <syncfusion:GridNumericColumn  x:Name="Value_DataGridColumn" HeaderText="Value"  MappingName="Value" 
+                                       NumberDecimalDigits="2"
+                                       NumberDecimalSeparator="."
+                                       NumberGroupSizes="3"
+                                       NumberGroupSeparator=","/>
+
+                                <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn"  HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                                    <syncfusion:GridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Style="{DynamicResource Delete_Style}" Click="DeleteButton_Click"/>
+                                            <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
                                         </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                    </syncfusion:GridTemplateColumn.CellTemplate>
+                                </syncfusion:GridTemplateColumn>
+                            </syncfusion:SfDataGrid.Columns>
+
+                        </syncfusion:SfDataGrid>
+
+
                         <StackPanel Grid.Column="2" x:Name="AvgRate_panel" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="7,2,10,3" Grid.Row="1" >
-                            <ComboBox x:Name="AvgRate_comboBox" DisplayMemberPath="Rate group name" SelectedValuePath="ID"
+                            <ComboBox Style="{DynamicResource FloatingMultiComboboxStyle}" x:Name="AvgRate_comboBox" DisplayMemberPath="Rate group name" SelectedValuePath="ID"
                 FlowDirection="RightToLeft" Height="29" TabIndex="1" FontSize="14" Width="158" />
                             <Button x:Name="AvgRate_help" Width="30" Height="28" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100">
 
@@ -293,19 +302,6 @@
                                 </Button.ToolTip>
                             </Button>
                         </StackPanel>
-
-                        <!--<ListBox  Grid.Column="1" Grid.Row="4" Grid.RowSpan="2"
-            ItemsSource="{Binding Columns, ElementName=myDataGrid}">
-            <ListBox.Background>
-                <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-            </ListBox.Background>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <CheckBox Content="{Binding Header}" 
-                              IsChecked="{Binding IsVisible, Mode=TwoWay}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>-->
 
                     </Grid>
                 </Expander>
