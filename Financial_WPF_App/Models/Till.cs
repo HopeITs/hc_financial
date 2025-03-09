@@ -181,7 +181,6 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-
         public DataTable Select_All_tills_ForCombobox()
         {
             string query = @"SELECT 
@@ -220,7 +219,6 @@ namespace Financial_WPF_App.Models
             }
             return dt;
         }
-
 
         public DataTable Select_All_tills()
         {

@@ -74,6 +74,7 @@ namespace Financial_WPF_App
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
+
         private void Load_Data()
         {
             LoadGrid(false);
@@ -149,9 +150,10 @@ namespace Financial_WPF_App
                         string Name = rows[0]["Name"].ToString();
                         Query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES ('AddTillType_Window', 'DELETE', 'Tilltypes', '" + Delete_list[i] + "', CONCAT('Tilltype Name = ', '" + Name + "'), '' , '" + Log_Query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     }
-                    for (int i = 0; i < myDataGrid.Items.Count - 1; i++)
+                    for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        DataRowView row = myDataGrid.Items[i] as DataRowView;
+                        DataRowView row = myDataGrid.View.Records.GetItemAt(i) as DataRowView;
+
                         if (!string.IsNullOrWhiteSpace(row.Row["Name"].ToString()))
                         {
                             if (row.Row["ID"] == null || row.Row["ID"].ToString() == "") //ID 
@@ -200,14 +202,13 @@ namespace Financial_WPF_App
         {
             try
             {
-                if (myDataGrid.SelectedIndex < myDataGrid.Items.Count - 1)
+                if (myDataGrid.SelectedIndex < dt.Rows.Count)
                 {
                     //var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirm before save", MessageBoxButton.YesNo);
                     var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None);
                     if (dialogResult == MessageBoxResult.Yes)
                     {
                         DataRowView dataRow = (DataRowView)myDataGrid.SelectedItem;
-
 
                         if (dataRow.Row["ID"] == null || dataRow.Row["ID"].ToString() == "")
                         {
@@ -282,24 +283,12 @@ namespace Financial_WPF_App
             e.Handled = true;
         }
 
-        private void myDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                int row_index = e.Row.GetIndex();
-                TillType_IsDirty = true;
-
-                DataRowView row = myDataGrid.Items[row_index] as DataRowView;
-
-                if (row.Row["ID"] == null || row.Row["ID"].ToString() == "")
-                {
-
-                }
-                else
-                {
-                    if (!isDirty_list.Contains(Int32.Parse(row.Row["ID"].ToString())))
-                        isDirty_list.Add(Int32.Parse(row.Row["ID"].ToString()));
-                }
+                Load_Data();
             }
             catch (Exception ex)
             {
@@ -313,16 +302,33 @@ namespace Financial_WPF_App
             }
         }
 
-        private void Export_btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private void myDataGrid_CurrentCellEndEdit(object sender, Syncfusion.UI.Xaml.Grid.CurrentCellEndEditEventArgs e)
         {
             try
             {
-                Load_Data();
+                TillType_IsDirty = true;
+                int rowIndex = e.RowColumnIndex.RowIndex - 1;
+
+                if (rowIndex < 0 || rowIndex >= myDataGrid.View.Records.Count)
+                {
+                    return;
+                }
+                else
+                {
+                    DataRowView row = (DataRowView)this.myDataGrid.View.Records.GetItemAt(rowIndex);
+
+
+                    if (row.Row["ID"] == null || row.Row["ID"].ToString() == "")
+                    {
+
+                    }
+                    else
+                    {
+                        if (!isDirty_list.Contains(Int32.Parse(row.Row["ID"].ToString())))
+                            isDirty_list.Add(Int32.Parse(row.Row["ID"].ToString()));
+                    }
+                }
+
             }
             catch (Exception ex)
             {

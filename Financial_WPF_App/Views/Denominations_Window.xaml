@@ -7,6 +7,15 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
         Title="Denominations_Window" Height="480" Width="400" KeyDown="Window_KeyDown" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Refresh" Click = "Refresh_Click" >
+                <MenuItem.Icon>
+                    <Image Source="/Cashing;component/Images/refresh32.png" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Window.ContextMenu>
     <Grid>
         <Grid >
             <Grid.ColumnDefinitions>
