@@ -1,5 +1,4 @@
 ﻿using Financial_WPF_App.Models;
-
 using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Syncfusion.UI.Xaml.Grid;
 
 
 namespace Financial_WPF_App.Views
@@ -329,6 +329,139 @@ namespace Financial_WPF_App.Views
             Password_txtBox.Text = string.Empty;
             Role_comboBox.SelectedIndex = -1;
             Load_Data();
+        }
+
+        private void myDataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                IInputElement element = e.MouseDevice.DirectlyOver;
+                if (element != null && element is FrameworkElement)
+                {
+                    if (((FrameworkElement)element).Parent is GridCell)
+                    {
+                        var grid = sender as SfDataGrid;
+                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        {
+      
+
+                            User_ID = -1;
+                            Username_txtBox.Text = string.Empty;
+                            Password_txtBox.Text = string.Empty;
+                            Role_comboBox.SelectedIndex = -1;
+                            Clear_Lists();
+
+
+                            DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
+                            User_ID = Convert.ToInt32(dataRow["user_id"].ToString());
+                            Username_txtBox.Text = dataRow["username"].ToString();
+                            Password_txtBox.Text = dataRow["Password"].ToString();
+                            Role_comboBox.SelectedValue = Convert.ToInt32(dataRow["role_id"].ToString());
+
+
+                            Original_Subprojects.Clear();
+                            if (dataRow["user_subprojects"] != DBNull.Value && dataRow["user_subprojects"] != null)
+                            {
+                                Original_Subprojects = dataRow["user_subprojects"].ToString().Split(',').Select(int.Parse).ToList();
+
+                                for (int i = 0; i < Subproject_CheckListBox.Items.Count; i++)
+                                {
+                                    DataRowView row = (DataRowView)Subproject_CheckListBox.Items[i];
+                                    if (Original_Subprojects.Contains(Convert.ToInt32(row["ID"])))
+                                    {
+                                        Subproject_CheckListBox.SelectedItems.Add(Subproject_CheckListBox.Items[i]);
+                                    }
+                                }
+                            }
+
+                            Original_Accounts.Clear();
+                            if (dataRow["user_accounts"] != DBNull.Value && dataRow["user_accounts"] != null)
+                            {
+                                Original_Accounts = dataRow["user_accounts"].ToString().Split(',').Select(int.Parse).ToList();
+
+                                for (int i = 0; i < Account_CheckListBox.Items.Count; i++)
+                                {
+                                    DataRowView row = (DataRowView)Account_CheckListBox.Items[i];
+                                    if (Original_Accounts.Contains(Convert.ToInt32(row["ID"])))
+                                    {
+                                        Account_CheckListBox.SelectedItems.Add(Account_CheckListBox.Items[i]);
+                                    }
+                                }
+                            }
+
+                            Original_PersonalAccounts.Clear();
+                            if (dataRow["user_Personalaccounts"] != DBNull.Value && dataRow["user_Personalaccounts"] != null)
+                            {
+                                Original_PersonalAccounts = dataRow["user_Personalaccounts"].ToString().Split(',').Select(int.Parse).ToList();
+
+                                for (int i = 0; i < PersonalAccount_CheckListBox.Items.Count; i++)
+                                {
+                                    DataRowView row = (DataRowView)PersonalAccount_CheckListBox.Items[i];
+                                    if (Original_PersonalAccounts.Contains(Convert.ToInt32(row["ID"])))
+                                    {
+                                        PersonalAccount_CheckListBox.SelectedItems.Add(PersonalAccount_CheckListBox.Items[i]);
+                                    }
+                                }
+                            }
+
+                            Original_ExchangeAccounts.Clear();
+                            if (dataRow["user_Exchangeaccounts"] != DBNull.Value && dataRow["user_Exchangeaccounts"] != null)
+                            {
+                                Original_ExchangeAccounts = dataRow["user_Exchangeaccounts"].ToString().Split(',').Select(int.Parse).ToList();
+
+                                for (int i = 0; i < ExchangeAccount_CheckListBox.Items.Count; i++)
+                                {
+                                    DataRowView row = (DataRowView)ExchangeAccount_CheckListBox.Items[i];
+                                    if (Original_ExchangeAccounts.Contains(Convert.ToInt32(row["ID"])))
+                                    {
+                                        ExchangeAccount_CheckListBox.SelectedItems.Add(ExchangeAccount_CheckListBox.Items[i]);
+                                    }
+                                }
+                            }
+
+                            Original_CashAccounts.Clear();
+                            if (dataRow["user_Cashaccounts"] != DBNull.Value && dataRow["user_Cashaccounts"] != null)
+                            {
+                                Original_CashAccounts = dataRow["user_Cashaccounts"].ToString().Split(',').Select(int.Parse).ToList();
+
+                                for (int i = 0; i < CashAccount_CheckListBox.Items.Count; i++)
+                                {
+                                    DataRowView row = (DataRowView)CashAccount_CheckListBox.Items[i];
+                                    if (Original_CashAccounts.Contains(Convert.ToInt32(row["ID"])))
+                                    {
+                                        CashAccount_CheckListBox.SelectedItems.Add(CashAccount_CheckListBox.Items[i]);
+                                    }
+                                }
+                            }
+
+                            Original_Cashier.Clear();
+                            if (dataRow["user_IsCashier"] != DBNull.Value && dataRow["user_IsCashier"] != null)
+                            {
+                                Original_Cashier = dataRow["user_IsCashier"].ToString().Split(',').Select(int.Parse).ToList();
+
+                                for (int i = 0; i < IsCashier_CashAccount_CheckListBox.Items.Count; i++)
+                                {
+                                    DataRowView row = (DataRowView)IsCashier_CashAccount_CheckListBox.Items[i];
+                                    if (Original_Cashier.Contains(Convert.ToInt32(row["ID"])))
+                                    {
+                                        IsCashier_CashAccount_CheckListBox.SelectedItems.Add(IsCashier_CashAccount_CheckListBox.Items[i]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
         }
 
         private void Show_Hide_Component()
@@ -665,7 +798,7 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Role_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Role_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             try
             {

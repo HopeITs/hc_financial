@@ -31,32 +31,37 @@
                 <RowDefinition Height="10" />
             </Grid.RowDefinitions>
 
-            <DataGrid  x:Name="myDataGrid"  Grid.Column="0" Grid.Row="0"
-                ColumnHeaderStyle="{DynamicResource DataGrid_header}" 
-                Style="{DynamicResource DataGrid_body}"
-                AlternatingRowBackground="{DynamicResource HopeBlue1}" 
-                RowBackground="{DynamicResource HopeGrey}" AlternationCount="2" 
-                IsReadOnly="True"  >
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding user_id}" Header="#" Visibility="Hidden" />
-                    <DataGridTextColumn Header="Username"  Binding="{Binding username}"/>
-                    <DataGridTextColumn Header="Role" Binding="{Binding role}"/>
-                    <DataGridTemplateColumn Header="Edit" >
-                        <DataGridTemplateColumn.CellTemplate>
+            <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
+      Style="{DynamicResource SfDataGrid_body}"
+      HeaderStyle="{DynamicResource SfDataGrid_header}"
+      RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+      AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
+      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+      Margin="1,0,2,0" MouseDoubleClick="myDataGrid_MouseDoubleClick" Grid.RowSpan="2">
+
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="user_id" IsHidden="True"/>
+                    <syncfusion:GridTextColumn x:Name="Username_DataGridColumn" HeaderText="Username"  MappingName="username" />
+                    <syncfusion:GridTextColumn x:Name="Role_DataGridColumn" HeaderText="Role"  MappingName="role" />
+
+                    <syncfusion:GridTemplateColumn x:Name="Edit_DataGridColumn" HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{DynamicResource Edit_Style}" Click="EditButton_Click" />
+                                <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click" />
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Delete" >
-                        <DataGridTemplateColumn.CellTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+
+                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{DynamicResource Delete_Style}" Click="DeleteButton_Click"/>
+                                <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+                </syncfusion:SfDataGrid.Columns>
+            </syncfusion:SfDataGrid>
+
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
