@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App.Views"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.User_Window"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+        x:Class="Financial_WPF_App.Views.User_Window"
         mc:Ignorable="d"
         Title="User_Window" Width="1280" Height="620" FontFamily="Myriad Arabic" FontSize="18" WindowStartupLocation="CenterScreen">
     <Grid>
