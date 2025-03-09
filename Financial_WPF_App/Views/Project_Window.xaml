@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
         Title="Project_Window"  Height="600" Width="450" FontFamily="Myriad Arabic" FontSize="16"  WindowStartupLocation="CenterScreen">
 
@@ -56,39 +57,38 @@
             TabIndex="4" Click="Save_btn_Click" Height="32" Margin="10,0,0,0" Width="86"   />
 
 
-        <!--</ScrollViewer>-->
-        <!--<ScrollViewer  
-            FlowDirection="RightToLeft"
-            VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Auto" 
-            PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">-->
-        <DataGrid  x:Name="myDataGrid"  Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4"  
-            ColumnHeaderStyle="{DynamicResource DataGrid_header}" 
-            Style="{DynamicResource DataGrid_body}"
-            AlternatingRowBackground="{DynamicResource HopeBlue1}" 
-            RowBackground="{DynamicResource HopeGrey}" AlternationCount="2" Margin="0,2,0,0" >
+        <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
+       Style="{DynamicResource SfDataGrid_body}"
+       HeaderStyle="{DynamicResource SfDataGrid_header}"
+       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+       AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
+       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+       Margin="1,2,2,0"  Grid.Row="4" Grid.ColumnSpan="4" MouseDoubleClick="myDataGrid_MouseDoubleClick">
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ID}" Header="#"  />
-                <DataGridTextColumn Header="Project Name"  Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Category"  Binding="{Binding Category}"/>
-                <DataGridTextColumn Header="Category_ID"  Binding="{Binding Category_ID}" Visibility="Hidden" />
-                <DataGridTemplateColumn Header="Edit" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Style="{DynamicResource Edit_Style}" Click="EditButton_Click" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Delete" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Style="{DynamicResource Delete_Style}" Click="DeleteButton_Click"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID"/>
+                <syncfusion:GridTextColumn x:Name="ProjectName" HeaderText="Project Name"  MappingName="Name" />
+                <syncfusion:GridTextColumn x:Name="Category_DataGridColumn" HeaderText="Category"  MappingName="Category" />
+                <syncfusion:GridTextColumn x:Name="CategoryID_DataGridColumn" HeaderText="Category_ID"  MappingName="Category_ID" IsHidden="True"/>
 
+
+                <syncfusion:GridTemplateColumn x:Name="Edit_DataGridColumn" HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click" />
+                        </DataTemplate>
+                    </syncfusion:GridTemplateColumn.CellTemplate>
+                </syncfusion:GridTemplateColumn>
+
+                <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
+                        </DataTemplate>
+                    </syncfusion:GridTemplateColumn.CellTemplate>
+                </syncfusion:GridTemplateColumn>
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
 
     </Grid>
 </Window>

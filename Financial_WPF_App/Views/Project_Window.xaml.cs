@@ -194,8 +194,8 @@ namespace Financial_WPF_App.Views
 
             try
             {
-
                 DataRowView dataRow = (DataRowView)myDataGrid.SelectedItem;
+
                 ID = Convert.ToInt32(dataRow["ID"].ToString());
                 Name_txtBox.Text = dataRow["Name"].ToString();
 
@@ -218,6 +218,43 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
 
+        }
+
+        private void myDataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                IInputElement element = e.MouseDevice.DirectlyOver;
+                if (element != null && element is FrameworkElement)
+                {
+                    if (((FrameworkElement)element).Parent is GridCell)
+                    {
+                        var grid = sender as SfDataGrid;
+                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        {
+                            DataRowView rowview = grid.SelectedItem as DataRowView;
+                            ID = Convert.ToInt32(rowview["ID"].ToString());
+                            Name_txtBox.Text = rowview["Name"].ToString();
+
+                            if (rowview["Category_ID"] != DBNull.Value)
+                                Category_comboBox.SelectedValue = Convert.ToInt32(rowview["Category_ID"].ToString());
+
+                            Category_comboBox.IsEnabled = false;
+                            Category_clear_btn.IsEnabled = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
