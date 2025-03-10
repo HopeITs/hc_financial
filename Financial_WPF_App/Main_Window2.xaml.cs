@@ -1139,16 +1139,15 @@ namespace Financial_WPF_App
                             {
                                 if (Category == "Micro Projects")
                                 {
-                                    FiscalBond_Window All_FiscalBonds = new FiscalBond_Window(this, Sub_ID);
+                                    FiscalBond_Window All_FiscalBonds = new FiscalBond_Window(this, Sub_ID, "Micro Projects");
                                     Create_tabItem(All_FiscalBonds, textBlock.Text + "-" + Header_Text, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
                                 }
                                 else if (Category == "Budget")
                                 {
-                                    FiscalBond_Window All_FiscalBonds = new FiscalBond_Window(this, Sub_ID);
+                                    FiscalBond_Window All_FiscalBonds = new FiscalBond_Window(this, Sub_ID, "Budget");
                                     Create_tabItem(All_FiscalBonds, textBlock.Text + "-" + Header_Text, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                 }
-                            }
-       
+                            }    
                         }
                     }
                 }

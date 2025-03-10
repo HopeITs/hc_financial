@@ -17,11 +17,12 @@ namespace Financial_WPF_App.Views
 
     public partial class FiscalBond_Window : Window
     {
-        public FiscalBond_Window(Main_Window_2 main_Window , string Subproject_ID)
+        public FiscalBond_Window(Main_Window_2 main_Window, string Subproject_ID, string Category)
         {
             InitializeComponent();
             this.main_Window = main_Window;
             this.Subproject_ID = Subproject_ID;
+            this.Category = Category;
             if (OnLoad())
             {
 
@@ -41,7 +42,7 @@ namespace Financial_WPF_App.Views
         List<string> Originally_HiddenColumns = new List<string>();
         double HOffset = 0;
         string Subproject_ID;
-
+        string Category;
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
         #region privileges
@@ -79,6 +80,14 @@ namespace Financial_WPF_App.Views
         private void Apply_Color_Theme()
         {
 
+            if (Category == "Micro Projects")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+            }
+            else if (Category == "Budget")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+            }
 
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
@@ -95,7 +104,7 @@ namespace Financial_WPF_App.Views
 
         private void Set_privileges()
         {
-            Edit_privileges =Delete_privileges = false;
+            Edit_privileges = Delete_privileges = false;
 
             if (Settings.Default.Role == "Head Office")
             {
@@ -225,7 +234,7 @@ namespace Financial_WPF_App.Views
                     }
 
                     fb.Delete(FiscalBond_ID, FiscalBond_Name, "FiscalBond_Window");
-  
+
                     LoadGrid();
                     main_Window.Fill_TreeView(true);
                 }
@@ -309,7 +318,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                if(Edit_privileges)
+                if (Edit_privileges)
                 {
                     IInputElement element = e.MouseDevice.DirectlyOver;
                     if (element != null && element is FrameworkElement)
