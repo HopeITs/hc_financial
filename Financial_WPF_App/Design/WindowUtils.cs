@@ -125,40 +125,18 @@ namespace Financial_WPF_App
             if (parent == null || borderColor == null)
                 return;
 
+            // Iterate through all the header cells in the parent container
             foreach (var headerCell in FindVisualChildren<GridHeaderCellControl>(parent))
             {
-                // Create a new ControlTemplate with the updated border color
-                var newTemplate = new ControlTemplate(typeof(GridHeaderCellControl));
+                // Set the BorderBrush and BorderThickness for the bottom border
+                headerCell.BorderBrush = borderColor;
 
-                newTemplate.VisualTree = new FrameworkElementFactory(typeof(Border));
-                var mainBorder = newTemplate.VisualTree;
-
-                // Set up main Border properties
-                mainBorder.SetValue(Border.BackgroundProperty, headerCell.Background);
-                mainBorder.SetValue(Border.BorderBrushProperty, new SolidColorBrush(Colors.LightGray));
-                mainBorder.SetValue(Border.BorderThicknessProperty, new Thickness(0.4, 0.4, 0.4, 0));
-
-                // Create a Grid inside the Border
-                var gridFactory = new FrameworkElementFactory(typeof(Grid));
-                mainBorder.AppendChild(gridFactory);
-
-                // ContentPresenter for header text
-                var contentPresenterFactory = new FrameworkElementFactory(typeof(ContentPresenter));
-                contentPresenterFactory.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
-                contentPresenterFactory.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-                gridFactory.AppendChild(contentPresenterFactory);
-
-                // Bottom border with dynamic color
-                var bottomBorderFactory = new FrameworkElementFactory(typeof(Border));
-                bottomBorderFactory.SetValue(Border.BackgroundProperty, borderColor);
-                bottomBorderFactory.SetValue(HeightProperty, 3.0);
-                bottomBorderFactory.SetValue(VerticalAlignmentProperty, VerticalAlignment.Bottom);
-                gridFactory.AppendChild(bottomBorderFactory);
-
-                // Apply the new template to the header cell
-                headerCell.Template = newTemplate;
+                // Set the BorderThickness to apply only to the bottom border
+                headerCell.BorderThickness = new Thickness(0, 0, 0, 3); // Adjust the bottom thickness if needed
             }
         }
+
+
         // Generic method to find all elements of a specific type in a given UI structure
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
         {
