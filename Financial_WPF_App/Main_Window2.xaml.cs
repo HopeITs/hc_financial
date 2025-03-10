@@ -1815,7 +1815,7 @@ namespace Financial_WPF_App
             try
             {
                 CashBalances_Window CashBalances_Window = new CashBalances_Window(-1, this);
-                Create_tabItem(CashBalances_Window, "Balances", (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
+                Create_tabItem(CashBalances_Window, "Balances", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
