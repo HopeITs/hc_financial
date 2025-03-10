@@ -474,9 +474,10 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                 </DockPanel>
             </Grid>
             <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True"
-            ExpandDirection="Right" 
-            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,5,44,0" Grid.RowSpan="2" Background="{x:Null}" Grid.Row="1">
-                <Grid>
+            ExpandDirection="Right" Style="{StaticResource AccountExpander}"
+            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,5,44,0" Background="{x:Null}" Grid.Row="1">
+                
+                <Grid Margin="20,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="2"/>
@@ -492,7 +493,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AutoGenerateColumns="True"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-                Margin="1,1,0,10" Grid.Row="2" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded">
+                Margin="1,1,0,0" Grid.Row="2" Grid.RowSpan="2" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded">
                         <syncfusion:SfDataGrid.TableSummaryRows>
                             <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                                        Title="Total:">
@@ -513,10 +514,12 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                             </syncfusion:GridTableSummaryRow>
                         </syncfusion:SfDataGrid.TableSummaryRows>
                     </syncfusion:SfDataGrid>
-                    <Button
-                    TabIndex="5" Style="{DynamicResource Export_Style}" x:Name="Cash_Export_btn" Margin="2,1,0,-4" Command="local:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Left" RenderTransformOrigin="0.536,0.355" Width="28" Grid.Row="3"/>
-                    <Label Style="{DynamicResource lableStyle}" 
-                        Content="Balances" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,-1,0"  />
+                    <StackPanel Orientation="Horizontal">
+                        <Button TabIndex="5" Style="{DynamicResource Export_Style}" x:Name="Cash_Export_btn" Margin="2,1,0,0" Command="local:Commands.ExportToExcel" VerticalAlignment="Stretch" HorizontalAlignment="Left" RenderTransformOrigin="0.536,0.355" Width="22" Grid.Row="3" Height="22"/>
+                        <Label Style="{DynamicResource statistic_lableStyle}" Background="{StaticResource LightGray2}"
+                                Content="Balances" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" Width="263" />
+                    </StackPanel>
+                    
                 </Grid>
 
             </Expander>
