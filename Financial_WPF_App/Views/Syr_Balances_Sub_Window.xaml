@@ -189,7 +189,7 @@ PopupAnimation="Fade">
     GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"                 
     HorizontalAlignment="Stretch"
     AutoGenerateColumns="True"
-    Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" Margin="2,1,2,1" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3">
+    Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3">
                     </syncfusion:SfDataGrid>
 
                 </Grid>

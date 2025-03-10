@@ -475,7 +475,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
             </Grid>
             <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True"
             ExpandDirection="Right" 
-            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,5,0,0" Grid.RowSpan="2" Background="{x:Null}" Grid.Row="1">
+            Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E" Margin="0,5,44,0" Grid.RowSpan="2" Background="{x:Null}" Grid.Row="1">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
