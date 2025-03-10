@@ -1954,12 +1954,6 @@
 
             <!-- Global Style for GridCell -->
             <Style TargetType="syncfusion:GridCell">
-                <!--<Setter Property="Background" Value="White" />
-                <Setter Property="BorderBrush" Value="Transparent" />
-                <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="Padding" Value="2" />-->
-
-                <!-- ControlTemplate with VisualStateManager -->
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="syncfusion:GridCell">
@@ -1975,15 +1969,7 @@
                                 <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
                                     <Setter TargetName="CellBorder" Property="BorderBrush" Value="{StaticResource DarkGray}" />
                                     <Setter TargetName="CellBorder" Property="BorderThickness" Value="1.5" />
-                                    <!--<Setter TargetName="CellBorder" Property="Background" Value="LightYellow" />-->
                                 </DataTrigger>
-
-                                <!-- Selected VisualState -->
-                                <!--<DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True">
-                                    <Setter TargetName="CellBorder" Property="BorderBrush" Value="Red" />
-                                    <Setter TargetName="CellBorder" Property="BorderThickness" Value="2" />
-                                    <Setter TargetName="CellBorder" Property="Background" Value="LightBlue" />
-                                </DataTrigger>-->
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
