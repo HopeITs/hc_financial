@@ -76,7 +76,7 @@ namespace Financial_WPF_App.Views
                     int Type_ID = Budget_Typs_dt.Rows[i].Field<int>("BudgetType_ID");
                     string Type_Name = Budget_Typs_dt.Rows[i].Field<string>("BudgetType");
 
-                    All_BidgetLine_Sub_Window All_BidgetLine_Sub_Window = new All_BidgetLine_Sub_Window(Type_ID, main_Window);
+                    All_BidgetLine_Sub_Window All_BudgetLine_Sub_Window = new All_BidgetLine_Sub_Window(Type_ID, main_Window);
                     newTabItem = new TabItem
                     {
                         Header = (Type_Name).ToUpper() + " Budgets",
@@ -88,7 +88,7 @@ namespace Financial_WPF_App.Views
                     newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                     Main_tabControl.Items.Add(newTabItem);
                     newTabItem.Content = null;
-                    newTabItem.Content = All_BidgetLine_Sub_Window.Content;
+                    newTabItem.Content = All_BudgetLine_Sub_Window.Content;
 
                 }
             }

@@ -2047,7 +2047,7 @@ namespace Financial_WPF_App
             try
             {
                 All_Budgetlins_Window All_Budgetlins_Window = new All_Budgetlins_Window(this);
-                Create_tabItem(All_Budgetlins_Window, "All Bidget Lines Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                Create_tabItem(All_Budgetlins_Window, "All Budget Lines Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
