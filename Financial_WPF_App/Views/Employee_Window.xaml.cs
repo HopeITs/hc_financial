@@ -141,7 +141,7 @@ namespace Financial_WPF_App.Views
                     Add_btn.Visibility = Visibility.Collapsed;
 
                 foreach (var C in EmployeeDataGrid.Columns)
-                    if (C.HeaderText.ToString() == "Delete")
+                    if (C.HeaderText.ToString() == "Edit")
                     {
                         C.IsHidden = true;
                     }
@@ -318,43 +318,38 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                IInputElement element = e.MouseDevice.DirectlyOver;
-                if (element != null && element is FrameworkElement)
+                if(Edit_privileges)
                 {
-                    if (((FrameworkElement)element).Parent is GridCell)
+                    IInputElement element = e.MouseDevice.DirectlyOver;
+                    if (element != null && element is FrameworkElement)
                     {
-                        var grid = sender as SfDataGrid;
-                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        if (((FrameworkElement)element).Parent is GridCell)
                         {
-                            DataRowView rowview = grid.SelectedItem as DataRowView;
-                            Employee_ID = Convert.ToInt32(rowview["Employee_ID"].ToString());
+                            var grid = sender as SfDataGrid;
+                            if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                            {
+                                DataRowView rowview = grid.SelectedItem as DataRowView;
+                                Employee_ID = Convert.ToInt32(rowview["Employee_ID"].ToString());
 
-                            if (rowview["FName"] != DBNull.Value || rowview["FName"] != null)
-                                FName_txtBox.Text = rowview["FName"].ToString();
+                                if (rowview["FName"] != DBNull.Value || rowview["FName"] != null)
+                                    FName_txtBox.Text = rowview["FName"].ToString();
 
-                            if (rowview["FaName"] != DBNull.Value || rowview["FaName"] != null)
-                                FaName_txtBox.Text = rowview["FaName"].ToString();
+                                if (rowview["FaName"] != DBNull.Value || rowview["FaName"] != null)
+                                    FaName_txtBox.Text = rowview["FaName"].ToString();
 
-                            if (rowview["LName"] != DBNull.Value || rowview["LName"] != null)
-                                LName_txtBox.Text = rowview["LName"].ToString();
+                                if (rowview["LName"] != DBNull.Value || rowview["LName"] != null)
+                                    LName_txtBox.Text = rowview["LName"].ToString();
 
 
-                            Employee_Subproject_Table = Emp.Select_Detailed_Employee(Employee_ID);
-                            Original_Employee_Subproject_Table = Employee_Subproject_Table.Copy();
+                                Employee_Subproject_Table = Emp.Select_Detailed_Employee(Employee_ID);
+                                Original_Employee_Subproject_Table = Employee_Subproject_Table.Copy();
 
-                            EmployeeDataGrid.ItemsSource = Employee_Subproject_Table;
-
-                            //int B_ID = Convert.ToInt32(rowview[0].ToString());
-
-                            //Beneficiary_Window beneficiary_Window = new Beneficiary_Window(B_ID, SubProject_ID, main_Window);
-                            //bool? dialogResult = beneficiary_Window.ShowDialog();
-                            //if (dialogResult == true)
-                            //{
-                            //    Load_Data();
-                            //}
+                                EmployeeDataGrid.ItemsSource = Employee_Subproject_Table;
+                            }
                         }
                     }
                 }
+
             }
             catch (Exception ex)
             {

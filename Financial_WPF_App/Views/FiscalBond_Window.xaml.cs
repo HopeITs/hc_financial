@@ -309,24 +309,27 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                IInputElement element = e.MouseDevice.DirectlyOver;
-                if (element != null && element is FrameworkElement)
+                if(Edit_privileges)
                 {
-                    if (((FrameworkElement)element).Parent is GridCell)
+                    IInputElement element = e.MouseDevice.DirectlyOver;
+                    if (element != null && element is FrameworkElement)
                     {
-                        var grid = sender as SfDataGrid;
-                        if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                        if (((FrameworkElement)element).Parent is GridCell)
                         {
-                            DataRowView rowview = grid.SelectedItem as DataRowView;
-                            int FiscalBond_ID = Convert.ToInt32(rowview["id"].ToString());
-
-                            Add_FiscalBond_Window _Window = new Add_FiscalBond_Window(FiscalBond_ID, dt, main_Window);
-
-                            bool? dialogResult = _Window.ShowDialog();
-                            if (dialogResult == true)
+                            var grid = sender as SfDataGrid;
+                            if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
                             {
-                                Load_Data();
-                                main_Window.Fill_TreeView(true);
+                                DataRowView rowview = grid.SelectedItem as DataRowView;
+                                int FiscalBond_ID = Convert.ToInt32(rowview["id"].ToString());
+
+                                Add_FiscalBond_Window _Window = new Add_FiscalBond_Window(FiscalBond_ID, dt, main_Window);
+
+                                bool? dialogResult = _Window.ShowDialog();
+                                if (dialogResult == true)
+                                {
+                                    Load_Data();
+                                    main_Window.Fill_TreeView(true);
+                                }
                             }
                         }
                     }
