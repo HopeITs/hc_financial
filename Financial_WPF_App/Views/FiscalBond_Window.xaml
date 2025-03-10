@@ -10,7 +10,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         mc:Ignorable="d"
         Title="FiscalBond_Window" Height="620" Width="1180" 
-        WindowStartupLocation="CenterScreen" KeyDown="FiscalBond_KeyDown" Closing="FiscalBond_Closing" >
+        WindowStartupLocation="CenterScreen" >
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Header="Refresh" Click = "Refresh_Click" >
@@ -25,83 +25,11 @@
             <ColumnDefinition Width="100*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20*" />
+            <RowDefinition Height="0*" />
             <RowDefinition Height="7*" />
             <RowDefinition Height="60*" />
             <RowDefinition Height="7*" />
         </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="7*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="7*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="7*"/>
-
-                <ColumnDefinition Width="2*"/>
-
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="10*"/>
-                <RowDefinition Height="10*"/>
-                <RowDefinition Height="10*"/>
-            </Grid.RowDefinitions>
-
-            <Label Grid.Column="6" Grid.Row="0" Style="{DynamicResource lableStyle}" Content="Bond name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,1,1,1" HorizontalContentAlignment="Right"  />
-            <TextBox x:Name="Name_txtBox" Style="{DynamicResource textBoxStyle}" 
-                     Grid.Column="5" Grid.Row="0" TabIndex="1" />
-
-            <Label Grid.Column="4" Grid.Row="0" Style="{DynamicResource lableStyle}" Content="Discerption:" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,1,1,1"/>
-            <TextBox x:Name="Notes_txtBox" Style="{DynamicResource textBoxStyle}" 
-                     Grid.Column="3" Grid.Row="0" TabIndex="2" />
-
-            <Label Grid.Column="2" Grid.Row="0" Style="{DynamicResource lableStyle}" Margin="1,1,1,1" Content="Bond date:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-            <DatePicker x:Name="Date_datepicker" Grid.Column="1"  TabIndex="3" HorizontalAlignment="Left" Margin="60,0,0,0" Width="154" />
-
-
-            <Label Grid.Column="6" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Center:" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,1,1,1"   />
-
-            <Label Grid.Column="4" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Account:" FontSize="18" HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="1,1,1,1"/>
-
-            <Button Grid.Row="2" Style="{DynamicResource SaveButton_Style}"
-                    x:Name="Save_btn" TabIndex="7" Click="Save_btn_Click" Width="92" Grid.Column="1" Margin="2,0,0,0" />
-            <Label Grid.Column="2" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Till:" FontSize="18"  Margin="1,1,1,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-            <StackPanel Grid.Column="5" Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,1,1,1">
-                <ComboBox x:Name="SubProject_comboBox" 
-                      DisplayMemberPath="Name" SelectedValuePath="ID"  
-                      FlowDirection="RightToLeft" Height="28" TabIndex="4" 
-                      SelectionChanged="SubProject_comboBox_SelectionChanged" Width="184" />
-                <Button x:Name="SubProject_clear_btn" Width="25" Height="25" BorderBrush="{x:Null}" Click="SubProject_clear_btn_Click" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-            </StackPanel>
-            <StackPanel Grid.Column="3" Grid.Row="1" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="1,1,1,1">
-                <ComboBox x:Name="Account_comboBox" 
-                      DisplayMemberPath="Name" SelectedValuePath="ID"  
-                      FlowDirection="RightToLeft" Height="28" TabIndex="5" SelectionChanged="Account_comboBox_SelectionChanged" Width="183" />
-                <Button x:Name="Account_clear_btn" Width="25" Height="25" BorderBrush="{x:Null}" Click="Account_clear_btn_Click" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="2,1,1,1" Grid.Row="1" Grid.Column="1">
-                <ComboBox x:Name="Till_ComboBox" 
-            	DisplayMemberPath="Type" SelectedValuePath="ID"  
-            	FlowDirection="RightToLeft" Height="28" TabIndex="5" Width="184" />
-                <Button x:Name="Till_clear_btn" Width="25" Height="25" BorderBrush="{x:Null}" Click="Till_clear_btn_Click" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-            </StackPanel>
-        </Grid>
 
         <syncfusion:SfDataGrid x:Name="myDataGrid" Grid.Row="2" FrozenColumnCount="2"
                     Style="{DynamicResource SfDataGrid_body}"
@@ -110,7 +38,7 @@
                                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                       SelectionChanged="myDataGrid_SelectionChanged"  
                       MouseDoubleClick="myDataGrid_MouseDoubleClick"
-                                Loaded="myDataGrid_Loaded" Height="365" FilterChanged="myDataGrid_FilterChanged">
+                                Loaded="myDataGrid_Loaded" Height="484" FilterChanged="myDataGrid_FilterChanged">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
@@ -158,11 +86,11 @@
                 <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
             </Border>
         </StackPanel>
-        <Grid Grid.Column="0" Margin="5,128,5,5" Grid.RowSpan="2">
+        <Grid Grid.Column="0" Margin="5,1,5,2" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="47*" />
-                <ColumnDefinition Width="245*" />
-                <ColumnDefinition Width="98*" />
+                <ColumnDefinition Width="84*" />
+                <ColumnDefinition Width="259*" />
                 <ColumnDefinition Width="64*"/>
                 <ColumnDefinition Width="0*" />
                 <ColumnDefinition Width="99*"/>
@@ -173,7 +101,7 @@
             <!--<CheckBox x:Name="ExactSearch_checkBox" Content="Full match"
                 Checked="ExactSearch_checkBox_Checked" Unchecked="ExactSearch_checkBox_Unchecked"
                 Style="{DynamicResource checkBoxStyle}" Height="30" Margin="3,0,0,0" Width="88" Grid.Column="5" HorizontalAlignment="Left"/>-->
-            <Label Grid.Column="7" Content="Search:" Style="{DynamicResource lableStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="1,1,1,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <Label Grid.Column="7" Content="Search:" Style="{DynamicResource lableStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="1,1,1,1" />
             <Border Grid.Column="6" BorderThickness="1" CornerRadius="10" Padding="0" VerticalAlignment="Center" Width="auto" Margin="9,0,9,0" Height="34" >
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource Color_HopeBlue4}"/>
@@ -190,8 +118,8 @@
                     </TextBox.BorderBrush>
                 </TextBox>
             </Border>
-            <Menu x:Name="ShowHideMenu" Margin="10,3,12,8" Background="White" >
-                <MenuItem Header="" StaysOpenOnClick="True" Grid.Column="1" Width="28" Height="32" >
+            <Menu x:Name="ShowHideMenu" Margin="13,12,13,13" Background="White" >
+                <MenuItem Header="" StaysOpenOnClick="True" Grid.Column="1" Width="21" Height="27" >
                     <MenuItem.Background>
                         <ImageBrush ImageSource="/Images/2072010 (100x100).png" Stretch="Uniform" TileMode="Tile"/>
                     </MenuItem.Background>
@@ -202,8 +130,8 @@
                 </MenuItem>
             </Menu>
             <Button Grid.Column="1" Style="{DynamicResource Export_Style}" x:Name="Export_btn"
-                TabIndex="5" HorizontalAlignment="Left" Margin="6,5,0,0"
-                Command="local:Commands.ExportToExcel" VerticalAlignment="Top" Height="25" Width="25"
+                TabIndex="5" HorizontalAlignment="Left" Margin="13,0,0,0"
+                Command="local:Commands.ExportToExcel" Height="25" Width="25"
                 />
         </Grid>
 

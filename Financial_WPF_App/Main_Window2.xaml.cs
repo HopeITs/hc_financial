@@ -932,9 +932,9 @@ namespace Financial_WPF_App
                 var cityItem_itemInfo = new tagItemInfo { ID = cityGroup.First().Field<int>("CityID"), Category = "Default" };
 
                 var cityItem = CreateTreeViewItem(cityGroup.Key, null, cityItem_itemInfo);
-
                 // Group projects by project_ID
                 var projectGroups = cityGroup.GroupBy(row => row.Field<string>("ProjectName"));
+
                 foreach (var projectGroup in projectGroups)
                 {
                     string prjectCategory = projectGroup.First().Field<string>("CategoryName");
@@ -949,14 +949,35 @@ namespace Financial_WPF_App
                         var subprojectItem_itemInfo = new tagItemInfo { ID = subprojectGroup.First().Field<int?>("SubprojectID"), Category = subprojectCategory };
                         var subprojectItem = CreateTreeViewItem(subprojectGroup.First().Field<string>("SubprojectName"), null, subprojectItem_itemInfo);
 
+                        if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
+                        {
+                            if (projectGroup.First().Field<string>("CategoryName") == "Micro Projects")
+                            {
+                                var AllBonds_itemInfo = new tagItemInfo { ID = -1, Category = "Micro Projects" };
+
+                                var AllPBonds = CreateTreeViewItem("All Bonds", null, AllBonds_itemInfo);
+                                AllPBonds.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
+
+                                subprojectItem.Items.Add(AllPBonds);
+                            }
+                            else if (projectGroup.First().Field<string>("CategoryName") == "Budget")
+                            {
+                                var AllBonds_itemInfo = new tagItemInfo { ID = -1, Category = "Budget" };
+
+                                var AllPBonds = CreateTreeViewItem("All Bonds", null, AllBonds_itemInfo);
+                                AllPBonds.PreviewMouseLeftButtonDown += Options_PreviewMouseLeftButtonDown;
+
+                                subprojectItem.Items.Add(AllPBonds);
+                            }
+            
+                        }
+
                         // Add accounts as child items
                         foreach (var FiscalbondRow in subprojectGroup)
                         {
-
                             string FiscalbondName = FiscalbondRow.Field<string>("FiscalbondName");
                             string FiscalbondCategory = FiscalbondRow.Field<string>("CategoryName");
                             System.Windows.Controls.TreeViewItem FiscalbondItem = new TreeViewItem();
-
 
                             var FiscalbondItem_itemInfo = new tagItemInfo { ID = FiscalbondRow.Field<int?>("FiscalbondID"), Category = FiscalbondCategory };
                             FiscalbondItem = CreateTreeViewItem(FiscalbondName, null, FiscalbondItem_itemInfo);
@@ -1113,6 +1134,19 @@ namespace Financial_WPF_App
                             {
                                 All_Peersonal_Accounts_Window All_Peersonal_Accounts = new All_Peersonal_Accounts_Window(this, Sub_ID);
                                 Create_tabItem(All_Peersonal_Accounts, textBlock.Text + "-" + Header_Text, (SolidColorBrush)Application.Current.Resources["PastelGreen"]);
+                            }
+                            else if (textBlock.Text == "All Bonds")
+                            {
+                                if (Category == "Micro Projects")
+                                {
+                                    FiscalBond_Window All_FiscalBonds = new FiscalBond_Window(this, Sub_ID);
+                                    Create_tabItem(All_FiscalBonds, textBlock.Text + "-" + Header_Text, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                                }
+                                else if (Category == "Budget")
+                                {
+                                    FiscalBond_Window All_FiscalBonds = new FiscalBond_Window(this, Sub_ID);
+                                    Create_tabItem(All_FiscalBonds, textBlock.Text + "-" + Header_Text, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                                }
                             }
        
                         }
@@ -1333,9 +1367,13 @@ namespace Financial_WPF_App
                         {
                             switch (textBlock.Text)
                             {
-                                case "Create New Bond":
-                                    FiscalBond_Window _FBWindow = new FiscalBond_Window(this);
-                                    _FBWindow.ShowDialog();
+                                case "Create New Bond":                              
+                                    Add_FiscalBond_Window _FBWindow = new Add_FiscalBond_Window(this);
+                                    bool? dialogResult = _FBWindow.ShowDialog();
+                                    if (dialogResult == true)
+                                    {
+                                        Fill_TreeView(true);
+                                    }
                                     break;
                                 case "Create New Micro Projects Account":
                                     Account_Window Maccount_ = new Account_Window("Micro Projects", "Project", "", "", this);

@@ -1,4 +1,5 @@
 ﻿using Financial_WPF_App.Models;
+using Financial_WPF_App.Properties;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
@@ -16,11 +17,11 @@ namespace Financial_WPF_App.Views
 
     public partial class FiscalBond_Window : Window
     {
-        public FiscalBond_Window(Main_Window_2 main_Window)
+        public FiscalBond_Window(Main_Window_2 main_Window , string Subproject_ID)
         {
             InitializeComponent();
             this.main_Window = main_Window;
-
+            this.Subproject_ID = Subproject_ID;
             if (OnLoad())
             {
 
@@ -32,28 +33,27 @@ namespace Financial_WPF_App.Views
         }
 
         Main_Window_2 main_Window;
-        private int FiscalBond_ID;
         private FiscalBond fb;
-        private SubProject sub;
-        private Account a;
-        private Till t;
-        private DataTable dt, a_dt, sub_dt, t_dt;
-        int Till_ID = -1;
+
+        private DataTable dt;
+
         List<string> HiddenColumns = new List<string>();
         List<string> Originally_HiddenColumns = new List<string>();
         double HOffset = 0;
+        string Subproject_ID;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+        #region privileges
+        bool Edit_privileges, Delete_privileges;
+        #endregion
 
         private bool OnLoad()
         {
             try
             {
-                sub = new SubProject();
-                a = new Account();
-                t = new Till();
                 fb = new FiscalBond();
-                dt = sub_dt = a_dt = t_dt = new DataTable();
+                dt = new DataTable();
                 for (int i = 0; i < myDataGrid.Columns.Count; i++)
                 {
                     myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
@@ -88,23 +88,74 @@ namespace Financial_WPF_App.Views
 
         private void Load_Data()
         {
-
-            FiscalBond_ID = -1;
-            Till_ID = -1;
-
-            Date_datepicker.SelectedDate = DateTime.Today;
-            Load_Comboboxes_Data();
-
+            Set_privileges();
+            Show_Hide();
             LoadGrid();
         }
 
+        private void Set_privileges()
+        {
+            Edit_privileges =Delete_privileges = false;
+
+            if (Settings.Default.Role == "Head Office")
+            {
+                Edit_privileges = Delete_privileges = true;
+            }
+            else if (Settings.Default.Role == "Project Manager")
+            {
+
+            }
+            else if (Settings.Default.Role == "Financial Manager")
+            {
+
+            }
+            else if (Settings.Default.Role == "Accountant")
+            {
+
+            }
+            else if (Settings.Default.Role == "Cashier")
+            {
+
+            }
+            else if (Settings.Default.Role == "Employee")
+            {
+
+            }
+            else if (Settings.Default.Role == "Donor")
+            {
+
+            }
+        }
+
+        private void Show_Hide()
+        {
+            if (!Edit_privileges)
+            {
+                foreach (var C in myDataGrid.Columns)
+                    if (C.HeaderText.ToString() == "Edit")
+                    {
+                        C.IsHidden = true;
+                        Originally_HiddenColumns.Add(C.HeaderText.ToString());
+                    }
+            }
+
+            if (!Delete_privileges)
+            {
+                foreach (var C in myDataGrid.Columns)
+                    if (C.HeaderText.ToString() == "Delete")
+                    {
+                        C.IsHidden = true;
+                        Originally_HiddenColumns.Add(C.HeaderText.ToString());
+                    }
+            }
+        }
 
         private void LoadGrid()
         {
 
             if (Login.BuildConnection())
             {
-                dt = fb.Select("", "", "", "", true);
+                dt = fb.Select("", "", "", Subproject_ID, true);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     myDataGrid.ItemsSource = dt.DefaultView;
@@ -119,41 +170,21 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Fill_FiscalBond(DataRowView dataRow)
-        {
-
-            FiscalBond_ID = Convert.ToInt32(dataRow["ID"].ToString());
-            Till_ID = Convert.ToInt32(dataRow["Till_ID"].ToString());
-
-            Name_txtBox.Text = dataRow["Name"].ToString();
-            Date_datepicker.SelectedDate = Convert.ToDateTime(dataRow["Date"].ToString());
-            Notes_txtBox.Text = dataRow["Notes"].ToString();
-            if (dataRow["SubProject_ID"] != DBNull.Value)
-            {
-                SubProject_comboBox.SelectedValue = Convert.ToInt32(dataRow["SubProject_ID"]);
-                SubProject_comboBox_SelectionChanged(SubProject_comboBox, null);
-            }
-
-            if (dataRow["Account_ID"] != DBNull.Value)
-            {
-                Account_comboBox.SelectedValue = Convert.ToInt32(dataRow["Account_ID"]);
-                Account_comboBox_SelectionChanged(Account_comboBox, null);
-
-            }
-
-            if (dataRow["Till_ID"] != DBNull.Value)
-                Till_ComboBox.SelectedValue = Convert.ToInt32(dataRow["Till_ID"]);
-
-
-
-        }
-
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 DataRowView dataRow = (DataRowView)myDataGrid.SelectedItem;
-                Fill_FiscalBond(dataRow);
+                int FiscalBond_ID = Convert.ToInt32(dataRow["id"].ToString());
+
+                Add_FiscalBond_Window _Window = new Add_FiscalBond_Window(FiscalBond_ID, dt, main_Window);
+
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
+                {
+                    Load_Data();
+                    main_Window.Fill_TreeView(true);
+                }
             }
             catch (Exception ex)
             {
@@ -171,13 +202,12 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                //var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirm before save", MessageBoxButton.YesNo);
                 var dialogResult = MessageBox.Show("Are you sure you want to delete this data?", "Confirmation Request", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None);
 
                 if (dialogResult == MessageBoxResult.Yes)
                 {
                     DataRowView dataRow = (DataRowView)myDataGrid.SelectedItem;
-                    FiscalBond_ID = Convert.ToInt32(dataRow[0].ToString());
+                    int FiscalBond_ID = Convert.ToInt32(dataRow[0].ToString());
                     string FiscalBond_Name = dataRow[1].ToString();
                     int Account_ID = Convert.ToInt32(dataRow["Account_ID"].ToString());
 
@@ -195,8 +225,7 @@ namespace Financial_WPF_App.Views
                     }
 
                     fb.Delete(FiscalBond_ID, FiscalBond_Name, "FiscalBond_Window");
-                    FiscalBond_ID = -1;
-                    Till_ID = -1;
+  
                     LoadGrid();
                     main_Window.Fill_TreeView(true);
                 }
@@ -219,103 +248,9 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void FiscalBond_KeyDown(object sender, KeyEventArgs e)
-        {
-            try
-            {
-                if (e.Key == Key.Return)
-                {
-                    Save_btn_Click(sender, e);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
         private void FiscalBond_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
-        }
-
-        private void Save_btn_Click(object sender, RoutedEventArgs e)
-        {
-            Save_btn.IsEnabled = false;
-            try
-            {
-                if (Name_txtBox.Text == "")
-                {
-                    MessageBox.Show("Please enter the name.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-   
-                }
-
-                if (SubProject_comboBox.SelectedIndex == -1 || Account_comboBox.SelectedIndex == -1 || Till_ComboBox.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select the center, account and till", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-           
-                }
-
-                if (Login.BuildConnection())
-                {
-                    string Name = Name_txtBox.Text;
-                    string Date = ((DateTime)Date_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                    string Notes = Notes_txtBox.Text;
-                    int SubProject_ID = Convert.ToInt32(SubProject_comboBox.SelectedValue);
-                    int Account_ID = Convert.ToInt32(Account_comboBox.SelectedValue);
-                    string Account = Account_comboBox.Text.ToString();
-                    int Till_ID = Convert.ToInt32(Till_ComboBox.SelectedValue);
-
-                    if (FiscalBond_ID != -1)//Edit
-                    {
-                        fb.Update(FiscalBond_ID, Name, Date, Notes, Account_ID, Till_ID, "FiscalBond_Window");
-                    }
-                    else//Add new
-                    {
-                        fb.Insert(Name, Date, Notes, Account_ID, Till_ID, "FiscalBond_Window");
-                    }
-
-                    Clear_Boxes();
-                    LoadGrid();
-                    main_Window.Fill_TreeView(true);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
-                {
-                    Login.MyConn.Close();
-                }
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-            finally
-            {
-                Save_btn.IsEnabled = true;
-            }
-        }
-
-        private void Clear_Boxes()
-        {
-            Name_txtBox.Text = Notes_txtBox.Text = "";
-            Account_comboBox.SelectedIndex = SubProject_comboBox.SelectedIndex = Till_ComboBox.SelectedIndex = -1;
-            Date_datepicker.SelectedDate = DateTime.Now;
-            FiscalBond_ID = -1; Till_ID = -1;
         }
 
         private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -351,7 +286,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-
         private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
         {
             try
@@ -384,7 +318,16 @@ namespace Financial_WPF_App.Views
                         if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
                         {
                             DataRowView rowview = grid.SelectedItem as DataRowView;
-                            Fill_FiscalBond(rowview);
+                            int FiscalBond_ID = Convert.ToInt32(rowview["id"].ToString());
+
+                            Add_FiscalBond_Window _Window = new Add_FiscalBond_Window(FiscalBond_ID, dt, main_Window);
+
+                            bool? dialogResult = _Window.ShowDialog();
+                            if (dialogResult == true)
+                            {
+                                Load_Data();
+                                main_Window.Fill_TreeView(true);
+                            }
                         }
                     }
                 }
@@ -406,7 +349,6 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Clear_Boxes();
                 Load_Data();
             }
             catch (Exception ex)
@@ -419,94 +361,6 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
-        }
-
-        private void Export_btn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Load_Comboboxes_Data()
-        {
-            SubProject_comboBox.ItemsSource = null;
-            sub_dt = sub.Select("", "", "", "");
-            if (sub_dt != null && sub_dt.Rows.Count > 0)
-            {
-                SubProject_comboBox.ItemsSource = sub_dt.DefaultView;
-            }
-
-
-            Account_comboBox.ItemsSource = null;
-            a_dt = a.Select("", "", "Project", false, "");
- 
-        }
-
-        private void SubProject_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            try
-            {
-                Account_comboBox.ItemsSource = null;
-                if (SubProject_comboBox.SelectedValue != null && SubProject_comboBox.SelectedIndex != -1)
-                {
-                    int SubProject_id = Convert.ToInt32(SubProject_comboBox.SelectedValue);
-
-                    System.Data.DataRow[] rows = a_dt.Select("SubProject_ID=" + SubProject_id);
-                    DataTable selected_dt = new DataTable();
-                    if (rows.Length != 0)
-                    {
-                        selected_dt = rows.CopyToDataTable();
-                        if (selected_dt!= null && selected_dt.Rows.Count > 0)
-                            Account_comboBox.ItemsSource = selected_dt.DefaultView;
-                    }
-
-                }
-                Till_ComboBox.SelectedIndex = -1;
-                Till_ComboBox.ItemsSource = null;
-
-
-            }
-            catch (Exception ex)
-            { if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL")) 
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host")) 
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else { MessageBox.Show(ex.Message, "Error"); } 
-            }
-
-        }
-
-        private void Account_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            try
-            {
-                if (Account_comboBox.SelectedIndex != -1 && Account_comboBox.SelectedValue != null)
-                {
-                    Till_ComboBox.ItemsSource = null;
-                    string Account_ID = Account_comboBox.SelectedValue.ToString();
-                    LoadTillComboBox(Account_ID);
-                }
-                else
-                {
-                    Till_ComboBox.ItemsSource = null;
-                }
-            }
-            catch (Exception ex)
-            { if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL")) 
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host")) 
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else { MessageBox.Show(ex.Message, "Error"); } 
-            }
-
-        }
-
-        private void LoadTillComboBox(string account_ID)
-        {
-            Till_ComboBox.ItemsSource = null;
-
-            t_dt = t.Select_FiscalBond_Missing_TillTypes(account_ID, Till_ID);
-            if (t_dt != null && t_dt.Rows.Count > 0)
-                Till_ComboBox.ItemsSource = t_dt.DefaultView;
         }
 
         private void Bind_Show_Hide_Menu()
@@ -604,56 +458,18 @@ namespace Financial_WPF_App.Views
                 this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
         }
 
-        private void SubProject_clear_btn_Click(object sender, RoutedEventArgs e)
+        private void AddNewAction_btn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                SubProject_comboBox.SelectedIndex = -1;
+                Add_FiscalBond_Window _Window = new Add_FiscalBond_Window(main_Window);
 
-                Account_comboBox.SelectedIndex = -1;
-                Account_comboBox.ItemsSource = null;
-
-                Till_ComboBox.SelectedIndex = -1;
-                Till_ComboBox.ItemsSource = null;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Account_clear_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Account_comboBox.SelectedIndex = -1;
-
-                Till_ComboBox.SelectedIndex = -1;
-                Till_ComboBox.ItemsSource = null;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Till_clear_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Till_ComboBox.SelectedIndex = -1;
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
+                {
+                    Load_Data();
+                    main_Window.Fill_TreeView(true);
+                }
             }
             catch (Exception ex)
             {
