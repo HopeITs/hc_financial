@@ -69,7 +69,7 @@ namespace Financial_WPF_App
 
             UpdateLabelsInContainer(parent, color, labelStyleKey);
 
-            UpdateDGInContainer(parent, color);
+            //UpdateDGInContainer(parent, color);
             // Find all TabControls inside the window
             foreach (var tabControl in FindVisualChildren<TabControl>(parent))
             {
@@ -81,7 +81,7 @@ namespace Financial_WPF_App
                         UpdateTextBlocksInContainer(tabContent, color, targetStyleKey);
                         UpdateButtonsInContainer(tabContent, new SolidColorBrush(Colors.White), color, buttonStyleKey);
                         UpdateLabelsInContainer(tabContent, color, labelStyleKey);
-                        UpdateDGInContainer(tabContent, color);
+                        //UpdateDGInContainer(tabContent, color);
                     }
                 }
             }
@@ -120,6 +120,7 @@ namespace Financial_WPF_App
                 }
             }
         }
+
         public static void UpdateDGInContainer(DependencyObject parent, Brush borderColor)
         {
             if (parent == null || borderColor == null)

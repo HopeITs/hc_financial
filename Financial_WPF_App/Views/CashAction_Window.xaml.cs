@@ -109,6 +109,14 @@ namespace Financial_WPF_App.Views
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
+        private void Apply_DataGrid_Color_Theme()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(Actions_DataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+
         private void Load_Form()
         {
             ActionDate_datepicker.SelectedDate = DateTime.Today;
@@ -414,7 +422,23 @@ namespace Financial_WPF_App.Views
             }
         }
 
-
+        private void Actions_DataGrid_ItemsSourceChanged(object sender, Syncfusion.UI.Xaml.Grid.GridItemsSourceChangedEventArgs e)
+        {
+            try
+            {
+                Apply_DataGrid_Color_Theme();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
 
         private void Calc_TotalNet()
         {

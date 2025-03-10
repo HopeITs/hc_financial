@@ -106,6 +106,13 @@ namespace Financial_WPF_App.Views
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
+        private void Apply_DataGrid_Color_Theme()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
         private void Set_privileges()
         {
             Edit_privileges = Add_privileges = Delete_privileges = false;
@@ -407,6 +414,8 @@ namespace Financial_WPF_App.Views
                 }
                 Bind_Show_Hide_Menu();
                 move_Columns();
+
+                Apply_DataGrid_Color_Theme();
             }
             catch (Exception ex)
             {

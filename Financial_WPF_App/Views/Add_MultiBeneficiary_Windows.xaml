@@ -64,7 +64,7 @@
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"   
                 AllowFiltering ="False" ShowGroupDropArea ="False"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                Loaded="myDataGrid_Loaded"/>
+                Loaded="myDataGrid_Loaded" ItemsSourceChanged="myDataGrid_ItemsSourceChanged"/>
             <Button Grid.Row="4"  Style="{DynamicResource ButtonColoredStyle}"
     x:Name="Save_btn" Content="Save" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" Margin="12,0,1,0" />
         </Grid>

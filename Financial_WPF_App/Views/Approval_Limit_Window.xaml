@@ -29,7 +29,7 @@
                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
                NavigationMode="Cell"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
-               Margin="1,1,1,5"  CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AllowFiltering="False">
+               Margin="1,1,1,5"  CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AllowFiltering="False" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
 
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID" IsHidden="True"/>

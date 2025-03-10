@@ -146,7 +146,7 @@
                                HeaderStyle="{DynamicResource SfDataGrid_header}"
                                RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
-                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" Margin="11,9,8,8" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick">
+                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" Margin="11,9,8,8" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />

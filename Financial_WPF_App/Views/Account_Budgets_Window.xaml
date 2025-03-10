@@ -87,7 +87,7 @@
                       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                       AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                       AllowFiltering="False"  
-                      ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                      ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSourceChanged="Budget_Dononrs_DataGrid_ItemsSourceChanged">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn MappingName="Budget_Donor_ID" HeaderText="Budget_Donor_ID" 
                                                IsHidden="True" />

@@ -157,11 +157,24 @@ namespace Financial_WPF_App.Views
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
+        private void Apply_DataGrid_Color_Theme()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(Cash_DataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+
         public void Load_Data()
         {
             if (AsFiscalBond)
             {
-                fb_dt = fiscalBond.Select(FiscalBond_ID.ToString(), "", Properties.Settings.Default.User_ID.ToString(),"", false);
+                fb_dt = fiscalBond.Select(FiscalBond_ID.ToString(), "", Properties.Settings.Default.User_ID.ToString(), "", false);
 
                 Account_Type = fb_dt.Rows[0].Field<string>("accounttype");
                 TillType_Name = fb_dt.Rows[0].Field<string>("Till");
@@ -667,7 +680,7 @@ namespace Financial_WPF_App.Views
                     {
                         int count = dt.Rows.Count;
                         All_textBlock.Text = count.ToString("N0");
-              
+
                         myDataGrid.ItemsSource = dt.DefaultView;
                     }
                     else
@@ -1373,6 +1386,42 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void myDataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
+        {
+            try
+            {
+                Apply_DataGrid_Color_Theme();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Cash_DataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
+        {
+            try
+            {
+                Apply_DataGrid_Color_Theme();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void Exchpand_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (Exchpand_textBlock1.ActualWidth > Exchpand_textBlock.ActualWidth)
@@ -1644,6 +1693,8 @@ namespace Financial_WPF_App.Views
         {
 
         }
+
+ 
 
     }
 }

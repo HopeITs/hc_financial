@@ -36,7 +36,7 @@
     AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"                   
     Loaded="myDataGrid_Loaded" 
     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-    Margin="2,1,0,7" Grid.RowSpan="2" MouseDoubleClick="myDataGrid_MouseDoubleClick" >
+    Margin="2,1,0,7" Grid.RowSpan="2" MouseDoubleClick="myDataGrid_MouseDoubleClick" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" >
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Employee"  MappingName="Name" />
                     <syncfusion:GridTextColumn x:Name="FatherName_DataGridColumn" HeaderText="Father name"  MappingName="FaName" />
@@ -197,7 +197,7 @@
                         RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                         AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  AllowFiltering="False" ShowGroupDropArea="False"
-                        Margin="2,10,4,10" Grid.Row="3" Grid.ColumnSpan="5" NavigationMode="Cell">
+                        Margin="2,10,4,10" Grid.Row="3" Grid.ColumnSpan="5" NavigationMode="Cell" ItemsSourceChanged="EmployeeDataGrid_ItemsSourceChanged">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" HeaderText="Center"  MappingName="SubprojectName" />
                     <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Position"  MappingName="LineName" />

@@ -198,7 +198,7 @@
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                 GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
                 Loaded="myDataGrid_Loaded"
-                Margin="4,0,0,0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" >
+                Margin="4,0,0,0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" >
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn x:Name="Employee_Salary_ID_DataGridColumn" HeaderText="#" MappingName="Employee_Salary_ID" IsHidden="True"/>
                 <syncfusion:GridTextColumn x:Name="Employee_ID_DataGridColumn" HeaderText="Employee_ID" MappingName="Employee_ID" IsHidden="True"/>
