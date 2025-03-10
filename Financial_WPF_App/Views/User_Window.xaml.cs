@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Syncfusion.UI.Xaml.Grid;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
 namespace Financial_WPF_App.Views
@@ -109,6 +110,7 @@ namespace Financial_WPF_App.Views
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
+
         private void Load_Data()
         {
             Load_Comboboxes_Data();
@@ -712,7 +714,18 @@ namespace Financial_WPF_App.Views
                 else
                 {
                     Username = Username_txtBox.Text;
+
+                    bool usernameExists = users_dt.AsEnumerable()
+                                .Any(row => row.Field<string>("username") == Username);
+
+                    if (usernameExists)
+                    {
+                        MessageBox.Show("Username is already used.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+        
                 }
+
                 if (String.IsNullOrWhiteSpace(Password_txtBox.Text) || String.IsNullOrEmpty(Password_txtBox.Text))
                 {
                     MessageBox.Show("Please enter the password.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
