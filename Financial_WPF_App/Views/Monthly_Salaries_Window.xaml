@@ -190,7 +190,7 @@
 
 
 
-        <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"
+        <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="3"
                 Style="{DynamicResource SfDataGrid_body}" SelectionChanged="myDataGrid_SelectionChanged" 
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
@@ -270,7 +270,7 @@
 
 
             <syncfusion:SfDataGrid.GroupSummaryRows>
-                <syncfusion:GridSummaryRow ShowSummaryInRow="False" TitleColumnCount="1"  Title="Total:">
+                <syncfusion:GridSummaryRow ShowSummaryInRow="False" TitleColumnCount="3"  Title="Total:">
                     <syncfusion:GridSummaryRow.SummaryColumns>
                         <syncfusion:GridSummaryColumn Name="Total_B"                                                      
                            Format="'{Sum:N2}'"
@@ -294,7 +294,7 @@
             
             
             <syncfusion:SfDataGrid.TableSummaryRows>
-                <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
+                <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="3" Position="Bottom"
                                        Title="Total:">
                     <syncfusion:GridSummaryRow.SummaryColumns>
                         <syncfusion:GridSummaryColumn Name="Total_B"                                                      
