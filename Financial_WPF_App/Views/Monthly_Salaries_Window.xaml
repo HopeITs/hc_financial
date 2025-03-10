@@ -196,6 +196,7 @@
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
+                GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
                 Loaded="myDataGrid_Loaded"
                 Margin="4,0,0,0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" >
             <syncfusion:SfDataGrid.Columns>
@@ -267,6 +268,31 @@
 
             </syncfusion:SfDataGrid.Columns>
 
+
+            <syncfusion:SfDataGrid.GroupSummaryRows>
+                <syncfusion:GridSummaryRow ShowSummaryInRow="False" TitleColumnCount="1"  Title="Total:">
+                    <syncfusion:GridSummaryRow.SummaryColumns>
+                        <syncfusion:GridSummaryColumn Name="Total_B"                                                      
+                           Format="'{Sum:N2}'"
+                           MappingName="Basic"
+                           SummaryType="DoubleAggregate" />
+                        <syncfusion:GridSummaryColumn Name="Total_Adj"                                                      
+                           Format="'{Sum:N2}'"
+                           MappingName="Adjustment"
+                           SummaryType="DoubleAggregate" />
+                        <syncfusion:GridSummaryColumn Name="Total_B_USD"                                                      
+                           Format="'{Sum:N2}'"
+                           MappingName="USD_Basic"
+                           SummaryType="DoubleAggregate" />
+                        <syncfusion:GridSummaryColumn Name="Total_Adj_USD"                                                      
+                           Format="'{Sum:N2}'"
+                           MappingName="USD_Adjustment"
+                           SummaryType="DoubleAggregate" />
+                    </syncfusion:GridSummaryRow.SummaryColumns>
+                </syncfusion:GridSummaryRow>
+            </syncfusion:SfDataGrid.GroupSummaryRows>
+            
+            
             <syncfusion:SfDataGrid.TableSummaryRows>
                 <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                                        Title="Total:">
