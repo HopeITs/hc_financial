@@ -49,7 +49,7 @@ namespace Financial_WPF_App.Views
 
         DataTable Report_dt = new DataTable();
 
-        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+        System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
 
 
 
