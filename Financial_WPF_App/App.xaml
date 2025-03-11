@@ -1955,7 +1955,7 @@
 
 
             <!-- Global Style for GridCell -->
-            <Style TargetType="syncfusion:GridCell">
+            <!--<Style TargetType="syncfusion:GridCell">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="syncfusion:GridCell">
@@ -1978,7 +1978,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-            </Style>
+            </Style>-->
 
 
 
