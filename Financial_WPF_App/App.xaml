@@ -1819,17 +1819,51 @@
             </Style>
 
             <Style x:Key="TableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl">
-                <Setter Property="Foreground" Value="{StaticResource PastelDarkBlue}" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="FontFamily" Value="Rubik" />
             </Style>
+            <Style x:Key="PastelDarkBlueTableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource TableSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource PastelDarkBlue}" />
+            </Style>
+            <Style x:Key="GreenBlueDarkBlueTableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource TableSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource GreenBlue}" />
+            </Style>
+            <Style x:Key="RedTableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource TableSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource HopeRed}" />
+            </Style>
+            <Style x:Key="OrangeTableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource TableSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource Orange}" />
+            </Style>
+            <Style x:Key="VioletTableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource TableSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource DarkgrayishViolet}" />
+            </Style>
+            <Style x:Key="PasletGreenTableSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource TableSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource PastelGreen}" />
+            </Style>
 
             <Style x:Key="GroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl">
-                <Setter Property="Foreground" Value="{StaticResource PastelDarkBlue}" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="FontFamily" Value="Rubik" />
+            </Style>
+            <Style x:Key="PastelDarkBlueGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource PastelDarkBlue}" />
+            </Style>
+            <Style x:Key="GreenBlueDarkBlueGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource GreenBlue}" />
+            </Style>
+            <Style x:Key="RedGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource HopeRed}" />
+            </Style>
+            <Style x:Key="OrangeGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource Orange}" />
+            </Style>
+            <Style x:Key="VioletGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource DarkgrayishViolet}" />
+            </Style>
+            <Style x:Key="PasletGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+                <Setter Property="Foreground" Value="{StaticResource PastelGreen}" />
             </Style>
 
             <Style x:Key="DataGrid_body" TargetType="{x:Type DataGrid}"  
@@ -1982,7 +2016,7 @@
 
 
 
-            <Style x:Key="SfDataGrid_header"
+            <Style x:Key="GreenBlueSfDataGrid_header"
                 TargetType="{x:Type syncfusion:GridHeaderCellControl}"
                 BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
                 <Setter Property="FontFamily" Value="Rubik"/>
@@ -2004,7 +2038,142 @@
                 <!-- Add bottom border only -->
                 <Setter Property="BorderBrush">
                     <Setter.Value>
-                        <SolidColorBrush Color="{StaticResource Color_DarkGray}" />
+                        <SolidColorBrush Color="{StaticResource Color_GreenBlue}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderThickness" Value="0,0,0,3" />
+            </Style>
+            <Style x:Key="RedSfDataGrid_header"
+    TargetType="{x:Type syncfusion:GridHeaderCellControl}"
+    BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_LightGray2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <!-- Add bottom border only -->
+                <Setter Property="BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_HopeRed}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderThickness" Value="0,0,0,3" />
+            </Style>
+            <Style x:Key="OrangeSfDataGrid_header"
+    TargetType="{x:Type syncfusion:GridHeaderCellControl}"
+    BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_LightGray2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <!-- Add bottom border only -->
+                <Setter Property="BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_Orange}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderThickness" Value="0,0,0,3" />
+            </Style>
+            <Style x:Key="PastelGreenSfDataGrid_header"
+TargetType="{x:Type syncfusion:GridHeaderCellControl}"
+BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_LightGray2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <!-- Add bottom border only -->
+                <Setter Property="BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_PastelDarkBlue}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderThickness" Value="0,0,0,3" />
+            </Style>
+            <Style x:Key="PastelDarkBlueSfDataGrid_header"
+TargetType="{x:Type syncfusion:GridHeaderCellControl}"
+BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_LightGray2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <!-- Add bottom border only -->
+                <Setter Property="BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_PastelDarkBlue}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderThickness" Value="0,0,0,3" />
+            </Style>
+            <Style x:Key="VioletSfDataGrid_header"
+TargetType="{x:Type syncfusion:GridHeaderCellControl}"
+BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_LightGray2}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <!-- Add bottom border only -->
+                <Setter Property="BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{StaticResource Color_DarkgrayishViolet}" />
                     </Setter.Value>
                 </Setter>
                 <Setter Property="BorderThickness" Value="0,0,0,3" />
