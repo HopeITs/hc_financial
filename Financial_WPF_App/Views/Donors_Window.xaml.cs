@@ -1,4 +1,5 @@
 ﻿using Financial_WPF_App.Models;
+using Syncfusion.UI.Xaml.Grid;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -110,7 +111,7 @@ namespace Financial_WPF_App
                         dt = dt.Clone();
 
                         // Add Auto Increment Column called ID
-                        dt.Columns.Add(new DataColumn("Local_Index")
+                        dt.Columns.Add(new System.Data.DataColumn("Local_Index")
                         {
                             AutoIncrement = true,
                             AllowDBNull = false,
@@ -156,7 +157,7 @@ namespace Financial_WPF_App
                     {
                         Query += " DELETE FROM `donor` WHERE ID = " + Delete_list[i] + ";";
                         Log_Query = " DELETE FROM `donor` WHERE ID = " + Delete_list[i] + ";";
-                        DataRow[] rows = donor_dt.Select("ID =" + Delete_list[i]);
+                        System.Data.DataRow[] rows = donor_dt.Select("ID =" + Delete_list[i]);
                         string Name = rows[0]["Name"].ToString();
                         Query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES ('Donors_Window', 'DELETE', 'Donor', '" + Delete_list[i] + "', CONCAT('Donor Name = ', '" + Name + "'), '' , '" + Log_Query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     }
@@ -237,7 +238,7 @@ namespace Financial_WPF_App
 
                         int Local_Index = Int32.Parse(dataRow.Row["Local_Index"].ToString());
 
-                        DataRow[] dtr = dt.Select("Local_Index='" + Local_Index + "'");
+                        System.Data.DataRow[] dtr = dt.Select("Local_Index='" + Local_Index + "'");
                         foreach (var drow in dtr)
                         {
                             drow.Delete();
@@ -413,5 +414,7 @@ namespace Financial_WPF_App
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
+        
     }
 }

@@ -1952,6 +1952,37 @@
                 <Setter Property="Background" Value="{DynamicResource LightGray2}"/>
             </Style>
 
+
+
+            <!-- Global Style for GridCell -->
+            <!--<Style TargetType="syncfusion:GridCell">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="syncfusion:GridCell">
+                            <Border x:Name="CellBorder"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
+                                    <Setter TargetName="CellBorder" Property="BorderBrush" Value="{StaticResource DarkGray}" />
+                                    <Setter TargetName="CellBorder" Property="BorderThickness" Value="1.5" />
+                                    <Setter TargetName="CellBorder" Property="Background" Value="{StaticResource DarkGray}" />
+                                    <Setter Property="Foreground" Value="{StaticResource LightGray2}" />
+                                    <Setter Property="Background" Value="{StaticResource DarkGray}" />
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>-->
+
+
+
+
             <Style x:Key="SfDataGrid_header"
                 TargetType="{x:Type syncfusion:GridHeaderCellControl}"
                 BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">

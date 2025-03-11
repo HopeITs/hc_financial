@@ -39,9 +39,9 @@
             <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
  Style="{DynamicResource SfDataGrid_body}"
  HeaderStyle="{DynamicResource SfDataGrid_header}"
- RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+ RowStyle="{DynamicResource SfDataGrid_RowStyle}" 
  AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
- NavigationMode="Cell"
+ NavigationMode="Cell" SelectionUnit="Row" SelectionMode="Single"
  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
  Margin="1,1,1,5"  AllowFiltering="False" CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AddNewRowPosition="Bottom" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
 
