@@ -197,7 +197,7 @@
                         RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                         AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  AllowFiltering="False" ShowGroupDropArea="False"
-                        Margin="2,10,4,10" Grid.Row="3" Grid.ColumnSpan="5" NavigationMode="Cell" ItemsSourceChanged="EmployeeDataGrid_ItemsSourceChanged">
+                        Margin="2,10,4,10" Grid.Row="3" Grid.ColumnSpan="5" NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2" ItemsSourceChanged="EmployeeDataGrid_ItemsSourceChanged">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" HeaderText="Center"  MappingName="SubprojectName" />
                     <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Position"  MappingName="LineName" />

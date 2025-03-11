@@ -241,7 +241,7 @@
           GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
                        AutoGenerateColumns="True"
                        SelectionChanged="myDataGrid_SelectionChanged"
-                       NavigationMode="Cell"
+                       NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2"
                        Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">

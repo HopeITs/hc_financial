@@ -41,7 +41,7 @@
  HeaderStyle="{DynamicResource SfDataGrid_header}"
  RowStyle="{DynamicResource SfDataGrid_RowStyle}" 
  AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
- NavigationMode="Cell" SelectionUnit="Row" SelectionMode="Single"
+ NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2" SelectionUnit="Row" SelectionMode="Single"
  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
  Margin="1,1,1,5"  AllowFiltering="False" CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AddNewRowPosition="Bottom" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
 

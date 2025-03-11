@@ -184,7 +184,7 @@ PopupAnimation="Fade">
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"   
                 GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
                 AutoGenerateColumns="True"
-                NavigationMode="Cell"
+                NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2"
                 Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="3,1,3,4" CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
                 </syncfusion:SfDataGrid>
 
