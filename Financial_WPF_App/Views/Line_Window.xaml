@@ -72,7 +72,7 @@
             RowStyle="{DynamicResource SfDataGrid_RowStyle}"
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            Margin="1,2,2,0"  Grid.Row="4" Grid.ColumnSpan="4" MouseDoubleClick="myDataGrid_MouseDoubleClick">
+            Margin="1,2,2,0"  Grid.Row="4" Grid.ColumnSpan="4" MouseDoubleClick="myDataGrid_MouseDoubleClick" ItemsSourceChanged="categoryDataGrid_ItemsSourceChanged">
 
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID"/>

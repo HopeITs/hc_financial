@@ -89,6 +89,18 @@ namespace Financial_WPF_App.Views
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
+        private void Apply_DataGrid_Color_Theme()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(Budget_Dononrs_DataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
         private void Set_privileges()
         {
             Edit_privileges = Add_privileges = Delete_privileges = false;
@@ -815,6 +827,7 @@ namespace Financial_WPF_App.Views
                 }
                 move_Columns();
                 Bind_Show_Hide_Menu();
+                Apply_DataGrid_Color_Theme();
             }
             catch (Exception ex)
             {
@@ -876,6 +889,24 @@ namespace Financial_WPF_App.Views
         {
             if (HOffset != 0)
                 this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+        }
+
+        private void Budget_Dononrs_DataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
+        {
+            try
+            {
+                Apply_DataGrid_Color_Theme();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
         }
 
         private void myDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)

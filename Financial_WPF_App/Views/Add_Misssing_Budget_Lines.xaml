@@ -45,7 +45,7 @@
                     NavigationMode="Cell"
                     Loaded="myDataGrid_Loaded" 
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
-                    Margin="1,1,1,1" FilterChanged="myDataGrid_FilterChanged" Grid.ColumnSpan="4" Grid.RowSpan="2" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged" >
+                    Margin="1,1,1,1" FilterChanged="myDataGrid_FilterChanged" Grid.ColumnSpan="4" Grid.RowSpan="2" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" >
 
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTextColumn x:Name="Category_DataGridColumn" HeaderText="Category"  MappingName="Category" />

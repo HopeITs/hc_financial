@@ -182,7 +182,7 @@ PopupAnimation="Fade">
         GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
         Loaded="myDataGrid_Loaded" 
         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-        Margin="1,2,1,0" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" >
+        Margin="1,2,1,0" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" >
 
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTextColumn x:Name="City_DataGridColumn" MappingName="City_Name" HeaderText="City"/>

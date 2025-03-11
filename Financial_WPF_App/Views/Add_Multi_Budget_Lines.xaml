@@ -66,7 +66,7 @@
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"   
                 AllowFiltering ="False" ShowGroupDropArea ="False"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" 
                 />
 
             <Button Grid.Row="4"  Style="{DynamicResource ButtonColoredStyle}"

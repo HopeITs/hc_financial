@@ -137,7 +137,7 @@
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AllowFiltering="False"  
-                ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1">
+                ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" ItemsSourceChanged="Actions_DataGrid_ItemsSourceChanged">
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTextColumn MappingName="cashaction_denominations_id" HeaderText="cashaction_denominations_id"  IsHidden="True"/>
                         <syncfusion:GridNumericColumn  HeaderText="Amount"  MappingName="Amount" 

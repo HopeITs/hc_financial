@@ -100,6 +100,13 @@ namespace Financial_WPF_App
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
+        private void Apply_DataGrid_Color_Theme()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
         private void Load_Data()
         {
             Set_privileges();
@@ -574,6 +581,24 @@ namespace Financial_WPF_App
         {
             if (HOffset != 0)
                 this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+        }
+
+        private void myDataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
+        {
+            try
+            {
+                Apply_DataGrid_Color_Theme();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
         }
 
         private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)

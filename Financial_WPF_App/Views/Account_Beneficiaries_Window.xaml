@@ -252,7 +252,7 @@
                     SelectionChanged="myDataGrid_SelectionChanged"
                     MouseDoubleClick="myDataGrid_MouseDoubleClick"
                     Loaded="myDataGrid_Loaded" 
-                    AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,4,10" FilterChanged="myDataGrid_FilterChanged">
+                    AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,4,10" FilterChanged="myDataGrid_FilterChanged" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
 
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTemplateColumn HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">

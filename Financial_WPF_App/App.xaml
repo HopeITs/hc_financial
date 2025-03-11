@@ -1946,18 +1946,48 @@
                 <Setter Property ="HeaderRowHeight" Value ="50" />
                 <Setter Property ="AllowResizingColumns" Value ="True" />
                 <Setter Property ="FrozenRowsCount" Value ="0" />
-
             </Style>
 
             <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_alternatingRowStyle">
                 <Setter Property="Background" Value="{DynamicResource LightGray2}"/>
             </Style>
 
+
+
+            <!-- Global Style for GridCell -->
+            <!--<Style TargetType="syncfusion:GridCell">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="syncfusion:GridCell">
+                            <Border x:Name="CellBorder"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
+                                    <Setter TargetName="CellBorder" Property="BorderBrush" Value="{StaticResource DarkGray}" />
+                                    <Setter TargetName="CellBorder" Property="BorderThickness" Value="1.5" />
+                                    <Setter TargetName="CellBorder" Property="Background" Value="{StaticResource DarkGray}" />
+                                    <Setter Property="Foreground" Value="{StaticResource LightGray2}" />
+                                    <Setter Property="Background" Value="{StaticResource DarkGray}" />
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>-->
+
+
+
+
             <Style x:Key="SfDataGrid_header"
-        BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}"
-        TargetType="{x:Type syncfusion:GridHeaderCellControl}">
-                <Setter Property="FontFamily" Value="Rubik" />
-                <Setter Property="FontSize" Value="16" />
+                TargetType="{x:Type syncfusion:GridHeaderCellControl}"
+                BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="FontSize" Value="16"/>
                 <Setter Property="Background">
                     <Setter.Value>
                         <SolidColorBrush Color="{StaticResource Color_MidGray}"/>
@@ -1972,25 +2002,13 @@
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Template">
+                <!-- Add bottom border only -->
+                <Setter Property="BorderBrush">
                     <Setter.Value>
-                        <ControlTemplate TargetType="syncfusion:GridHeaderCellControl">
-
-                            <Border Background="{TemplateBinding Background}"
-            BorderBrush="{StaticResource LightGray2}"
-            BorderThickness="0.4,0.4,0.4,0">
-                                <Grid>
-                                    <ContentPresenter HorizontalAlignment="Center"
-                              VerticalAlignment="Center"/>
-                                    <!-- Red Bottom Border -->
-                                    <Border Background="{StaticResource DarkGray}"
-                    Height="3"
-                    VerticalAlignment="Bottom"/>
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
+                        <SolidColorBrush Color="{StaticResource Color_DarkGray}" />
                     </Setter.Value>
                 </Setter>
+                <Setter Property="BorderThickness" Value="0,0,0,3" />
             </Style>
 
             <Style x:Key="SfDataGrid_StackedHeaderstyle" TargetType="syncfusion:GridStackedHeaderCellControl">

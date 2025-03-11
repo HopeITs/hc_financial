@@ -112,7 +112,23 @@ namespace Financial_WPF_App.Views
         int success = 0;
         int totalFiles = 0;
 
-
+        private void myDataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
+        {
+            try
+            {
+                Apply_DataGrid_Color_Theme();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
 
         DataTable OperationType_dt = new DataTable();
         DataTable AccountType_dt = new DataTable();
@@ -214,6 +230,48 @@ namespace Financial_WPF_App.Views
                 Attachment_copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
             }
 
+        }
+
+        private void Apply_Color_Theme()
+        {
+
+            if (Account_Type == "Project")
+            {
+                if (Category == "Micro Projects")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
+                }
+                else if (Category == "Budget")
+                {
+                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+                }
+            }
+            else if (Account_Type == "Exchange")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
+            }
+            else if (Account_Type == "Personal")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
+            }
+            else if (Account_Type == "Cash")
+            {
+                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
+            }
+
+
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UIElementColoring(this.Content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+
+        private void Apply_DataGrid_Color_Theme()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
         private void Fill_Main_Comboboxs()
@@ -1509,40 +1567,6 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
-        }
-
-        private void Apply_Color_Theme()
-        {
-
-            if (Account_Type == "Project")
-            {
-                if (Category == "Micro Projects")
-                {
-                    Theme_Color = (SolidColorBrush)Application.Current.Resources["HopeRed"];
-                }
-                else if (Category == "Budget")
-                {
-                    Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
-                }
-            }
-            else if (Account_Type == "Exchange")
-            {
-                Theme_Color = (SolidColorBrush)Application.Current.Resources["Orange"];
-            }
-            else if (Account_Type == "Personal")
-            {
-                Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelGreen"];
-            }
-            else if (Account_Type == "Cash")
-            {
-                Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
-            }
-
-
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UIElementColoring(this.Content, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
         private void Tilltype_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

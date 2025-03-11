@@ -91,6 +91,13 @@ namespace Financial_WPF_App.Views
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
+        private void Apply_DataGrid_Color_Theme()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
         private void Load_Data()
         {
             for (int i = 0; i < myDataGrid.Columns.Count; i++)
@@ -645,6 +652,8 @@ namespace Financial_WPF_App.Views
 
                 AddSums();
 
+                Apply_DataGrid_Color_Theme();
+        
             }
             catch (Exception ex)
             {
