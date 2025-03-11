@@ -365,7 +365,7 @@
                                             <Style TargetType="CheckBox">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsSelected}" Value="1">
-                                                        <Setter Property="Background" Value="Green" />
+                                                        <Setter Property="Background" Value="{StaticResource LightGray1}" />
                                                         <Setter Property="FlowDirection" Value="LeftToRight" />
                                                     </DataTrigger>
 

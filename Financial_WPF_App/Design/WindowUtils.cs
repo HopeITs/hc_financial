@@ -135,6 +135,14 @@ namespace Financial_WPF_App
                 // Set the BorderThickness to apply only to the bottom border
                 headerCell.BorderThickness = new Thickness(0, 0, 0, 3); // Adjust the bottom thickness if needed
             }
+            foreach (var tablesummary in FindVisualChildren<TableSummaryRowControl>(parent))
+            {
+                tablesummary.Foreground = borderColor;
+            }
+            foreach (var groupsummary in FindVisualChildren<GroupSummaryRowControl>(parent))
+            {
+                groupsummary.Foreground = borderColor;
+            }
         }
 
 
