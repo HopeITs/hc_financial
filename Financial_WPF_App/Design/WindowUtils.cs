@@ -139,6 +139,10 @@ namespace Financial_WPF_App
             {
                 tablesummary.Foreground = borderColor;
             }
+            foreach (var groupsummary in FindVisualChildren<GroupSummaryRowControl>(parent))
+            {
+                groupsummary.Foreground = borderColor;
+            }
         }
 
 
