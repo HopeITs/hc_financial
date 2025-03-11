@@ -1847,22 +1847,22 @@
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="FontFamily" Value="Rubik" />
             </Style>
-            <Style x:Key="PastelDarkBlueGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+            <Style x:Key="PastelDarkBlueGroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
                 <Setter Property="Foreground" Value="{StaticResource PastelDarkBlue}" />
             </Style>
-            <Style x:Key="GreenBlueDarkBlueGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+            <Style x:Key="GreenBlueDarkBlueGroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
                 <Setter Property="Foreground" Value="{StaticResource GreenBlue}" />
             </Style>
-            <Style x:Key="RedGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+            <Style x:Key="RedGroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
                 <Setter Property="Foreground" Value="{StaticResource HopeRed}" />
             </Style>
-            <Style x:Key="OrangeGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+            <Style x:Key="OrangeGroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
                 <Setter Property="Foreground" Value="{StaticResource Orange}" />
             </Style>
-            <Style x:Key="VioletGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+            <Style x:Key="VioletGroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
                 <Setter Property="Foreground" Value="{StaticResource DarkgrayishViolet}" />
             </Style>
-            <Style x:Key="PasletGroupSummaryRowStyle" TargetType="syncfusion:TableSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
+            <Style x:Key="PasletGroupSummaryRowStyle" TargetType="syncfusion:GroupSummaryRowControl" BasedOn="{StaticResource GroupSummaryRowStyle}">
                 <Setter Property="Foreground" Value="{StaticResource PastelGreen}" />
             </Style>
 
