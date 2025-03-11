@@ -514,7 +514,7 @@ namespace Financial_WPF_App.Views
             MyDatagrid.CellRenderers.Remove("StackedHeader");
 
             //Customized GridStackedCellRenderer is added.
-            MyDatagrid.CellRenderers.Add("StackedHeader", new GridCustomStackedRenderer());
+            MyDatagrid.CellRenderers.Add("StackedHeader", new GridCustomStackedRenderer(Theme_Color));
         }
 
         private void AddNewAction_btn_Click(object sender, RoutedEventArgs e)

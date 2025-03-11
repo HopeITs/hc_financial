@@ -613,7 +613,7 @@ namespace Financial_WPF_App.Views
             MyDatagrid.CellRenderers.Remove("StackedHeader");
 
             //Customized GridStackedCellRenderer is added.
-            MyDatagrid.CellRenderers.Add("StackedHeader", new GridCustomStackedRenderer());
+            MyDatagrid.CellRenderers.Add("StackedHeader", new GridCustomStackedRenderer(Theme_Color));
         }
 
         private int stack_and_goup_columns(int i, string StacHeader, StackedColumn CurrentStack, SfDataGrid MyDatagrid)
