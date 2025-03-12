@@ -7,10 +7,10 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
 
         mc:Ignorable="d"
-        Title="DonorWindow" Width="1000" Height="600"
+        Title="DonorWindow"
         WindowStartupLocation="CenterScreen" KeyDown="DonorWindow_KeyDown"  ResizeMode="NoResize"
         Closing="Donor_Window_Closing" 
-        Style="{DynamicResource WindowPopupStyle}">
+        Style="{DynamicResource smallWindowPopupStyle}">
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Header="Refresh" Click = "Refresh_Click" >

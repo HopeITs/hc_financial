@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
-        Title="Approval_Limit_Window" Style="{StaticResource WindowPopupStyle}"
+        Title="Approval_Limit_Window" Style="{StaticResource smallWindowPopupStyle}"
         WindowStartupLocation="CenterScreen"  Closing="Approval_Limit_Window_Closing">
     <Grid Margin="5" >
         <Grid.ColumnDefinitions>

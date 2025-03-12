@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
-        Title="CityWindow" Style="{StaticResource WindowPopupStyle}"
+        Title="CityWindow" Style="{StaticResource smallWindowPopupStyle}"
         WindowStartupLocation="CenterScreen" KeyDown="City_Window_KeyDown" Closing="City_Window_Closing" >
     <Window.ContextMenu>
         <ContextMenu>

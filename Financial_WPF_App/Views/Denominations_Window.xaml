@@ -6,7 +6,7 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         xmlns:local="clr-namespace:Financial_WPF_App"
         mc:Ignorable="d"
-        Title="Denominations_Window" KeyDown="Window_KeyDown" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Style="{StaticResource WindowPopupStyle}">
+        Title="Denominations_Window" KeyDown="Window_KeyDown" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Style="{StaticResource smallWindowPopupStyle}">
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Header="Refresh" Click = "Refresh_Click" >

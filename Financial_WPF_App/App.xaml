@@ -276,6 +276,11 @@
                 <Setter Property="Height" Value="600"/>
                 <Setter Property="ResizeMode" Value="NoResize"/>
             </Style>
+            <Style x:Key="smallWindowPopupStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
+                <Setter Property="Width" Value="500"/>
+                <Setter Property="Height" Value="600"/>
+                <Setter Property="ResizeMode" Value="NoResize"/>
+            </Style>
 
             <!-- tell Dragablz tab control to use the Material Design theme -->
             <Style TargetType="{x:Type dragablz:TabablzControl}" 
