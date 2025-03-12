@@ -3,26 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
-        Title="Approval_Limit_Window" Height="480" Width="400"
+        Title="Approval_Limit_Window" Style="{StaticResource WindowPopupStyle}"
         WindowStartupLocation="CenterScreen"  Closing="Approval_Limit_Window_Closing">
-    <Grid >
+    <Grid Margin="5" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="90*" />
-            <RowDefinition Height="10*" />
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="355*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
         <!--<ScrollViewer   
             FlowDirection="RightToLeft"
             VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Auto" 
             PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">-->
-
-        <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
+        <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
+            <local:WindowControlBar_Popup x:Name="ControlBar" HorizontalAlignment="Right"/>
+        </DockPanel>
+        <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"   Grid.Row="1"                                   
                Style="{DynamicResource SfDataGrid_body}"
                HeaderStyle="{DynamicResource SfDataGrid_header}"
                RowStyle="{DynamicResource SfDataGrid_RowStyle}"
@@ -43,24 +46,7 @@
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
 
-        <Grid Grid.Column="0" Grid.Row="1" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30*"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="1"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50*" />
-            </Grid.RowDefinitions>
-            <Button Grid.Column="0" Style="{DynamicResource SaveButton_Style}" 
-                x:Name="Save_btn" TabIndex="3" Click="Save_btn_Click" />
-
-            <!--<Label Grid.Column="1" Style="{DynamicResource lableStyle}" x:Name="Selected_lable" Content="Selected: 0" />-->
-            <!--<Label Grid.Column="2" Style="{DynamicResource lableStyle}" x:Name="All_lable" Content="All: 0" />-->
-        </Grid>
+        <Button Grid.Row="2"  Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn" Content="Save" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" Margin="10,0,1,0" />
 
     </Grid>
 </Window>

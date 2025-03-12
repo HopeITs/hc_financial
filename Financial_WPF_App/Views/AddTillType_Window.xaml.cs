@@ -411,5 +411,41 @@ namespace Financial_WPF_App
                 MessageBox.Show(ex.Message, "Error");
             }
         }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
+        }
+
+
+        private void Close_Click(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+
+                if (TillType_IsDirty)
+                {
+                    if (MessageBox.Show("There are some unsaved changes, would you like to save them before closing the page?", "Alert", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None) == MessageBoxResult.Yes)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                    else
+                    {
+                        // continue closing;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
+        }
     }
 }

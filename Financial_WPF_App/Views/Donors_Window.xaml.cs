@@ -16,6 +16,10 @@ namespace Financial_WPF_App
         public NewDonor_Window(Main_Window_2 main_Window)
         {
             InitializeComponent();
+
+            // Subscribe to UserControl event
+            ControlBar.WindowStateChanged += OnUserControlWindowStateChanged;
+
             this.main_Window = main_Window;
             if (OnLoad())
             {
@@ -26,7 +30,8 @@ namespace Financial_WPF_App
                 throw new ArgumentException("This page will not open due to data fetching error.");
             }
         }
-
+        public static event Action<WindowState> WindowStateChanged; // Notify AccountWindow
+        private WindowState _currentWindowState = WindowState.Normal; // Store state
         private Donors d;
         private DataTable dt, donor_dt;
         Main_Window_2 main_Window;
@@ -415,6 +420,47 @@ namespace Financial_WPF_App
             }
         }
 
-        
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
+        }
+
+
+        private void Close_Click(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                if (Donor_IsDirty)
+                {
+                    if (MessageBox.Show("There are some unsaved changes, would you like to save them before closing the page?", "Alert", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None) == MessageBoxResult.Yes)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                    else
+                    {
+                        // continue closing;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
+        }
+        private void OnUserControlWindowStateChanged(WindowState newState)
+        {
+            _currentWindowState = newState;
+            this.WindowState = newState; // Apply state change
+
+            // Notify AccountWindow
+            WindowStateChanged?.Invoke(_currentWindowState);
+        }
     }
 }
