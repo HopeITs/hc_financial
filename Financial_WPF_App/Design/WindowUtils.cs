@@ -121,31 +121,6 @@ namespace Financial_WPF_App
             }
         }
 
-        public static void UpdateDGInContainer(DependencyObject parent, Brush borderColor)
-        {
-            if (parent == null || borderColor == null)
-                return;
-
-            // Iterate through all the header cells in the parent container
-            foreach (var headerCell in FindVisualChildren<GridHeaderCellControl>(parent))
-            {
-                // Set the BorderBrush and BorderThickness for the bottom border
-                headerCell.BorderBrush = borderColor;
-
-                // Set the BorderThickness to apply only to the bottom border
-                headerCell.BorderThickness = new Thickness(0, 0, 0, 3); // Adjust the bottom thickness if needed
-            }
-            foreach (var tablesummary in FindVisualChildren<TableSummaryRowControl>(parent))
-            {
-                tablesummary.Foreground = borderColor;
-            }
-            foreach (var groupsummary in FindVisualChildren<GroupSummaryRowControl>(parent))
-            {
-                groupsummary.Foreground = borderColor;
-            }
-        }
-
-
         // Generic method to find all elements of a specific type in a given UI structure
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
         {
