@@ -47,7 +47,7 @@ namespace Financial_WPF_App
 
         }
 
-       
+
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             Window.GetWindow(this)?.Close();

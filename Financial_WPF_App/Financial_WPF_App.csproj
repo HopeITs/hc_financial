@@ -223,6 +223,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Design\tagItemInfo.cs" />
+    <Compile Include="Design\WindowControlBar_Popup.xaml.cs">
+      <DependentUpon>WindowControlBar_Popup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helper\Approval_CustomAlternatingRowStyleSelector.cs" />
     <Compile Include="Helper\Approval_CustomRowStyleSelector.cs" />
     <Compile Include="Helper\CellStyleSelector.cs" />
@@ -441,6 +444,10 @@
     </Compile>
     <Compile Include="Design\WindowUtils.cs" />
     <Page Include="Controls\AutoCompleteTextBoxUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Design\WindowControlBar_Popup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
