@@ -88,7 +88,7 @@
             <SolidColorBrush x:Key="MidGray" Color="#939598"/>
             <SolidColorBrush x:Key="LightGray1" Color="#DCDDDE"/>
             <SolidColorBrush x:Key="LightGray2" Color="#F1F2F2"/>
-            <SolidColorBrush x:Key="RowSelectionColor" Color="#DDE3E8"/>
+            <SolidColorBrush x:Key="RowSelectionColor" Color="#A2C8D1"/>
 
             <Color x:Key="Color_HopeRed" >#BE1F24</Color>
             <Color x:Key="Color_Orange" >#F7981D</Color>
