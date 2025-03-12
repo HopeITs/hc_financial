@@ -21,7 +21,7 @@ namespace Financial_WPF_App.Helper
 
             // Apply BorderBrush and BorderThickness
             uiElement.BorderBrush = borderColor;
-            uiElement.BorderThickness = new Thickness(0, 0, 0, 3);
+            uiElement.BorderThickness = new Thickness(0.1, 0, 0.1, 3);
 
             base.OnInitializeEditElement(dataColumn, uiElement, dataContext);
         }
