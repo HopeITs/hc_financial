@@ -48,6 +48,9 @@ namespace Financial_WPF_App.Views
         private DataTable MissingLiens_dt;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
+        string HeaderStyle_Name = "PastelDarkBlue_SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "PastelDarkBlue_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "PastelDarkBlue_GroupSummaryRowStyle";
 
         private bool OnLoad()
         {
@@ -63,6 +66,7 @@ namespace Financial_WPF_App.Views
 
                 Load_Data();
                 Apply_Color_Theme();
+                Apply_DataGrid_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -89,11 +93,11 @@ namespace Financial_WPF_App.Views
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
+
         public void Load_Data()
         {
             LoadGrid();
@@ -285,24 +289,6 @@ namespace Financial_WPF_App.Views
                     var anyChecked = MissingLiens_dt.AsEnumerable().Any(row => row.Field<int>("IsSelected") == 1);
                     headerCheckbox.IsChecked = allChecked ? true : (anyChecked ? null : (bool?)false);
                 }
-            }
-        }
-
-        private void myDataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
-        {
-            try
-            {
-                Apply_DataGrid_Color_Theme();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
     }

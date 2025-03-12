@@ -142,7 +142,7 @@
                 MouseDoubleClick="myDataGrid_MouseDoubleClick" 
                 Loaded="myDataGrid_Loaded" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                Margin="2,1,2,2" Grid.Column="0" Grid.Row="1" FilterChanged="myDataGrid_FilterChanged" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" >
+                Margin="2,1,2,2" Grid.Column="0" Grid.Row="1" FilterChanged="myDataGrid_FilterChanged" >
 
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" MappingName="ID" HeaderText="Operation ID"/>
@@ -493,7 +493,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AutoGenerateColumns="True"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-                Margin="1,1,0,0" Grid.Row="2" Grid.RowSpan="2" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded" ItemsSourceChanged="Cash_DataGrid_ItemsSourceChanged">
+                Margin="1,1,0,0" Grid.Row="2" Grid.RowSpan="2" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded">
                         <syncfusion:SfDataGrid.TableSummaryRows>
                             <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                                        Title="Total:">

@@ -180,7 +180,7 @@ PopupAnimation="Fade">
                              RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                              AlternatingRowStyleSelector="{StaticResource AlternatingrowStyleSelector}"
                              RowStyleSelector="{StaticResource rowStyleSelector}"                            
-                Loaded="myDataGrid_Loaded" SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,2,1" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
+                Loaded="myDataGrid_Loaded" SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,2,1" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3">
 
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridCheckBoxColumn x:Name="Selected_DataGridColumn" HeaderText="Select" MappingName="IsSelected" AllowEditing="True" AllowFiltering="False" AllowGrouping="False">

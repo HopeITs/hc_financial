@@ -50,7 +50,9 @@ namespace Financial_WPF_App.Views
         DataTable Report_dt = new DataTable();
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
-
+        string HeaderStyle_Name = "PastelDarkBlue_SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "PastelDarkBlue_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "PastelDarkBlue_GroupSummaryRowStyle";
 
 
         private void OnLoad()
@@ -63,6 +65,7 @@ namespace Financial_WPF_App.Views
             PassException = true;
             Load_Data();
             Apply_Color_Theme();
+            Apply_DataGrid_Color_Theme();
             PassException = false;
         }
 
@@ -78,15 +81,14 @@ namespace Financial_WPF_App.Views
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(Expenses_DataGridView, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            Expenses_DataGridView.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            Expenses_DataGridView.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            Expenses_DataGridView.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
 
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(Budget_AvgRate_Datagridview, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            Expenses_DataGridView.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            Expenses_DataGridView.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            Expenses_DataGridView.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
+
         }
 
         private void Load_Data()
@@ -555,8 +557,6 @@ namespace Financial_WPF_App.Views
                 }
                 Bind_Show_Hide_Menu();
 
-                Apply_DataGrid_Color_Theme();
-
             }
             catch (Exception ex)
             {
@@ -837,24 +837,6 @@ namespace Financial_WPF_App.Views
                 }
                 HiddenColumns.Clear();
                 Bind_Show_Hide_Menu();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Budget_AvgRate_Datagridview_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
-        {
-            try
-            {
-                Apply_DataGrid_Color_Theme();
             }
             catch (Exception ex)
             {

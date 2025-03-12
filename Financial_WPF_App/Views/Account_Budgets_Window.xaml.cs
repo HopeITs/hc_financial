@@ -50,7 +50,9 @@ namespace Financial_WPF_App.Views
         double HOffset = 0;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
-
+        string HeaderStyle_Name = "PastelDarkBlue_SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "PastelDarkBlue_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "PastelDarkBlue_GroupSummaryRowStyle";
 
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
@@ -76,6 +78,7 @@ namespace Financial_WPF_App.Views
 
             Load_Data();
             Apply_Color_Theme();
+            Apply_DataGrid_Color_Theme();
             UserMode = true;
         }
 
@@ -91,16 +94,16 @@ namespace Financial_WPF_App.Views
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
 
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(Budget_Dononrs_DataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            Budget_Dononrs_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            Budget_Dononrs_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            Budget_Dononrs_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
+    
         }
+
         private void Set_privileges()
         {
             Edit_privileges = Add_privileges = Delete_privileges = false;
@@ -827,7 +830,6 @@ namespace Financial_WPF_App.Views
                 }
                 move_Columns();
                 Bind_Show_Hide_Menu();
-                Apply_DataGrid_Color_Theme();
             }
             catch (Exception ex)
             {
@@ -889,24 +891,6 @@ namespace Financial_WPF_App.Views
         {
             if (HOffset != 0)
                 this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
-        }
-
-        private void Budget_Dononrs_DataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
-        {
-            try
-            {
-                Apply_DataGrid_Color_Theme();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
         }
 
         private void myDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)

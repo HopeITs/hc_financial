@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Financial_WPF_App.Views
 {
@@ -79,7 +80,9 @@ namespace Financial_WPF_App.Views
         bool AsFiscalBond;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-
+        string HeaderStyle_Name = "SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
 
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
@@ -105,6 +108,13 @@ namespace Financial_WPF_App.Views
 
                 Load_Data();
                 Apply_Color_Theme();
+                Dispatcher.BeginInvoke(new System.Action(() =>
+                {
+                    Apply_DataGrid_Color_Theme();
+                }), DispatcherPriority.ApplicationIdle);
+                myDataGrid.InvalidateVisual();
+
+                //Apply_DataGrid_Color_Theme();
                 return true;
             }
 
@@ -125,7 +135,6 @@ namespace Financial_WPF_App.Views
 
         private void Apply_Color_Theme()
         {
-
             if (Account_Type == "Project")
             {
                 if (Category == "Micro Projects")
@@ -150,7 +159,6 @@ namespace Financial_WPF_App.Views
                 Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
             }
 
-
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
@@ -159,15 +167,48 @@ namespace Financial_WPF_App.Views
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            if (Account_Type == "Project")
             {
-                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                if (Category == "Micro Projects")
+                {
+                    HeaderStyle_Name = "HopeRed_SfDataGrid_header";
+                    TableSummaryRowStyle_Name = "HopeRed_TableSummaryRowStyle";
+                    GroupSummaryRowStyle = "HopeRed_GroupSummaryRowStyle";
 
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                }
+                else if (Category == "Budget")
+                {
+                    HeaderStyle_Name = "PastelDarkBlue_SfDataGrid_header";
+                    TableSummaryRowStyle_Name = "PastelDarkBlue_TableSummaryRowStyle";
+                    GroupSummaryRowStyle = "PastelDarkBlue_GroupSummaryRowStyle";
+                }
+            }
+            else if (Account_Type == "Exchange")
             {
-                WindowUtils.UpdateDGInContainer(Cash_DataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                HeaderStyle_Name = "Orange_SfDataGrid_header";
+                TableSummaryRowStyle_Name = "Orange_TableSummaryRowStyle";
+                GroupSummaryRowStyle = "Orange_GroupSummaryRowStyle";
+            }
+            else if (Account_Type == "Personal")
+            {
+                HeaderStyle_Name = "PastelGreen_SfDataGrid_header";
+                TableSummaryRowStyle_Name = "PastelGreen_TableSummaryRowStyle";
+                GroupSummaryRowStyle = "PastelGreen_GroupSummaryRowStyle";
+            }
+            else if (Account_Type == "Cash")
+            {
+                HeaderStyle_Name = "DarkgrayishViolet_SfDataGrid_header";
+                TableSummaryRowStyle_Name = "DarkgrayishViolet_TableSummaryRowStyle";
+                GroupSummaryRowStyle = "DarkgrayishViolet_GroupSummaryRowStyle";
+            }
+
+            myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
+
+            Cash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            Cash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            Cash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
 
         public void Load_Data()
@@ -1383,42 +1424,6 @@ namespace Financial_WPF_App.Views
             finally
             {
                 Delete_Selected_btn.IsEnabled = true;
-            }
-        }
-
-        private void myDataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
-        {
-            try
-            {
-                Apply_DataGrid_Color_Theme();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Cash_DataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
-        {
-            try
-            {
-                Apply_DataGrid_Color_Theme();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
 

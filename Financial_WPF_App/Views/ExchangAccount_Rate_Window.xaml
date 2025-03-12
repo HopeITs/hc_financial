@@ -215,7 +215,7 @@ PopupAnimation="Fade">
                         AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                         TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                         HorizontalAlignment="Stretch" Grid.Row="4" SelectionChanged="myDataGrid_SelectionChanged"
-                        AutoGenerateColumns="True" Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" Margin="3,3,6,0" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="2" Grid.RowSpan="2" FilterChanged="myDataGrid_FilterChanged" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
+                        AutoGenerateColumns="True" Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" Margin="3,3,6,0" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="2" Grid.RowSpan="2" FilterChanged="myDataGrid_FilterChanged">
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                             <syncfusion:GridTemplateColumn.CellTemplate>

@@ -43,7 +43,9 @@ namespace Financial_WPF_App
         List<Local_Project> objProjectList;
         List<Local_Project> Original_ProjectList;
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-
+        string HeaderStyle_Name = "SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
         private class Local_Project
         {
             public int ProjectID { set; get; }
@@ -66,6 +68,7 @@ namespace Financial_WPF_App
 
                 Load_Data();
                 Apply_Color_Theme();
+                Apply_DataGrid_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -93,10 +96,9 @@ namespace Financial_WPF_App
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
         private void Load_Data()
         {
@@ -612,25 +614,6 @@ namespace Financial_WPF_App
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
-
-        private void myDataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
-        {
-            try
-            {
-                Apply_DataGrid_Color_Theme();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
         private void Project_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
         {
             int count = objProjectList.Count(item => item.Project_Check_Status == true);

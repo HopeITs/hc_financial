@@ -267,7 +267,7 @@ HeaderStyle="{DynamicResource SfDataGrid_header}"
 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
-Margin="16,9,0,1"  AllowFiltering="False" Grid.RowSpan="3" Grid.Row="4" Grid.ColumnSpan="4" ItemsSourceChanged="Budget_AvgRate_Datagridview_ItemsSourceChanged">
+Margin="16,9,0,1"  AllowFiltering="False" Grid.RowSpan="3" Grid.Row="4" Grid.ColumnSpan="4">
 
                             <syncfusion:SfDataGrid.Columns>
                                 <syncfusion:GridTextColumn x:Name="budg_avgetrate_id_DataGridColumn" HeaderText="budg_avgetrate_id"  MappingName="budg_avgetrate_id" IsHidden="True"/>

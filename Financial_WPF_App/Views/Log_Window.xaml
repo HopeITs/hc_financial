@@ -180,7 +180,7 @@
                                     FrozenColumnCount="3"
                                     AutoGenerateColumns="True"
                                     Loaded="myDataGrid_Loaded" 
-                                    AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,0,-1,0" Grid.Row="3" ItemsSourceChanged="myDataGrid_ItemsSourceChanged"/>
+                                    AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,0,-1,0" Grid.Row="3"/>
         </Grid>
 
         

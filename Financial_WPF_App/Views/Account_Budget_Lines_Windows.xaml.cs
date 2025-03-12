@@ -51,7 +51,9 @@ namespace Financial_WPF_App.Views
         double HOffset = 0;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
-
+        string HeaderStyle_Name = "PastelDarkBlue_SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "PastelDarkBlue_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "PastelDarkBlue_GroupSummaryRowStyle";
 
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
@@ -78,6 +80,7 @@ namespace Financial_WPF_App.Views
             //Panel1.Visibility = Visibility.Collapsed;
             Load_Data();
             Apply_Color_Theme();
+            Apply_DataGrid_Color_Theme();
             UserMode = true;
         }
 
@@ -93,11 +96,11 @@ namespace Financial_WPF_App.Views
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
+
         private void Load_Data()
         {
             for (int i = 0; i < myDataGrid.Columns.Count; i++)
@@ -652,7 +655,6 @@ namespace Financial_WPF_App.Views
 
                 AddSums();
 
-                Apply_DataGrid_Color_Theme();
         
             }
             catch (Exception ex)

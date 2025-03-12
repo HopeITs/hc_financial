@@ -70,7 +70,9 @@ namespace Financial_WPF_App.Views
         int NewAddedRows = 0;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
-
+        string HeaderStyle_Name = "DarkgrayishViolet_SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "DarkgrayishViolet_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "DarkgrayishViolet_GroupSummaryRowStyle";
 
         private bool OnLoad()
         {
@@ -84,6 +86,7 @@ namespace Financial_WPF_App.Views
                 AccountName_lable.Content = Account_Name;
                 Load_Form();
                 Apply_Color_Theme();
+                Apply_DataGrid_Color_Theme();
                 return true;
             }
             catch (Exception ex)
@@ -111,10 +114,9 @@ namespace Financial_WPF_App.Views
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(Actions_DataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            Actions_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            Actions_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            Actions_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
 
         private void Load_Form()
@@ -409,24 +411,6 @@ namespace Financial_WPF_App.Views
                 Actions_dt.AcceptChanges();
 
                 Calc_TotalNet();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Actions_DataGrid_ItemsSourceChanged(object sender, Syncfusion.UI.Xaml.Grid.GridItemsSourceChangedEventArgs e)
-        {
-            try
-            {
-                Apply_DataGrid_Color_Theme();
             }
             catch (Exception ex)
             {

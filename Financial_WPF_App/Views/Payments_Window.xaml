@@ -302,7 +302,7 @@
             HeaderStyle="{DynamicResource SfDataGrid_header}"
             RowStyle="{DynamicResource SfDataGrid_RowStyle}"
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"                              
-            SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" ItemsSourceChanged="myDataGrid_ItemsSourceChanged">
+            SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick">
 
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
@@ -400,7 +400,7 @@
                         TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                         AutoGenerateColumns="True"
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-                        Margin="1,1,0,10" Grid.Row="2" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded" ItemsSourceChanged="Cash_DataGrid_ItemsSourceChanged">
+                        Margin="1,1,0,10" Grid.Row="2" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded">
                                 <syncfusion:SfDataGrid.TableSummaryRows>
                                     <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                                 Title="Total:">

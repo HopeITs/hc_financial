@@ -47,7 +47,9 @@ namespace Financial_WPF_App.Views
         double HOffset = 0;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-
+        string HeaderStyle_Name = "SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
 
         #region privileges
         bool Edit_privileges, Add_privileges, Delete_privileges;
@@ -69,6 +71,7 @@ namespace Financial_WPF_App.Views
             }
             Load_Data();
             Apply_Color_Theme();
+            Apply_DataGrid_Color_Theme();
             UserMode = true;
         }
 
@@ -108,10 +111,45 @@ namespace Financial_WPF_App.Views
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            if (Account_Type == "Project")
             {
-                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                if (Category == "Micro Projects")
+                {
+                    HeaderStyle_Name = "HopeRed_SfDataGrid_header";
+                    TableSummaryRowStyle_Name = "HopeRed_TableSummaryRowStyle";
+                    GroupSummaryRowStyle = "HopeRed_GroupSummaryRowStyle";
+
+                }
+                else if (Category == "Budget")
+                {
+                    HeaderStyle_Name = "PastelDarkBlue_SfDataGrid_header";
+                    TableSummaryRowStyle_Name = "PastelDarkBlue_TableSummaryRowStyle";
+                    GroupSummaryRowStyle = "PastelDarkBlue_GroupSummaryRowStyle";
+                }
+            }
+            else if (Account_Type == "Exchange")
+            {
+                HeaderStyle_Name = "Orange_SfDataGrid_header";
+                TableSummaryRowStyle_Name = "Orange_TableSummaryRowStyle";
+                GroupSummaryRowStyle = "Orange_GroupSummaryRowStyle";
+            }
+            else if (Account_Type == "Personal")
+            {
+                HeaderStyle_Name = "PastelGreen_SfDataGrid_header";
+                TableSummaryRowStyle_Name = "PastelGreen_TableSummaryRowStyle";
+                GroupSummaryRowStyle = "PastelGreen_GroupSummaryRowStyle";
+            }
+            else if (Account_Type == "Cash")
+            {
+                HeaderStyle_Name = "DarkgrayishViolet_SfDataGrid_header";
+                TableSummaryRowStyle_Name = "DarkgrayishViolet_TableSummaryRowStyle";
+                GroupSummaryRowStyle = "DarkgrayishViolet_GroupSummaryRowStyle";
+            }
+
+            myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
+
         }
         private void Set_privileges()
         {
@@ -415,7 +453,6 @@ namespace Financial_WPF_App.Views
                 Bind_Show_Hide_Menu();
                 move_Columns();
 
-                Apply_DataGrid_Color_Theme();
             }
             catch (Exception ex)
             {

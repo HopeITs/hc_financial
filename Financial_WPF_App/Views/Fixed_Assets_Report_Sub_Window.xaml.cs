@@ -38,7 +38,9 @@ namespace Financial_WPF_App.Views
         StackedHeaderRow StackedHeaderRow1 = new StackedHeaderRow { };
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
-
+        string HeaderStyle_Name = "SfDataGrid_header";
+        string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
+        string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
 
 
         int TillType_ID; string TillType_Name;
@@ -62,6 +64,7 @@ namespace Financial_WPF_App.Views
             }
             Load_Data();
             Apply_Color_Theme();
+            Apply_DataGrid_Color_Theme();
             UserMode = true;
         }
 
@@ -77,10 +80,9 @@ namespace Financial_WPF_App.Views
 
         private void Apply_DataGrid_Color_Theme()
         {
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                WindowUtils.UpdateDGInContainer(myDataGrid, Theme_Color);
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
         private void Load_Data()
         {
@@ -348,7 +350,6 @@ namespace Financial_WPF_App.Views
             {
                 Bind_Show_Hide_Menu();
                 AddSums();
-                Apply_DataGrid_Color_Theme();
             }
             catch (Exception ex)
             {
