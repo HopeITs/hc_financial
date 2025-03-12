@@ -27,11 +27,16 @@ namespace Financial_WPF_App
     public partial class WindowControlBar : UserControl
     {
         public event Action<WindowState> WindowStateChanged; // Event to notify MainWindow
-        private WindowState _customWindowState = WindowState.Normal;
+        private WindowState _customWindowState;
 
         public WindowControlBar()
         {
             InitializeComponent();
+            var parentWindow = Window.GetWindow(this);
+            if (parentWindow != null)
+            {
+                _customWindowState = parentWindow.WindowState;
+            }
         }
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {

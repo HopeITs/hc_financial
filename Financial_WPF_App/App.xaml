@@ -88,6 +88,7 @@
             <SolidColorBrush x:Key="MidGray" Color="#939598"/>
             <SolidColorBrush x:Key="LightGray1" Color="#DCDDDE"/>
             <SolidColorBrush x:Key="LightGray2" Color="#F1F2F2"/>
+            <SolidColorBrush x:Key="RowSelectionColor" Color="#DDE3E8"/>
 
             <Color x:Key="Color_HopeRed" >#BE1F24</Color>
             <Color x:Key="Color_Orange" >#F7981D</Color>
@@ -270,6 +271,11 @@
                 </Style.Triggers>
             </Style>
 
+            <Style x:Key="WindowPopupStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
+                <Setter Property="Width" Value="1000"/>
+                <Setter Property="Height" Value="600"/>
+                <Setter Property="ResizeMode" Value="NoResize"/>
+            </Style>
 
             <!-- tell Dragablz tab control to use the Material Design theme -->
             <Style TargetType="{x:Type dragablz:TabablzControl}" 
@@ -1922,7 +1928,8 @@
                 <Setter Property ="SelectionMode" Value ="Extended" />
                 <Setter Property ="SelectionUnit" Value ="Row" />
                 <Setter Property ="NavigationMode" Value ="Row" />
-                <Setter Property ="RowSelectionBrush" Value ="{DynamicResource White}" />
+                <Setter Property ="SelectionForegroundBrush" Value="{DynamicResource DarkGray}"/>
+                <Setter Property ="RowSelectionBrush" Value ="{DynamicResource RowSelectionColor}" />
                 <Setter Property ="ItemsSource" Value ="{Binding}" />
                 <Setter Property ="AllowFiltering" Value ="True" />
                 <Setter Property ="ShowGroupDropArea" Value ="True" />
@@ -2339,8 +2346,8 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
 
 
             <Style x:Key="DGButtonStyle" TargetType="{x:Type Button}">
-                <Setter Property="Button.Width" Value="20" />
-                <Setter Property="Button.Height" Value="20" />
+                <Setter Property="Button.Width" Value="15" />
+                <Setter Property="Button.Height" Value="15" />
                 <Setter Property="Button.HorizontalContentAlignment" Value="Center" />
                 <Setter Property="Button.HorizontalAlignment" Value="Center" />
                 <Setter Property="Button.VerticalContentAlignment" Value="Center" />

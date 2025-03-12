@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
-        Title="Project_Window"  Height="600" Width="450" FontFamily="Myriad Arabic" FontSize="16"  WindowStartupLocation="CenterScreen">
+        Title="Project_Window"  Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen">
 
     <Window.ContextMenu>
         <ContextMenu>
@@ -17,44 +17,44 @@
             </MenuItem>
         </ContextMenu>
     </Window.ContextMenu>
-    
-    
-    <Grid Margin="0,11,0,0" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="86*"/>
-            <ColumnDefinition Width="217*"/>
-            <ColumnDefinition Width="102*"/>
-            <ColumnDefinition Width="45*"/>
-        </Grid.ColumnDefinitions>
+
+
+    <Grid Margin="10" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="11*"/>
-            <RowDefinition Height="11*"/>
-            <RowDefinition/>
-            <RowDefinition Height="13*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="97*" />
         </Grid.RowDefinitions>
-
-        <Label Grid.Column="2"  Style="{DynamicResource lableStyle}" Content="Category:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,6,1,6" HorizontalContentAlignment="Right" />
-        <Grid  Grid.Column="1" Grid.Row="0" FlowDirection="RightToLeft" Margin="1,2,1,2" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="75*"/>
-                <ColumnDefinition Width="25*"/>
-            </Grid.ColumnDefinitions>
-            <ComboBox x:Name="Category_comboBox" Grid.Column="0" DisplayMemberPath="Name" SelectedValuePath="ID" 
-                TabIndex="2" FlowDirection="RightToLeft" Height="auto"  />
-            <Button x:Name="Category_clear_btn" Grid.Column="1" FontSize="16" BorderBrush="{x:Null}"
-                Click="Category_clear_btn_Click" Margin="7,10,0,0" MaxWidth="20" MinHeight="20" MinWidth="15" MaxHeight="15" VerticalAlignment="Top" HorizontalAlignment="Left" Height="23" Width="24" RenderTransformOrigin="0.291,-1.37"  >
-                <Button.Background>
-                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                </Button.Background>
-            </Button>
+        
+        <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
+            <local:WindowControlBar_Popup x:Name="ControlBar" HorizontalAlignment="Right"/>
+        </DockPanel>
+        <Grid Grid.Row="1"  Margin="0,5,0,0">
+            <StackPanel Orientation="Horizontal" Height="30">
+                <Label  Style="{DynamicResource statistic_lableStyle}" Content="Category:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,29,0" />
+                <ComboBox x:Name="Category_comboBox" Style="{StaticResource FloatingComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"  Width="175"
+TabIndex="2" />
+                <Button x:Name="Category_clear_btn" Grid.Column="1" FontSize="16" BorderBrush="{x:Null}" Style="{StaticResource DeleteButtonStyle}"
+            Click="Category_clear_btn_Click"  VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
         </Grid>
 
-        <Label Grid.Column="2" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Project Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,6,1,6" HorizontalContentAlignment="Right" />
-        <TextBox x:Name="Name_txtBox" Grid.Column="1"  Grid.Row="1"  Style="{DynamicResource textBoxStyle}" TabIndex="2" HorizontalContentAlignment="Stretch" Margin="17,0,1,0" Height="32" />
-
-        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3"  Style="{DynamicResource SaveButton_Style}" x:Name="Save_btn" 
-            TabIndex="4" Click="Save_btn_Click" Height="32" Margin="10,0,0,0" Width="86"   />
+        <Grid Grid.Row="2"  Margin="0,5,0,0">
+            <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" Margin="0,5,0,0">
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Project Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                <TextBox x:Name="Name_txtBox"  Style="{DynamicResource FloatingTextBoxStyle}" Width="175" TabIndex="2" HorizontalContentAlignment="Stretch"  />
+            </StackPanel>
+            
+        </Grid>
+        <Grid Grid.Row="3" Margin="0,5,0,5" >
+            <Button  Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn" Content="Save" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" Margin="10,5,1,0" />
+        </Grid>
 
 
         <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
