@@ -20,7 +20,7 @@
             <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
                 <local:WindowControlBar_Popup x:Name="ControlBar" HorizontalAlignment="Right"/>
             </DockPanel>
-            <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
+            <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"   Grid.Row="1"                                         
                     Style="{DynamicResource SfDataGrid_body}"
                     HeaderStyle="{DynamicResource SfDataGrid_header}"
                     RowStyle="{DynamicResource SfDataGrid_RowStyle}"
@@ -28,7 +28,7 @@
                     NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2"
                     Loaded="myDataGrid_Loaded" 
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
-                    Margin="1,1,1,1" FilterChanged="myDataGrid_FilterChanged" Grid.ColumnSpan="4" Grid.RowSpan="2" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged" >
+                    Margin="1,1,1,1" FilterChanged="myDataGrid_FilterChanged" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged" >
 
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="Category_DataGridColumn" HeaderText="Category"  MappingName="Category" />
