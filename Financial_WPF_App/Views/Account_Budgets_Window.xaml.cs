@@ -34,6 +34,7 @@ namespace Financial_WPF_App.Views
 
         private int Account_ID;
         private Budget b;
+        private Account acc;
         Till t;
         private DataTable Budgets_dt, Donor_dt, all_budget_donor_dt;
         Main_Window_2 main_Window;
@@ -65,6 +66,7 @@ namespace Financial_WPF_App.Views
 
             UserMode = false;
             b = new Budget();
+            acc = new Account();
             t = new Till();
 
             for (int i = 0; i < myDataGrid.Columns.Count; i++)
@@ -72,6 +74,8 @@ namespace Financial_WPF_App.Views
                 myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
                 myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
             }
+
+            Donor_dt = acc.Select_Account_Donors(Account_ID);
 
             Load_Data();
             Apply_Color_Theme();
