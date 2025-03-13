@@ -32,11 +32,10 @@ namespace Financial_WPF_App.Views
 
         }
 
-        private int Account_ID, Budget_ID;
-        private Budget b; private Account acc;
+        private int Account_ID;
+        private Budget b;
         Till t;
-        private DataTable Budgets_dt, TillType_dt, Donor_dt, all_budget_donor_dt,
-            budget_donor_dt = new DataTable(), original_budget_donor_dt = new DataTable();
+        private DataTable Budgets_dt, Donor_dt, all_budget_donor_dt;
         Main_Window_2 main_Window;
         bool IsAdminAccount;
 
@@ -65,11 +64,9 @@ namespace Financial_WPF_App.Views
             Show_Hide();
 
             UserMode = false;
-            acc = new Account();
             b = new Budget();
             t = new Till();
-            Rate_TextBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
-            TillType_dt = new DataTable();
+
             for (int i = 0; i < myDataGrid.Columns.Count; i++)
             {
                 myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
@@ -97,11 +94,6 @@ namespace Financial_WPF_App.Views
             myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
-
-            Budget_Dononrs_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
-            Budget_Dononrs_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
-            Budget_Dononrs_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
-    
         }
 
         private void Set_privileges()
@@ -142,8 +134,7 @@ namespace Financial_WPF_App.Views
         {
             if (!Add_privileges)
             {
-                Grid1.Visibility = Visibility.Collapsed;
-                First_col.Width = new GridLength(0, GridUnitType.Star);
+                Add_btn.Visibility = Visibility.Collapsed;
             }
             if (!Edit_privileges)
             {
@@ -167,40 +158,7 @@ namespace Financial_WPF_App.Views
 
         private void Load_Data()
         {
-            Name_txtBox.Text = "";
-            beginDate_datepicker.SelectedDate = null;
-            endDate_datepicker.SelectedDate = null;
-            Budget_ID = -1;
-            TillType_comboBox.SelectedIndex = -1;
-            Donor_comboBox.SelectedIndex = -1;
-            Rate_TextBox.Clear();
-            Budget_Dononrs_DataGrid.ItemsSource = null;
-
-            Fill_comboBoxs();
             Fill_Budget(false);
-        }
-
-        private void Fill_comboBoxs()
-        {
-            TillType_dt = t.Select_Account_TillTypes(Account_ID, "SYR");
-            if (TillType_dt != null && TillType_dt.Rows.Count > 0)
-            {
-                TillType_comboBox.ItemsSource = TillType_dt.DefaultView;
-            }
-            else
-            {
-                TillType_comboBox.ItemsSource = null;
-            }
-
-            Donor_dt = acc.Select_Account_Donors(Account_ID);
-            if (Donor_dt != null && Donor_dt.Rows.Count > 0)
-            {
-                Donor_comboBox.ItemsSource = Donor_dt.DefaultView;
-            }
-            else
-            {
-                Donor_comboBox.ItemsSource = null;
-            }
         }
 
         private void Fill_Budget(bool Update)
@@ -240,6 +198,7 @@ namespace Financial_WPF_App.Views
                 if (duplicateBudgetIds.Count > 0)
                 {
                     Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Visible;
+                    Total_RadioButton.IsChecked = true;
                     //Panel1.Visibility = Visibility.Visible;
                 }
                 else
@@ -264,43 +223,13 @@ namespace Financial_WPF_App.Views
             try
             {
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
-                Budget_ID = Convert.ToInt32(dataRow["ID"]);
+                int Budget_ID = Convert.ToInt32(dataRow["ID"]);
 
-                if (dataRow["Name"] != DBNull.Value || dataRow["Name"] != null)
-                    Name_txtBox.Text = dataRow["Name"].ToString();
-
-                beginDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow["BeginDate"].ToString());
-                endDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow["EndDate"].ToString());
-
-                TillType_comboBox.SelectedValue = Convert.ToInt32(dataRow["Budget_Type_ID"].ToString());
-
-
-                System.Data.DataRow[] rows = all_budget_donor_dt.Select("budget_id = '" + Budget_ID + "'");
-                if (rows.Length != 0)
+                Add_Account_Budget_Window _Window = new Add_Account_Budget_Window(Account_ID,Budget_ID,Budgets_dt,all_budget_donor_dt,this,main_Window);
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
                 {
-                    budget_donor_dt = rows.CopyToDataTable();
-                    original_budget_donor_dt = rows.CopyToDataTable();
-                    if (budget_donor_dt != null && budget_donor_dt.Rows.Count > 0)
-                        Budget_Dononrs_DataGrid.ItemsSource = budget_donor_dt.DefaultView;
-
-                }
-
-                var budget_donor_ids = budget_donor_dt.AsEnumerable().Select(row => row.Field<int>("Donor_ID"));
-
-                // Select rows from dt1 where id is not in dt2Ids
-                var result = Donor_dt.AsEnumerable()
-                                .Where(row => !budget_donor_ids.Contains(row.Field<int>("ID")));
-
-
-                if (result.Count() > 0)
-                {
-                    Donor_dt = result.CopyToDataTable();
-                    Donor_comboBox.ItemsSource = Donor_dt.DefaultView;
-                }
-                else
-                {
-                    Donor_dt.Clear();
-                    Donor_comboBox.ItemsSource = null;
+                    Load_Data();
                 }
 
             }
@@ -326,7 +255,7 @@ namespace Financial_WPF_App.Views
                 if (dialogResult == MessageBoxResult.Yes)
                 {
                     DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
-                    Budget_ID = Convert.ToInt32(dataRow[0].ToString());
+                    int Budget_ID = Convert.ToInt32(dataRow[0].ToString());
                     string Name = dataRow["Name"].ToString();
 
                     b.Delete(Budget_ID, Account_ID, Name, "Account_Budgets_Window");
@@ -348,147 +277,6 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("Duplicate entry"))
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Save_btn_Click(object sender, RoutedEventArgs e)
-        {
-            Save_btn.IsEnabled = false;
-            try
-            {
-                if (Name_txtBox.Text == "")
-                {
-                    MessageBox.Show("Please make sure to enter the name.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                    //throw new Exception("Please make sure to enter the name.");
-
-                }
-
-                if (beginDate_datepicker.SelectedDate == null || endDate_datepicker.SelectedDate == null)
-                {
-                    MessageBox.Show("Please make sure to specify the start and end dates.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                    //throw new Exception("Please make sure to specify the start and end dates.");
-
-                }
-
-                if (beginDate_datepicker.SelectedDate >= endDate_datepicker.SelectedDate)
-                {
-                    MessageBox.Show("Error in start and end dates.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                    //throw new Exception("Error in start and end dates.");
-
-                }
-
-                foreach (System.Data.DataRow R in Budgets_dt.Rows)
-                {
-                    if (Budget_ID == -1 || R.Field<int>("ID") != Budget_ID)
-                    {
-                        if (beginDate_datepicker.SelectedDate <= Convert.ToDateTime(R.Field<DateTime>("EndDate").ToString()) && endDate_datepicker.SelectedDate >= Convert.ToDateTime(R.Field<DateTime>("BeginDate").ToString()))
-                        {
-                            MessageBox.Show("There is an overlap between the entered dates and previously specified dates.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            return;
-                            //throw new Exception("There is an overlap between the entered dates and previously specified dates.");
-                        }
-                    }
-                }
-
-                if (TillType_comboBox.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select the budget currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                    //throw new Exception("Please select the budget currency.");
-
-                }
-
-                if (budget_donor_dt.Rows.Count == 0)
-                {
-                    MessageBox.Show("Please select at least one donor for the budget.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                    //throw new Exception("Please select at least one donor for the budget.");
-                }
-
-                object sumObject;
-                sumObject = budget_donor_dt.Compute("Sum(Rate)", string.Empty);
-
-                if (Convert.ToDouble(sumObject) != 100)
-                {
-                    if (MessageBox.Show("Alert!!!" + Environment.NewLine + "The total percentage of all donors does not equal 100%" + Environment.NewLine + "Are you sure you want to continue??", "Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None) == MessageBoxResult.No)
-                    {
-                        return;
-                    }
-                }
-                if (Login.BuildConnection())
-                {
-                    string Name = Name_txtBox.Text;
-                    string BeginDate = ((DateTime)beginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    string EndDate = ((DateTime)endDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    int Budget_Type_ID = Convert.ToInt32(TillType_comboBox.SelectedValue);
-
-                    DataTable Add_Donors_dt = new DataTable();
-                    System.Data.DataRow[] rowsToAdd = budget_donor_dt.Select("Budget_Donor_ID = '-1'");
-                    if (rowsToAdd.Count() > 0)
-                        Add_Donors_dt = rowsToAdd.CopyToDataTable();
-
-                    if (Budget_ID != -1)//Edit
-                    {
-                        DataTable Delete_Donors_dt = new DataTable();
-                        var kept_Donors = budget_donor_dt.AsEnumerable()
-                            .Where(row => row.Field<int>("Budget_Donor_ID") != -1)
-                            .Select(row => row.Field<int>("Donor_ID"));
-
-                        // Select rows from dt1 where id is not in dt2Ids
-                        var result = original_budget_donor_dt.AsEnumerable()
-                                        .Where(row => !kept_Donors.Contains(row.Field<int>("Donor_ID")));
-
-                        if (result.Count() > 0)
-                        {
-                            Delete_Donors_dt = result.CopyToDataTable();
-                        }
-
-
-                        if (Delete_Donors_dt.Rows.Count > 0 || Add_Donors_dt.Rows.Count > 0)
-                        {
-                            if (MessageBox.Show("Alert!!!" + Environment.NewLine + "Making any changes to the donors will be accompanied by a change in the calculations of all previous reports for this budget." + Environment.NewLine + "Are you sure you want to continue؟؟", "Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-                            {
-                                return;
-                            }
-                        }
-                        b.Update(Budget_ID, Name, Account_ID, BeginDate, EndDate, Budget_Type_ID, Add_Donors_dt, Delete_Donors_dt, "Account_Budgets_Window");
-                    }
-                    else//Add new
-                    {
-                        if (!Add_privileges)
-                        {
-                            MessageBox.Show("Sorry … You do not have add permissions.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            return;
-                            //throw new Exception("Sorry … You do not have add permissions.");
-                        }
-
-                        b.Insert(Name, BeginDate, EndDate, Account_ID, Budget_Type_ID, Add_Donors_dt, "Account_Budgets_Window");
-                    }
-                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
-                    Load_Data();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
-                {
-                    Login.MyConn.Close();
-                }
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-            finally
-            {
-                Save_btn.IsEnabled = true;
             }
         }
 
@@ -560,13 +348,14 @@ namespace Financial_WPF_App.Views
             }
             catch (Exception ex)
             {
+                /*
                 if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
                 { MessageBox.Show("please check your network and try again", "Error"); }
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
                 else if (ex.Message.Contains("Duplicate entry"))
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
+                else { MessageBox.Show(ex.Message, "Error"); }*/
             }
 
         }
@@ -714,108 +503,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Donor_DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                DataRowView dataRow = (DataRowView)Budget_Dononrs_DataGrid.CurrentItem;
-                int Current_donor_id = Convert.ToInt32(dataRow["Donor_ID"].ToString());
-                string Current_donor_name = dataRow["Donor"].ToString();
-
-                System.Data.DataRow[] dtr = budget_donor_dt.Select("Donor_ID='" + Current_donor_id + "'");
-                foreach (var drow in dtr)
-                {
-                    drow.Delete();
-                }
-                budget_donor_dt.AcceptChanges();
-
-                //resore deleted donor to donor Combobox
-                System.Data.DataRow dr = Donor_dt.NewRow();
-                dr["ID"] = Current_donor_id;
-                dr["Name"] = Current_donor_name;
-                Donor_dt.Rows.Add(dr);
-                Donor_dt.AcceptChanges();
-
-                Donor_comboBox.ItemsSource = Donor_dt.DefaultView;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void AddDonor_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (Donor_comboBox.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select the donor before entering.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                    //throw new Exception("Please select the donor before entering.");
-
-                }
-
-                double rate;
-
-                if (Rate_TextBox.Text == "" || !double.TryParse(Rate_TextBox.Text, out rate))
-                {
-                    MessageBox.Show("Please make sure to enter the percentage correctly.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                    //throw new Exception("Please make sure to enter the percentage correctly.");
-                }
-
-                if (Budget_Dononrs_DataGrid.ItemsSource == null)
-                {
-                    budget_donor_dt = new DataTable();
-                    budget_donor_dt.Columns.Add("Budget_Donor_ID", typeof(int));
-                    budget_donor_dt.Columns.Add("Donor_ID", typeof(int));
-                    budget_donor_dt.Columns.Add("Donor", typeof(string));
-                    budget_donor_dt.Columns.Add("Rate", typeof(double));
-
-                    Budget_Dononrs_DataGrid.ItemsSource = budget_donor_dt;
-                }
-
-                System.Data.DataRow dr = budget_donor_dt.NewRow();
-
-                dr["Budget_Donor_ID"] = -1;
-                dr["Donor_ID"] = Convert.ToInt32(Donor_comboBox.SelectedValue);
-                dr["Donor"] = Donor_comboBox.Text;
-                dr["Rate"] = rate;
-
-                budget_donor_dt.Rows.Add(dr);
-                budget_donor_dt.AcceptChanges();
-
-
-                //remove added donor from donor Combobox
-                System.Data.DataRow[] rowsToDelete = Donor_dt.Select("ID = '" + Donor_comboBox.SelectedValue + "'");
-                foreach (System.Data.DataRow row in rowsToDelete)
-                {
-                    Donor_dt.Rows.Remove(row);
-                    Donor_dt.AcceptChanges();
-                }
-                Donor_comboBox.ItemsSource = Donor_dt.DefaultView;
-                Donor_comboBox.SelectedIndex = -1;
-                Rate_TextBox.Clear();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
         private void myDataGrid_ItemsSourceChanged(object sender, GridItemsSourceChangedEventArgs e)
         {
             try
@@ -841,28 +528,6 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
-        }
-
-        private void Rate_TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (Rate_TextBox.Text != "")
-                {
-                    Rate_TextBox.Text = Login.ConvertToDouble(Rate_TextBox.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
         }
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
@@ -909,43 +574,13 @@ namespace Financial_WPF_App.Views
                             {
                                 DataRowView rowview = grid.SelectedItem as DataRowView;
 
-                                Budget_ID = Convert.ToInt32(rowview["ID"].ToString());
+                                int Budget_ID = Convert.ToInt32(rowview["ID"].ToString());
 
-                                if (rowview["Name"] != DBNull.Value || rowview["Name"] != null)
-                                    Name_txtBox.Text = rowview["Name"].ToString();
-
-                                beginDate_datepicker.SelectedDate = Convert.ToDateTime(rowview["BeginDate"].ToString());
-                                endDate_datepicker.SelectedDate = Convert.ToDateTime(rowview["EndDate"].ToString());
-
-                                TillType_comboBox.SelectedValue = Convert.ToInt32(rowview["Budget_Type_ID"].ToString());
-
-
-                                System.Data.DataRow[] rows = all_budget_donor_dt.Select("budget_id = '" + Budget_ID + "'");
-                                if (rows.Length != 0)
+                                Add_Account_Budget_Window _Window = new Add_Account_Budget_Window(Account_ID, Budget_ID, Budgets_dt, all_budget_donor_dt, this, main_Window);
+                                bool? dialogResult = _Window.ShowDialog();
+                                if (dialogResult == true)
                                 {
-                                    budget_donor_dt = rows.CopyToDataTable();
-                                    original_budget_donor_dt = rows.CopyToDataTable();
-                                    if (budget_donor_dt != null && budget_donor_dt.Rows.Count > 0)
-                                        Budget_Dononrs_DataGrid.ItemsSource = budget_donor_dt.DefaultView;
-
-                                }
-
-                                var budget_donor_ids = budget_donor_dt.AsEnumerable().Select(row => row.Field<int>("Donor_ID"));
-
-                                // Select rows from dt1 where id is not in dt2Ids
-                                var result = Donor_dt.AsEnumerable()
-                                                .Where(row => !budget_donor_ids.Contains(row.Field<int>("ID")));
-
-
-                                if (result.Count() > 0)
-                                {
-                                    Donor_dt = result.CopyToDataTable();
-                                    Donor_comboBox.ItemsSource = Donor_dt.DefaultView;
-                                }
-                                else
-                                {
-                                    Donor_dt.Clear();
-                                    Donor_comboBox.ItemsSource = null;
+                                    Load_Data();
                                 }
                             }
                         }
@@ -1181,6 +816,30 @@ namespace Financial_WPF_App.Views
 
                     // Call the search method when text changes
                     searchHelper.Search(Search_txtBox.Text, myDataGrid);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void AddNewAction_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Add_Account_Budget_Window _Window = new Add_Account_Budget_Window(Account_ID,Budgets_dt,all_budget_donor_dt,this,main_Window);
+
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
+                {
+                    Load_Data();
                 }
             }
             catch (Exception ex)

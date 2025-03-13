@@ -267,6 +267,9 @@
     <Compile Include="Views\Account_Budgets_Window.xaml.cs">
       <DependentUpon>Account_Budgets_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Add_Account_Budget_Window.xaml.cs">
+      <DependentUpon>Add_Account_Budget_Window.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Add_Account_Rate_Window.xaml.cs">
       <DependentUpon>Add_Account_Rate_Window.xaml</DependentUpon>
     </Compile>
@@ -456,6 +459,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Account_Budgets_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Add_Account_Budget_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
