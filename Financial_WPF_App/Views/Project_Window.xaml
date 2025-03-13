@@ -23,38 +23,36 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="97*" />
         </Grid.RowDefinitions>
-        
+
         <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
             <local:WindowControlBar_Popup x:Name="ControlBar" HorizontalAlignment="Right"/>
         </DockPanel>
-        <Grid Grid.Row="1"  Margin="0,5,0,0">
-            <StackPanel Orientation="Horizontal" Height="30">
-                <Label  Style="{DynamicResource statistic_lableStyle}" Content="Category:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,29,0" />
-                <ComboBox x:Name="Category_comboBox" Style="{StaticResource FloatingComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"  Width="175"
-TabIndex="2" />
-                <Button x:Name="Category_clear_btn" Grid.Column="1" FontSize="16" BorderBrush="{x:Null}" Style="{StaticResource DeleteButtonStyle}"
+        <DockPanel LastChildFill="True" Background="{StaticResource LightGray1}" Height="40" Grid.Row="1">
+            <WrapPanel Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Height="30">
+                    <Label  Style="{DynamicResource statistic_lableStyle}" Content="Category:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,2,0" />
+                    <ComboBox x:Name="Category_comboBox" Style="{StaticResource ActionComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"  Width="175"
+                        TabIndex="2" />
+                    <Button x:Name="Category_clear_btn" Grid.Column="1" FontSize="16" BorderBrush="{x:Null}" Style="{StaticResource ActionDeleteButtonStyle}"
             Click="Category_clear_btn_Click"  VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" Margin="0,5,0,0">
+                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Project Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                    <TextBox x:Name="Name_txtBox"  Style="{DynamicResource CustomTextBoxActionStyle}" Width="175" TabIndex="2" HorizontalContentAlignment="Stretch"  />
+                </StackPanel>
+                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="Save_btn" Click="Save_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Project" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,2,1,0" Width="22" Height="23">
                     <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                        <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-            </StackPanel>
-        </Grid>
-
-        <Grid Grid.Row="2"  Margin="0,5,0,0">
-            <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" Margin="0,5,0,0">
-                <Label Style="{DynamicResource statistic_lableStyle}" Content="Project Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <TextBox x:Name="Name_txtBox"  Style="{DynamicResource FloatingTextBoxStyle}" Width="175" TabIndex="2" HorizontalContentAlignment="Stretch"  />
-            </StackPanel>
-            
-        </Grid>
-        <Grid Grid.Row="3" Margin="0,5,0,5" >
-            <Button  Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn" Content="Save" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" Margin="10,5,1,0" />
-        </Grid>
+            </WrapPanel>
+        </DockPanel>
 
 
         <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
