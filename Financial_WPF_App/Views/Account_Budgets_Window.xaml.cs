@@ -202,7 +202,6 @@ namespace Financial_WPF_App.Views
                 if (duplicateBudgetIds.Count > 0)
                 {
                     Total_RadioButton.Visibility = PerDonor_RadioButton.Visibility = Visibility.Visible;
-                    Total_RadioButton.IsChecked = true;
                     //Panel1.Visibility = Visibility.Visible;
                 }
                 else
