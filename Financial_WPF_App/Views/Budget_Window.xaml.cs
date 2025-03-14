@@ -170,15 +170,12 @@ namespace Financial_WPF_App
                 {
                     MessageBox.Show("Please enter the name.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
-
-
                 }
 
                 if (Category_comboBox.SelectedIndex == -1)
                 {
                     MessageBox.Show("Please select the category.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
-
                 }
 
                 int ProjectFound = 0;
@@ -266,7 +263,9 @@ namespace Financial_WPF_App
                     {
                         Project.Project_Check_Status = false;
                     }
+                    Project_comboBox.ItemsSource = null;
                     Project_comboBox.Text = "0 Selected";
+                    Project_comboBox.ItemsSource = objProjectList;
                     LoadGrid();
                 }
             }
