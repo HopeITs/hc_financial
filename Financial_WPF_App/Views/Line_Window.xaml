@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" KeyDown="ProjectWindow_KeyDown"
-        Height="550" Width="450" FontFamily="Myriad Arabic" FontSize="16" >
+        Style="{StaticResource WindowPopupStyle}">
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Header="Refresh" Click = "Refresh_Click" >
@@ -17,24 +17,38 @@
             </MenuItem>
         </ContextMenu>
     </Window.ContextMenu>
-    <Grid  >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="70*"></ColumnDefinition>
-            <ColumnDefinition Width="30*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+    <Grid Margin="10" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="13*"></RowDefinition>
-            <RowDefinition Height="13*"></RowDefinition>
-            <RowDefinition Height="13*"></RowDefinition>
-            <RowDefinition Height="15*" ></RowDefinition>
-            <RowDefinition Height="90*" ></RowDefinition>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="97*" />
         </Grid.RowDefinitions>
 
-        <Label Grid.Column="1" Grid.Row="0" Style="{DynamicResource lableStyle}" Content="Name:" />
-        <TextBox x:Name="CategoryName_txtBox" Grid.Column="0" Grid.Row="0" TabIndex="2" 
-                 Style="{DynamicResource textBoxStyle}" />
-
-        <Label Grid.Column="1" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Type:" />
+        <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
+            <local:WindowControlBar_Popup x:Name="ControlBar" HorizontalAlignment="Right"/>
+        </DockPanel>
+        <DockPanel LastChildFill="True" Background="{StaticResource LightGray1}" Height="40" Grid.Row="1">
+            <WrapPanel Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
+                <StackPanel  Orientation="Horizontal" Height="30">
+                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Name:"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,2,0"/>
+                    <TextBox x:Name="CategoryName_txtBox" Style="{DynamicResource CustomTextBoxActionStyle}" Width="175" TabIndex="2" HorizontalContentAlignment="Stretch"  />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="30">
+                    <Label  Style="{DynamicResource statistic_lableStyle}" Content="Type:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,2,0" />
+                    <ComboBox x:Name="Type_comboBox" Style="{StaticResource ActionComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"  Width="175"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" Margin="0,5,0,0">
+                    <Label  Style="{DynamicResource statistic_lableStyle}" Content="Kind:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,2,0" />
+                    <ComboBox x:Name="Kind_comboBox" Style="{StaticResource ActionComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"  Width="175"/>
+                </StackPanel>
+                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="categorySave_btn" Click="CategorySave_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Project" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,2,1,0" Width="22" Height="23">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </WrapPanel>
+        </DockPanel>
+        
 
         <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
@@ -46,7 +60,7 @@
                 <RowDefinition Height="50*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <DockPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="6,14,5,19" Width="156">
+            <!--<DockPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="6,14,5,19" Width="156">
                 <Border CornerRadius="6" BorderBrush="Gray" Background="{DynamicResource HopeYellow1}" BorderThickness="2" DockPanel.Dock="Top" Width="140">
                     <StackPanel  >
                         <CheckBox  x:Name="Fixed_checkBox" Content="Equipping the place" HorizontalAlignment="Right" Margin="3" FlowDirection="RightToLeft" Checked="Fixed_checkBox_Checked" Background="{DynamicResource HopeDarkBlue2}" BorderBrush="{DynamicResource HopeBlue1}" Width="121"/>
@@ -59,11 +73,8 @@
                     <CheckBox  x:Name="Profit_checkBox" Content="Profit" Margin="3" VerticalAlignment="Center" FlowDirection="RightToLeft" Checked="Profit_checkBox_Checked" Background="{DynamicResource HopeDarkBlue2}" BorderBrush="{DynamicResource HopeBlue1}" Width="60"/>
                     <CheckBox  x:Name="Budget_checkBox" Content="Budget" FlowDirection="RightToLeft" Checked="Budget_checkBox_Checked" Background="{DynamicResource HopeDarkBlue2}" BorderBrush="{DynamicResource HopeBlue1}"/>
                 </StackPanel>
-            </Border>
+            </Border>-->
         </Grid>
-
-        <Button Grid.Column="0" Grid.Row="3"  x:Name="categorySave_btn" TabIndex="4" 
-                Style="{DynamicResource SaveButton_Style}"  Click="CategorySave_btn_Click"/>
 
 
         <syncfusion:SfDataGrid x:Name="categoryDataGrid" FrozenColumnCount="2"                                            
@@ -72,7 +83,7 @@
             RowStyle="{DynamicResource SfDataGrid_RowStyle}"
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            Margin="1,2,2,0"  Grid.Row="4" Grid.ColumnSpan="4" MouseDoubleClick="myDataGrid_MouseDoubleClick">
+            Margin="1,2,2,0"  Grid.Row="3" MouseDoubleClick="myDataGrid_MouseDoubleClick">
 
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID"/>

@@ -536,7 +536,7 @@ namespace Financial_WPF_App
         {
             if (myDataGrid.View != null)
             {
-                Export_btn.CommandTarget = myDataGrid;
+                //Export_btn.CommandTarget = myDataGrid;
             }
         }
 
@@ -620,6 +620,20 @@ namespace Financial_WPF_App
             Project_comboBox.Text = count.ToString() + " Selected";
         }
 
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this);
+        }
+
+        private void Close_Click(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.CloseWindow(this);
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
+        }
 
         #region disable combobox text edit
         private void comboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

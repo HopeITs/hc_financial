@@ -182,7 +182,7 @@ PopupAnimation="Fade">
                                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                       SelectionChanged="myDataGrid_SelectionChanged"  
                       MouseDoubleClick="myDataGrid_MouseDoubleClick"
-                                Loaded="myDataGrid_Loaded" Height="484" FilterChanged="myDataGrid_FilterChanged">
+                                Loaded="myDataGrid_Loaded" Height="484" FilterChanged="myDataGrid_FilterChanged" HorizontalAlignment="Right" Margin="0,0,0,0">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
@@ -219,6 +219,6 @@ PopupAnimation="Fade">
                 </syncfusion:GridTemplateColumn>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
-        
+
     </Grid>
 </Window>
