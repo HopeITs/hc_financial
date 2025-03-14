@@ -48,9 +48,9 @@ namespace Financial_WPF_App
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
         private class Local_Project
         {
-            public int ProjectID { set; get; }
+            public int ID { set; get; }
 
-            public string ProjectName { set; get; }
+            public string Name { set; get; }
 
             public Boolean Project_Check_Status { set; get; }
         }
@@ -149,8 +149,8 @@ namespace Financial_WPF_App
                     for (int i = 0; i < projects_dt.Rows.Count; i++)
                     {
                         Local_Project obj = new Local_Project();
-                        obj.ProjectID = projects_dt.Rows[i].Field<int>(0);
-                        obj.ProjectName = projects_dt.Rows[i].Field<string>(1);
+                        obj.ID = projects_dt.Rows[i].Field<int>(0);
+                        obj.Name = projects_dt.Rows[i].Field<string>(1);
                         objProjectList.Add(obj);
                     }
                     Project_comboBox.ItemsSource = objProjectList;
@@ -170,15 +170,12 @@ namespace Financial_WPF_App
                 {
                     MessageBox.Show("Please enter the name.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
-
-
                 }
 
                 if (Category_comboBox.SelectedIndex == -1)
                 {
                     MessageBox.Show("Please select the category.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
-
                 }
 
                 int ProjectFound = 0;
@@ -218,14 +215,14 @@ namespace Financial_WPF_App
                                 if (Original_ProjectList != null && Original_ProjectList.Count > 0)
                                     foreach (var OriginalProject in Original_ProjectList)
                                     {
-                                        if (OriginalProject.ProjectID == Project.ProjectID && OriginalProject.Project_Check_Status == true)
+                                        if (OriginalProject.ID == Project.ID && OriginalProject.Project_Check_Status == true)
                                         {
                                             Found = true;
                                             break;
                                         }
                                     }
                                 if (Found == false)
-                                    Add_Projects.Add(Project.ProjectID.ToString());
+                                    Add_Projects.Add(Project.ID.ToString());
                             }
                         }
 
@@ -238,14 +235,14 @@ namespace Financial_WPF_App
                                 if (objProjectList != null && objProjectList.Count > 0)
                                     foreach (var Project in objProjectList)
                                     {
-                                        if (OriginalProject.ProjectID == Project.ProjectID && Project.Project_Check_Status == true)
+                                        if (OriginalProject.ID == Project.ID && Project.Project_Check_Status == true)
                                         {
                                             Found = true;
                                             break;
                                         }
                                     }
                                 if (Found == false)
-                                    Delete_Projects.Add(OriginalProject.ProjectID.ToString());
+                                    Delete_Projects.Add(OriginalProject.ID.ToString());
                             }
                         }
 
@@ -266,7 +263,9 @@ namespace Financial_WPF_App
                     {
                         Project.Project_Check_Status = false;
                     }
+                    Project_comboBox.ItemsSource = null;
                     Project_comboBox.Text = "0 Selected";
+                    Project_comboBox.ItemsSource = objProjectList;
                     LoadGrid();
                 }
             }
@@ -320,13 +319,13 @@ namespace Financial_WPF_App
                         {
                             foreach (var Project in objProjectList)
                             {
-                                if (Project.ProjectID.ToString() == AllProject_ID[j])
+                                if (Project.ID.ToString() == AllProject_ID[j])
                                 {
                                     Project.Project_Check_Status = true;
 
                                     Local_Project obj = new Local_Project();
-                                    obj.ProjectID = Project.ProjectID;
-                                    obj.ProjectName = Project.ProjectName;
+                                    obj.ID = Project.ID;
+                                    obj.Name = Project.Name;
                                     obj.Project_Check_Status = true;
                                     Original_ProjectList.Add(obj);
                                 }
@@ -516,9 +515,6 @@ namespace Financial_WPF_App
                     int count = objProjectList.Count(item => item.Project_Check_Status == true);
                     Project_comboBox.Text = count.ToString() + " Selected";
                 }
-
-
-
             }
             catch (Exception ex)
             {
@@ -536,7 +532,7 @@ namespace Financial_WPF_App
         {
             if (myDataGrid.View != null)
             {
-                Export_btn.CommandTarget = myDataGrid;
+                //Export_btn.CommandTarget = myDataGrid;
             }
         }
 
@@ -577,13 +573,13 @@ namespace Financial_WPF_App
                                     {
                                         foreach (var Project in objProjectList)
                                         {
-                                            if (Project.ProjectID.ToString() == AllProject_ID[j])
+                                            if (Project.ID.ToString() == AllProject_ID[j])
                                             {
                                                 Project.Project_Check_Status = true;
 
                                                 Local_Project obj = new Local_Project();
-                                                obj.ProjectID = Project.ProjectID;
-                                                obj.ProjectName = Project.ProjectName;
+                                                obj.ID = Project.ID;
+                                                obj.Name = Project.Name;
                                                 obj.Project_Check_Status = true;
                                                 Original_ProjectList.Add(obj);
                                             }
@@ -620,6 +616,20 @@ namespace Financial_WPF_App
             Project_comboBox.Text = count.ToString() + " Selected";
         }
 
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this);
+        }
+
+        private void Close_Click(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.CloseWindow(this);
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
+        }
 
         #region disable combobox text edit
         private void comboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

@@ -10,7 +10,7 @@ namespace Financial_WPF_App.Models
         public DataTable Select(string ids)
         {
             //check user from database
-            string query = "select ID,Name" +
+            string query = "select ID, Name" +
                 ", case Type when 0 then 'Equipping the place' else 'Running cost' end as 'Type'" +
                 ", case Kind when 0 then 'Profit' else 'Budget' end as 'Kind' from `linecategory`";
 

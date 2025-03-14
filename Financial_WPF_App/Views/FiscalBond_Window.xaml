@@ -219,6 +219,6 @@ PopupAnimation="Fade">
                 </syncfusion:GridTemplateColumn>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
-        
+
     </Grid>
 </Window>
