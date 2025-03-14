@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
-        mc:Ignorable="d"
+        mc:Ignorable="d" Tag="Project Window"
         Title="Project_Window"  Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen">
 
     <Window.ContextMenu>
@@ -27,7 +27,7 @@
         </Grid.RowDefinitions>
 
         <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
-            <local:WindowControlBar_Popup x:Name="ControlBar" HorizontalAlignment="Right"/>
+            <local:WindowControlBar_Popup x:Name="ControlBar"/>
         </DockPanel>
         <DockPanel LastChildFill="True" Background="{StaticResource LightGray1}" Height="40" Grid.Row="1">
             <WrapPanel Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
