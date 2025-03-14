@@ -5,12 +5,37 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" Background="#FFDCDDDE" d:DesignHeight="15" d:DesignWidth="120"
              >
-	<!--<DockPanel MouseDown="TitleBar_MouseDown">-->
-	<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-		<!-- Minimize Button -->
-		<Button HorizontalAlignment="Center" VerticalAlignment="Center" Width="15" Height="15" Grid.Column="0" Click="Minimize_Click"  Background="{StaticResource ButtonImageMinimize}" BorderBrush="{x:Null}" Foreground="{x:Null}" Margin="0,0,20,0" />
-		<!-- Close Button -->
-		<Button VerticalAlignment="Center" x:Name="Close" Width="13" Height="14" Grid.Column="2" BorderBrush="{x:Null}" Foreground="{x:Null}" FontWeight="Normal" Background="{StaticResource ButtonImageClose}" Click="Close_Click" Margin="0,0,30,0"/>
-	</StackPanel>
-	<!--</DockPanel>-->
+    <Grid VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <!-- Title side -->
+            <ColumnDefinition Width="Auto" />
+            <!-- Buttons side -->
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Left">
+
+            <Image Source="/Logo.ico"
+                   Width="Auto" Height="Auto"
+                   VerticalAlignment="Center" Margin="10,4,2,4" />
+            <!-- Left-aligned Title Label -->
+            <Label Content="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Tag}" Style="{StaticResource statistic_lableStyle}" Margin="2,0,1,0" />
+        </StackPanel>
+        
+
+        <!-- Right-aligned Buttons -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0">
+            <!-- Minimize Button -->
+            <Button Width="15" Height="15"
+                    Click="Minimize_Click"
+                    Background="{StaticResource ButtonImageMinimize}"
+                    BorderBrush="{x:Null}" Foreground="{x:Null}" Margin="0,0,10,0" />
+
+            <!-- Close Button -->
+            <Button Width="15" Height="15"
+                    Click="Close_Click"
+                    Background="{StaticResource ButtonImageClose}"
+                    BorderBrush="{x:Null}" Foreground="{x:Null}" />
+        </StackPanel>
+    </Grid>
 </UserControl>
