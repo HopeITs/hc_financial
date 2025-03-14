@@ -41,7 +41,7 @@
                     <Label  Style="{DynamicResource statistic_lableStyle}" Content="Kind:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,2,0" />
                     <ComboBox x:Name="Kind_comboBox" Style="{StaticResource ActionComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"  Width="175"/>
                 </StackPanel>
-                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="categorySave_btn" Click="CategorySave_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Project" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,2,1,0" Width="22" Height="23">
+                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="categorySave_btn" Click="CategorySave_btn_Click" FlowDirection="LeftToRight" ToolTip="Save" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,2,1,0" Width="22" Height="23">
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
                     </Button.Background>

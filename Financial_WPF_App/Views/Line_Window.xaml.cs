@@ -39,6 +39,8 @@ namespace Financial_WPF_App.Views
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
 
+        DataTable Type_dt = new DataTable();
+        DataTable Kind_dt = new DataTable();
         private bool OnLoad()
         {
             try
@@ -79,13 +81,42 @@ namespace Financial_WPF_App.Views
             categoryDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             categoryDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
 
-         
+
         }
         private void Load_Data()
         {
             cat_dt = new DataTable();
+            Type_dt.Columns.AddRange(new System.Data.DataColumn[] {
+                        new System.Data.DataColumn("ID", typeof(string)),
+                        new System.Data.DataColumn("Name", typeof(string))});
 
+            Kind_comboBox.ItemsSource = null;
+            Kind_dt.Columns.AddRange(new System.Data.DataColumn[] {
+                        new System.Data.DataColumn("ID", typeof(string)),
+                        new System.Data.DataColumn("Name", typeof(string))});
+
+            Fill_Comboboxs();
             LoadGrid_Category();
+        }
+
+        private void Fill_Comboboxs()
+        {
+            Type_comboBox.ItemsSource = null;
+
+
+
+            Type_dt.Rows.Add("Running_cost_Item", "Running cost");
+            Type_dt.Rows.Add("Equipping_the_place_Item", "Equipping the place");
+
+            Type_comboBox.ItemsSource = Type_dt.DefaultView;
+
+
+
+
+            Kind_dt.Rows.Add("Budget_Item", "Budget");
+            Kind_dt.Rows.Add("Profit_Item", "Profit");
+            Kind_comboBox.ItemsSource = Kind_dt.DefaultView;
+
         }
 
         private void LoadGrid_Category()
@@ -140,28 +171,42 @@ namespace Financial_WPF_App.Views
                     return;
                 }
 
-                if (Fixed_checkBox.IsChecked == false && InFlow_checkBox.IsChecked == false)
+                if (Kind_comboBox.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Please select the type (Equipping the place / Running cost)", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("Please select the category (budget / profit)", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
 
-                if (Profit_checkBox.IsChecked == false && Budget_checkBox.IsChecked == false)
+                if (Type_comboBox.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Please select the category (budget / profit)", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("Please select the type (Equipping the place / Running cost)", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
 
                 if (Login.BuildConnection())
                 {
                     string CName = Login.ReplaceQuotation(CategoryName_txtBox.Text);
-                    int Type, Kind;
+                    int Type = -1, Kind = -1;
 
-                    if (Fixed_checkBox.IsChecked == true) Type = 0;
-                    else Type = 1;
 
-                    if (Profit_checkBox.IsChecked == true) Kind = 0;
-                    else Kind = 1;
+                    if (Type_comboBox.SelectedValue.ToString() == "Equipping_the_place_Item")
+                    {
+                        Type = 0;
+                    }
+                    else if (Type_comboBox.SelectedValue.ToString() == "Running_cost_Item")
+                    {
+                        Type = 1;
+                    }
+
+
+                    if (Kind_comboBox.SelectedValue.ToString() == "Budget_Item")
+                    {
+                        Kind = 1;
+                    }
+                    else if (Kind_comboBox.SelectedValue.ToString() == "Profit_Item")
+                    {
+                        Kind = 0;
+                    }
 
                     if (Cat_ID != -1)//Edit
                     {
@@ -195,86 +240,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Fixed_checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (Fixed_checkBox.IsChecked == true) InFlow_checkBox.IsChecked = false;
-                else InFlow_checkBox.IsChecked = true;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
-        private void Profit_checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (Profit_checkBox.IsChecked == true) Budget_checkBox.IsChecked = false;
-                else Budget_checkBox.IsChecked = true;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
-        private void InFlow_checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (InFlow_checkBox.IsChecked == true) Fixed_checkBox.IsChecked = false;
-                else Fixed_checkBox.IsChecked = true;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
-        private void Budget_checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (Budget_checkBox.IsChecked == true) Profit_checkBox.IsChecked = false;
-                else Profit_checkBox.IsChecked = true;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -286,14 +251,19 @@ namespace Financial_WPF_App.Views
 
                 if (dataRow[2] != DBNull.Value || dataRow[2] != null)
                 {
-                    if (dataRow[2].ToString() == "Equipping the place") Fixed_checkBox.IsChecked = true;                
-                    else InFlow_checkBox.IsChecked = true;           
+                    if (dataRow[2].ToString() == "Equipping the place")
+                        Type_comboBox.SelectedValue = "Equipping_the_place_Item";
+                    else if (dataRow[2].ToString() == "Running cost")
+                        Type_comboBox.SelectedValue = "Running_cost_Item";
                 }
 
                 if (dataRow[3] != DBNull.Value || dataRow[3] != null)
                 {
-                    if (dataRow[3].ToString() == "Profit") Profit_checkBox.IsChecked = true;                
-                    else Budget_checkBox.IsChecked = true;             
+
+                    if (dataRow[3].ToString() == "Profit")
+                        Kind_comboBox.SelectedValue = "Profit_Item";
+                    else if (dataRow[3].ToString() == "Budget")
+                        Kind_comboBox.SelectedValue = "Budget_Item";
                 }
             }
             catch (Exception ex)
@@ -378,10 +348,8 @@ namespace Financial_WPF_App.Views
         {
             Cat_ID = -1;
             CategoryName_txtBox.Text = "";
-            Fixed_checkBox.IsChecked = false;
-            InFlow_checkBox.IsChecked = false;
-            Budget_checkBox.IsChecked = false;
-            Profit_checkBox.IsChecked = false;
+            Type_comboBox.SelectedIndex = -1;
+            Kind_comboBox.SelectedIndex = -1;
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
@@ -389,7 +357,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 Clear_Boxses();
-                Load_Data();
+                LoadGrid_Category();
             }
             catch (Exception ex)
             {
@@ -422,17 +390,19 @@ namespace Financial_WPF_App.Views
 
                             if (rowview[2] != DBNull.Value || rowview[2] != null)
                             {
-                                if (rowview[2].ToString() == "Equipping the place") Fixed_checkBox.IsChecked = true;
-                                else InFlow_checkBox.IsChecked = true;
+                                if (rowview[2].ToString() == "Equipping the place")
+                                    Type_comboBox.SelectedValue = "Equipping_the_place_Item";
+                                else if (rowview[2].ToString() == "Running cost")
+                                    Type_comboBox.SelectedValue = "Running_cost_Item";
                             }
 
                             if (rowview[3] != DBNull.Value || rowview[3] != null)
                             {
-                                if (rowview[3].ToString() == "Profit") Profit_checkBox.IsChecked = true;
-                                else Budget_checkBox.IsChecked = true;
+                                if (rowview[3].ToString() == "Profit")
+                                    Kind_comboBox.SelectedValue = "Profit_Item";
+                                else if (rowview[3].ToString() == "Budget")
+                                    Kind_comboBox.SelectedValue = "Budget_Item";
                             }
-
-
                         }
                     }
                 }
