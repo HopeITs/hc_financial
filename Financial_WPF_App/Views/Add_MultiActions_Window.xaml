@@ -100,7 +100,7 @@
             AllowFiltering ="False" ShowGroupDropArea ="False"
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
             Loaded="myDataGrid_Loaded" Grid.Row="4"/>
-
+            
             <syncfusion:SfCircularProgressBar x:Name="circularProgressBar" IsIndeterminate="False" 
                 ShowProgressValue ="True"
                  Grid.Row="4"/>

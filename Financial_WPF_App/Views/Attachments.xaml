@@ -79,11 +79,17 @@
             <Button Style="{DynamicResource Add_Style}" 
                 x:Name="AddAttachments_btn" TabIndex="15" Margin="19,15,11,15" Grid.Column="6" Height="NaN" Width="NaN" HorizontalAlignment="Stretch" Click="AddAttachments_btn_Click" VerticalAlignment="Stretch"/>
 
-            <Syncfusion:SfCircularProgressBar x:Name="circularProgressBar" IsIndeterminate="False" 
+            <!--<Syncfusion:SfCircularProgressBar x:Name="circularProgressBar" IsIndeterminate="False" 
                                               ShowProgressValue ="True"
              Grid.ColumnSpan="2" Margin="13,115,54,119" Grid.Column="4" Grid.Row="1">
 
-            </Syncfusion:SfCircularProgressBar>
+            </Syncfusion:SfCircularProgressBar>-->
+
+            <syncfusion:SfLinearProgressBar x:Name="circularProgressBar"
+                    Height="10"
+                    SegmentCount="10"
+                    TrackColor="{StaticResource LightGray1}"
+                    ProgressColor="{StaticResource GreenBlue}" Grid.Row="1"  Grid.Column="4" Grid.ColumnSpan="2" Margin="13,115,54,119"/>
 
         </Grid>
 
