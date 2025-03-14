@@ -50,15 +50,6 @@
                     <Label Style="{DynamicResource statistic_lableStyle}" Content="Project:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <ComboBox x:Name="Project_comboBox" Style="{StaticResource ActionMultiComboboxStyle}" IsEditable="True" PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown"  Width="175"
                         TabIndex="2">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox x:Name="SubProject_comboBox" Width="220" 
-            Click="Project_Checkbox_Item_Clicked"
-            Content="{Binding ProjectName}" 
-            IsChecked="{Binding Project_Check_Status}" 
-            CommandParameter="{Binding ProjectID}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
                     </ComboBox>
                     <Button x:Name="Project_clear_btn" Grid.Column="1"  BorderBrush="{x:Null}" Style="{StaticResource ActionDeleteButtonStyle}"
                     Click="Project_clear_btn_Click"  VerticalAlignment="Top" Height="30" Margin="5,0,1,0">
