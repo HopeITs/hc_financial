@@ -9,9 +9,7 @@
     xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
     x:Class="Financial_WPF_App.Account_Window"
     mc:Ignorable="d"
-    x:Name="AccountWindow" Title="Account_Window" Height="614" Width="1280"  
-    FontFamily="Myriad Arabic"
-    FontSize="18"
+    x:Name="AccountWindow" Title="Account_Window" Height="614" Width="1280" 
     WindowState="Maximized" WindowStartupLocation="CenterScreen">
 
 
