@@ -1969,7 +1969,16 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Label">
-                            <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}"/>
+                            <Border Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}">
+                                <ContentPresenter
+                        RecognizesAccessKey="True"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        ContentStringFormat="{TemplateBinding ContentStringFormat}" />
+                            </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -2061,13 +2070,11 @@
                 </Style.Triggers>
 
             </Style>
-
             <Style x:Key="SfDataGrid_body" TargetType="{x:Type syncfusion:SfDataGrid}">
                 <Setter Property="FontFamily" Value="Rubik" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="GridLinesVisibility" Value="Both" />
                 <Setter Property="Background" Value="{StaticResource LightGray2}" />
-                <Setter Property="Margin" Value="0,0,40,0"></Setter>
                 <Setter Property="Foreground" >
                     <Setter.Value>
                         <SolidColorBrush Color="{DynamicResource Color_DarkGray}"/>
@@ -2089,6 +2096,8 @@
                 <Setter Property ="HeaderRowHeight" Value ="50" />
                 <Setter Property ="AllowResizingColumns" Value ="True" />
                 <Setter Property ="FrozenRowsCount" Value ="0" />
+                <Setter Property="Margin" Value="2,5,40,5" />
+
             </Style>
 
             <Style TargetType="syncfusion:VirtualizingCellsControl" x:Key="SfDataGrid_alternatingRowStyle">

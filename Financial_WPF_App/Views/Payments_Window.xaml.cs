@@ -22,6 +22,7 @@ namespace Financial_WPF_App.Views
         public Payments_Window(Main_Window_2 main_Window, string SubProject_ID)
         {
             InitializeComponent();
+            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             this.main_Window = main_Window;
             if (SubProject_ID != "")
                 this.SubProject_ID = Int32.Parse(SubProject_ID);
@@ -46,7 +47,7 @@ namespace Financial_WPF_App.Views
 
         double HOffset = 0; bool GridFilled = false;
 
-
+        private WindowState _currentWindowState = WindowState.Maximized; // Track window state
         List<string> HiddenColumns = new List<string>();
         List<string> Originally_HiddenColumns = new List<string>();
 
@@ -74,7 +75,7 @@ namespace Financial_WPF_App.Views
                 }
 
                 myExpander.IsExpanded = false;
-
+                myDataGrid.Margin = new Thickness(2, 5, 0, 5);
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
@@ -697,8 +698,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Grid_col.Width = new GridLength(60, GridUnitType.Star);
-                Expander_col.Width = new GridLength(40, GridUnitType.Star);
+                if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
+                {
+                    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+                }
+                else
+                {
+                    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+                }
+
             }
             catch (Exception ex)
             {
@@ -716,8 +726,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Grid_col.Width = new GridLength(95, GridUnitType.Star);
-                Expander_col.Width = new GridLength(5, GridUnitType.Star);
+                if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
+                {
+                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(8, GridUnitType.Star);
+                }
+                else if (_currentWindowState == WindowState.Maximized)
+                {
+                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+                }
+
             }
             catch (Exception ex)
             {
@@ -728,6 +747,31 @@ namespace Financial_WPF_App.Views
                 else if (ex.Message.Contains("Duplicate entry"))
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void OnMainWindowStateChanged(WindowState newState)
+        {
+            _currentWindowState = newState;
+            if (newState == WindowState.Normal && myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                Expander_col.Width = new GridLength(50, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                Expander_col.Width = new GridLength(30, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                Expander_col.Width = new GridLength(7, GridUnitType.Star);
+            }
+            else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                Expander_col.Width = new GridLength(6, GridUnitType.Star);
             }
         }
 

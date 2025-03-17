@@ -14,7 +14,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="233*"/>
-                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
@@ -174,7 +173,7 @@ PopupAnimation="Fade">
                 HorizontalAlignment="Stretch"
                 AutoGenerateColumns="True"
                 SelectionChanged="myDataGrid_SelectionChanged"
-                Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" Margin="2,1,2,1" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3"/>
+                Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3"/>
         </Grid>
     </Grid>
 </Window>

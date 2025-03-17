@@ -230,13 +230,18 @@ namespace Financial_WPF_App
             _currentWindowState = newState;
             if (newState == WindowState.Normal && myExpander.IsExpanded)
             {
-                First_col.Width = new GridLength(200, GridUnitType.Star);
-                Second_col.Width = new GridLength(140, GridUnitType.Star);
+                First_col.Width = new GridLength(220, GridUnitType.Star);
+                Second_col.Width = new GridLength(160, GridUnitType.Star);
             }
             else if (newState == WindowState.Maximized && myExpander.IsExpanded)
             {
                 First_col.Width = new GridLength(85, GridUnitType.Star);
                 Second_col.Width = new GridLength(45, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            {
+                First_col.Width = new GridLength(220, GridUnitType.Star);
+                Second_col.Width = new GridLength(160, GridUnitType.Star);
             }
         }
 
@@ -2209,8 +2214,8 @@ namespace Financial_WPF_App
         {
             if (_currentWindowState == WindowState.Normal)
             {
-                First_col.Width = new GridLength(200, GridUnitType.Star);
-                Second_col.Width = new GridLength(140, GridUnitType.Star);
+                First_col.Width = new GridLength(220, GridUnitType.Star);
+                Second_col.Width = new GridLength(160, GridUnitType.Star);
             }
             else if (_currentWindowState == WindowState.Maximized)
             {

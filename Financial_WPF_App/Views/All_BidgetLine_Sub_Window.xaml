@@ -190,7 +190,7 @@
                     TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"   
                     GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
                     AutoGenerateColumns="True"  SelectionChanged="myDataGrid_SelectionChanged"
-                    Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="3,3,3,2" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.RowSpan="4">
+                    Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.RowSpan="4">
                     </syncfusion:SfDataGrid>
 
                 </Grid>

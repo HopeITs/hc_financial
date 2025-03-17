@@ -182,7 +182,7 @@
                          RowStyleSelector="{StaticResource rowStyleSelector}"                    
                 Loaded="myDataGrid_Loaded" SelectionChanged="myDataGrid_SelectionChanged"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                Margin="3,3,3,6" Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged" >
+                Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged" >
 
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridCheckBoxColumn x:Name="Selected_DataGridColumn" HeaderText="Select" MappingName="IsSelected" AllowEditing="True" AllowFiltering="False" AllowGrouping="False">

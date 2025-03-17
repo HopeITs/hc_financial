@@ -31,7 +31,7 @@
         </Grid.RowDefinitions>
 
 
-        <Grid  Grid.Column="0" Margin="10,0,10,0" >
+        <Grid  Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -223,7 +223,7 @@
                             </Border>
                         </StackPanel>
                     </WrapPanel>
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,45,0">
                         <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                     </StackPanel>
                 </DockPanel>
@@ -252,7 +252,7 @@
                     SelectionChanged="myDataGrid_SelectionChanged"
                     MouseDoubleClick="myDataGrid_MouseDoubleClick"
                     Loaded="myDataGrid_Loaded" 
-                    AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,4,10" FilterChanged="myDataGrid_FilterChanged">
+                    AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged">
 
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTemplateColumn HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">

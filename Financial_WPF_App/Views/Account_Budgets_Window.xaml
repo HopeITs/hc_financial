@@ -19,7 +19,7 @@
         </ContextMenu>
     </Window.ContextMenu>
 
-    <Grid Margin="0,1,0,1">
+    <Grid>
         <Grid.ContextMenu>
             <ContextMenu Name="cm">
                 <MenuItem Header="Refresh Budget" Click = "Refresh_Click" >
@@ -38,7 +38,7 @@
                 <RowDefinition Height="100*"/>
             </Grid.RowDefinitions>
 
-            <Grid  Grid.Column="0" Margin="10,0,10,0" >
+            <Grid  Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -209,7 +209,7 @@
                       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                       AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"  
                                    AutoGenerateColumns="True"
-                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" Grid.Row="3" Margin="2,0,3,5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="5" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" >
+                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="5" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" >
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                             <syncfusion:GridTemplateColumn.CellTemplate>

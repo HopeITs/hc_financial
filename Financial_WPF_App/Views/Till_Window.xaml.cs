@@ -20,6 +20,7 @@ namespace Financial_WPF_App.Views
         public Till_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int SubProject_ID, int Till_ID, string TillType_Name, Account_Window account_Window, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             AsFiscalBond = false;
             this.main_Window = main_Window;
             this.account_Window = account_Window;
@@ -38,6 +39,7 @@ namespace Financial_WPF_App.Views
         public Till_Window(int FiscalBond_ID, string FiscalBond_Name, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             AsFiscalBond = true;
             this.main_Window = main_Window;
             this.FiscalBond_ID = FiscalBond_ID;
@@ -67,6 +69,7 @@ namespace Financial_WPF_App.Views
         private DataTable b_dt, dt, not_approved_dt, sum_dt, cash_dt, fb_dt; //Account_Budgets_dt;
         Main_Window_2 main_Window;
         bool IsAdminAccount;
+        private WindowState _currentWindowState = WindowState.Maximized; // Track window state
 
         List<string> HiddenColumns = new List<string>();
         List<string> Originally_HiddenColumns = new List<string>();
@@ -104,8 +107,9 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
-                myExpander.IsExpanded = false;
 
+                myExpander.IsExpanded = false;
+                myDataGrid.Margin = new Thickness(2, 5, 0, 5);
                 Load_Data();
                 Apply_Color_Theme();
                 Dispatcher.BeginInvoke(new System.Action(() =>
@@ -378,6 +382,7 @@ namespace Financial_WPF_App.Views
                     myExpander.Visibility = Visibility.Collapsed;
                     Grid_col.Width = new GridLength(100, GridUnitType.Star);
                     Expander_col.Width = new GridLength(0, GridUnitType.Star);
+                    myDataGrid.Margin = new Thickness(2, 5, 40, 5);
 
                     Outcome_Label.Visibility = Outcome_textBlock.Visibility = Outcome_Border.Visibility =
                         Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility = Visibility.Collapsed;
@@ -412,6 +417,7 @@ namespace Financial_WPF_App.Views
                     myExpander.Visibility = Visibility.Collapsed;
                     Grid_col.Width = new GridLength(100, GridUnitType.Star);
                     Expander_col.Width = new GridLength(0, GridUnitType.Star);
+                    myDataGrid.Margin = new Thickness(2, 5, 40, 5);
                 }
                 foreach (var C in myDataGrid.Columns)
                     if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
@@ -468,6 +474,7 @@ namespace Financial_WPF_App.Views
                     myExpander.Visibility = Visibility.Collapsed;
                     Grid_col.Width = new GridLength(100, GridUnitType.Star);
                     Expander_col.Width = new GridLength(0, GridUnitType.Star);
+                    myDataGrid.Margin = new Thickness(2, 40, 0, 5);
                 }
             }
         }
@@ -1659,8 +1666,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Grid_col.Width = new GridLength(60, GridUnitType.Star);
-                Expander_col.Width = new GridLength(40, GridUnitType.Star);
+                if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
+                {
+                    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+                }
+                else
+                {
+                    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+                }
+
             }
             catch (Exception ex)
             {
@@ -1678,8 +1694,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Grid_col.Width = new GridLength(97, GridUnitType.Star);
-                Expander_col.Width = new GridLength(3, GridUnitType.Star);
+                if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
+                {
+                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(8, GridUnitType.Star);
+                }
+                else if (_currentWindowState == WindowState.Maximized)
+                {
+                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+                }
+
             }
             catch (Exception ex)
             {
@@ -1693,6 +1718,30 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void OnMainWindowStateChanged(WindowState newState)
+        {
+            _currentWindowState = newState;
+            if (newState == WindowState.Normal && myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                Expander_col.Width = new GridLength(50, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                Expander_col.Width = new GridLength(30, GridUnitType.Star);
+            }
+            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                Expander_col.Width = new GridLength(7, GridUnitType.Star);
+            }
+            else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
+            {
+                Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                Expander_col.Width = new GridLength(6, GridUnitType.Star);
+            }
+        }
 
         private void Delete_Selected_TextBlock_Click(object sender, RoutedEventArgs e)
         {

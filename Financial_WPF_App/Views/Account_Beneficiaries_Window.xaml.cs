@@ -74,8 +74,7 @@ namespace Financial_WPF_App.Views
                 monthes_txtBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
 
                 myExpander.IsExpanded = false;
-                //Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                //Expander_col.Width = new GridLength(5, GridUnitType.Star);
+                myDataGrid.Margin = new Thickness(2, 5, 0, 5);
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
@@ -435,12 +434,12 @@ namespace Financial_WPF_App.Views
                 if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
                 {
                     Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(10, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(8, GridUnitType.Star);
                 }
                 else if (_currentWindowState == WindowState.Maximized)
                 {
                     Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(5, GridUnitType.Star);
+                    Expander_col.Width = new GridLength(6, GridUnitType.Star);
                 }
                 
             }
@@ -1221,12 +1220,12 @@ namespace Financial_WPF_App.Views
             else if (newState == WindowState.Normal && !myExpander.IsExpanded)
             {
                 Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(10, GridUnitType.Star);
+                Expander_col.Width = new GridLength(7, GridUnitType.Star);
             }
             else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
             {
                 Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(5, GridUnitType.Star);
+                Expander_col.Width = new GridLength(6, GridUnitType.Star);
             }
         }
     }
