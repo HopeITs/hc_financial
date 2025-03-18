@@ -340,6 +340,7 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             try

@@ -568,6 +568,66 @@ namespace Financial_WPF_App.Views
                 HOffset = e.HorizontalOffset;
             }
         }
+
+        private void View_Bond_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (Selected_DataRow != null)
+                {
+                    int fiscalbond_ID = Convert.ToInt32(Selected_DataRow["ID"].ToString());
+                    string fiscalbond_Name = Selected_DataRow["Name"].ToString();
+
+                    if (fiscalbond_ID != 0)
+                    {
+                        Till_Window till_Window = new Till_Window(fiscalbond_ID, fiscalbond_Name, main_Window);
+
+                        if (Category == "Micro Projects")
+                        {
+                            main_Window.Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
+                        }
+                        else if (Category == "Budget")
+                        {
+                            main_Window.Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
+                        } 
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+
+
+
+        }
+
+        DataRowView Selected_DataRow = null;
+
+        private void myDataGrid_GridContextMenuOpening(object sender, GridContextMenuEventArgs e)
+        {
+            try
+            {
+                Selected_DataRow = (DataRowView)this.myDataGrid.View.Records.GetItemAt(e.RowColumnIndex.RowIndex - 1);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)

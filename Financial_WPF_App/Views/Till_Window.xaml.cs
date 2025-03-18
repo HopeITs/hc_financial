@@ -219,7 +219,7 @@ namespace Financial_WPF_App.Views
         {
             if (AsFiscalBond)
             {
-                fb_dt = fiscalBond.Select(FiscalBond_ID.ToString(), "", Properties.Settings.Default.User_ID.ToString(), "", false);
+                fb_dt = fiscalBond.Select(FiscalBond_ID.ToString(), "", Properties.Settings.Default.User_ID.ToString(), "", true);
 
                 Account_Type = fb_dt.Rows[0].Field<string>("accounttype");
                 TillType_Name = fb_dt.Rows[0].Field<string>("Till");

@@ -11,16 +11,17 @@
         mc:Ignorable="d"
         Title="FiscalBond_Window" Height="620" Width="1180" 
         WindowStartupLocation="CenterScreen" >
-    <Window.ContextMenu>
-        <ContextMenu>
-            <MenuItem Header="Refresh" Click = "Refresh_Click" >
-                <MenuItem.Icon>
-                    <Image Source="/Cashing;component/Images/refresh32.png" />
-                </MenuItem.Icon>
-            </MenuItem>
-        </ContextMenu>
-    </Window.ContextMenu>
+  
     <Grid  Grid.Column="0" >
+        <Grid.ContextMenu>
+            <ContextMenu Name="cm">
+                <MenuItem Header="Refresh" Click = "Refresh_Click" >
+                    <MenuItem.Icon>
+                        <Image Source="/Cashing;component/Images/refresh32.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -182,7 +183,13 @@ PopupAnimation="Fade">
                                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                       SelectionChanged="myDataGrid_SelectionChanged"  
                       MouseDoubleClick="myDataGrid_MouseDoubleClick"
-                                Loaded="myDataGrid_Loaded" FilterChanged="myDataGrid_FilterChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                Loaded="myDataGrid_Loaded" FilterChanged="myDataGrid_FilterChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" GridContextMenuOpening="myDataGrid_GridContextMenuOpening">
+            <syncfusion:SfDataGrid.RecordContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="Refresh" Header="Refresh" Click="Refresh_Click" />
+                    <MenuItem x:Name="View_Bond" Header="View bond" Click="View_Bond_Click"/>
+                </ContextMenu>
+            </syncfusion:SfDataGrid.RecordContextMenu>
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
