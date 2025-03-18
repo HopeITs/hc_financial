@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         mc:Ignorable="d" 
         Title="Till_Window" Width="1280" Height="620"
-        FontFamily="Myriad Arabic" FontSize="22" WindowStartupLocation="CenterScreen">
+         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <Helper:CustomRowStyleSelector x:Key="rowStyleSelector" />
