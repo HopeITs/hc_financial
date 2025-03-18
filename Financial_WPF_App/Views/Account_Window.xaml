@@ -213,8 +213,7 @@
                     </Grid.ColumnDefinitions>
                     <ComboBox x:Name="Project_comboBox" Style="{DynamicResource FloatingComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID" 
              TabIndex="3" 
-              SelectionChanged="Project_comboBox_SelectionChanged" Grid.Row="1" Grid.Column="0"
-              />
+              SelectionChanged="Project_comboBox_SelectionChanged" Grid.Row="1" Grid.Column="0"/>
                     <Button x:Name="Project_clear_btn" Grid.Column="1" TabIndex="4"
                         Click="Project_clear_btn_Click"  Grid.Row="1" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
@@ -287,6 +286,7 @@
                                 <CheckBox x:Name="PersonalAcc_comboBox" Width="220" 
               Click="PersonalAcc_Checkbox_Item_Clicked"
             Content="{Binding PersonalAcc_Name}" 
+            Style="{DynamicResource ComboBoxCheckBoxStyle}"
             IsChecked="{Binding PersonalAcc_Check_Status}" 
             CommandParameter="{Binding PersonalAcc_ID}"/>
                             </DataTemplate>
@@ -310,6 +310,7 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                                 <CheckBox x:Name="ExchangeAcc_comboBox" Width="220" 
                Click="ExchangeAcc_Checkbox_Item_Clicked"
             Content="{Binding ExchangeAcc_Name}" 
+            Style="{DynamicResource ComboBoxCheckBoxStyle}"
             IsChecked="{Binding ExchangeAcc_Check_Status}" 
             CommandParameter="{Binding ExchangeAcc_ID}"/>
                             </DataTemplate>
