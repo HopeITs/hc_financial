@@ -67,6 +67,7 @@
                             </Button>
                         </StackPanel>
                     </WrapPanel>
+                    
                 </DockPanel>
             </Grid>
             <Grid Grid.Row="4" Margin="0,5,0,0" Grid.ColumnSpan="2" >
@@ -88,7 +89,15 @@
                                 </Button.Background>
                             </Button>
                         </StackPanel>
+                        
                     </WrapPanel>
+                    <StackPanel Orientation="Horizontal"  Height="40" HorizontalAlignment="Right">
+                        <syncfusion:SfLinearProgressBar x:Name="circularProgressBar" Width="166"
+                    Height="12" SegmentCount="20"
+                    TrackColor="{StaticResource LightGray2}"
+                    ProgressColor="{StaticResource GreenBlue}"/>
+                        <Label x:Name="Percentage_label" FontSize="11" Style="{DynamicResource statistic_lableStyle}" Content="0%" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                    </StackPanel>
                 </DockPanel>
             </Grid>
 
@@ -105,9 +114,9 @@
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
             Loaded="myDataGrid_Loaded" Grid.Row="5" Margin="2,5,-4,5"/>
             
-            <syncfusion:SfCircularProgressBar x:Name="circularProgressBar" IsIndeterminate="False" 
+            <!--<syncfusion:SfCircularProgressBar x:Name="circularProgressBar" IsIndeterminate="False" 
                 ShowProgressValue ="True"
-                 Grid.Row="5"/>
+                 Grid.Row="5"/>-->
 
             <Button Grid.Row="6"  Style="{DynamicResource ButtonColoredStyle}"
                 x:Name="Save_btn" Content="Save" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" Margin="12,0,1,0" />
