@@ -51,7 +51,7 @@ namespace Financial_WPF_App.Views
             InitializeComponent();
             this.main_Window = main_Window;
             this.MultiAttachments = MultiAttachments;
-
+            this.Tag = "Add Multi-Attachments Window";
             if (OnLoad())
             {
 
