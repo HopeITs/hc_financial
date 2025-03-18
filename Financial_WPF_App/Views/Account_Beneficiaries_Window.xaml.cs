@@ -392,7 +392,7 @@ namespace Financial_WPF_App.Views
         private void Fill_Till_comboBox()
         {
             Till_comboBox.ItemsSource = null;
-            till_dt = t.Select(Account_ID.ToString(), -1, "syr");
+            till_dt = t.Select_ForComboBox(Account_ID.ToString(), -1, "syr");
             if (till_dt != null && till_dt.Rows.Count > 0)
             {
                 Till_comboBox.ItemsSource = till_dt.DefaultView;
@@ -498,13 +498,18 @@ namespace Financial_WPF_App.Views
             {
                 if (Till_comboBox.SelectedValue != null)
                 {
-                    var Amount = dt.Compute("Sum([Total invoices amount " + Till_comboBox.SelectedValue + "])", string.Empty);
-                    var Num = dt.Compute("count([Total invoices amount " + Till_comboBox.SelectedValue + "])", "[Total invoices amount " + Till_comboBox.SelectedValue + "]<>'0.00'");
+                    if (Till_comboBox.SelectedItem is DataRowView selectedRow)
+                    {
+                        string selectedName = selectedRow["Name"].ToString();
 
-                    float Amount1 = float.Parse(Amount.ToString());
-                    int Num1 = int.Parse(Num.ToString());
+                        var Amount = dt.Compute($"Sum([Total invoices amount {selectedName}])", string.Empty);
+                        var Num = dt.Compute($"count([Total invoices amount {selectedName}])", $"[Total invoices amount {selectedName}]<>'0.00'");
 
-                    avg_amounts_usd_lbl.Content = Login.ConvertToDouble((Amount1 / Num1).ToString());
+                        float Amount1 = float.Parse(Amount.ToString());
+                        int Num1 = int.Parse(Num.ToString());
+
+                        avg_amounts_usd_lbl.Content = Login.ConvertToDouble((Amount1 / Num1).ToString());
+                    }
                 }
 
             }

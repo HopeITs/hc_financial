@@ -48,6 +48,42 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        public DataTable Select_ForComboBox(string Account_IDs, int Till_ID, string Without_type)
+        {
+            //check user from database
+            string query = @"SELECT till.`ID` as 'till_ID',tilltypes.Name as 'Name', till.`Type_ID` as 'ID', till.`Account_ID` FROM `till` left join tilltypes on till.type_id = tilltypes.id";
+            string condition = " where 1 ";
+
+            if (Without_type != "") condition += " and LOWER(tilltypes.Name) NOT like @Without_type ";
+
+            if (Account_IDs != "")
+            {
+                condition += " and Account_ID in (" + Account_IDs + ")";
+            }
+            if (Till_ID != -1)
+            {
+                condition += " and till.`ID` <> @Till_ID";
+            }
+            query += condition;
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@Without_type", Without_type.ToLower());
+                sc.Parameters.AddWithValue("@Till_ID", Till_ID);
+
+                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.MyConn.Close();
+            }
+            return dt;
+        }
+
         public DataTable Select_Projects_tillTypes()
         {
             string query = @"SELECT  DISTINCT(tilltypes.Name) as 'Type_Name', tilltypes.ID as 'Type_ID'
