@@ -1,5 +1,6 @@
 ﻿using Financial_WPF_App.Models;
 using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.UI.Xaml.ProgressBar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,8 @@ namespace Financial_WPF_App
 
             UpdateLabelsInContainer(parent, color, labelStyleKey);
 
+            UpdateProgressInContainer(parent, color);
+
             //UpdateDGInContainer(parent, color);
             // Find all TabControls inside the window
             foreach (var tabControl in FindVisualChildren<TabControl>(parent))
@@ -81,7 +84,7 @@ namespace Financial_WPF_App
                         UpdateTextBlocksInContainer(tabContent, color, targetStyleKey);
                         UpdateButtonsInContainer(tabContent, new SolidColorBrush(Colors.White), color, buttonStyleKey);
                         UpdateLabelsInContainer(tabContent, color, labelStyleKey);
-                        //UpdateDGInContainer(tabContent, color);
+                        UpdateProgressInContainer(tabContent, color);
                     }
                 }
             }
@@ -118,6 +121,14 @@ namespace Financial_WPF_App
                     label.ClearValue(Label.ForegroundProperty); // Remove style-based Foreground
                     label.Foreground = foreground; // Apply new color
                 }
+            }
+        }
+
+        private static void UpdateProgressInContainer(DependencyObject parent, Brush foreground)
+        {
+            foreach (var progress in FindVisualChildren<SfLinearProgressBar>(parent))
+            {
+                    progress.ProgressColor = foreground; // Apply new color
             }
         }
 

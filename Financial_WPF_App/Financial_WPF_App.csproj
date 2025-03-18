@@ -1107,6 +1107,12 @@
     <Resource Include="Images\Icons\dg_download.png" />
     <Resource Include="Images\Icons\dg_view.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\add_attach.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\attachement.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -3,43 +3,51 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
-        Title="Attachments" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid x:Name="mainGrid" Margin="0,0,10,0" >
+        Title="Attachments" Style="{StaticResource smallWindowPopupStyle}" WindowStartupLocation="CenterScreen">
+        <Grid  Margin="5">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25*"/>
-                <ColumnDefinition Width="109*"/>
-                <ColumnDefinition Width="68*"/>
-                <ColumnDefinition Width="79*"/>
-                <ColumnDefinition Width="100*"/>
-                <ColumnDefinition Width="172*"/>
-                <ColumnDefinition Width="91*"/>
-                <ColumnDefinition Width="127*"/>
-                <ColumnDefinition Width="20*"/>
-
-            </Grid.ColumnDefinitions>
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="55*"/>
-
-
-                <RowDefinition Height="358*" />
-                <RowDefinition Height="20.918"/>
-
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="355*"/>
             </Grid.RowDefinitions>
-
-
+            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
+                <local:WindowControlBar_Popup x:Name="ControlBar" HorizontalAlignment="Right"/>
+            </DockPanel>
+            <DockPanel Grid.Row="1">
+                <StackPanel Orientation="Horizontal"  Height="40">
+                        <Image Source="/Images/Icons/attachement.png" Width="15" Height="15"/>
+                        <Label  Style="{DynamicResource statistic_lableStyle}" Content="Attachments:" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                        <Label  Style="{DynamicResource statistic_lableStyle}" Content="3" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"  Height="40" HorizontalAlignment="Right">
+                    <syncfusion:SfLinearProgressBar x:Name="circularProgressBar" Width="75"
+                    Height="10" SegmentCount="10"
+                    TrackColor="{StaticResource LightGray1}"
+                    ProgressColor="{StaticResource GreenBlue}"/>
+                    <Label  Style="{DynamicResource statistic_lableStyle}" Content="75%" FontSize="9" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                    <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Add Attachments" ToolTipService.InitialShowDelay="100" Cursor="Hand"
+x:Name="AddAttachments_btn" TabIndex="15" HorizontalAlignment="Stretch" Click="AddAttachments_btn_Click" VerticalAlignment="Stretch">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Icons/add_attach.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
+            </DockPanel>
+            
+                
             <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
       Style="{DynamicResource SfDataGrid_body}"
       HeaderStyle="{DynamicResource SfDataGrid_header}"
       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
       AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-      Margin="1,1,5,0" Grid.Row="1" Grid.ColumnSpan="7" Grid.Column="1">
+       Grid.Row="2" Margin="0,0,0,0" >
 
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="id"  MappingName="id" IsHidden="True"/>
@@ -75,15 +83,6 @@
 
 
 
-            <Label Grid.Column="7"  Style="{DynamicResource lableStyle}" Content="Add attachments:" Margin="4,4,2,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
-            <Button Style="{DynamicResource Add_Style}" 
-                x:Name="AddAttachments_btn" TabIndex="15" Margin="19,15,11,15" Grid.Column="6" Height="NaN" Width="NaN" HorizontalAlignment="Stretch" Click="AddAttachments_btn_Click" VerticalAlignment="Stretch"/>
-
-            <Syncfusion:SfCircularProgressBar x:Name="circularProgressBar" IsIndeterminate="False" 
-                                              ShowProgressValue ="True"
-             Grid.ColumnSpan="2" Margin="13,115,54,119" Grid.Column="4" Grid.Row="1">
-
-            </Syncfusion:SfCircularProgressBar>
 
         </Grid>
 
