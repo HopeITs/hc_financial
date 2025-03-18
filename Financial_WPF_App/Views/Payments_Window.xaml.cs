@@ -338,6 +338,9 @@ namespace Financial_WPF_App.Views
             if (cash_dt != null && cash_dt.Rows.Count > 0)
             {
                 Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
+
+                Cash_Export_btn.CommandTarget = Cash_DataGrid;
+
             }
             else
             {
@@ -904,7 +907,7 @@ namespace Financial_WPF_App.Views
                             string log_query = "";
 
                             var Action_ID = newView[k]["ID"];
-       
+
                             Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
 
                             Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Payment_Window");
