@@ -74,7 +74,7 @@ namespace Financial_WPF_App.Views
                 monthes_txtBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
 
                 myExpander.IsExpanded = false;
-                myDataGrid.Margin = new Thickness(2, 5, 0, 5);
+                
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
@@ -186,13 +186,17 @@ namespace Financial_WPF_App.Views
 
 
                 myExpander.Visibility = Visibility.Hidden;
-
+                myDataGrid.Margin = new Thickness(2, 5, 5, 5);
+                Expander_col.Width = new GridLength(0, GridUnitType.Star);
+                Search_StackPanel.Margin = new Thickness(0, 0, 5, 0);
                 Fill_Till_comboBox();
                 Fill_Grid();
                 if (Account_ID != -1)
                 {
                     Fill_AccountView();
                     myExpander.Visibility = Visibility.Visible;
+                    OnMainWindowStateChanged(_currentWindowState);
+                    Search_StackPanel.Margin = new Thickness(0, 0, 45, 0);
                     //Grid_col.Width = new GridLength(50, GridUnitType.Star);
                     //Expander_col.Width = new GridLength(30, GridUnitType.Star);
                 }

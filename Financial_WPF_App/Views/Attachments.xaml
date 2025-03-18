@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
-        mc:Ignorable="d"
+        mc:Ignorable="d" Tag="Attachments Window"
         Title="Attachments" Style="{StaticResource smallWindowPopupStyle}" WindowStartupLocation="CenterScreen">
     <Grid  Margin="5">
 

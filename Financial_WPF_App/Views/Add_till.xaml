@@ -23,14 +23,14 @@
             <RowDefinition Height="30*"></RowDefinition>
             <RowDefinition Height="100*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Label x:Name="EndDate_lable_Copy" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" FontSize="14.5" Content="Please Select The Currency Of The New Till:" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,1,0"  />
+        <Label x:Name="EndDate_lable_Copy" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" FontSize="13" Content="Please Select The Currency Of The New Till:" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,1,0"  />
         <ComboBox Style="{DynamicResource XLFloatingComboboxStyle}" x:Name="tilltypes_ComboBox" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="ID" 
         	TabIndex="1"  Grid.Row="2" VerticalAlignment="Stretch" />
         <Button Grid.Row="2" Grid.Column="3"
         	Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn" Content="Save"
         	TabIndex="10"  Click="Save_btn_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   />
-        
-        <Button Style="{DynamicResource AddButtonStyle}" 
+
+        <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Add New Till" ToolTipService.InitialShowDelay="100"
         x:Name="AddNewTillType_btn" TabIndex="2" Click="AddNewTillType_btn_Click" Width="22" Height="22" Grid.Column="2"  Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Button.Background>
                 <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>

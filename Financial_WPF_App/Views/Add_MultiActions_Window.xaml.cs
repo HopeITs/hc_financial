@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Login = Financial_WPF_App.Models.Login;
 
@@ -1659,6 +1660,20 @@ namespace Financial_WPF_App.Views
                 All_textBlock.Text = Attachment_copyPasteHandler.TotalPastedRows.ToString("N0");
                 Error_textBlock.Text = Attachment_copyPasteHandler.TotalErrorRows.ToString("N0");
             }
+        }
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this);
+        }
+
+        private void Close_Click(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.CloseWindow(this);
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
         }
     }
 }
