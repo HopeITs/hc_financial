@@ -29,7 +29,7 @@ namespace Financial_WPF_App.Views
         }
 
 
-        private int Cat_ID;
+        private int Cat_ID = -1;
         private LineCategory cat;
         private DataTable cat_dt;
         Main_Window_2 main_Window;
