@@ -79,7 +79,7 @@
 
             <SolidColorBrush x:Key="White" Color="#FFFFFF"/>
             <SolidColorBrush x:Key="HopeRed" Color="#BE1F24"/>
-            <SolidColorBrush x:Key="Orange" Color="#F7981D"/>
+            <SolidColorBrush x:Key="Orange" Color="#F99D1C"/>
             <SolidColorBrush x:Key="PastelGreen" Color="#7d9885"/>
             <SolidColorBrush x:Key="PastelDarkBlue" Color="#074063"/>
             <SolidColorBrush x:Key="DarkgrayishViolet" Color="#826F89"/>
@@ -91,7 +91,7 @@
             <SolidColorBrush x:Key="RowSelectionColor" Color="#A2C8D1"/>
 
             <Color x:Key="Color_HopeRed" >#BE1F24</Color>
-            <Color x:Key="Color_Orange" >#F7981D</Color>
+            <Color x:Key="Color_Orange" >#F99D1C</Color>
             <Color x:Key="Color_PastelGreen" >#7d9885</Color>
             <Color x:Key="Color_PastelDarkBlue" >#074063</Color>
             <Color x:Key="Color_DarkgrayishViolet" >#826F89</Color>

@@ -17,7 +17,7 @@
                 <RowDefinition Height="355*"/>
             </Grid.RowDefinitions>
             <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
-                <local:WindowControlBar_Popup x:Name="ControlBar" HorizontalAlignment="Right"/>
+                <local:WindowControlBar_Popup x:Name="ControlBar"/>
             </DockPanel>
             <DockPanel Grid.Row="1">
                 <StackPanel Orientation="Horizontal"  Height="40">
