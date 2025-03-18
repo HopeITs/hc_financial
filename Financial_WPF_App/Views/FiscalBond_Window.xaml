@@ -183,8 +183,8 @@ PopupAnimation="Fade">
                                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                       SelectionChanged="myDataGrid_SelectionChanged"  
                       MouseDoubleClick="myDataGrid_MouseDoubleClick"
-                                Loaded="myDataGrid_Loaded" FilterChanged="myDataGrid_FilterChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,5,5,5">
-                                Loaded="myDataGrid_Loaded" FilterChanged="myDataGrid_FilterChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" GridContextMenuOpening="myDataGrid_GridContextMenuOpening">
+                                Loaded="myDataGrid_Loaded" FilterChanged="myDataGrid_FilterChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" GridContextMenuOpening="myDataGrid_GridContextMenuOpening" Margin="2,5,5,5">
+
             <syncfusion:SfDataGrid.RecordContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="Refresh" Header="Refresh" Click="Refresh_Click" />
