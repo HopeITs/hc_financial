@@ -133,7 +133,7 @@ namespace Financial_WPF_App.Views
                 Emp = new Employee();
                 d = new Document();
 
-                circularProgressBar.Visibility = Visibility.Collapsed;
+                circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Collapsed;
 
                 Set_privileges();
 
@@ -1428,8 +1428,9 @@ namespace Financial_WPF_App.Views
         {
             totalFiles = Login.MultiAttachment_Dictionary.Values.Sum(data => data.Paths.Count);
             circularProgressBar.Progress = 0;
-            circularProgressBar.SegmentCount = totalFiles;
-            circularProgressBar.Visibility = Visibility.Visible;
+            Percentage_label.Content = "0%";
+            //circularProgressBar.SegmentCount = totalFiles;
+            circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Visible;
 
             int currentFile = 0;
 
@@ -1481,7 +1482,7 @@ namespace Financial_WPF_App.Views
 
                     // Update the circular progress bar value
                     circularProgressBar.Progress = progress;
-
+                    Percentage_label.Content = progress.ToString("N0") + "%";
 
                     bool uploadSuccess = await Task.Run(() => d.SaveDocument(FullAttachName, fileName));
 
@@ -1505,8 +1506,9 @@ namespace Financial_WPF_App.Views
             }
 
             circularProgressBar.Progress = 100;
+            Percentage_label.Content = "100%";
             await Task.Delay(1000);
-            circularProgressBar.Visibility = Visibility.Collapsed;
+            circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Collapsed;
         }
 
         private void AccountType_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
