@@ -4,20 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
+    xmlns:cmd="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.Add_Multi_Budget_Lines"
-        mc:Ignorable="d"
-        Title="Add_Multi_Budget_Lines" Width="1000" Height="600"  WindowStartupLocation="CenterScreen">
-    <Grid>
-
-        <Grid  Grid.Column="0" >
+        mc:Ignorable="d" Tag="Add Multi Budget Lines Window"
+        Title="Add_Multi_Budget_Lines" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen">
+    <Grid Margin="5">
+        <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="233*"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
-            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
+                <cmd:WindowControlBar_Popup x:Name="ControlBar"/>
+            </DockPanel>
+            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="50" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
@@ -25,7 +29,7 @@
                     </Border>
                 </StackPanel>
             </Border>
-            <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+            <Border Grid.Row="2" Style="{StaticResource MainBorderWrapPanelStyle}">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Error:" Style="{DynamicResource statistic_lableStyle}" Width="50" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
@@ -33,7 +37,7 @@
                     </Border>
                 </StackPanel>
             </Border>
-            <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
+            <Grid Grid.Row="3" Margin="0,5,0,0" Grid.ColumnSpan="2" >
                 <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
                     <WrapPanel Orientation="Horizontal" Width="Auto">
 
@@ -58,7 +62,7 @@
 
 
             <syncfusion:SfDataGrid x:Name="myDataGrid"  ShowRowHeader="True"
-                AutoGenerateColumns="True" Grid.Row="3"
+                AutoGenerateColumns="True" Grid.Row="4"
                 GridPasteOption="PasteData"
                 GridValidationMode="InView"
                 Style="{DynamicResource SfDataGrid_body}"
@@ -66,10 +70,10 @@
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"   
                 AllowFiltering ="False" ShowGroupDropArea ="False"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,5,5,5" 
                 />
 
-            <Button Grid.Row="4"  Style="{DynamicResource ButtonColoredStyle}"
+            <Button Grid.Row="5"  Style="{DynamicResource ButtonColoredStyle}"
                 x:Name="Save_btn" Content="Save" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" HorizontalAlignment="Left" Width="175" Margin="12,0,1,0" />
         </Grid>
     </Grid>

@@ -182,7 +182,7 @@
                         </Button>
                     </StackPanel>
                 </WrapPanel>
-                <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                 </StackPanel>
             </DockPanel>
@@ -198,7 +198,7 @@
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                 GroupSummaryRowStyle="{DynamicResource GroupSummaryRowStyle}"
                 Loaded="myDataGrid_Loaded"
-                 Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" >
+                 Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" Margin="2,5,5,5" >
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn x:Name="Employee_Salary_ID_DataGridColumn" HeaderText="#" MappingName="Employee_Salary_ID" IsHidden="True"/>
                 <syncfusion:GridTextColumn x:Name="Employee_ID_DataGridColumn" HeaderText="Employee_ID" MappingName="Employee_ID" IsHidden="True"/>

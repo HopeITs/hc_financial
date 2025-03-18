@@ -170,7 +170,7 @@ PopupAnimation="Fade">
                         </Button>
                     </StackPanel>
                 </WrapPanel>
-                <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                 </StackPanel>
             </DockPanel>
@@ -182,7 +182,7 @@ PopupAnimation="Fade">
                                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                       SelectionChanged="myDataGrid_SelectionChanged"  
                       MouseDoubleClick="myDataGrid_MouseDoubleClick"
-                                Loaded="myDataGrid_Loaded" FilterChanged="myDataGrid_FilterChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                Loaded="myDataGrid_Loaded" FilterChanged="myDataGrid_FilterChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,5,5,5">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
