@@ -1,9 +1,12 @@
 ﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Microsoft.Win32;
+using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -66,7 +69,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                circularProgressBar.Visibility = Visibility.Collapsed;
+                circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Collapsed;
                 d = new Document();
                 Load_Data();
                 Apply_Color_Theme();
@@ -176,6 +179,12 @@ namespace Financial_WPF_App.Views
                 {
                     myDataGrid.ItemsSource = null;
                 }
+
+                if (myDataGrid.View != null)
+                {
+                    int count = myDataGrid.View.Records.Count();
+                    All_Label.Content = count.ToString("N0");
+                }
             }
         }
 
@@ -225,7 +234,7 @@ namespace Financial_WPF_App.Views
                 else
                 {
                     d.DeleteAttachmentTfromDatabase(attachments_id, dataRow["attach_name"].ToString(), Action_ID, Beneficiary_ID, Approved_Action, "Attachments");
-                    MessageBox.Show("The file is missing - The name has been deleted from the list.", "Error",MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("The file is missing - The name has been deleted from the list.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     Load_Data();
                 }
             }
@@ -301,7 +310,7 @@ namespace Financial_WPF_App.Views
                 else
                 {
                     d.DeleteAttachmentTfromDatabase(attachments_id, SaveFileName, Action_ID, Beneficiary_ID, Approved_Action, "Attachments");
-                    MessageBox.Show("The file is missing - The name has been deleted from the list.","Error" ,MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("The file is missing - The name has been deleted from the list.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     Load_Data();
                 }
 
@@ -403,8 +412,14 @@ namespace Financial_WPF_App.Views
                 int currentFile = 0;
 
                 circularProgressBar.Progress = 0;
-                circularProgressBar.SegmentCount = totalFiles;
-                circularProgressBar.Visibility = Visibility.Visible;
+                Percentage_label.Content = "0%";
+
+                //if (totalFiles < 8)
+                //    circularProgressBar.SegmentCount = totalFiles * 4;
+                //else
+                //    circularProgressBar.SegmentCount = totalFiles;
+
+                circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Visible;
                 int success = 0;
                 foreach (var FullAttachName in FullAttachNames)
                 {
@@ -439,13 +454,14 @@ namespace Financial_WPF_App.Views
 
                     // Update the circular progress bar value
                     circularProgressBar.Progress = progress;
+                    Percentage_label.Content = progress.ToString("N0") + "%";
 
 
                     bool uploadSuccess = await Task.Run(() => d.SaveDocument(FullAttachName, fileName));
 
                     if (uploadSuccess)
                     {
-                        d.AddAttachmentToDatabase(Action_ID, Beneficiary_ID, t,Approved_Action, "AddAction_Window");
+                        d.AddAttachmentToDatabase(Action_ID, Beneficiary_ID, t, Approved_Action, "AddAction_Window");
                         success++;
                     }
                     else
@@ -456,8 +472,10 @@ namespace Financial_WPF_App.Views
                     currentFile++;
                 }
                 circularProgressBar.Progress = 100;
+                Percentage_label.Content = "100%";
+
                 await Task.Delay(1000);
-                circularProgressBar.Visibility = Visibility.Collapsed;
+                circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Collapsed;
 
 
                 if (failurText != "")
@@ -474,7 +492,7 @@ namespace Financial_WPF_App.Views
                 if (AB != null)
                     AB.Load_Data();
 
-                if(App != null)
+                if (App != null)
                     App.Load_Data();
             }
         }
@@ -514,6 +532,15 @@ namespace Financial_WPF_App.Views
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowUtils.TitleBar_MouseDown(this, e);
+        }
+
+        private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (myDataGrid.View != null)
+            {
+                int count = myDataGrid.View.Records.Count();
+                All_Label.Content = count.ToString("N0");
+            }
         }
     }
 }
