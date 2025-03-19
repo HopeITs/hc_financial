@@ -336,6 +336,12 @@
                 <Setter Property="Label.VerticalAlignment" Value="Center" />
                 <Setter Property="Label.VerticalContentAlignment" Value="Center" />
                 <Setter Property="Label.Margin" Value="10,0,1,0" />
+                <!-- DISABLED STYLE TRIGGER -->
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Foreground" Value="{StaticResource LightGray1}" />
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style x:Key="TabControlStyle" TargetType="{x:Type TabControl}">

@@ -621,62 +621,62 @@ namespace Financial_WPF_App
             if (Action_ID == -1)
                 Clear_Boxes();
 
-            Amount_txtBox.Visibility =
-                ActionDate_Label.Visibility = ActionDate_datepicker.Visibility =
+            Amount_txtBox.IsEnabled = Amount_Label.IsEnabled =
+                ActionDate_Label.IsEnabled = ActionDate_datepicker.IsEnabled =
 
-                Notes_Label.Visibility = Notes_txtBox.Visibility = E_Notes_Label.Visibility = E_Notes_txtBox.Visibility =
+                Notes_Label.IsEnabled = Notes_txtBox.IsEnabled = E_Notes_Label.IsEnabled = E_Notes_txtBox.IsEnabled =
 
-                Add_Attachment_btn.Visibility = AddedAttachments_panel.Visibility =
+                Add_Attachment_btn.IsEnabled = AddedAttachments_panel.IsEnabled =
 
-                Exchange_Note_lable.Visibility =
+                Exchange_Note_lable.IsEnabled =
 
-                DestinationTill_lable.Visibility = DestinationTill_comboBox.Visibility = DestinationTill_clear_btn.Visibility = DestinationTill_help.Visibility =
+                DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled = 
 
-                ExchangeAcc_lable.Visibility = ExchangeAcc_comboBox.Visibility = ExchangeAcc_clear_btn.Visibility = ExchangeAcc_help.Visibility =
+                ExchangeAcc_lable.IsEnabled = ExchangeAcc_comboBox.IsEnabled = ExchangeAcc_clear_btn.IsEnabled = 
 
-                ExchangeCash_lable.Visibility = ExchangeCash_comboBox.Visibility = ExchangeCash_clear_btn.Visibility =
+                ExchangeCash_lable.IsEnabled = ExchangeCash_comboBox.IsEnabled = ExchangeCash_clear_btn.IsEnabled =
 
-                MircoProject_ID_lable.Visibility = MircoProject_ID_autoSuggestionUserControl.Visibility =
+                MircoProject_ID_lable.IsEnabled = MircoProject_ID_autoSuggestionUserControl.IsEnabled =
 
-                BeneficiaryName_lable.Visibility = BeneficiaryName_txtBox.Visibility =
+                BeneficiaryName_lable.IsEnabled = BeneficiaryName_txtBox.IsEnabled =
 
-                Donor_lable.Visibility = Donor_comboBox.Visibility = Donor_comboBox_clear_btn.Visibility =
+                Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
 
-                Budget_lable.Visibility = Budget_comboBox.Visibility = Budget_comboBox_clear.Visibility = Budget_help.Visibility =
+                Budget_lable.IsEnabled = Budget_comboBox.IsEnabled = Budget_comboBox_clear.IsEnabled = 
 
-                Category_lable.Visibility = Category_comboBox.Visibility = Category_comboBox_clear_btn.Visibility =
+                Category_lable.IsEnabled = Category_comboBox.IsEnabled = Category_comboBox_clear_btn.IsEnabled =
 
-                Line_lable.Visibility = Line_comboBox.Visibility = Line_comboBox_clear_btn.Visibility =
+                Line_lable.IsEnabled = Line_comboBox.IsEnabled = Line_comboBox_clear_btn.IsEnabled =
 
-                CashAccount_lable.Visibility = CashAccount_comboBox.Visibility = CashAccount_clear_btn.Visibility =
+                CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
 
-                ObserveCashAccount_lable.Visibility = ObserveCashAccount_comboBox.Visibility = ObserveCashAccount_clear_btn.Visibility =
+                ObserveCashAccount_lable.IsEnabled = ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled =
 
-                IsReceipt_comboBox.Visibility = ReceiptNum_txtBox.Visibility =
+                IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled =
 
-                Employee_lable.Visibility = Employee_comboBox.Visibility = Employee_comboBox_clear.Visibility = Employee_help.Visibility =
+                Employee_lable.IsEnabled = Employee_comboBox.IsEnabled = Employee_comboBox_clear.IsEnabled = 
 
-                Original_AvgRate_lable.Visibility = Original_AvgRate_comboBox.Visibility = Original_AvgRate_clear_btn.Visibility = Original_AvgRate_help.Visibility =
+                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
 
-                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+                USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled =
 
-                Rate_lable.Visibility = Rate_txtBox.Visibility =
+                Rate_lable.IsEnabled = Rate_txtBox.IsEnabled =
 
-                Exchanged_lable.Visibility = Exchanged_txtBox.Visibility =
+                Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = false;
 
-                Visibility.Collapsed;
+                DestinationTill_help.Visibility = ExchangeAcc_help.Visibility = Budget_help.Visibility = Employee_help.Visibility = Original_AvgRate_help.Visibility = Visibility.Collapsed;
 
 
-            payslip_ComboBoxItem.Visibility = Visibility.Collapsed;  //IsReceipt_comboBox Item
+                payslip_ComboBoxItem.IsEnabled = false;  //IsReceipt_comboBox Item
 
             if (Type_comboBox.SelectedIndex != -1)
             {
-                Amount_txtBox.Visibility = Visibility.Visible;
-                Notes_Label.Visibility = Notes_txtBox.Visibility = E_Notes_Label.Visibility = E_Notes_txtBox.Visibility = Visibility.Visible;
+                Amount_txtBox.IsEnabled = Amount_Label.IsEnabled = true;
+                Notes_Label.IsEnabled = Notes_txtBox.IsEnabled = E_Notes_Label.IsEnabled = E_Notes_txtBox.IsEnabled = true;
                 Add_Attachment_btn.Visibility = Visibility.Visible;
                 if (FromTillForm)
                 {
-                    ActionDate_Label.Visibility = ActionDate_datepicker.Visibility = Visibility.Visible;
+                    ActionDate_Label.IsEnabled = ActionDate_datepicker.IsEnabled = true;
                     ActionDate_datepicker.IsEnabled = true;
                 }
                 else
@@ -3334,6 +3334,20 @@ namespace Financial_WPF_App
 
             return sucess;
 
+        }
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this);
+        }
+
+        private void Close_Click(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.CloseWindow(this);
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
         }
     }
 }
