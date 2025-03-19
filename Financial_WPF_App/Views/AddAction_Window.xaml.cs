@@ -1081,7 +1081,7 @@ namespace Financial_WPF_App
                  = Rate_txtBox.Text =
                 MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = "";
             BeneficiaryName_txtBox.CloseAutoSuggestionBox();
-            USD_Value_TxtBox.Content = Exchanged_txtBox.Content = "";
+            USD_Value_TxtBox.Text = Exchanged_txtBox.Text = "";
 
             DestinationTill_comboBox.SelectedIndex = ExchangeAcc_comboBox.SelectedIndex = Donor_comboBox.SelectedIndex = Budget_comboBox.SelectedIndex =
                 Category_comboBox.SelectedIndex = Line_comboBox.SelectedIndex = CashAccount_comboBox.SelectedIndex = ObserveCashAccount_comboBox.SelectedIndex =
@@ -1283,7 +1283,7 @@ namespace Financial_WPF_App
                                     Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
                             }
                             else
-                                USD_Value_TxtBox.Content = "";
+                                USD_Value_TxtBox.Text = "";
                         }
                     }
                     if (Employee_comboBox.Visibility == Visibility.Visible)
@@ -1345,7 +1345,7 @@ namespace Financial_WPF_App
                             Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                     else
-                        USD_Value_TxtBox.Content = "";
+                        USD_Value_TxtBox.Text = "";
                 }
 
             }
@@ -1877,7 +1877,7 @@ namespace Financial_WPF_App
                                     Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
                             }
                             else
-                                USD_Value_TxtBox.Content = "";
+                                USD_Value_TxtBox.Text = "";
                         }
 
                     }
@@ -2805,14 +2805,14 @@ namespace Financial_WPF_App
                     //string expand = Amount_txtBox.Text.Replace(",", "");
                     Double.TryParse(Amount_txtBox.Text, out expandature);
                     USD_Value = expandature / avgRate;
-                    USD_Value_TxtBox.Content = USD_Value.ToString();
+                    USD_Value_TxtBox.Text = USD_Value.ToString();
                 }
 
             }
             else
             {
                 USD_Value = 0;
-                USD_Value_TxtBox.Content = "";
+                USD_Value_TxtBox.Text = "";
             }
         }
 
@@ -2822,7 +2822,7 @@ namespace Financial_WPF_App
             {
                 //double exchanged = Double.Parse(Amount_txtBox.Text.Replace(",", "")) * Double.Parse(Rate_txtBox.Text.Replace(",", ""));
                 double exchanged = Double.Parse(Amount_txtBox.Text) * Double.Parse(Rate_txtBox.Text);
-                Exchanged_txtBox.Content = exchanged.ToString();
+                Exchanged_txtBox.Text = exchanged.ToString();
             }
         }
 
@@ -3272,12 +3272,12 @@ namespace Financial_WPF_App
 
                 if (FullAttachNames.Length > 0)
                 {
-                    AddedAttachments_lable.Content = "Attachments:" + open.FileNames.Length.ToString();
+                    AddedAttachments_lable.Text = "Attachments:" + open.FileNames.Length.ToString();
                     AddedAttachments_panel.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    AddedAttachments_lable.Content = "Attachments:";
+                    AddedAttachments_lable.Text = "Attachments:";
                     AddedAttachments_panel.Visibility = Visibility.Collapsed;
                 }
 
