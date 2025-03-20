@@ -806,7 +806,7 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                                                     </Setter>
                                                 </Style>
                                             </ToggleButton.Style>
-                                            <TextBlock Text="▼"
+                                            <TextBlock Text="▼" Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                                                        Foreground="{TemplateBinding Foreground}"
                                                        FontSize="9"
                                                        FontWeight="Bold"/>
