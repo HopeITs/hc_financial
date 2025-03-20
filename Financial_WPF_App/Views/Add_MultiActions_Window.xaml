@@ -45,7 +45,7 @@
                     <WrapPanel Orientation="Horizontal" Width="Auto" ItemHeight="40">
                         <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
                             <Label Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Right" Height="40" Content="Account Type:"/>
-                            <ComboBox TabIndex="1" SelectionChanged="AccountType_comboBox_SelectionChanged" Style="{StaticResource ActionComboboxStyle}" x:Name="AccountType_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsEditable="True" />
+                            <ComboBox TabIndex="1" SelectionChanged="AccountType_comboBox_SelectionChanged" Style="{StaticResource ActionComboboxStyle}" x:Name="AccountType_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" />
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="LeftToRight">
                             <Label Style="{DynamicResource statistic_lableStyle}" Content="Till Type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
@@ -59,7 +59,7 @@
                         <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" Grid.Row="1">
                             <Label Style="{DynamicResource statistic_lableStyle}" Content="Operation type:" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                             <ComboBox x:Name="Type_comboBox" Style="{StaticResource ActionComboboxStyle}"  DisplayMemberPath="Name" SelectedValuePath="ID"
-                                IsEditable="True" SelectionChanged="Type_comboBox_SelectionChanged"/>
+                           SelectionChanged="Type_comboBox_SelectionChanged"/>
                             <Button x:Name="clear_type_btn" Style="{StaticResource ActionDeleteButtonStyle}" Width="27" Height="30" BorderBrush="{x:Null}" Click="clear_type_btn_Click" >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>

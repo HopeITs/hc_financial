@@ -113,7 +113,7 @@
                     </Button.ToolTip>
                 </Button>
                 <ComboBox x:Name="Type_comboBox" TabIndex="1" Grid.Column="5" Grid.Row="1" 
-                      IsEditable="True" Style="{StaticResource FloatingComboboxStyle}"
+                       Style="{StaticResource FloatingComboboxStyle}"
                       HorizontalContentAlignment="Right" 
                       SelectionChanged="Type_comboBox_SelectionChanged">
                     <ComboBoxItem x:Name="Type_ComboBox_Income_Item" Content="Income" />
@@ -156,7 +156,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <ComboBox Grid.Column="0" Style="{StaticResource FloatingComboboxStyle}" x:Name="IsReceipt_comboBox" TabIndex="15"
-                                IsEditable="True"
+                             
                                     HorizontalContentAlignment="Right" VerticalAlignment="Stretch" SelectionChanged="IsReceipt_comboBox_SelectionChanged" >
                         <ComboBoxItem x:Name="invoice_ComboBoxItem" Content="invoice" />
                         <ComboBoxItem x:Name="receipt_ComboBoxItem" Content="receipt"/>
