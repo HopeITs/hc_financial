@@ -727,14 +727,14 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                 <Setter Property="ItemContainerStyle">
                     <Setter.Value>
                         <Style TargetType="ComboBoxItem">
-                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Background" Value="{StaticResource LightGray1}"/>
                             <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
                             <Setter Property="Margin" Value="0,5,0,5"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ComboBoxItem">
-                                        <Border Name="Border" Background="Transparent" Padding="25,2,2,2">
+                                        <Border Name="Border" Background="{StaticResource LightGray1}" Padding="25,2,2,2">
                                             <ContentPresenter />
                                         </Border>
                                         <ControlTemplate.Triggers>
@@ -780,22 +780,19 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                                               Margin="10,0,30,0"
                                               VerticalAlignment="Center"/>
 
-                                         <!--DropDown Button--> 
-                                        <ToggleButton Name="DropDownToggle"
-                                                      Focusable="False"
+                                         <!--DropDown Button-->
+                                        <ToggleButton Name="DropDownToggle" Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                                                       IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                                       ClickMode="Press"
                                                       Background="Transparent"
                                                       BorderThickness="0"
-                                                      HorizontalAlignment="Left"
                                                       VerticalAlignment="Top"
-                                                      Width="Auto">
+                                                      >
                                             <ToggleButton.Style>
                                                 <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
                                                     <Setter Property="Background" Value="Transparent"/>
                                                     <Setter Property="BorderBrush" Value="Transparent"/>
                                                     <Setter Property="OverridesDefaultStyle" Value="True"/>
-                                                    <Setter Property="Margin" Value="-8,0,0,0"/>
                                                     <Setter Property="Template">
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="ToggleButton">
