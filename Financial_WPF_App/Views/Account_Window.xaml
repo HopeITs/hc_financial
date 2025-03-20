@@ -200,7 +200,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="City_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" 
-                             TabIndex="1" Grid.Row="1" Grid.Column="0" Width="176.5"/>
+                             TabIndex="1" Grid.Row="1" Grid.Column="0"/>
                     <Button x:Name="City_clear_btn" Grid.Column="1" TabIndex="2" Style="{DynamicResource DeleteButtonStyle}"
                          Grid.Row="1" Click="City_clear_btn_Click"/>
                 </Grid>

@@ -708,7 +708,7 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                 </Setter>
             </Style>
 
-            <!--<Style TargetType="ComboBox" x:Key="FloatingComboboxStyle">
+            <Style TargetType="ComboBox" x:Key="FloatingComboboxStyle">
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -738,20 +738,19 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                                             <ContentPresenter />
                                         </Border>
                                         <ControlTemplate.Triggers>
-                                            --><!-- Hover Effect --><!--
+                                             <!--Hover Effect--> 
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter TargetName="Border" Property="Background" Value="{StaticResource LightGray2}"/>
                                                 <Setter Property="Cursor" Value="Hand"/>
                                             </Trigger>
 
-                                            --><!-- Selected Effect --><!--
+                                             <!--Selected Effect--> 
                                             <Trigger Property="IsSelected" Value="True">
                                                 <Setter TargetName="Border" Property="Background" Value="{StaticResource MidGray}"/>
-                                                --><!-- Change if needed --><!--
                                                 <Setter Property="Foreground" Value="White"/>
                                             </Trigger>
 
-                                            --><!-- Disabled Effect --><!--
+                                             <!--Disabled Effect--> 
                                             <Trigger Property="IsEnabled" Value="False">
                                                 <Setter Property="Foreground" Value="{StaticResource LightGray1}"/>
                                             </Trigger>
@@ -767,22 +766,21 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBox">
                             <Grid>
-                                --><!-- Clickable Border (Now opens dropdown when clicking anywhere in the ComboBox) --><!--
-                                <Border Name="Border" Width="Auto"
+                                 <!--Clickable Border (Now opens dropdown when clicking anywhere in the ComboBox)-->
+                                <Border Name="Border" Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                                         Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderThickness}"
                                         Padding="{TemplateBinding Padding}"
                                         Cursor="Hand">
-                                    --><!-- Add event here --><!--
                                     <Grid>
-                                        --><!-- Selected Item Display --><!--
+                                         <!--Selected Item Display--> 
                                         <ContentPresenter Name="ContentSite"
-                                              Content="{Binding SelectedItem.Name, RelativeSource={RelativeSource TemplatedParent}}"
+                                              Content="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
                                               Margin="10,0,30,0"
                                               VerticalAlignment="Center"/>
 
-                                        --><!-- DropDown Button --><!--
+                                         <!--DropDown Button--> 
                                         <ToggleButton Name="DropDownToggle"
                                                       Focusable="False"
                                                       IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
@@ -819,8 +817,8 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                                     </Grid>
                                 </Border>
 
-                                --><!-- Popup for DropDown --><!--
-                                <Popup Name="Popup" Width="180"
+                                 <!--Popup for DropDown-->
+                                <Popup Name="Popup" Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                                         Placement="Bottom"
                                         IsOpen="{TemplateBinding IsDropDownOpen}"
                                         AllowsTransparency="True"
@@ -836,14 +834,13 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                                 </Popup>
                             </Grid>
 
-                            --><!-- Triggers --><!--
                             <ControlTemplate.Triggers>
-                                --><!-- MouseOver Effect --><!--
+                                 <!--MouseOver Effect--> 
                                 <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" TargetName="Border" Value="{StaticResource LightGray1}"/>
                                 </Trigger>
 
-                                --><!-- Disabled Effect --><!--
+                                 <!--Disabled Effect--> 
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter TargetName="Border" Property="Background" Value="White"/>
                                     <Setter Property="BorderThickness" Value="1"/>
@@ -854,7 +851,7 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
 
                     </Setter.Value>
                 </Setter>
-            </Style>-->
+            </Style>
             
 
             
@@ -1171,22 +1168,7 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
             </Style>
 
 
-            <Style TargetType="ComboBox" x:Key="FloatingMultiComboboxStyle">
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="VerticalAlignment" Value="Stretch"/>
-                <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                <Setter Property="Margin" Value="1,0,1,0"/>
-                <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
-                <Setter Property="FontFamily" Value="Rubik"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="FontSize" Value="13"/>
-                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource LightGray1}"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-                <Setter Property="Padding" Value="15,2,2,2"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Height" Value="30"/>
+            <Style TargetType="ComboBox" x:Key="FloatingMultiComboboxStyle" BasedOn="{StaticResource FloatingComboboxStyle}">
                 <Setter Property="ItemContainerStyle">
                     <Setter.Value>
                         <Style TargetType="ComboBoxItem">
@@ -1224,103 +1206,10 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                         </Style>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ComboBox">
-                            <Grid>
-                                <!-- Clickable Border (Now opens dropdown when clicking anywhere in the ComboBox) -->
-                                <Border Name="Border"  Width="Auto"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        Padding="{TemplateBinding Padding}"
-                                        Cursor="Hand">
-                                    <!-- Add event here -->
-                                    <Grid>
-                                        <!-- Selected Item Display -->
-                                        <ContentPresenter Name="ContentSite"
-                                              Content="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
-                                              Margin="10,0,30,0"
-                                              VerticalAlignment="Center"/>
-
-                                        <!-- DropDown Button -->
-                                        <ToggleButton Name="DropDownToggle"
-              Focusable="False"
-              IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-              ClickMode="Press"
-              Background="Transparent"
-              BorderThickness="0"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-              Padding="0"
-              Margin="0">
-                                            <ToggleButton.Style>
-                                                <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                    <Setter Property="BorderBrush" Value="Transparent"/>
-                                                    <Setter Property="OverridesDefaultStyle" Value="True"/>
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="ToggleButton">
-                                                                <Border Background="Transparent"
-                                BorderBrush="Transparent">
-                                                                    <!-- Icon aligned right inside the stretched ToggleButton -->
-                                                                    <ContentPresenter HorizontalAlignment="Left"
-                                              VerticalAlignment="Center"
-                                              Margin="0,0,10,0"/>
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </ToggleButton.Style>
-                                            <TextBlock Text="▼"
-               Foreground="{TemplateBinding Foreground}"
-               FontSize="9"
-               FontWeight="Bold"/>
-                                        </ToggleButton>
-                                    </Grid>
-                                </Border>
-
-                                <!-- Popup for DropDown -->
-                                <Popup Name="Popup"
-                                       Placement="Bottom" Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
-                                       IsOpen="{TemplateBinding IsDropDownOpen}"
-                                       AllowsTransparency="True"
-                                       Focusable="False">
-                                    <Border Background="{StaticResource LightGray1}"
-                                            Name="DropDownBorder"
-                                            BorderThickness="1"
-                                            CornerRadius="0">
-                                        <ScrollViewer>
-                                            <ItemsPresenter/>
-                                        </ScrollViewer>
-                                    </Border>
-                                </Popup>
-                            </Grid>
-
-                            <!-- Triggers -->
-                            <ControlTemplate.Triggers>
-                                <!-- MouseOver Effect -->
-                                <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" TargetName="Border" Value="{StaticResource LightGray1}"/>
-                                </Trigger>
-
-                                <!-- Disabled Effect -->
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="Border" Property="Background" Value="White"/>
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="Foreground" Value="{StaticResource LightGray1}"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-
-                    </Setter.Value>
-                </Setter>
             </Style>
 
-            <Style TargetType="ComboBox" x:Key="FloatingComboboxStyle" BasedOn="{StaticResource FloatingMultiComboboxStyle}">
-                <!-- Only override the properties you want to change -->
+            <!--<Style TargetType="ComboBox" x:Key="FloatingComboboxStyle" BasedOn="{StaticResource FloatingMultiComboboxStyle}">
+                --><!-- Only override the properties you want to change --><!--
                 <Setter Property="ItemContainerStyle">
                     <Setter.Value>
                         <Style TargetType="ComboBoxItem">
@@ -1353,10 +1242,7 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                         </Style>
                     </Setter.Value>
                 </Setter>
-
-                <!-- You can override specific properties like Padding, FontSize, etc., if needed -->
-                <!-- <Setter Property="Padding" Value="CustomPaddingIfYouWant"/> -->
-            </Style>
+            </Style>-->
 
             <Style x:Key="XLFloatingComboboxStyle" TargetType="ComboBox" BasedOn="{StaticResource FloatingComboboxStyle}">
                 <Setter Property="VerticalContentAlignment" Value="Center"/>

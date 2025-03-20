@@ -1058,6 +1058,7 @@ namespace Financial_WPF_App
         {
 
             Project_comboBox.ItemsSource = null;
+
             p_dt = p.Select("", "", "");
 
 
