@@ -2915,6 +2915,130 @@ namespace Financial_WPF_App
                     ActionDate = ((DateTime)ActionDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
                 }
 
+                if (CashAccount_comboBox.IsEnabled == true || (Action_ID > 0 && CashAccount_comboBox.SelectedIndex != -1))
+                {
+                    if (CashAccount_comboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Please make sure to select the cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+                    else
+                        CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);
+                }
+
+                if (MircoProject_ID_autoSuggestionUserControl.IsEnabled == true)
+                {
+                    if (MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text != "" && BeneficiaryName_txtBox.autoTextBox.Text != "")
+                        int.TryParse(MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text, out MicroProject_ID);
+                    else MicroProject_ID = -1;
+
+                    if (MicroProject_ID == -1)
+                    {
+                        MessageBox.Show("Please make sure to select the micro project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+
+                    }
+                }
+
+                if (Budget_comboBox.IsEnabled == true)
+                {
+                    if (Line_comboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Please make sure to select the budget, category and budget line.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+                    else
+                        budget_line_ID = Convert.ToInt32(Line_comboBox.SelectedValue);
+                }
+                if (IsReceipt_comboBox.IsEnabled == true)
+                {
+                    if (IsReceipt_comboBox.SelectedIndex == -1 && Account_Type != "Personal")
+                    {
+                        MessageBox.Show("Please make sure to select the documet type and to specify its date", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+                    else
+                    {
+                        if (IsReceipt_comboBox.SelectedIndex != -1)
+                        {
+                            if (IsReceipt_comboBox.SelectedItem.ToString().Contains("invoice"))
+                            {
+                                IsReceipt = 1;
+                            }
+                            else if (IsReceipt_comboBox.SelectedItem.ToString().Contains("receipt"))
+                            {
+                                IsReceipt = 0;
+                            }
+                            else if (IsReceipt_comboBox.SelectedItem.ToString().Contains("payslip"))
+                            {
+                                IsReceipt = 2;
+                            }
+                        }
+                    }
+                }
+
+                if (ReceiptNum_txtBox.IsEnabled == true)
+                {
+                    if (ReceiptNum_txtBox.Text == "" && Account_Type != "Personal")
+                    {
+                        MessageBox.Show("Please make sure to enter the document number", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+
+                    }
+                    else
+                        ReceiptNum = ReceiptNum_txtBox.Text;
+                }
+
+                if (Employee_comboBox.IsEnabled == true)
+                {
+                    if (Employee_comboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Please make sure to select the Volunteer.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+                    else
+                    {
+                        Employee_Salary_ID = Convert.ToInt32(Employee_comboBox.SelectedValue);
+                    }
+                }
+
+                if (Original_AvgRate_comboBox.IsEnabled == true)
+                {
+                    if (Original_AvgRate_comboBox.SelectedIndex == -1)
+                    {
+                        if (Account_Type == "Project" && TillType.ToLower() == "syr")
+                        {
+                            MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                            return;
+
+                        }
+                    }
+                    else
+                        OriginalRate_ID = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue);
+                }
+
+                if (Donor_comboBox.IsEnabled == true)
+                {
+                    if (Donor_comboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Please make sure to select the donor", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+                    else
+                        Donor_ID = Convert.ToInt32(Donor_comboBox.SelectedValue);
+                }
+
+                if (Rate_txtBox.IsEnabled == true)
+                {
+                    if (Rate_txtBox.Text == "")
+                    {
+                        MessageBox.Show("Please make sure to enter the rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+                    else
+                        Double.TryParse(Rate_txtBox.Text, out rate);
+                }
+
                 if (DestinationTill_comboBox.IsEnabled == true || (Action_ID > 0 && DestinationTill_comboBox.SelectedIndex != -1))
                 {
                     if (Type_comboBox.SelectedItem.ToString().Contains("Exchange"))
@@ -2960,6 +3084,18 @@ namespace Financial_WPF_App
 
                 }
 
+                if (ObserveCashAccount_comboBox.IsEnabled == true || (Action_ID > 0 && ObserveCashAccount_comboBox.SelectedIndex != -1))
+                {
+                    if (ObserveCashAccount_comboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Please make sure to select the corresponding cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+                    else
+                        ObserveCashAccount_ID = Convert.ToInt32(ObserveCashAccount_comboBox.SelectedValue);
+                }
+
+
                 if (ExchangeAcc_comboBox.IsEnabled == true || (Action_ID > 0 && ExchangeAcc_comboBox.SelectedIndex != -1))
                 {
                     if (ExchangeAcc_comboBox.SelectedIndex == -1)
@@ -2983,144 +3119,6 @@ namespace Financial_WPF_App
                                 ExchangeCash_ID = Convert.ToInt32(ExchangeCash_comboBox.SelectedValue);
                             }
                         }
-                    }
-                }
-
-                if (MircoProject_ID_autoSuggestionUserControl.IsEnabled == true)
-                {
-                    if (MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text != "" && BeneficiaryName_txtBox.autoTextBox.Text != "")
-                        int.TryParse(MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text, out MicroProject_ID);
-                    else MicroProject_ID = -1;
-
-                    if (MicroProject_ID == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the micro project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-
-                    }
-                }
-
-                if (Donor_comboBox.IsEnabled == true)
-                {
-                    if (Donor_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the donor", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        Donor_ID = Convert.ToInt32(Donor_comboBox.SelectedValue);
-                }
-
-                if (CashAccount_comboBox.IsEnabled == true || (Action_ID > 0 && CashAccount_comboBox.SelectedIndex != -1))
-                {
-                    if (CashAccount_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);
-                }
-
-                if (ObserveCashAccount_comboBox.IsEnabled == true || (Action_ID > 0 && ObserveCashAccount_comboBox.SelectedIndex != -1))
-                {
-                    if (ObserveCashAccount_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the corresponding cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        ObserveCashAccount_ID = Convert.ToInt32(ObserveCashAccount_comboBox.SelectedValue);
-                }
-
-                if (Budget_comboBox.IsEnabled == true)
-                {
-                    if (Line_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the budget, category and budget line.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        budget_line_ID = Convert.ToInt32(Line_comboBox.SelectedValue);
-                }
-
-
-
-                if (IsReceipt_comboBox.IsEnabled == true)
-                {
-                    if (IsReceipt_comboBox.SelectedIndex == -1 && Account_Type != "Personal")
-                    {
-                        MessageBox.Show("Please make sure to select the documet type and to specify its date", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                    {
-                        if (IsReceipt_comboBox.SelectedIndex != -1)
-                        {
-                            if (IsReceipt_comboBox.SelectedItem.ToString().Contains("invoice"))
-                            {
-                                IsReceipt = 1;
-                            }
-                            else if (IsReceipt_comboBox.SelectedItem.ToString().Contains("receipt"))
-                            {
-                                IsReceipt = 0;
-                            }
-                            else if (IsReceipt_comboBox.SelectedItem.ToString().Contains("payslip"))
-                            {
-                                IsReceipt = 2;
-                            }
-                        }
-                    }
-                }
-
-                if (ReceiptNum_txtBox.IsEnabled == true)
-                {
-                    if (ReceiptNum_txtBox.Text == "" && Account_Type != "Personal")
-                    {
-                        MessageBox.Show("Please make sure to enter the document number", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-
-                    }
-                    else
-                        ReceiptNum = ReceiptNum_txtBox.Text;
-                }
-
-                if (Original_AvgRate_comboBox.IsEnabled == true)
-                {
-                    if (Original_AvgRate_comboBox.SelectedIndex == -1)
-                    {
-                        if (Account_Type == "Project" && TillType.ToLower() == "syr")
-                        {
-                            MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            return;
-
-                        }
-                    }
-                    else
-                        OriginalRate_ID = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue);
-                }
-
-                if (Rate_txtBox.IsEnabled == true)
-                {
-                    if (Rate_txtBox.Text == "")
-                    {
-                        MessageBox.Show("Please make sure to enter the rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        Double.TryParse(Rate_txtBox.Text, out rate);
-                }
-
-                if (Employee_comboBox.IsEnabled == true)
-                {
-                    if (Employee_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the Volunteer.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                    {
-                        Employee_Salary_ID = Convert.ToInt32(Employee_comboBox.SelectedValue);
                     }
                 }
 
