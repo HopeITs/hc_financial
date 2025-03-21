@@ -2906,7 +2906,6 @@ namespace Financial_WPF_App
                 }
                 else
                 {
-
                     Double.TryParse(Amount_txtBox.Text, out amount);
                 }
 
@@ -2921,9 +2920,8 @@ namespace Financial_WPF_App
                     ActionDate = ((DateTime)ActionDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
                 }
 
-                if (DestinationTill_comboBox.IsEnabled == true)
+                if (DestinationTill_comboBox.IsEnabled == true || (Action_ID > 0 && DestinationTill_comboBox.SelectedIndex != -1))
                 {
-
                     if (Type_comboBox.SelectedItem.ToString().Contains("Exchange"))
                     {
                         if (DestinationTill_comboBox.SelectedIndex == -1)
@@ -2967,7 +2965,7 @@ namespace Financial_WPF_App
 
                 }
 
-                if (ExchangeAcc_comboBox.IsEnabled == true)
+                if (ExchangeAcc_comboBox.IsEnabled == true || (Action_ID > 0 && ExchangeAcc_comboBox.SelectedIndex != -1))
                 {
                     if (ExchangeAcc_comboBox.SelectedIndex == -1)
                     {
@@ -3018,7 +3016,7 @@ namespace Financial_WPF_App
                         Donor_ID = Convert.ToInt32(Donor_comboBox.SelectedValue);
                 }
 
-                if (CashAccount_comboBox.IsEnabled == true)
+                if (CashAccount_comboBox.IsEnabled == true || (Action_ID > 0 && CashAccount_comboBox.SelectedIndex != -1))
                 {
                     if (CashAccount_comboBox.SelectedIndex == -1)
                     {
@@ -3029,7 +3027,7 @@ namespace Financial_WPF_App
                         CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);
                 }
 
-                if (ObserveCashAccount_comboBox.IsEnabled == true)
+                if (ObserveCashAccount_comboBox.IsEnabled == true || (Action_ID > 0 && ObserveCashAccount_comboBox.SelectedIndex != -1))
                 {
                     if (ObserveCashAccount_comboBox.SelectedIndex == -1)
                     {
@@ -3340,6 +3338,7 @@ namespace Financial_WPF_App
             return sucess;
 
         }
+
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowUtils.MinimizeWindow(this);

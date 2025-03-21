@@ -104,7 +104,7 @@
                     </Button>
 
                 </Grid>
-                <Button Grid.Row="8" Grid.Column="3" x:Name="DestinationTill_help" Width="25" Height="25" ToolTipService.InitialShowDelay="100" BorderBrush="{x:Null}" Margin="5,0,0,0" HorizontalAlignment="Left">
+                <Button Grid.Row="16" Grid.Column="3" x:Name="DestinationTill_help" Width="25" Height="25" ToolTipService.InitialShowDelay="100" BorderBrush="{x:Null}" Margin="5,0,0,0" HorizontalAlignment="Left">
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
                     </Button.Background>
