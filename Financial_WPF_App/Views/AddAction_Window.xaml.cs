@@ -678,14 +678,12 @@ namespace Financial_WPF_App
                 if (FromTillForm)
                 {
                     ActionDate_Label.IsEnabled = ActionDate_datepicker.IsEnabled = true;
-                    //ActionDate_datepicker.IsEnabled = true;
                 }
                 else
                 {
                     if (Action_ID != -1)
                     {
                         ActionDate_Label.IsEnabled = ActionDate_datepicker.IsEnabled = true;
-                        //ActionDate_datepicker.IsEnabled = true;
                     }
                     else
                     {
@@ -1143,9 +1141,6 @@ namespace Financial_WPF_App
 
             FullAttachNames = new string[] { };
             AddedAttachments_lable.Text = "Count: 0";
-            //Attachment_lable.Visibility = AddedAttachments_lable.Visibility = AddedAttachments_clear_btn.Visibility = Add_Attachment_btn.Visibility = Visibility.Collapsed;
-
-            //AddedAttachments_panel.Visibility = Visibility.Collapsed;
 
         }
 
@@ -3272,16 +3267,12 @@ namespace Financial_WPF_App
                 if (FullAttachNames.Length > 0)
                 {
                     AddedAttachments_lable.Text = "Count: " + open.FileNames.Length.ToString();
-                    //Attachment_lable.Visibility = AddedAttachments_lable.Visibility = AddedAttachments_clear_btn.Visibility = Add_Attachment_btn.Visibility = Visibility.Visible;
-
-                    //AddedAttachments_panel.Visibility = Visibility.Visible;
+ 
                 }
                 else
                 {
                     AddedAttachments_lable.Text = "Count: 0";
                     Attachment_lable.Visibility = AddedAttachments_lable.Visibility = AddedAttachments_clear_btn.Visibility = Add_Attachment_btn.Visibility = Visibility.Collapsed;
-
-                    //ddedAttachments_panel.Visibility = Visibility.Collapsed;
                 }
 
 

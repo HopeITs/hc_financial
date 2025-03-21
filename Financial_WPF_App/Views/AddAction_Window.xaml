@@ -72,7 +72,7 @@
                 Style="{DynamicResource statistic_lableStyle}" Content="Micro Project number:" HorizontalContentAlignment="Left" />
                 <uc:AutoCompleteTextBoxUserControl  Style="{StaticResource TextBoxUserControlStyle}"
                 x:Name="MircoProject_ID_autoSuggestionUserControl" Tag="Project Number"
-                Grid.Column="2" Grid.Row="9" TabIndex="9" 
+                Grid.Column="2" Grid.Row="9" TabIndex="10" 
                 LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
 
                 <!--<TextBox x:Name="MircoProject_ID_txtBox" TabIndex="3"
@@ -93,7 +93,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox x:Name="DestinationTill_comboBox" TabIndex="5" Grid.Column="0" Style="{DynamicResource FloatingComboboxStyle}"
+                    <ComboBox x:Name="DestinationTill_comboBox" TabIndex="21" Grid.Column="0" Style="{DynamicResource FloatingComboboxStyle}"
                           DisplayMemberPath="Type" SelectedValuePath="ID" 
                           SelectionChanged="DestinationTill_comboBox_SelectionChanged"/>
                     <Button Grid.Column="1" x:Name="DestinationTill_clear_btn" HorizontalAlignment="Left" Style="{StaticResource DeleteButtonStyle}"
@@ -112,7 +112,7 @@
                         <TextBlock><Run Text="The account only appears if it contains a till of the same currency."/><LineBreak /><Run Text="In foreign currency till, The account only appears if it contains a till of the same currency and the account has the selected donor"/></TextBlock>
                     </Button.ToolTip>
                 </Button>
-                <ComboBox x:Name="Type_comboBox" TabIndex="1" Grid.Column="5" Grid.Row="1" 
+                <ComboBox x:Name="Type_comboBox" TabIndex="4" Grid.Column="5" Grid.Row="1" 
                        Style="{StaticResource FloatingComboboxStyle}"
                       HorizontalContentAlignment="Left" 
                       SelectionChanged="Type_comboBox_SelectionChanged">
@@ -125,11 +125,11 @@
                 </ComboBox>
                 <Label x:Name="Amount_Label" Grid.Row="2" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" Content="Amount:" HorizontalContentAlignment="Left" />
                 <TextBox x:Name="Amount_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" 
-                Grid.Column="2" Grid.Row="2" TabIndex="2" 
+                Grid.Column="2" Grid.Row="2" TabIndex="5" 
                 LostFocus="Amount_txtBox_LostFocus" />
 
                 <Label x:Name="ActionDate_Label" Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Operation date:" HorizontalContentAlignment="Left" Grid.Column="1"  />
-                <DatePicker Height="30" x:Name="ActionDate_datepicker" Grid.Row="3" TabIndex="3" 
+                <DatePicker Height="30" x:Name="ActionDate_datepicker" Grid.Row="3" TabIndex="6" 
                         FirstDayOfWeek="Monday" Grid.Column="2" SelectedDateChanged="ActionDate_datepicker_SelectedDateChanged" />
 
                 <Label x:Name="Notes_Label" Grid.Column="1" Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" Content="Description (AR):" HorizontalContentAlignment="Left" />
@@ -140,7 +140,7 @@
          Grid.Row="4"
          Grid.ColumnSpan="4"
          Grid.RowSpan="2"
-         TabIndex="4"
+         TabIndex="7"
          Margin="1,1,1,1"
          Height="70"
          AcceptsReturn="True"
@@ -191,7 +191,7 @@
 
                 <Label x:Name="Rate_lable" Grid.Column="4" Grid.Row="15" Style="{DynamicResource statistic_lableStyle}" Content="Rate:"  HorizontalContentAlignment="Left"   />
                 <TextBox x:Name="Rate_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" 
-                Grid.Column="5" Grid.Row="15" TabIndex="19"   
+                Grid.Column="5" Grid.Row="15" TabIndex="20"   
                 LostFocus="Rate_txtBox_LostFocus" Height="30"  />
 
                 <Label x:Name="Exchanged_lable" Grid.Column="4" Grid.Row="19" Style="{DynamicResource statistic_lableStyle}" Content="Exchanged:"  HorizontalContentAlignment="Left"   />
@@ -200,7 +200,7 @@
 
                 <Button Grid.Row="20" 
                     Style="{DynamicResource ButtonColoredStyle}" Content="Save"
-                x:Name="Save_btn" TabIndex="20" Click="Save_btn_Click" Grid.Column="1" />
+                x:Name="Save_btn" TabIndex="25" Click="Save_btn_Click" Grid.Column="1" />
                 <Label Grid.Column="4" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Operation type:"  HorizontalContentAlignment="Left"  />
 
                 <Label Grid.Row="17" x:Name="ExchangeAcc_lable" Style="{DynamicResource statistic_lableStyle}" Content="Exchange account:"  Margin="10,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Grid.Column="1" />
@@ -210,7 +210,7 @@
                         <!-- TextBox will stretch -->
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="ExchangeAcc_comboBox" TabIndex="8" Grid.Column="0"
+                    <ComboBox x:Name="ExchangeAcc_comboBox" TabIndex="23" Grid.Column="0"
                     DisplayMemberPath="Name" SelectedValuePath="id" Style="{StaticResource FloatingComboboxStyle}"
                      SelectionChanged="ExchangeAcc_comboBox_SelectionChanged"/>
                     <Button Grid.Column="1" x:Name="ExchangeAcc_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}" 
@@ -254,7 +254,7 @@
                         <!-- TextBox will stretch -->
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" x:Name="CashAccount_comboBox" TabIndex="6"
+                    <ComboBox Grid.Column="0" x:Name="CashAccount_comboBox" TabIndex="9"
                     DisplayMemberPath="Name" SelectedValuePath="ID" Style="{StaticResource FloatingComboboxStyle}"
                     VerticalContentAlignment="Center"/>
                     <Button Grid.Column="1" x:Name="CashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}"  Click="CashAccount_clear_btn_Click" Margin="5,0,0,0" >
@@ -375,7 +375,7 @@ In case of having a budget, Avg Rate only appears from the selected budget curre
 
                 </Grid>
                 <uc:AutoCompleteTextBoxUserControl Grid.Column="5" Style="{StaticResource TextBoxUserControlStyle}"
-                x:Name="BeneficiaryName_txtBox" TabIndex="10" Tag="Beneficiary Number"
+                x:Name="BeneficiaryName_txtBox" TabIndex="11" Tag="Beneficiary Number"
                 LostFocus="BeneficiaryName_autoSuggestionUserControl_LostFocus"  Grid.Row="9" />
                 <Grid Height="30" Grid.Row="15" x:Name="Donor_panel"  Grid.Column="2" >
                     <Grid.ColumnDefinitions>
@@ -383,7 +383,7 @@ In case of having a budget, Avg Rate only appears from the selected budget curre
                         <!-- TextBox will stretch -->
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" x:Name="Donor_comboBox" TabIndex="11" Style="{StaticResource FloatingComboboxStyle}"
+                    <ComboBox Grid.Column="0" x:Name="Donor_comboBox" TabIndex="19" Style="{StaticResource FloatingComboboxStyle}"
                     DisplayMemberPath="Name" SelectedValuePath="ID" 
                     SelectionChanged="Donor_comboBox_SelectionChanged"/>
                     <Button Grid.Column="1" x:Name="Donor_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}" Click="Donor_comboBox_clear_btn_Click" Margin="5,0,0,0" >
@@ -400,7 +400,7 @@ In case of having a budget, Avg Rate only appears from the selected budget curre
                         <!-- TextBox will stretch -->
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" x:Name="ObserveCashAccount_comboBox" TabIndex="7" Style="{StaticResource FloatingComboboxStyle}"
+                    <ComboBox Grid.Column="0" x:Name="ObserveCashAccount_comboBox" TabIndex="22" Style="{StaticResource FloatingComboboxStyle}"
                     DisplayMemberPath="Name" SelectedValuePath="ID" />
                     <Button Grid.Column="1" x:Name="ObserveCashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center"  Click="ObserveCashAccount_clear_btn_Click" Style="{StaticResource DeleteButtonStyle}" Margin="5,0,0,0">
                         <Button.Background>
@@ -409,7 +409,7 @@ In case of having a budget, Avg Rate only appears from the selected budget curre
                     </Button>
                 </Grid>
                 <Label x:Name="E_Notes_Label" Grid.Row="6" Style="{DynamicResource statistic_lableStyle}" Content="Description (Eng):" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Grid.Column="1" />
-                <TextBox x:Name="E_Notes_txtBox" Style="{DynamicResource FloatingTextBoxStyle}"  HorizontalContentAlignment="Left" Grid.Row="6" TabIndex="4"  Grid.Column="2" Grid.ColumnSpan="4" Grid.RowSpan="2" AcceptsReturn="True"
+                <TextBox x:Name="E_Notes_txtBox" Style="{DynamicResource FloatingTextBoxStyle}"  HorizontalContentAlignment="Left" Grid.Row="6" TabIndex="8"  Grid.Column="2" Grid.ColumnSpan="4" Grid.RowSpan="2" AcceptsReturn="True"
 TextWrapping="Wrap"
 VerticalScrollBarVisibility="Auto" Height="70" Margin="1,1,1,1"/>
                 <Label Grid.Column="4" Grid.Row="17" x:Name="ExchangeCash_lable" Style="{DynamicResource statistic_lableStyle}" Content="Exchange cash till:"  Margin="10,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" />
@@ -419,7 +419,7 @@ VerticalScrollBarVisibility="Auto" Height="70" Margin="1,1,1,1"/>
                         <!-- TextBox will stretch -->
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" x:Name="ExchangeCash_comboBox" TabIndex="8" Style="{DynamicResource  FloatingComboboxStyle}"
+                    <ComboBox Grid.Column="0" x:Name="ExchangeCash_comboBox" TabIndex="24" Style="{DynamicResource  FloatingComboboxStyle}"
                     DisplayMemberPath="Name" SelectedValuePath="ID" />
                     <Button Grid.Column="1" x:Name="ExchangeCash_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}" Click="ExchangeCash_clear_btn_Click" Margin="5,0,0,0" >
                         <Button.Background>
@@ -434,7 +434,7 @@ VerticalScrollBarVisibility="Auto" Height="70" Margin="1,1,1,1"/>
                         <!-- TextBox will stretch -->
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" x:Name="Employee_comboBox" TabIndex="12" Style="{DynamicResource FloatingComboboxStyle}"
+                    <ComboBox Grid.Column="0" x:Name="Employee_comboBox" TabIndex="17" Style="{DynamicResource FloatingComboboxStyle}"
                     DisplayMemberPath="Employee_Name" SelectedValuePath="Employee_Salary_ID" />
                     <Button Grid.Column="1" x:Name="Employee_comboBox_clear" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}" Click="Employee_comboBox_clear_Click" Margin="5,0,0,0" >
                         <Button.Background>
@@ -458,14 +458,14 @@ VerticalScrollBarVisibility="Auto" Height="70" Margin="1,1,1,1"/>
                     SelectionChanged="Subproject_comboBox_SelectionChanged" >
                 </ComboBox>
                 <Label Grid.Row="0" Grid.Column="4" Style="{DynamicResource statistic_lableStyle}" Content="Account:" HorizontalContentAlignment="Left"  />
-                <ComboBox Grid.Row="0" Grid.Column="5" x:Name="Account_comboBox" TabIndex="1" Style="{StaticResource FloatingComboboxStyle}"
+                <ComboBox Grid.Row="0" Grid.Column="5" x:Name="Account_comboBox" TabIndex="2" Style="{StaticResource FloatingComboboxStyle}"
                 DisplayMemberPath="Account_Name" SelectedValuePath="Account_ID" 
                 HorizontalContentAlignment="Left" 
                 VerticalAlignment="Stretch" SelectionChanged="Account_comboBox_SelectionChanged" >
 
                 </ComboBox>
                 <Label Grid.Row="1" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" Content="Till:" HorizontalContentAlignment="Left" />
-                <ComboBox x:Name="Till_comboBox" Grid.Row="1" Grid.Column="2" TabIndex="1"  DisplayMemberPath="Tilltypes_Name" SelectedValuePath="Till_ID" 
+                <ComboBox x:Name="Till_comboBox" Grid.Row="1" Grid.Column="2" TabIndex="3"  DisplayMemberPath="Tilltypes_Name" SelectedValuePath="Till_ID" 
               Style="{DynamicResource FloatingComboboxStyle}"
                 HorizontalContentAlignment="Left"  SelectionChanged="Till_comboBox_SelectionChanged" >
                 </ComboBox>
