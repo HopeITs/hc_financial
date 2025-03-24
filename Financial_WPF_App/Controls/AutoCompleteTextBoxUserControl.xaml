@@ -4,28 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Financial_WPF_App.Controls"
-             mc:Ignorable="d">
-    <Grid>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+             mc:Ignorable="d" HorizontalAlignment="Stretch">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        
             <!-- Text Box -->
-            <TextBox x:Name="autoTextBox"    
-                    Width="175"
+            <TextBox x:Name="autoTextBox"  Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
                     TextChanged="AutoTextBox_TextChanged"  
-                    Style="{DynamicResource CustomTextBoxActionStyle}" Tag="Project Number" />
+                   Style="{Binding TextBoxStyle, RelativeSource={RelativeSource AncestorType=UserControl}}" Tag="{Binding TextBoxTag, RelativeSource={RelativeSource AncestorType=UserControl}}" />
  
             <!-- Auto Suggestion box -->
-            <Popup x:Name="autoListPopup"     
+        <Popup x:Name="autoListPopup"     
                    Visibility="Collapsed"                    
-                   Height="200" Width="175"
+                   Height="200" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
                    StaysOpen="True"    
-                   AllowsTransparency="True"  
+                   AllowsTransparency="True"  PlacementTarget="{Binding ElementName=autoTextBox}"
                    Placement="Bottom" IsOpen="False">
-
-                <ListBox x:Name="autoList"  Style="{StaticResource AutoCompleteDropdownItemStyle}"
-                         Visibility="Collapsed"
-                         SelectionChanged="AutoList_SelectionChanged">
-                </ListBox>
-            </Popup>
-        </StackPanel>
+            <ListBox x:Name="autoList"
+                             Width="{Binding ElementName=autoTextBox, Path=ActualWidth}"
+                             Style="{StaticResource AutoCompleteDropdownItemStyle}"
+                             Visibility="Collapsed"
+                             SelectionChanged="AutoList_SelectionChanged"/>
+        </Popup>
     </Grid>
 </UserControl>

@@ -33,45 +33,45 @@
             <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"/>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="175"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="175"/>
+                    <ColumnDefinition Width="250"/>
                     <ColumnDefinition Width="30"/>
 
 
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition/>
 
                 </Grid.RowDefinitions>
 
                 <Label x:Name="MircoProject_ID_lable" Grid.Column="1" Grid.Row="9" 
                 Style="{DynamicResource statistic_lableStyle}" Content="Micro Project number:" HorizontalContentAlignment="Left" />
-                <uc:AutoCompleteTextBoxUserControl  Style="{StaticResource TextBoxUserControlStyle}"
-                x:Name="MircoProject_ID_autoSuggestionUserControl" Tag="Project Number"
+                <uc:AutoCompleteTextBoxUserControl TextBoxStyle="{StaticResource FloatingTextBoxStyle}"
+                x:Name="MircoProject_ID_autoSuggestionUserControl" 
                 Grid.Column="2" Grid.Row="9" TabIndex="10" 
                 LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
 
@@ -141,8 +141,8 @@
          Grid.ColumnSpan="4"
          Grid.RowSpan="2"
          TabIndex="7"
-         Margin="1,1,1,1"
-         Height="70"
+         Margin="1,0,1,0"
+         Height="NaN"
          AcceptsReturn="True"
          TextWrapping="Wrap"
          VerticalScrollBarVisibility="Auto" />
@@ -152,7 +152,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <!-- TextBox will stretch -->
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <ComboBox Grid.Column="0" Style="{StaticResource FloatingComboboxStyle}" x:Name="IsReceipt_comboBox" TabIndex="15"
@@ -163,7 +163,7 @@
                         <ComboBoxItem x:Name="payslip_ComboBoxItem" Content="payslip"/>
                     </ComboBox>
 
-                    <TextBox Grid.Column="1" x:Name="ReceiptNum_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" Background="{StaticResource LightGray1}" Tag="Document Number"
+                    <TextBox Grid.Column="1" x:Name="ReceiptNum_txtBox" TextChanged="ReceiptNum_txtBox_TextChanged"   Style="{StaticResource FloatingTextBoxStyle}"  Tag="Document Number"
                            TabIndex="16" Padding="40,2,2,2" />
                 </Grid>
 
@@ -186,7 +186,7 @@
             </StackPanel>-->
 
                 <Label Grid.Column="1" Grid.Row="19" x:Name="USD_Value_lable" Style="{DynamicResource statistic_lableStyle}" Content="Value:" HorizontalContentAlignment="Left"  />
-                <TextBox x:Name="USD_Value_TxtBox"  IsReadOnly="True" Style="{DynamicResource FloatingTextBoxStyle}" 
+                <Label x:Name="USD_Value_TxtBox"  Style="{DynamicResource statistic_lableStyle}" 
                      Grid.Column="2" Grid.Row="19" TabIndex="100" Height="30"  />
 
                 <Label x:Name="Rate_lable" Grid.Column="4" Grid.Row="15" Style="{DynamicResource statistic_lableStyle}" Content="Rate:"  HorizontalContentAlignment="Left"   />
@@ -195,7 +195,7 @@
                 LostFocus="Rate_txtBox_LostFocus" Height="30"  />
 
                 <Label x:Name="Exchanged_lable" Grid.Column="4" Grid.Row="19" Style="{DynamicResource statistic_lableStyle}" Content="Exchanged:"  HorizontalContentAlignment="Left"   />
-                <TextBox x:Name="Exchanged_txtBox" IsReadOnly="True" Style="{DynamicResource FloatingTextBoxStyle}"
+                <Label x:Name="Exchanged_txtBox" Style="{DynamicResource statistic_lableStyle}"
                 Grid.Column="5" Grid.Row="19" TabIndex="101"   Height="30"  />
 
                 <Button Grid.Row="20" 
@@ -335,47 +335,64 @@ In case of having a budget, Avg Rate only appears from the selected budget curre
 
                 <Label x:Name="Attachment_lable" Grid.Column="4" Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Attachments:"  HorizontalContentAlignment="Left"   />
 
-                <Grid Grid.Row="3" Grid.Column="5" Height="30" x:Name="AddedAttachments_panel">
+                <Grid Grid.Row="3" Grid.Column="5" Height="30" x:Name="AddedAttachments_panel" Margin="1,0,1,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="6*" />
                         <!-- TextBox will stretch -->
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                         <!-- Clear button -->
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                         <!-- Add button -->
                     </Grid.ColumnDefinitions>
 
                     <TextBox x:Name="AddedAttachments_lable"
              IsReadOnly="True"
-             Style="{DynamicResource FloatingTextBoxStyle}"
+             Style="{DynamicResource FloatingTextBoxStyle}" 
              Text="Count: 0"
              Grid.Column="0"
              Margin="0,0,0,0" />
 
                     <Button x:Name="AddedAttachments_clear_btn"
-            Grid.Column="1"
+            Grid.Column="1"  Margin="4,0,0,0"
             Style="{StaticResource DeleteButtonStyle}"
-            Click="AddedAttachments_clear_btn_Click"
+            Click="AddedAttachments_clear_btn_Click"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             ToolTip="Clear Attachments"
-            ToolTipService.InitialShowDelay="100" />
+            ToolTipService.InitialShowDelay="100"  />
 
                     <Button x:Name="Add_Attachment_btn"
-            Grid.Column="2"
-            ToolTip="Add Attachment"
-            ToolTipService.InitialShowDelay="100"
-            Click="Add_Attachment_btn_Click"
-            Style="{StaticResource AddButtonStyle}"
-            Height="30"
-            Width="25"
-            Margin="5,0,0,0">
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Icons/add_attach.png" Stretch="UniformToFill"/>
-                        </Button.Background>
+        Grid.Column="2" Margin="4,0,0,0" Width="27"
+        ToolTip="Add Attachment"
+        ToolTipService.InitialShowDelay="100"
+        Click="Add_Attachment_btn_Click"
+          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="30" >
+
+
+                        <!-- Use the existing AddButtonStyle and modify only the Disabled State -->
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource AddButtonStyle}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <ImageBrush ImageSource="/Images/Icons/add_attach_disabled.png" Stretch="Fill"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="True">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <ImageBrush ImageSource="/Images/Icons/add_attach.png" Stretch="Fill"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
 
                 </Grid>
-                <uc:AutoCompleteTextBoxUserControl Grid.Column="5" Style="{StaticResource TextBoxUserControlStyle}"
-                x:Name="BeneficiaryName_txtBox" TabIndex="11" Tag="Beneficiary Number"
+                <uc:AutoCompleteTextBoxUserControl Grid.Column="5" TextBoxStyle="{StaticResource FloatingTextBoxStyle}"
+                x:Name="BeneficiaryName_txtBox" TabIndex="11" 
                 LostFocus="BeneficiaryName_autoSuggestionUserControl_LostFocus"  Grid.Row="9" />
                 <Grid Height="30" Grid.Row="15" x:Name="Donor_panel"  Grid.Column="2" >
                     <Grid.ColumnDefinitions>
@@ -411,7 +428,7 @@ In case of having a budget, Avg Rate only appears from the selected budget curre
                 <Label x:Name="E_Notes_Label" Grid.Row="6" Style="{DynamicResource statistic_lableStyle}" Content="Description (Eng):" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Grid.Column="1" />
                 <TextBox x:Name="E_Notes_txtBox" Style="{DynamicResource FloatingTextBoxStyle}"  HorizontalContentAlignment="Left" Grid.Row="6" TabIndex="8"  Grid.Column="2" Grid.ColumnSpan="4" Grid.RowSpan="2" AcceptsReturn="True"
 TextWrapping="Wrap"
-VerticalScrollBarVisibility="Auto" Height="70" Margin="1,1,1,1"/>
+VerticalScrollBarVisibility="Auto" Height="70" Margin="1,0,1,0"/>
                 <Label Grid.Column="4" Grid.Row="17" x:Name="ExchangeCash_lable" Style="{DynamicResource statistic_lableStyle}" Content="Exchange cash till:"  Margin="10,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" />
                 <Grid Height="30" Grid.Row="17" x:Name="ExchangeAcc_panel_Copy"  Grid.Column="5" >
                     <Grid.ColumnDefinitions>

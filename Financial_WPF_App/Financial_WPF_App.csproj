@@ -1113,6 +1113,9 @@
   <ItemGroup>
     <Resource Include="Images\Icons\attachement.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\add_attach_disabled.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

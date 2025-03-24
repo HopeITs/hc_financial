@@ -542,9 +542,9 @@
                     <Trigger Property="IsEnabled" Value="False">
                         <Setter Property="Background" Value="White"/>
                         <Setter Property="BorderThickness" Value="1"/>
-                        <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
-                        <Setter Property="BorderBrush" Value="{StaticResource MidGray}"/>
-                        <Setter Property="Opacity" Value=".6"/>
+                        <Setter Property="Foreground" Value="{StaticResource LightGray1}"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource LightGray1}"/>
+                        
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -593,12 +593,12 @@
                                 <!-- Placeholder Text -->
                                 <TextBlock x:Name="PlaceholderText"
                Text="{TemplateBinding Tag}"
-               Foreground="{StaticResource DarkGray}"
+               Foreground="{StaticResource MidGray}"
                FontSize="13"
                HorizontalAlignment="Center"
                VerticalAlignment="Center"
                Visibility="Visible"
-               IsHitTestVisible="True"/>
+                IsHitTestVisible="True"/>
                                 <!-- Actual TextBox Content -->
                                 <ScrollViewer x:Name="PART_ContentHost" Margin="12,0,0,0"/>
                             </Grid>
@@ -608,18 +608,18 @@
             </Style>
 
             <!-- UserControlTextBox-Specific Style -->
-            <Style x:Key="TextBoxUserControlStyle" TargetType="uc:AutoCompleteTextBoxUserControl" BasedOn="{StaticResource FloatingBoxesStyle}">
+            <!--<Style x:Key="TextBoxUserControlStyle" TargetType="uc:AutoCompleteTextBoxUserControl" BasedOn="{StaticResource FloatingBoxesStyle}">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="uc:AutoCompleteTextBoxUserControl">
                             <Grid>
-                                <!-- Background Border -->
+                                --><!-- Background Border --><!--
                                 <Border Background="{TemplateBinding Background}" 
 BorderBrush="{TemplateBinding BorderBrush}" 
 BorderThickness="{TemplateBinding BorderThickness}"/>
 
 
-                                <!-- Placeholder Text -->
+                                --><!-- Placeholder Text --><!--
                                 <TextBlock x:Name="PlaceholderText"
        Text="{TemplateBinding Tag}"
        Foreground="{StaticResource DarkGray}"
@@ -628,13 +628,11 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
        VerticalAlignment="Center"
        Visibility="Visible"
        IsHitTestVisible="True"/>
-                                <!-- Actual TextBox Content -->
-                                <ScrollViewer x:Name="PART_ContentHost" Margin="12,0,0,0"/>
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-            </Style>
+            </Style>-->
 
             <!-- TextBox-Action bar Style -->
             <Style x:Key="TextBoxActionStyle" TargetType="TextBox" BasedOn="{StaticResource FloatingBoxesStyle}">
