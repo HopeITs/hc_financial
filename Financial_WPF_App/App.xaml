@@ -5,6 +5,7 @@
              xmlns:converters="clr-namespace:Financial_WPF_App.Views"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:uc ="clr-namespace:Financial_WPF_App.Controls"
+             xmlns:helper="clr-namespace:Financial_WPF_App.helper"
              StartupUri="Main_Window2.xaml">
     
     <Application.Resources>
@@ -707,6 +708,7 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
             </Style>
 
             <Style TargetType="ComboBox" x:Key="FloatingComboboxStyle">
+                <Setter Property="helper:DisableMouseWheelSelection_ComboBoxHelper.DisableMouseWheelSelection" Value="True"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Stretch"/>

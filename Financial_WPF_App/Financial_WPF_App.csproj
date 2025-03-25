@@ -237,6 +237,7 @@
     <Compile Include="Helper\Commands.cs" />
     <Compile Include="Helper\CustomRowStyleSelector.cs" />
     <Compile Include="Helper\DatePickerCalendar.cs" />
+    <Compile Include="Helper\DisableMouseWheelSelection_ComboBoxHelper.cs" />
     <Compile Include="Helper\ExtractTextFromHeader.cs" />
     <Compile Include="Helper\GridCustomStackedRenderer.cs" />
     <Compile Include="Helper\InputValidationHelper.cs" />
