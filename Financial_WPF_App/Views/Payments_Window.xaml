@@ -105,8 +105,8 @@
                     </Grid.RowDefinitions>
                     <DockPanel LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
                         <WrapPanel Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
-                          
-                                <Controls:AutoCompleteTextBoxUserControl
+
+                            <Controls:AutoCompleteTextBoxUserControl TextBoxTag="Project Number" TextBoxStyle="{StaticResource CustomTextBoxActionStyle}"
                         x:Name="MircoProject_ID_autoSuggestionUserControl" 
                         LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus"
                          VerticalAlignment="Center" Width="175" Margin="14,0,6,0" />

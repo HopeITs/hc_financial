@@ -1130,8 +1130,7 @@ namespace Financial_WPF_App
                  = Rate_txtBox.Text =
                 MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = "";
             BeneficiaryName_txtBox.CloseAutoSuggestionBox();
-            USD_Value_TxtBox.Text = Exchanged_txtBox.Text = "";
-
+            USD_Value_TxtBox.Content = Exchanged_txtBox.Content = "";
             DestinationTill_comboBox.SelectedIndex = ExchangeAcc_comboBox.SelectedIndex = Donor_comboBox.SelectedIndex = Budget_comboBox.SelectedIndex =
                 Category_comboBox.SelectedIndex = Line_comboBox.SelectedIndex = CashAccount_comboBox.SelectedIndex = ObserveCashAccount_comboBox.SelectedIndex =
                 Original_AvgRate_comboBox.SelectedIndex = IsReceipt_comboBox.SelectedIndex = Employee_comboBox.SelectedIndex = -1;
@@ -1319,7 +1318,7 @@ namespace Financial_WPF_App
                                     Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
                             }
                             else
-                                USD_Value_TxtBox.Text = "";
+                                USD_Value_TxtBox.Content = "";
                         }
                     }
                     if (Employee_comboBox.IsEnabled == true)
@@ -1381,7 +1380,7 @@ namespace Financial_WPF_App
                             Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                     else
-                        USD_Value_TxtBox.Text = "";
+                        USD_Value_TxtBox.Content = "";
                 }
 
             }
@@ -1909,7 +1908,7 @@ namespace Financial_WPF_App
                                     Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
                             }
                             else
-                                USD_Value_TxtBox.Text = "";
+                                USD_Value_TxtBox.Content = "";
                         }
 
                     }
@@ -2801,14 +2800,14 @@ namespace Financial_WPF_App
                     //string expand = Amount_txtBox.Text.Replace(",", "");
                     Double.TryParse(Amount_txtBox.Text, out expandature);
                     USD_Value = expandature / avgRate;
-                    USD_Value_TxtBox.Text = USD_Value.ToString();
+                    USD_Value_TxtBox.Content = USD_Value.ToString();
                 }
 
             }
             else
             {
                 USD_Value = 0;
-                USD_Value_TxtBox.Text = "";
+                USD_Value_TxtBox.Content = "";
             }
         }
 
@@ -2818,7 +2817,7 @@ namespace Financial_WPF_App
             {
                 //double exchanged = Double.Parse(Amount_txtBox.Text.Replace(",", "")) * Double.Parse(Rate_txtBox.Text.Replace(",", ""));
                 double exchanged = Double.Parse(Amount_txtBox.Text) * Double.Parse(Rate_txtBox.Text);
-                Exchanged_txtBox.Text = exchanged.ToString();
+                Exchanged_txtBox.Content = exchanged.ToString();
             }
         }
 
@@ -3284,6 +3283,27 @@ namespace Financial_WPF_App
                 else if (ex.Message.Contains("Duplicate entry"))
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void ReceiptNum_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)ReceiptNum_txtBox.Template.FindName("PlaceholderText", ReceiptNum_txtBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(ReceiptNum_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Info.  
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Console.Write(ex);
             }
         }
 

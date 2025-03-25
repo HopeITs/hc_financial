@@ -42,7 +42,6 @@ namespace Financial_WPF_App.Controls
             {
                 // Initialization.  
                 this.InitializeComponent();
-                autoTextBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
             }
             catch (Exception ex)
             {
@@ -64,7 +63,23 @@ namespace Financial_WPF_App.Controls
             get { return this.autoSuggestionList; }
             set { this.autoSuggestionList = value; }
         }
+        public static readonly DependencyProperty TextBoxTagProperty =
+        DependencyProperty.Register("TextBoxTag", typeof(object), typeof(AutoCompleteTextBoxUserControl), new PropertyMetadata(null));
 
+        public object TextBoxTag
+        {
+            get { return GetValue(TextBoxTagProperty); }
+            set { SetValue(TextBoxTagProperty, value); }
+        }
+
+        public static readonly DependencyProperty TextBoxStyleProperty =
+    DependencyProperty.Register("TextBoxStyle", typeof(Style), typeof(AutoCompleteTextBoxUserControl), new PropertyMetadata(null));
+
+        public Style TextBoxStyle
+        {
+            get => (Style)GetValue(TextBoxStyleProperty);
+            set => SetValue(TextBoxStyleProperty, value);
+        }
         #endregion
 
         #region Open Auto Suggestion box method  
