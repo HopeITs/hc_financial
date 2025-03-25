@@ -654,13 +654,14 @@ namespace Financial_WPF_App
 
                 Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
 
-                USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled =
+                Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = false;
 
-                Rate_lable.IsEnabled = Rate_txtBox.IsEnabled =
-
-                Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = false;
 
             Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
+
+
+            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+            Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Collapsed;
 
             Exchange_Note_lable.Visibility = Visibility.Collapsed;
             DestinationTill_help.Visibility = ExchangeAcc_help.Visibility = Budget_help.Visibility = Employee_help.Visibility = Original_AvgRate_help.Visibility = Visibility.Collapsed;
@@ -728,11 +729,11 @@ namespace Financial_WPF_App
 
                                     CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
 
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled =
+                                    Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = true;
 
-                                    Rate_lable.IsEnabled = Rate_txtBox.IsEnabled =
 
-                                    Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+                                Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
 
                                 ExchangeAcc_help.Visibility = Visibility.Visible;
                                 Original_AvgRate_help.Visibility = Visibility.Visible;
@@ -747,9 +748,9 @@ namespace Financial_WPF_App
 
                                     CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
 
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
+                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 Original_AvgRate_help.Visibility = Visibility.Visible;
 
@@ -762,9 +763,9 @@ namespace Financial_WPF_App
 
                                     CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
 
-                                    ObserveCashAccount_lable.IsEnabled = ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled =
+                                    ObserveCashAccount_lable.IsEnabled = ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = true;
 
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
                                 Original_AvgRate_help.Visibility = Visibility.Visible;
@@ -797,11 +798,10 @@ namespace Financial_WPF_App
 
                                     Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
 
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled =
+                                    Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = true;
 
-                                    Rate_lable.IsEnabled = Rate_txtBox.IsEnabled =
-
-                                    Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+                                Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
 
                                 ExchangeAcc_help.Visibility = Visibility.Visible;
                                 Original_AvgRate_help.Visibility = Visibility.Visible;
@@ -816,8 +816,10 @@ namespace Financial_WPF_App
                                 DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
                                 Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
 
-                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = true;
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
+
+
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
                                 Original_AvgRate_help.Visibility = Visibility.Visible;
@@ -875,11 +877,10 @@ namespace Financial_WPF_App
 
                                     Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
 
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled =
+                                    Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = true;
 
-                                    Rate_lable.IsEnabled = Rate_txtBox.IsEnabled =
-
-                                    Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+                                Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
 
                                 ExchangeAcc_help.Visibility = Visibility.Visible;
                                 Budget_help.Visibility = Visibility.Visible;
@@ -899,15 +900,12 @@ namespace Financial_WPF_App
 
                                     Document_Label.IsEnabled = IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled =
 
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
+                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
+
                                 Budget_help.Visibility = Visibility.Visible;
                                 Original_AvgRate_help.Visibility = Visibility.Visible;
-
-
-
-
                                 payslip_ComboBoxItem.Visibility = Visibility.Visible;
                             }
                             else if (Type_ComboBox_Move_Item.IsSelected)
@@ -924,9 +922,9 @@ namespace Financial_WPF_App
 
                                     Line_lable.IsEnabled = Line_comboBox.IsEnabled = Line_comboBox_clear_btn.IsEnabled =
 
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
+                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
                                 Budget_help.Visibility = Visibility.Visible;
@@ -962,11 +960,10 @@ namespace Financial_WPF_App
 
                                     Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
 
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled =
+                                    Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = true;
 
-                                    Rate_lable.IsEnabled = Rate_txtBox.IsEnabled =
-
-                                    Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+                                Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
 
                                 ExchangeAcc_help.Visibility = Visibility.Visible;
                                 Original_AvgRate_help.Visibility = Visibility.Visible;
@@ -980,10 +977,9 @@ namespace Financial_WPF_App
                             {
                                 DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
                                 Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
-
-                                    USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = true;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
                                 Original_AvgRate_help.Visibility = Visibility.Visible;
@@ -1015,9 +1011,9 @@ namespace Financial_WPF_App
 
                                 CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
 
-                                Rate_lable.IsEnabled = Rate_txtBox.IsEnabled =
+                                Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = true;
 
-                                Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = true;
+                            Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
                         }
                         else if (Type_ComboBox_Expand_Item.IsSelected)
                         {
@@ -1045,10 +1041,9 @@ namespace Financial_WPF_App
                         else if (Type_ComboBox_Exchange_Item.IsSelected)
                         {
                             DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                            Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = true;
 
-                                Rate_lable.IsEnabled = Rate_txtBox.IsEnabled =
-
-                                Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = true;
+                            Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
                         }
                         else if (Type_ComboBox_Expand_Item.IsSelected)
                         {
@@ -1112,7 +1107,6 @@ namespace Financial_WPF_App
                         else if (Type_ComboBox_Expand_Item.IsSelected)
                         {
                             Document_Label.IsEnabled = IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled = true;
-
                         }
                         else if (Type_ComboBox_Move_Item.IsSelected)
                         {
@@ -3264,7 +3258,7 @@ namespace Financial_WPF_App
                 if (FullAttachNames.Length > 0)
                 {
                     AddedAttachments_lable.Text = "Count: " + open.FileNames.Length.ToString();
- 
+
                 }
                 else
                 {

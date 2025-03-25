@@ -10,7 +10,7 @@
         x:Class="Financial_WPF_App.AddAction_Window"
     
         mc:Ignorable="d" Tag="Add Action Window"
-        Title="AddAction_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen" d:DesignHeight="800">
+        Title="AddAction_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen" d:DesignHeight="900">
 
     <Window.ContextMenu>
         <ContextMenu>
