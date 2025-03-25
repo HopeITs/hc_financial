@@ -196,11 +196,11 @@
                 <Label Grid.Row="1" x:Name="City_lable" Style="{DynamicResource FloatingExpanderlableStyle}" Content="City:"  Grid.Column="0"/>
                 <Grid Grid.Column="1" Grid.Row="1" Height="30" >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="City_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" 
-                             TabIndex="1" Grid.Row="1" Grid.Column="0"/>
+                             TabIndex="1" Grid.Row="0" Grid.Column="0"/>
                     <Button x:Name="City_clear_btn" Grid.Column="1" TabIndex="2" Style="{DynamicResource DeleteButtonStyle}"
                          Grid.Row="1" Click="City_clear_btn_Click"/>
                 </Grid>
@@ -208,40 +208,40 @@
                 <Label Grid.Row="2" x:Name="Project_lable" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Project:" Grid.Column="0" />
                 <Grid Grid.Column="1" Grid.Row="2" Height="30">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="85*"/>
-                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="Project_comboBox" Style="{DynamicResource FloatingComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID" 
+                    <ComboBox x:Name="Project_comboBox" Style="{DynamicResource FloatingComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"
              TabIndex="3" 
-              SelectionChanged="Project_comboBox_SelectionChanged" Grid.Row="1" Grid.Column="0"/>
+              SelectionChanged="Project_comboBox_SelectionChanged" Grid.Row="0" Grid.Column="0"/>
                     <Button x:Name="Project_clear_btn" Grid.Column="1" TabIndex="4"
-                        Click="Project_clear_btn_Click"  Grid.Row="1" Style="{DynamicResource DeleteButtonStyle}">
+                        Click="Project_clear_btn_Click"  Grid.Row="0" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
                 </Grid>
 
                 <Label x:Name="SubProject_label" Grid.Row="3" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Center:" Grid.Column="0" />
                 <Grid Grid.Column="1" Grid.Row="3" Height="30">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="85*"/>
-                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
 
                     </Grid.ColumnDefinitions>
-                    <ComboBox Style="{DynamicResource FloatingMultiComboboxStyle}" x:Name="SubProject_comboBox" Grid.Column="0" 
+                    <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="SubProject_comboBox" Grid.Column="0" Grid.Row="0"
                               TabIndex="5" SelectionChanged="SubProject_comboBox_SelectionChanged" 
-                              IsEditable="True" PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown" Margin="1,0,1,0">
+                              PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown" >
 
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox x:Name="SubProject_comboBox" Width="220" 
                                             Click="SubProject_Checkbox_Item_Clicked"
-                                            Style="{DynamicResource ComboBoxCheckBoxStyle}"
+                                            Style="{DynamicResource CheckBoxStyle}"
                                             Content="{Binding SubName}" 
                                             IsChecked="{Binding Sub_Check_Status}" 
                                             CommandParameter="{Binding SubID}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <Button x:Name="SubProject_clear_btn" TabIndex="6" Grid.Column="1"
+                    <Button x:Name="SubProject_clear_btn" TabIndex="6" Grid.Column="1" Grid.Row="0"
                             Click="SubProject_clear_btn_Click" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
                 </Grid>
@@ -249,16 +249,16 @@
                 <Label x:Name="Donor_label" Grid.Row="4" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Donor:" Grid.Column="0" />
                 <Grid Grid.Row="4" Grid.Column="1" Height="30">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="85*"/>
-                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Style="{DynamicResource FloatingMultiComboboxStyle}" x:Name="Donor_comboBox" Grid.Column="0"
-                        TabIndex="7" IsEditable="True" PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown">
+                    <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="Donor_comboBox" Grid.Column="0" Grid.Row="0"
+                        TabIndex="7" PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="Donor_CheckBox" Width="220" 
+                                <CheckBox x:Name="Donor_CheckBox" Width="Auto" 
                                             Click="Donor_Checkbox_Item_Clicked"
-                                            Style="{DynamicResource ComboBoxCheckBoxStyle}"
+                                            Style="{DynamicResource CheckBoxStyle}"
                                             Content="{Binding DonorName}" 
                                             IsChecked="{Binding Check_Status}" 
                                             CommandParameter="{Binding Donor_ID}"/>
@@ -266,7 +266,7 @@
                         </ComboBox.ItemTemplate>
 
                     </ComboBox>
-                    <Button x:Name="Donor_clear_btn" Grid.Column="1" TabIndex="8"
+                    <Button x:Name="Donor_clear_btn" Grid.Column="1" TabIndex="8" Grid.Row="0"
         Click="Donor_clear_btn_Click" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
                 </Grid>
@@ -274,19 +274,19 @@
                 <Label x:Name="PersonalAccount_label" Grid.Row="5" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Personal account:" Grid.Column="0" />
                 <Grid Grid.Column="1" Grid.Row="5" Height="30" >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="85*"/>
-                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
 
                     </Grid.ColumnDefinitions>
-                    <ComboBox Style="{DynamicResource FloatingMultiComboboxStyle}" x:Name="PersonalAccount_comboBox" Grid.Column="0" 
-                        TabIndex="9" IsEditable="True" PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown">
+                    <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="PersonalAccount_comboBox" Grid.Column="0" 
+                        TabIndex="9" PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown">
 
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox x:Name="PersonalAcc_comboBox" Width="220" 
               Click="PersonalAcc_Checkbox_Item_Clicked"
             Content="{Binding PersonalAcc_Name}" 
-            Style="{DynamicResource ComboBoxCheckBoxStyle}"
+            Style="{DynamicResource CheckBoxStyle}"
             IsChecked="{Binding PersonalAcc_Check_Status}" 
             CommandParameter="{Binding PersonalAcc_ID}"/>
                             </DataTemplate>
@@ -300,17 +300,17 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                 <Label x:Name="ExchangeAccount_label" Grid.Row="6" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Exchange account:" Grid.Column="0" />
                 <Grid Grid.Column="1" Grid.Row="6" Height="30">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="85*"/>
-                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Style="{DynamicResource FloatingMultiComboboxStyle}" x:Name="ExchangeAccount_comboBox" Grid.Column="0" 
-                       TabIndex="11" IsEditable="True" PreviewKeyDown="comboBox_PreviewKeyDown" PreviewTextInput="comboBox_PreviewTextInput" >
+                    <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="ExchangeAccount_comboBox" Grid.Column="0" 
+                       TabIndex="11" PreviewKeyDown="comboBox_PreviewKeyDown" PreviewTextInput="comboBox_PreviewTextInput" >
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox x:Name="ExchangeAcc_comboBox" Width="220" 
                Click="ExchangeAcc_Checkbox_Item_Clicked"
             Content="{Binding ExchangeAcc_Name}" 
-            Style="{DynamicResource ComboBoxCheckBoxStyle}"
+            Style="{DynamicResource CheckBoxStyle}"
             IsChecked="{Binding ExchangeAcc_Check_Status}" 
             CommandParameter="{Binding ExchangeAcc_ID}"/>
                             </DataTemplate>
@@ -330,17 +330,17 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                 <Label x:Name="EndDate_label" Grid.Row="9" Style="{DynamicResource FloatingExpanderlableStyle}" Content="End Date:" />
                 <Grid Grid.Row="9" Grid.Column="1" Height="30">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="85*"/>
-                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <DatePicker  x:Name="EndDate_datepicker" Grid.Column="0" TabIndex="15" FirstDayOfWeek="Monday" Margin="1,0,1,0"/>
-                    <Border x:Name="EndDate_Border" Width="27" Height="30" MouseDown="Border_MouseDown" Grid.Column="1" Background="{StaticResource LightGray1}" ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
+                    <Border x:Name="EndDate_Border" Width="26" Height="30" MouseDown="Border_MouseDown" Grid.Column="1" Background="{StaticResource LightGray1}" ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
                             ToolTipService.ShowDuration="5000"
                             ToolTipService.BetweenShowDelay="200" Margin="3,0,0,0">
                         <CheckBox x:Name="EndDate_CheckBox" TabIndex="16"  ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
                             ToolTipService.ShowDuration="5000"
                             ToolTipService.BetweenShowDelay="200" Style="{StaticResource CheckBoxStyle}"
-                            Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" Width="9" HorizontalAlignment="Center" Height="8" Margin="0,0,0,0"
+                            Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" HorizontalAlignment="Center" Width="12"
                             />
                     </Border>
                 </Grid>
@@ -348,13 +348,13 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                 <Label x:Name="TotalAmount_label" Grid.Row="10" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Total Budget:" Grid.Column="0" />
                 <Grid Grid.Row="10" Grid.Column="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="87*"/>
-                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="TotalAmount_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" 
                         TabIndex="9" LostFocus="TotalAmount_txtBox_LostFocus" Grid.Column="0"  />
                     <ComboBox x:Name="AmountType_comboBox" Grid.Column="1" DisplayMemberPath="NAME" SelectedValuePath="ID"
-                        Style="{DynamicResource SmallComboboxStyle}" TabIndex="17" Margin="3,0,0,0"/>
+                        Style="{DynamicResource FloatingComboboxStyle}" TabIndex="17" Margin="3,0,0,0"/>
                 </Grid>
 
                 <Label x:Name="IsClosed_label" Grid.Row="11" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Account Status:" Grid.Column="0" />

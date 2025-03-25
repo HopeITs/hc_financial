@@ -24,7 +24,7 @@
             <RowDefinition Height="100*"></RowDefinition>
         </Grid.RowDefinitions>
         <Label x:Name="EndDate_lable_Copy" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" FontSize="13" Content="Please Select The Currency Of The New Till:" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,1,0"  />
-        <ComboBox Style="{DynamicResource XLFloatingComboboxStyle}" x:Name="tilltypes_ComboBox" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="ID" 
+        <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="tilltypes_ComboBox" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="ID" 
         	TabIndex="1"  Grid.Row="2" VerticalAlignment="Stretch" />
         <Button Grid.Row="2" Grid.Column="3"
         	Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn" Content="Save"
