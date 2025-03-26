@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
@@ -19,7 +20,7 @@ namespace Financial_WPF_App
             InitializeComponent();
 
             Version_Label.Content = $"Version: {Assembly.GetExecutingAssembly().GetName().Version}";
-            
+
             this.main_Window = main_Window;
             On_Load();
         }
@@ -28,11 +29,19 @@ namespace Financial_WPF_App
         {
             try
             {
-                // add events to the storyboards
-                Storyboard sb1 = this.FindResource("Login_Click_Animation") as Storyboard;
-                sb1.Completed += new EventHandler(sb1_Completed);
+                sb1 = this.FindResource("Login_Click_Animation") as Storyboard;
+                sb3 = this.FindResource("Connecting_Animation") as Storyboard;
 
-                Storyboard sb2 = this.FindResource("Shutdown_Pressed") as Storyboard;
+                sb1.Completed += async (s, e) =>
+                {
+                    // Start the animation that repeats forever (sb3)
+                    sb3.Begin();
+
+                    // Run Sb1_CopmleteAsync() without blocking the thread (it runs in parallel)
+                    _ = Sb1_CopmleteAsync();
+                };
+
+                sb2 = this.FindResource("Shutdown_Pressed") as Storyboard;
                 sb2.Completed += new EventHandler(Shutdown_Pressed_onCompleted);
 
                 if (Settings.Default.update_version)
@@ -78,6 +87,8 @@ namespace Financial_WPF_App
         Main_Window_2 main_Window;
         bool Sb1Completed = false;
 
+        Storyboard sb1, sb2, sb3;
+
         private void WEB_Butten_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -90,30 +101,30 @@ namespace Financial_WPF_App
             }
         }
 
-        private void Login_Butten_Click_1(object sender, RoutedEventArgs e)
-        {
-            Storyboard sb1 = this.FindResource("Login_Click_Animation") as Storyboard;
-            sb1.Begin();
-        }
-
-        private void sb1_Completed(object sender, EventArgs e)
+        private async Task Sb1_CopmleteAsync()
         {
             try
             {
                 if (Settings.Default.Online)
-                    Login.Set_ConnectionString(true, 'h'); //online
+                    Login.Set_ConnectionString(true, 'h'); // online
                 else
-                    Login.Set_ConnectionString(false, 'h'); //offline
+                    Login.Set_ConnectionString(false, 'h'); // offline
 
-                if (Login.Login_BuildConnection())
+                bool isConnected = await Task.Run(() => Login.Login_BuildConnection());
+
+                if (isConnected)
                 {
-                    if(!Sb1Completed)
+                    if (!Sb1Completed)
                     {
-                        if(main_Window.Check_App_Version())
+                        if (main_Window.Check_App_Version())
                         {
+                            var username = username_txt.Text;
+                            var password = password_txt1.Password;
+
                             u = new Users();
-                            user_dt = u.Get_User(username_txt.Text, password_txt1.Password);
-                            if (user_dt.Rows.Count == 1) // user exsist
+                            var user_dt = await Task.Run(() => u.Get_User(username, password));
+
+                            if (user_dt.Rows.Count == 1) // User exists
                             {
                                 var User_ID = user_dt.Rows[0].Field<int>(0);
                                 var role = user_dt.Rows[0].Field<string>(3);
@@ -122,26 +133,17 @@ namespace Financial_WPF_App
                                 var User_CashAccounts = user_dt.Rows[0].Field<string>(6);
                                 var User_Subprojects = user_dt.Rows[0].Field<string>(7);
 
-
                                 if (Remember_checkBox_Copy.IsChecked == true)
                                 {
-                                    //save properties settings
                                     Settings.Default.RememberMe = true;
-                                    Settings.Default.username = username_txt.Text;
-                                    Settings.Default.password = password_txt1.Password;
-
-                                    //if (Settings.Default.Online)
-                                    //    Settings.Default.Online = true;
-                                    //else
-                                    //    Settings.Default.Online = false;
+                                    Settings.Default.username = username;
+                                    Settings.Default.password = password;
                                 }
                                 else
                                 {
-                                    //clear properties settings
                                     Settings.Default.RememberMe = false;
-                                    Settings.Default.username = username_txt.Text;
+                                    Settings.Default.username = username;
                                     Settings.Default.password = "";
-                                    //Settings.Default.Online = false;
                                 }
 
                                 Settings.Default.Role = role;
@@ -152,9 +154,12 @@ namespace Financial_WPF_App
                                 Settings.Default.User_Subprojects = User_Subprojects;
 
                                 Settings.Default.Save();
-                                string Query = " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES ('Login_Window2', 'LOGIN', '', '', '', '' , '', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+                                string Query = "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES ('Login_Window2', 'LOGIN', '', '', '', '', '', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                                 Login.Execute_Query(Query);
+
                                 Sb1Completed = true;
+
                                 this.DialogResult = true;
                             }
                             else
@@ -162,7 +167,7 @@ namespace Financial_WPF_App
                                 Storyboard sb = this.FindResource("User_False") as Storyboard;
                                 sb.Begin();
                             }
-                        }         
+                        }
                     }
                 }
                 else
@@ -187,12 +192,11 @@ namespace Financial_WPF_App
                 {
                     Storyboard sb = this.FindResource("Other_False") as Storyboard;
                     sb.Begin();
-
                     MessageBox.Show(ex.Message, "Error");
                 }
-   
             }
         }
+
 
         private void Remember_Me_Butten_Copy_Click(object sender, RoutedEventArgs e)
         {
@@ -269,23 +273,6 @@ namespace Financial_WPF_App
 
         }
 
-        private void LoginWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            try
-            {
-                if (e.Key == Key.Return)
-                {
-                    Login_Butten_Click_1(sender, e);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL")) { MessageBox.Show("please check your network and try again", "Error"); } else if (ex.Message.Contains("host")) { MessageBox.Show("please check the server or your network connection and try again", "Error"); } else if (ex.Message.Contains("Duplicate entry")) { MessageBox.Show("Error … There are duplicate values.", "Error"); } else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
         private void Shutdown_Pressed_onCompleted(object sender, EventArgs e)
         {
             try
@@ -299,6 +286,7 @@ namespace Financial_WPF_App
             }
 
         }
+
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
@@ -313,10 +301,15 @@ namespace Financial_WPF_App
         {
             WindowUtils.CloseWindow(this); // Calls the WindowUtils method
         }
+
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowUtils.TitleBar_MouseDown(this, e);
         }
 
+        private void Login_Butten_Click(object sender, RoutedEventArgs e)
+        {    
+            sb1.Begin();
+        }
     }
 }
