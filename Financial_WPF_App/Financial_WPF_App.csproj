@@ -229,6 +229,7 @@
     <Compile Include="Helper\Approval_CustomAlternatingRowStyleSelector.cs" />
     <Compile Include="Helper\Approval_CustomRowStyleSelector.cs" />
     <Compile Include="Helper\CellStyleSelector.cs" />
+    <Compile Include="Helper\ComboBoxBehaviorManager.cs" />
     <Compile Include="Helper\CustomAlternatingRowStyleSelector.cs" />
     <Compile Include="Helper\CustomCopyPaste.cs" />
     <Compile Include="Controls\AutoCompleteTextBoxUserControl.xaml.cs">
@@ -241,6 +242,7 @@
     <Compile Include="Helper\ExtractTextFromHeader.cs" />
     <Compile Include="Helper\GridCustomStackedRenderer.cs" />
     <Compile Include="Helper\InputValidationHelper.cs" />
+    <Compile Include="Helper\MouseClickComboBoxBehavior .cs" />
     <Compile Include="Helper\MultiAttachments_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiBeneficiares_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiBudgetLines_CustomCopyPaste.cs" />

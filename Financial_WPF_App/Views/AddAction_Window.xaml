@@ -8,7 +8,8 @@
         xmlns:uc ="clr-namespace:Financial_WPF_App.Controls"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         x:Class="Financial_WPF_App.AddAction_Window"
-    
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:helper="clr-namespace:Financial_WPF_App.helper"
         mc:Ignorable="d" Tag="Add Action Window"
         Title="AddAction_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen" d:DesignHeight="900">
 
@@ -473,6 +474,9 @@ VerticalScrollBarVisibility="Auto" Height="70" Margin="1,0,1,0"/>
                 <ComboBox Grid.Row="0" x:Name="Subproject_comboBox" TabIndex="1" Grid.Column="2" DisplayMemberPath="Subproject_Name" SelectedValuePath="Subproject_ID" 
                 Style="{DynamicResource FloatingComboboxStyle}"
                     SelectionChanged="Subproject_comboBox_SelectionChanged" >
+                    <i:Interaction.Behaviors>
+                        <helper:MouseClickComboBoxBehavior />
+                    </i:Interaction.Behaviors>
                 </ComboBox>
                 <Label Grid.Row="0" Grid.Column="4" Style="{DynamicResource statistic_lableStyle}" Content="Account:" HorizontalContentAlignment="Left"  />
                 <ComboBox Grid.Row="0" Grid.Column="5" x:Name="Account_comboBox" TabIndex="2" Style="{StaticResource FloatingComboboxStyle}"
