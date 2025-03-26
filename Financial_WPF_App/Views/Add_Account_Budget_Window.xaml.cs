@@ -353,6 +353,27 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void Rate_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)Rate_TextBox.Template.FindName("PlaceholderText", Rate_TextBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(Rate_TextBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Info.  
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Console.Write(ex);
+            }
+        }
+
         private void Save_btn_Click(object sender, RoutedEventArgs e)
         {
             Save_btn.IsEnabled = false;
@@ -497,6 +518,20 @@ namespace Financial_WPF_App.Views
             Donor_comboBox.SelectedIndex = -1;
             Rate_TextBox.Clear();
             Budget_Dononrs_DataGrid.ItemsSource = null;
+        }
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this);
+        }
+
+        private void Close_Click(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.CloseWindow(this);
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
         }
     }
 

@@ -3,11 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" xmlns:Controls="clr-namespace:Financial_WPF_App.Controls" x:Class="Financial_WPF_App.Views.Add_Payment_Window"
-        mc:Ignorable="d"
-        Title="Add_Payment_Window" Width="1140" Height="600" WindowStartupLocation="CenterScreen"
-        FontFamily="Myriad Arabic" FontSize="18" Closing="Window_Closing">
+        xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
+        xmlns:local="clr-namespace:Financial_WPF_App"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Controls="clr-namespace:Financial_WPF_App.Controls" x:Class="Financial_WPF_App.Views.Add_Payment_Window"
+        mc:Ignorable="d" Tag="Add Payment Window"
+        Title="Add_Payment_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen"
+         Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="136*"/>
