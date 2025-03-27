@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App.Views"
         mc:Ignorable="d"
-        Title="Add_Subproject_Window" Height="450" Width="800"  WindowStartupLocation="CenterScreen">
+        Title="Add_Subproject_Window" Height="450" Width="500"  WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -15,29 +15,25 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="184*"/>
-            <ColumnDefinition Width="230*"/>
-            <ColumnDefinition Width="217*"/>
-            <ColumnDefinition Width="169*"/>
+            <ColumnDefinition Width="173*"/>
+            <ColumnDefinition Width="71*"/>
+            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="173*"/>
+            <ColumnDefinition Width="71*"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Column="3"  Style="{DynamicResource lableStyle}" Content="Project:" Height="32" HorizontalContentAlignment="Right" Margin="10,17,7,17" />
+        <Label Grid.Column="4"  Style="{DynamicResource lableStyle}" Content="Project:" Margin="3,11,3,11" VerticalContentAlignment="Center" />
         <ComboBox x:Name="Project_comboBox" 
-            Grid.Column="2"  TabIndex="1" 
-            DisplayMemberPath="Name" SelectedValuePath="ID" Width="auto" FlowDirection="RightToLeft" Height="28" Margin="19,13,19,13" />
-        <Label Grid.Column="1" Style="{DynamicResource lableStyle}" Content="City:" Height="33" Margin="28,19,14,14" HorizontalContentAlignment="Right" />
-        <ComboBox x:Name="City_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID"  FlowDirection="RightToLeft" Height="28" TabIndex="2" Margin="22,13,22,13" VerticalContentAlignment="Center"  />
-        <Label Grid.Column="3" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Center name:" Height="33" Margin="10,12,10,10" HorizontalContentAlignment="Right"/>
-        <TextBox x:Name="Name_txtBox" Grid.Column="2" Grid.Row="1"  TabIndex="3"
-            Style="{DynamicResource textBoxStyle}" Width="Auto" Height="30" Margin="19,12,19,13" />
-        <Label Grid.Column="3" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Start date:" Height="33" HorizontalContentAlignment="Right" Margin="10,12,10,9" />
-        <DatePicker x:Name="beginDate_datepicker" Grid.Column="2" Grid.Row="2" TabIndex="4" HorizontalAlignment="Center" Height="34" Margin="0,5,0,15" Width="179" />
-        <Label Grid.Column="1" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="End date:" Height="33" Margin="28,10,14,11" HorizontalContentAlignment="Right" />
-        <DatePicker x:Name="endDate_datepicker" Grid.Row="2" TabIndex="3" HorizontalAlignment="Left" Height="33" Margin="63,10,0,11" Width="116"  />
-        <CheckBox x:Name="EndDate_CheckBox" Grid.Row="2" Content="TBD"
-            HorizontalAlignment="Left"  VerticalAlignment="Center" FlowDirection="RightToLeft" 
-            Height="17" Margin="10,0,0,0" Width="48" 
-            Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" />
-        <Grid x:Name="donors_grid" Grid.Row="3" Grid.ColumnSpan="4" Margin="162,7,162,8" >
+            Grid.Column="3"  TabIndex="1" 
+            DisplayMemberPath="Name" SelectedValuePath="ID" Width="auto" FlowDirection="RightToLeft" Margin="6,13,6,13" />
+        <Label Grid.Column="1" Style="{DynamicResource lableStyle}" Content="City:" Margin="3,11,3,10" VerticalContentAlignment="Center" Grid.ColumnSpan="2" />
+        <ComboBox x:Name="City_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID"  FlowDirection="RightToLeft" TabIndex="2" Margin="6,13,6,13" VerticalContentAlignment="Center"  />
+        <Label Grid.Column="4" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Center name:" Margin="3,11,3,11" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="Name_txtBox" Grid.Column="3" Grid.Row="1"  TabIndex="3"
+            Style="{DynamicResource textBoxStyle}" Width="Auto" Margin="6,12,6,13" />
+        <Label Grid.Column="4" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Start date:" Margin="3,10,3,11" VerticalContentAlignment="Center" />
+        <DatePicker x:Name="beginDate_datepicker" Grid.Column="3" Grid.Row="2" TabIndex="4" Margin="6,8,6,12" VerticalContentAlignment="Center" />
+        <Label Grid.Column="1" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="End date:" Margin="3,10,3,11" VerticalContentAlignment="Center" Grid.ColumnSpan="2" />
+        <Grid x:Name="donors_grid" Grid.Row="3" Grid.ColumnSpan="5" Margin="28,7,26,8" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30*"/>
                 <ColumnDefinition Width="8*"/>
@@ -109,7 +105,14 @@
             </ListBox>
         </Grid>
         <Button  Style="{DynamicResource SaveButton_Style}"
-            x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" Margin="173,4,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" />
+            x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" Margin="41,0,0,0" Grid.Column="1" Grid.Row="4" Height="32" Width="86" Grid.ColumnSpan="3" />
+        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,54,0,54" Grid.RowSpan="3">
+            <DatePicker x:Name="endDate_datepicker" TabIndex="3" Width="121"  Height="33"  />
+            <CheckBox x:Name="EndDate_CheckBox" Content="TBD"
+            FlowDirection="RightToLeft" 
+            Height="17" Width="48" 
+            Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" />
+        </StackPanel>
 
     </Grid>
 </Window>
