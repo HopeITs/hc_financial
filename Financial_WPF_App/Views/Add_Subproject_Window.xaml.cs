@@ -38,11 +38,12 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        public Add_Subproject_Window(int Sudproject_ID, Main_Window_2 main_Window)
+        public Add_Subproject_Window(int Sudproject_ID, DataTable subproject_dt, Main_Window_2 main_Window)
         {
             InitializeComponent();
             this.main_Window = main_Window;
             this.Sudproject_ID = Sudproject_ID;
+            this.subproject_dt = subproject_dt;
 
             if (OnLoad())
             {
@@ -59,7 +60,7 @@ namespace Financial_WPF_App.Views
         private Project p;
         private SubProject sub; private SubProject_Donor sd;
         private Donors d;
-        private DataTable c_dt, p_dt;
+        private DataTable c_dt, p_dt, subproject_dt;
         bool UserMode;
         Main_Window_2 main_Window;
 
@@ -119,11 +120,57 @@ namespace Financial_WPF_App.Views
             LoadProjectComboBox();
             LoadDonors_ListBox();
 
+            if (Sudproject_ID > 0)
+            {
+                Load_Subproject();
+            }
+            else
+            {
+                UserMode = false;
+                EndDate_CheckBox.IsChecked = true;
+                endDate_datepicker.IsEnabled = false;
+                endDate_datepicker.Text = "";
+                UserMode = true;
+            }
+
+        }
+
+        private void Load_Subproject()
+        {
             UserMode = false;
-            EndDate_CheckBox.IsChecked = true;
-            endDate_datepicker.IsEnabled = false;
-            endDate_datepicker.Text = "";
+
+            DataTable SB_dt = subproject_dt.Select("id = " + Sudproject_ID + "").CopyToDataTable();
+
+            Name_txtBox.Text = SB_dt.Rows[0].Field<string>("Name").ToString();
+            beginDate_datepicker.SelectedDate = Convert.ToDateTime(SB_dt.Rows[0].Field<DateTime>("BeginDate").ToString());
+            if (SB_dt.Rows[0]["EndDate"] == DBNull.Value)
+            {
+                UserMode = false;
+                EndDate_CheckBox.IsChecked = true;
+                endDate_datepicker.IsEnabled = false;
+                endDate_datepicker.Text = "";
+                UserMode = true;
+            }
+            else
+            {
+                EndDate_CheckBox.IsChecked = false;
+                endDate_datepicker.SelectedDate = Convert.ToDateTime(SB_dt.Rows[0].Field<DateTime>("EndDate").ToString());
+            }
+
+            if (SB_dt.Rows[0]["Project_ID"] != DBNull.Value)
+            {
+                Project_comboBox.SelectedValue = Convert.ToInt32(SB_dt.Rows[0].Field<int>("Project_ID"));
+            }
+
+            if (SB_dt.Rows[0]["City_ID"] != DBNull.Value)
+            {
+                City_comboBox.SelectedValue = Convert.ToInt32(SB_dt.Rows[0].Field<int>("City_ID"));
+            }
+
+            LoadDonors_ListBox();
+
             UserMode = true;
+
         }
 
         private void Clear_Boxes()
@@ -271,6 +318,11 @@ namespace Financial_WPF_App.Views
 
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DialogResult = true;
+        }
+
         private void EndDate_CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             try
@@ -343,7 +395,7 @@ namespace Financial_WPF_App.Views
                         endDate = "NULL";
                     else endDate = ((DateTime)endDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
 
-                    if (Sudproject_ID != -1)//Edit
+                    if (Sudproject_ID > 0)//Edit
                     {
                         List<string> Add_donors = new List<string>();
                         List<string> Delete_donors = new List<string>();
@@ -406,12 +458,8 @@ namespace Financial_WPF_App.Views
                         sub.Insert(Name, beginDate, endDate, Project_ID, City_ID, All_donors, WithPaymentAccount, "SubProjectWindow");
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         Clear_Boxes();
-                    }
-
-                    Clear_Boxes();
-                    LoadDonors_ListBox();
-      
-                    main_Window.Fill_TreeView(true);
+                        LoadDonors_ListBox();
+                    }         
                 }
             }
             catch (Exception ex)
@@ -441,4 +489,4 @@ namespace Financial_WPF_App.Views
             }
         }
     }
-} 
+}

@@ -9,15 +9,6 @@
         Title="SubProjectWindow"  Height="614" Width="1280"   
         WindowStartupLocation="CenterScreen"
         FontFamily="Myriad Arabic" FontSize="16">
-    <Window.ContextMenu>
-        <ContextMenu>
-            <MenuItem Header="Refresh" Click = "Refresh_Click" >
-                <MenuItem.Icon>
-                    <Image Source="/Cashing;component/Images/refresh32.png" />
-                </MenuItem.Icon>
-            </MenuItem>
-        </ContextMenu>
-    </Window.ContextMenu>
     <Window.Resources>
 
     </Window.Resources>
@@ -25,6 +16,15 @@
         <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
     </Window.Foreground>
     <Grid>
+        <Grid.ContextMenu>
+            <ContextMenu x:Name="cm">
+                <MenuItem Header="Refresh" Click = "Refresh_Click" >
+                    <MenuItem.Icon>
+                        <Image Source="/Images/refresh32.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
         <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48*"></ColumnDefinition>

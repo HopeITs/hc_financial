@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App.Views"
         mc:Ignorable="d"
-        Title="Add_Subproject_Window" Height="450" Width="500"  WindowStartupLocation="CenterScreen">
+        Title="Add_Subproject_Window" Height="450" Width="671"  WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -106,8 +106,8 @@
         </Grid>
         <Button  Style="{DynamicResource SaveButton_Style}"
             x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" Margin="41,0,0,0" Grid.Column="1" Grid.Row="4" Height="32" Width="86" Grid.ColumnSpan="3" />
-        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,54,0,54" Grid.RowSpan="3">
-            <DatePicker x:Name="endDate_datepicker" TabIndex="3" Width="121"  Height="33"  />
+        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,3,8,4" Grid.Row="2">
+            <DatePicker x:Name="endDate_datepicker" TabIndex="3" Width="180"  Height="33"  />
             <CheckBox x:Name="EndDate_CheckBox" Content="TBD"
             FlowDirection="RightToLeft" 
             Height="17" Width="48" 

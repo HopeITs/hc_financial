@@ -127,11 +127,12 @@ namespace Financial_WPF_App
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                 int Subproject_ID = Convert.ToInt32(dataRow["ID"]);
 
-                Add_Subproject_Window _Window = new Add_Subproject_Window(Subproject_ID, main_Window);
+                Add_Subproject_Window _Window = new Add_Subproject_Window(Subproject_ID, SUB_dt, main_Window);
                 bool? dialogResult = _Window.ShowDialog();
                 if (dialogResult == true)
                 {
                     Load_Data();
+                    main_Window.Fill_TreeView(true);
                 }
             }
             catch (Exception ex)
@@ -263,11 +264,12 @@ namespace Financial_WPF_App
                             DataRowView rowview = grid.SelectedItem as DataRowView;
                             int Subproject_ID = Convert.ToInt32(rowview["ID"]);
 
-                            Add_Subproject_Window _Window = new Add_Subproject_Window(Subproject_ID, main_Window);
+                            Add_Subproject_Window _Window = new Add_Subproject_Window(Subproject_ID, SUB_dt, main_Window);
                             bool? dialogResult = _Window.ShowDialog();
                             if (dialogResult == true)
                             {
                                 Load_Data();
+                                main_Window.Fill_TreeView(true);
                             }
                         }
                     }
@@ -297,6 +299,7 @@ namespace Financial_WPF_App
                 if (dialogResult == true)
                 {
                     Load_Data();
+                    main_Window.Fill_TreeView(true);
                 }
             }
             catch (Exception ex)
