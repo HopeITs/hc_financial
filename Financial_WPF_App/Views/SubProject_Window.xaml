@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         mc:Ignorable="d"
         Title="SubProjectWindow"  Height="614" Width="1280"   
-        WindowStartupLocation="CenterScreen" KeyDown="SubProjectWindow_KeyDown" 
+        WindowStartupLocation="CenterScreen"
         FontFamily="Myriad Arabic" FontSize="16">
     <Window.ContextMenu>
         <ContextMenu>
@@ -35,18 +35,19 @@
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="12*"></RowDefinition>
-                <RowDefinition Height="12*"></RowDefinition>
-                <RowDefinition Height="12*"></RowDefinition>
-                <RowDefinition Height="12*"></RowDefinition>
-                <RowDefinition Height="12*"></RowDefinition>
-                <RowDefinition Height="12*" ></RowDefinition>
-                <RowDefinition Height="20*" ></RowDefinition>
-                <RowDefinition Height="89*" ></RowDefinition>
+                <RowDefinition Height="6*"></RowDefinition>
+                <RowDefinition Height="53*"/>
+                <RowDefinition Height="15*"></RowDefinition>
+                <RowDefinition Height="37*"></RowDefinition>
+                <RowDefinition Height="37*"></RowDefinition>
+                <RowDefinition Height="37*"></RowDefinition>
+                <RowDefinition Height="37*" ></RowDefinition>
+                <RowDefinition Height="61*" ></RowDefinition>
+                <RowDefinition Height="274*" ></RowDefinition>
                 <RowDefinition Height="41.785" ></RowDefinition>
             </Grid.RowDefinitions>
 
-            <syncfusion:SfDataGrid Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="1" FrozenColumnCount="2"
+            <syncfusion:SfDataGrid Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="2" FrozenColumnCount="2"
                       x:Name="myDataGrid"  
                             Style="{DynamicResource SfDataGrid_body}"
                                HeaderStyle="{DynamicResource SfDataGrid_header}"
@@ -85,7 +86,7 @@
 
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-            <StackPanel Orientation="Horizontal" Grid.Row="7" FlowDirection="RightToLeft" Grid.ColumnSpan="5" Margin="-1,266,0,2" Grid.RowSpan="2" >
+            <StackPanel Orientation="Horizontal" Grid.Row="8" FlowDirection="RightToLeft" Grid.ColumnSpan="5" Margin="-1,266,0,2" Grid.RowSpan="2" >
                 <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border Style="{StaticResource BorderStackPanelStyle}" >
                     <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
@@ -96,7 +97,145 @@
                     <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
                 </Border>
             </StackPanel>
-            <Button TabIndex="5" Style="{DynamicResource Export_Style}" x:Name="Export_btn" Margin="19,6,0,0" Grid.Column="1" Command="local:Commands.ExportToExcel" VerticalAlignment="Top" Grid.RowSpan="2" Height="40" Width="25" HorizontalAlignment="Left" />
+            <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40" Grid.ColumnSpan="5" Margin="0,6,0,7" Grid.Row="1">
+                <WrapPanel Orientation="Horizontal" Width="Auto">
+                    <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
+                        <Menu.Resources>
+                            <!-- Custom Menu Style -->
+                            <Style TargetType="{x:Type Menu}">
+                                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Menu}">
+                                            <Border Background="{TemplateBinding Background}" Padding="0">
+                                                <ItemsPresenter />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+
+                            <!-- Custom MenuItem Style -->
+                            <Style x:Key="CustomMenuItemStyle" TargetType="{x:Type MenuItem}">
+                                <Setter Property="FontFamily" Value="Rubik"/>
+                                <Setter Property="FontSize" Value="13.5"/>
+                                <Setter Property="Foreground" Value="{DynamicResource DarkGray}"/>
+                                <Setter Property="Background" Value="{StaticResource LightGray1}"/>
+                                <Setter Property="Padding" Value="10,5"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type MenuItem}">
+                                            <Grid>
+                                                <!-- Main Item -->
+                                                <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="10,5">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <!-- Arrow Column -->
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <ContentPresenter Grid.Column="0" 
+                                                            HorizontalAlignment="Left" 
+                                                            VerticalAlignment="Center" 
+                                                            ContentSource="Header"/>
+
+                                                        <!-- Submenu Arrow -->
+                                                        <Path x:Name="Arrow"
+                                                            Grid.Column="1"
+                                                            Data="M 0 0 L 6 4 L 0 8 Z" 
+                                                            Fill="{DynamicResource DarkGray}"
+                                                            VerticalAlignment="Center"
+                                                            Margin="5,0,0,0"
+                                                            Visibility="Collapsed"/>
+                                                    </Grid>
+                                                </Border>
+
+                                                <!-- Submenu Popup -->
+                                                <Popup x:Name="Popup"
+                                                    Placement="Bottom"
+                                                    PlacementTarget="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                                    IsOpen="{TemplateBinding IsSubmenuOpen}"
+                                                    AllowsTransparency="True"
+                                                    Focusable="False"
+                                                    PopupAnimation="Fade">
+                                                    <Border Background="White" CornerRadius="5" BorderBrush="{StaticResource LightGray1}" BorderThickness="1">
+                                                        <StackPanel>
+                                                            <ItemsPresenter />
+                                                        </StackPanel>
+                                                    </Border>
+                                                </Popup>
+                                            </Grid>
+
+                                            <!-- Triggers -->
+                                            <ControlTemplate.Triggers>
+                                                <!-- Show Arrow Only if the MenuItem has sub-items (is a submenu) -->
+                                                <Trigger Property="HasItems" Value="True">
+                                                    <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
+                                                </Trigger>
+
+                                                <!-- Submenu Hover Effect -->
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <!--<Setter TargetName="Border" Property="Background" Value="transparent"/>-->
+                                                    <!--<Setter Property="Foreground" Value="{DynamicResource LightGray1}"/>-->
+                                                </Trigger>
+
+                                                <!-- Submenu Open Effect -->
+                                                <Trigger Property="IsSubmenuOpen" Value="True">
+                                                    <Setter TargetName="Popup" Property="IsOpen" Value="True"/>
+                                                </Trigger>
+
+                                                <!-- Disabled Effect -->
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Foreground" Value="{DynamicResource MidGray}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+
+                        </Menu.Resources>
+                        <!-- MenuItems with Custom Style -->
+                        <MenuItem Width="20" Height="20" StaysOpenOnClick="True" Header=""  Style="{StaticResource CustomMenuItemStyle}" Margin="6,9,0,0" ToolTip="Show/Hide Columns" ToolTipService.InitialShowDelay="100">
+                            <MenuItem.Background>
+                                <ImageBrush ImageSource="/Images/Buttons/showHide.png" Stretch="Uniform"/>
+                            </MenuItem.Background>
+                            <!-- Submenu Items (Will Keep Hover Effect) -->
+                            <MenuItem StaysOpenOnClick="True" x:Name="ShowMenu" Header="Show" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                            <MenuItem StaysOpenOnClick="True" x:Name="HideMenu" Header="Hide" Background="{StaticResource LightGray1}" Style="{StaticResource CustomMenuItemStyle}"/>
+                            <MenuItem Background="{StaticResource LightGray1}" Click="ShowAll_MenuItem_Click" Header="ShowAll" Style="{StaticResource CustomMenuItemStyle}"/>
+                        </MenuItem>
+                    </Menu>
+                    <StackPanel x:Name="ExportToExcel_StackPanel" RenderTransformOrigin="0.5,0.5" Width="31">
+                        <StackPanel.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="-1"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </StackPanel.RenderTransform>
+                        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
+                            </Button.Background>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Margin="5,8,5,2" x:Name="Add_btn"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Entry" ToolTipService.InitialShowDelay="100">
+                        <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click" HorizontalAlignment="Center">
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
+                            </Button.Background>
+                        </Button>
+                    </StackPanel>
+                </WrapPanel>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
 
 
         </Grid>
