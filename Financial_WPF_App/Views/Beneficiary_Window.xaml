@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        xmlns:local="clr-namespace:Financial_WPF_App.Helper"
-        mc:Ignorable="d"
-        Title="Beneficiary_Window" Width="1066" Height="765" WindowStartupLocation="CenterScreen"
-        FontFamily="Myriad Arabic" FontSize="18" Closing="Window_Closing">
+        xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
+        xmlns:local="clr-namespace:Financial_WPF_App"
+        mc:Ignorable="d" Tag="Beneficiary Window"
+        Title="Beneficiary_Window" Style="{StaticResource WindowPopupStyle}" Height="765" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
 
     <Window.ContextMenu>
         <ContextMenu>
@@ -18,328 +19,227 @@
             </MenuItem>
         </ContextMenu>
     </Window.ContextMenu>
-    <Grid >
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="1.4*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100*"></ColumnDefinition>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="65*"/>
         </Grid.ColumnDefinitions>
-
-        <Grid FlowDirection="RightToLeft" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="22*"></ColumnDefinition>
-                <ColumnDefinition Width="128*"></ColumnDefinition>
-                <ColumnDefinition Width="139*"></ColumnDefinition>
-
-                <ColumnDefinition Width="148*"></ColumnDefinition>
-                <ColumnDefinition Width="118*"></ColumnDefinition>
-                <ColumnDefinition Width="22*"></ColumnDefinition>
-
-                <ColumnDefinition Width="356*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition Height="35px"></RowDefinition>
-                <RowDefinition Height="35" ></RowDefinition>
-            </Grid.RowDefinitions>
-
-            <Label Style="{DynamicResource lableStyle}" Content="Project Number:" Height="33" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,2,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <TextBox x:Name="MP_ID_txtBox" Grid.Column="2" Style="{DynamicResource textBoxStyle}" TabIndex="1" Height="30" Margin="2,0,2,0"  />
-
-            <Label Grid.Column="3" Style="{DynamicResource lableStyle}" Content="Project Title:" Height="30" HorizontalAlignment="Stretch" Margin="2,0,2,0" HorizontalContentAlignment="Right"  />
-            <TextBox x:Name="MP_Name_txtBox" Grid.Column="4"  
-                     Style="{DynamicResource textBoxStyle}" TabIndex="2" Height="30" Margin="2,0,2,0" />
-
-            <Label Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Beneficiary Name:" Height="33" Margin="2,0,2,0" HorizontalAlignment="Stretch" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-
-            <Label Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Names of partners:" FontSize="18" Height="31" Margin="2,0,2,0" HorizontalAlignment="Stretch" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <TextBox x:Name="Partners_txtBox" Grid.Column="2" Grid.Row="2" 
-                     Style="{DynamicResource textBoxStyle}" TabIndex="6" Height="30" Margin="2,0,2,0" Grid.ColumnSpan="3" />
-
-            <Label Grid.Row="3" Style="{DynamicResource lableStyle}" Content="ID number:" Height="33" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2,0,2,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <TextBox x:Name="NationalNumber_txtBox" Grid.Column="2" Grid.Row="3" 
-                     Style="{DynamicResource textBoxStyle}" TabIndex="7" Height="28" Margin="2,0,2,0" />
-
-            <Label Grid.Row="4" Style="{DynamicResource lableStyle}" Content="Mobile number:" HorizontalAlignment="Stretch" Height="33" Grid.Column="1" Margin="2,0,2,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <TextBox x:Name="Mobile_txtBox" Grid.Column="2" Grid.Row="4" 
-                     Style="{DynamicResource textBoxStyle}" TabIndex="8" Height="29" Margin="2,0,2,0" />
-
-
-            <Label Grid.Row="5" Style="{DynamicResource lableStyle}" Content="Loan amount:" Height="33" Margin="2,0,2,0" HorizontalAlignment="Stretch" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <TextBox x:Name="Amount_txtBox" Grid.Column="2" Grid.Row="5" 
-                     LostFocus="Amount_txtBox_LostFocus"
-                        Style="{DynamicResource textBoxStyle}" TabIndex="9" HorizontalContentAlignment="Stretch" Width="Auto" 
-                     FlowDirection="RightToLeft" Height="27" Margin="2,0,2,0" />
-
-            <Label Grid.Column="3"  Grid.Row="5" Style="{DynamicResource lableStyle}" Content="Amount owed:" Margin="2,0,2,0" Height="30" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-            <TextBox x:Name="ToReturn_Amount_txtBox" Grid.Column="4"  Grid.Row="5" TabIndex="10" LostFocus="ToReturn_Amount_txtBox_LostFocus"
-                       Style="{DynamicResource textBoxStyle}" Width="Auto" HorizontalContentAlignment="Stretch" FlowDirection="RightToLeft" Margin="2,0,2,0" Height="30" />
-
-
-            <Label Grid.Column="1" Grid.Row="7" Style="{DynamicResource lableStyle}" Content="Financing date:" Margin="2,0,2,0" Height="33" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch" />
-            <DatePicker x:Name="Date_datepicker" Grid.Column="2"  Grid.Row="7" TabIndex="11" FontFamily="Segoe UI" 
-                            SelectedDateChanged="Date_datepicker_SelectedDateChanged" 
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" 
-                        FontSize="14" FlowDirection="RightToLeft" Margin="2,0,2,0" Height="28" />
-
-            <Label Grid.Column="3"  Grid.Row="7" Style="{DynamicResource lableStyle}" Content="Payments start date:" Margin="2,0,2,0" Height="32" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-            <DatePicker x:Name="FirstPaymentDate_datepicker" Grid.Column="4"  Grid.Row="7" TabIndex="12" 
-                            FontFamily="Segoe UI" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" 
-                        FontSize="14" FlowDirection="RightToLeft" Grid.ColumnSpan="2" Margin="1,0,20,0" Height="28" />
-
-            <Label Grid.Row="6" Style="{DynamicResource lableStyle}" Content="Payment:" Grid.Column="1" HorizontalAlignment="Stretch" Height="33" Margin="2,0,2,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <TextBox x:Name="Payment_txtBox" Grid.Column="2" Grid.Row="6" 
-                     LostFocus="Payment_txtBox_LostFocus"
-                     Style="{DynamicResource textBoxStyle}" TabIndex="13" Margin="2,0,4,0" Height="27" />
-
-            <Label Grid.Column="1" Grid.Row="8" Style="{DynamicResource lableStyle}" Content="Receipt number:" Margin="2,0,2,0" Height="33" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <TextBox x:Name="ReceiptNumber_txtBox" Grid.Column="2" Grid.Row="8"  Style="{DynamicResource textBoxStyle}" TabIndex="14" Margin="2,0,2,0" Height="29" />
-
-            <Label Grid.Column="1" Grid.Row="9" Style="{DynamicResource lableStyle}" Content="Order Number:" Margin="2,0,2,0" Height="33" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch" />
-            <TextBox x:Name="OrderNumber_txtBox" Grid.Column="2" Grid.Row="9"  
-                     Style="{DynamicResource textBoxStyle}" TabIndex="15" Margin="2,0,2,0" Height="30" VerticalContentAlignment="Stretch"/>
-
-            <Label Grid.Column="1" Grid.Row="10" Style="{DynamicResource lableStyle}" Content="Group account:" FontSize="18" Margin="2,0,2,0" Height="31" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch"  />
-            <ComboBox x:Name="Account_comboBox" Grid.Column="2" Grid.Row="10"
-                      DisplayMemberPath="Name" SelectedValuePath="ID"
-                      FlowDirection="RightToLeft" Height="28" TabIndex="17" Margin="2,0,2,0" VerticalContentAlignment="Stretch"  />
-
-            <Label Grid.Column="1" Grid.Row="11" Style="{DynamicResource lableStyle}" Content="Notes:" Margin="2,0,2,0" Height="33" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Stretch" />
-            <TextBox x:Name="Notes_txtBox" Grid.Column="2" Grid.Row="11" Style="{DynamicResource textBoxStyle}" TabIndex="18" Grid.ColumnSpan="3" Margin="2,0,2,0" Height="29"/>
-
-            <StackPanel Grid.Column="2" Grid.Row="17" Orientation="Horizontal" 
-                        FlowDirection="LeftToRight" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Width="224" Height="31"  >
-                <Button  Style="{DynamicResource SaveButton_Style}"   
-                	x:Name="GeneratePayments_btn" 
-                	TabIndex="21" Click="GeneratePayments_btn_Click"
-                	HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
-                	VerticalAlignment="Center" VerticalContentAlignment="Center" Width="120" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/Calculate_Payments_btn.png"/>
-                    </Button.Background>
-                </Button>
-                <Button  Style="{DynamicResource SaveButton_Style}" x:Name="Save_btn"  TabIndex="20"
-                         Click="Save_btn_Click" 
-                         HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
-                         VerticalAlignment="Center" VerticalContentAlignment="Center"  />
-            </StackPanel>
-            <Grid Grid.Column="6" Grid.Row="16" Margin="0,0,0,7" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="35"></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+        <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="2">
+            <local:WindowControlBar_Popup x:Name="ControlBar"/>
+        </DockPanel>
+        <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Grid.Column="1"  Grid.Row="2">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
+            </Border.Effect>
+            <Grid  >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50*" ></RowDefinition>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50*" />
+                    <ColumnDefinition Width=".3*" />
+                    <ColumnDefinition Width="40*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="1" Grid.RowSpan="14" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Percentage:" Grid.Row="0" Grid.Column="0"  HorizontalContentAlignment="Right"  />
+                <Label x:Name="Rate_txtBox"  Style="{DynamicResource statistic_lableStyle}" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0" TabIndex="13"  Grid.Row="0" Grid.Column="2" />
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Amount paid:"   HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="1" />
+                
+                <Label x:Name="Returned_txtBox" Grid.Row="1" Grid.Column="3" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" />
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Not Approved:" HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="2" />
+                <Label x:Name="NotApprovedAmount_txtBox" Grid.Column="2" Grid.Row="2" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0"  Style="{DynamicResource statistic_lableStyle}" TabIndex="13" />
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Remaining:" HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="3" />
+                <Label x:Name="RemainedِAmount_txtBox" Grid.Column="2" Grid.Row="3" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" />
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Total payments:"  HorizontalContentAlignment="Right" Grid.Row="4" Grid.Column="0" />
+                <Label x:Name="PaymentCount_txtBox" Grid.Column="2" Grid.Row="4" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" Content="###,###" FontSize="12" Margin="0,0,0,0" TabIndex="13"  />
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Paid:"   HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  Grid.Column="0" Grid.Row="5" />
+                <Label x:Name="PaidPaymentCount_txtBox" Grid.Column="2" Grid.Row="5" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Content="###,###" FontSize="12" Margin="0,0,0,0" />
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Incomplete:" Grid.Column="0" Grid.Row="6" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+                <Label x:Name="NotCompleted_txtBox" Grid.Column="2" Grid.Row="6" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Content="###,###" FontSize="12" Margin="0,0,0,0" />
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Late:" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="8" />
+                <Label x:Name="NotApprovedPaymentCont_txtBox" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" TabIndex="13"  Grid.Column="2" Grid.Row="9" Content="###,###" FontSize="12" Margin="0,0,0,0"/>
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Unpaid:" Grid.Column="0" Grid.Row="7"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"/>
+                <Label x:Name="RemainedPaymentCount_txtBox" Grid.Column="2" Grid.Row="7" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0"/>
+                <Label x:Name="DelayedPaymentCont_txtBox" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Grid.Column="2" Grid.Row="8" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0"/>
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Not Approved:"   HorizontalContentAlignment="Right"  Grid.Row="9" Grid.Column="0"  />
+            </Grid>
+        </Border>
+        <Border Background="White"  CornerRadius="{StaticResource CornerRadius}" Padding="10" Margin="0,5,0,0"  Grid.Column="1" Grid.Row="1">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Style="{DynamicResource statistic_lableStyle}" Content="Project Number:"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                <TextBox x:Name="MP_ID_txtBox" Grid.Column="3"  Grid.Row="0" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="1" Width="175" />
+                <Label Grid.Row="0" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Project Title:" Margin="11,0,1,0" HorizontalAlignment="Right"  />
+                <TextBox x:Name="MP_Name_txtBox" Grid.Column="1"  Grid.Row="0" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="2" Width="175"/>
 
-                <Button Grid.Column="0" Style="{DynamicResource Export_Style}" x:Name="Export_btn" TabIndex="5" Command="local:Commands.ExportToExcel" />
+                <Label Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Beneficiary Name:"   HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
 
-                <Label Grid.Column="1" Content="All:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border Grid.Column="2"
-                        Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                <Label Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="Names of partners:"  HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                <TextBox x:Name="Partners_txtBox" Grid.Column="1" Grid.Row="2" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="6"   Grid.ColumnSpan="3" />
 
-                </Border>
+                <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="ID number:"  Grid.Column="0" HorizontalAlignment="Right"  HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                <TextBox x:Name="NationalNumber_txtBox" Grid.Column="1" Grid.Row="3" Width="175" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="7"   />
 
-                <Label Grid.Column="3" Content="Selected:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border Grid.Column="4" Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Selected_textBlock" Text="0" 
-                               Style="{DynamicResource statistic_textBlockStyle}"
-                               OverridesDefaultStyle="True"  />
-                </Border>
+                <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Mobile number:" HorizontalAlignment="Right"  Grid.Column="2"  HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                <TextBox x:Name="Mobile_txtBox" Grid.Column="3" Grid.Row="3" Width="175" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="8"   />
+
+
+                <Label Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" Content="Loan amount:" HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                <TextBox x:Name="Amount_txtBox" Grid.Column="1" Grid.Row="4" Width="175" LostFocus="Amount_txtBox_LostFocus" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="9" HorizontalContentAlignment="Stretch" />
+
+                <Label Grid.Column="2"  Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" Content="Amount owed:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left"  />
+                <TextBox x:Name="ToReturn_Amount_txtBox" Grid.Column="3" Width="175" Grid.Row="4" TabIndex="10" LostFocus="ToReturn_Amount_txtBox_LostFocus" Style="{DynamicResource FloatingTextBoxStyle}"  HorizontalContentAlignment="Stretch"    />
+
+
+                <Label Grid.Column="0" Grid.Row="6" Style="{DynamicResource statistic_lableStyle}" Content="Financing date:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" />
+                <DatePicker x:Name="Date_datepicker" Grid.Column="1"  Grid.Row="6" TabIndex="11" Width="175"
+                    SelectedDateChanged="Date_datepicker_SelectedDateChanged" 
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" 
+                   />
+
+                <Label Grid.Column="2"  Grid.Row="6" Style="{DynamicResource statistic_lableStyle}" Content="Payments start date:" HorizontalAlignment="Right" HorizontalContentAlignment="Left" />
+                <DatePicker x:Name="FirstPaymentDate_datepicker" Grid.Column="3"  Grid.Row="6" TabIndex="12" Width="175"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"  />
+
+                <Label Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Payment:" Grid.Column="0" HorizontalAlignment="Right"   HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                <TextBox x:Name="Payment_txtBox" Grid.Column="1" Grid.Row="5" Width="175"
+             LostFocus="Payment_txtBox_LostFocus"
+             Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="13" />
+
+                <Label Grid.Column="0" Grid.Row="7" Style="{DynamicResource statistic_lableStyle}" Content="Receipt number:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                <TextBox x:Name="ReceiptNumber_txtBox" Grid.Column="1" Grid.Row="7"  Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="14" Width="175"  />
+
+                <Label Grid.Column="2" Grid.Row="7" Style="{DynamicResource statistic_lableStyle}" Content="Order Number:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" />
+                <TextBox x:Name="OrderNumber_txtBox" Grid.Column="3" Grid.Row="7" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="15" Width="175"  VerticalContentAlignment="Stretch"/>
+
+                <Label Grid.Column="0" Grid.Row="8" Style="{DynamicResource statistic_lableStyle}" Content="Group account:"  HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="8" Height="30">
+                    <ComboBox x:Name="Account_comboBox"  Style="{StaticResource FloatingComboboxStyle}" Width="145" DisplayMemberPath="Name" SelectedValuePath="ID" TabIndex="17"  VerticalContentAlignment="Stretch"  />
+                    <Button x:Name="Account_clear_btn" Style="{StaticResource DeleteButtonStyle}" Height="30" BorderBrush="{x:Null}" Grid.Column="3" Grid.Row="10" Click="Account_clear_btn_Click" >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
+
+
+                <Label Grid.Column="0" Grid.Row="9" Style="{DynamicResource statistic_lableStyle}" Content="Notes:" HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" />
+                <TextBox x:Name="Notes_txtBox" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="9" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="18" Grid.ColumnSpan="3"  />
+                <Button Grid.Row="10" Grid.Column="0" x:Name="Original_AvgRate_help" Width="20" Height="20" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Right" Margin="0,0,5,0" >
+
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
+                    </Button.Background>
+                    <Button.ToolTip>
+                        <TextBlock><Run Text="To carry out a rescheduling, you must :"/><LineBreak /><Run Text="either change the loan amount"/><LineBreak /><Run Text="or change the amount owed"/><LineBreak /><Run Text="or change the payment"/><LineBreak /><Run Text="or change the payments interval"/><LineBreak /><Run Text="or change the payments start date"/></TextBlock>
+                    </Button.ToolTip>
+                </Button>
+                <Grid Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button  Style="{DynamicResource ButtonColoredStyle}"   Content="Re-installment" Grid.Column="0"
+           	x:Name="GeneratePayments_btn" 
+           	TabIndex="21" Click="GeneratePayments_btn_Click"
+           	HorizontalAlignment="Stretch" 
+           	VerticalAlignment="Stretch" Margin="0,0,1,0">
+                    </Button>
+                    <Button  Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn"  TabIndex="20" Grid.Column="1"
+                 Click="Save_btn_Click" Content="Save"
+                 HorizontalAlignment="Stretch" 
+                 VerticalAlignment="Stretch" Margin="15,0,1,0"  />
+                </Grid>
+                <Label Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Payments interval (M):" Grid.Column="2" HorizontalAlignment="Right"  HorizontalContentAlignment="Left"   />
+                <TextBox x:Name="Payment_interval_TextBox" Grid.Column="3"  Grid.Row="5" TabIndex="10" LostFocus="ToReturn_Amount_txtBox_LostFocus"
+                    Style="{DynamicResource FloatingTextBoxStyle}"  HorizontalContentAlignment="Stretch"   />
+                <TextBox Grid.Column="1" x:Name="FName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center" TabIndex="3" Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="First Name" TextChanged="FName_txtBox_TextChanged"/>
+                <TextBox Grid.Column="2" x:Name="FaName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center"  TabIndex="4"  Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="Father Name" TextChanged="FaName_txtBox_TextChanged"/>
+                <TextBox x:Name="LName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center"  TabIndex="5" Grid.Column="3" Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="Last Name" TextChanged="LName_txtBox_TextChanged"/>
 
             </Grid>
-            <syncfusion:SfDataGrid  Grid.Column="6"  Grid.Row="0" Grid.RowSpan="16" x:Name="myDataGrid" 
+        </Border>
+
+
+        <syncfusion:SfDataGrid  Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="2,35,5,5" x:Name="myDataGrid" 
                        Style="{DynamicResource SfDataGrid_body}"
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
                                     ShowGroupDropArea ="False"
                                     Loaded="myDataGrid_Loaded"
-                        SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,33,10,10" >
-                <syncfusion:SfDataGrid.Columns>
-                    <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
+                        SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
-                    <syncfusion:GridTextColumn MappingName="Num" HeaderText="Number of payment"/>
-                    <syncfusion:GridNumericColumn  HeaderText="Payment amount"  MappingName="Amount"
+                <syncfusion:GridTextColumn MappingName="Num" HeaderText="Number of payment"/>
+                <syncfusion:GridNumericColumn  HeaderText="Payment amount"  MappingName="Amount"
                                                    NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
                                                    NumberGroupSeparator=","/>
-                    <syncfusion:GridDateTimeColumn HeaderText= "Due date" MappingName="DueDate"
+                <syncfusion:GridDateTimeColumn HeaderText= "Due date" MappingName="DueDate"
                                                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
-                    <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Payment status"  MappingName="payment_state" />
-                    <syncfusion:GridNumericColumn  HeaderText="Amount paid"  MappingName="Paid_Amount"
+                <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Payment status"  MappingName="payment_state" />
+                <syncfusion:GridNumericColumn  HeaderText="Amount paid"  MappingName="Paid_Amount"
                                                    NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
                                                    NumberGroupSeparator=","/>
-                    <syncfusion:GridTextColumn HeaderText= "Payment date" MappingName="action_date"/>
-                    <syncfusion:GridTextColumn MappingName="Approved" HeaderText="Approved" />
-                </syncfusion:SfDataGrid.Columns>
-            </syncfusion:SfDataGrid>
-            <Button x:Name="Original_AvgRate_help" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100" Grid.Column="4" Margin="2,4,97,3" Grid.Row="17">
+                <syncfusion:GridTextColumn HeaderText= "Payment date" MappingName="action_date"/>
+                <syncfusion:GridTextColumn MappingName="Approved" HeaderText="Approved" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
 
-                <Button.Background>
-                    <ImageBrush ImageSource="/Images/qm1.png" Stretch="Uniform"/>
-                </Button.Background>
-                <Button.ToolTip>
-                    <TextBlock><Run Text="To carry out a rescheduling, you must :"/><LineBreak /><Run Text="either change the loan amount"/><LineBreak /><Run Text="or change the amount owed"/><LineBreak /><Run Text="or change the payment"/><LineBreak /><Run Text="or change the payments interval"/><LineBreak /><Run Text="or change the payments start date"/></TextBlock>
-                </Button.ToolTip>
-            </Button>
-            <Label Grid.Row="6" Style="{DynamicResource lableStyle}" Content="Payments interval (M):" Grid.Column="3" HorizontalAlignment="Stretch" Height="33" HorizontalContentAlignment="Right" Margin="2,0,2,0"  />
-            <TextBox x:Name="Payment_interval_TextBox" Grid.Column="4"  Grid.Row="6" TabIndex="10" LostFocus="ToReturn_Amount_txtBox_LostFocus"
-                Style="{DynamicResource textBoxStyle}" Width="Auto" HorizontalContentAlignment="Stretch" FlowDirection="RightToLeft" Margin="3,0,2,0" Height="29" />
-            <TextBox Grid.Column="4" x:Name="FName_txtBox" TextWrapping="Wrap" FontSize="14"   Margin="2,2,2,2" VerticalContentAlignment="Center" FlowDirection="LeftToRight" TabIndex="3" Grid.Row="1" />
-            <TextBlock Grid.Column="4" x:Name="Placeholder1" IsHitTestVisible="False" TextWrapping="Wrap" Text="First name" VerticalAlignment="Center" Margin="52,0,3,0" Foreground="DarkGray" Height="19" Grid.Row="1" FlowDirection="LeftToRight">
-                <TextBlock.Style>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text, ElementName=FName_txtBox}" Value="">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            <TextBox Grid.Column="3" x:Name="FaName_txtBox" TextWrapping="Wrap" Width="Auto" FontSize="14" VerticalContentAlignment="Center" FlowDirection="LeftToRight" TabIndex="4" Margin="2,2,2,2" Grid.Row="1" />
-            <TextBlock Grid.Column="3" x:Name="Placeholder2" IsHitTestVisible="False" TextWrapping="Wrap" Text="Father name" VerticalAlignment="Center" Margin="53,0,3,0" Foreground="DarkGray" Height="19" Grid.Row="1" FlowDirection="LeftToRight">
-                <TextBlock.Style>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text, ElementName=FaName_txtBox}" Value="">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            <TextBox x:Name="LName_txtBox" TextWrapping="Wrap" Width="Auto" FontSize="14"   Margin="2,2,2,2" VerticalContentAlignment="Center" FlowDirection="LeftToRight" TabIndex="5" Grid.Column="2" Grid.Row="1" />
-            <TextBlock x:Name="Placeholder3" IsHitTestVisible="False" TextWrapping="Wrap" Text="Last name" VerticalAlignment="Center" Foreground="DarkGray" Height="19" Margin="52,0,4,0" Grid.Column="2" Grid.Row="1" FlowDirection="LeftToRight">
-                <TextBlock.Style>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text, ElementName=LName_txtBox}" Value="">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            <Grid Grid.Row="13" Grid.ColumnSpan="6" Margin="0,0,6,0" VerticalAlignment="Center" Height="35">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Style="{DynamicResource lableStyle}" Content="Percentage:" Margin="3,0,2,0" Height="31" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                <TextBox x:Name="Rate_txtBox" 
-                   Style="{DynamicResource textBoxStyle}" TabIndex="13" IsReadOnly="True" IsTabStop="False" Margin="2,0,2,0" Height="27" Grid.Column="1" />
-                <Label Style="{DynamicResource lableStyle}" Content="Amount paid:" Margin="1,0,2,0" Height="31" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Column="2"  />
-                <TextBox x:Name="Returned_txtBox" Grid.Column="3" 
-                Style="{DynamicResource textBoxStyle}" TabIndex="13" IsReadOnly="True" IsTabStop="False" Margin="2,0,2,0" Height="29" />
-                <Label Style="{DynamicResource lableStyle}" Content="Not Approved:" Margin="3,0,0,0" Height="31" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Column="4"  />
-                <TextBox x:Name="NotApprovedAmount_txtBox" Grid.Column="5" 
-                    Style="{DynamicResource textBoxStyle}" TabIndex="13" IsReadOnly="True" IsTabStop="False" Margin="2,0,2,0" Height="29" />
-            </Grid>
-            <Grid Grid.Row="14" Grid.ColumnSpan="6" Margin="0,0,6,0" VerticalAlignment="Center" Height="35">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6*"/>
-                    <ColumnDefinition Width="95*"/>
-
-                    <ColumnDefinition Width="90*"/>
-                    <ColumnDefinition Width="95*"/>
-                    <ColumnDefinition Width="95*"/>
-                    <ColumnDefinition Width="95*"/>
-                    <ColumnDefinition Width="95*"/>
-                </Grid.ColumnDefinitions>
-                <Label Style="{DynamicResource lableStyle}" Content="Remaining:" Margin="2,0,1,0" Height="32" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Column="1"  />
-                <TextBox x:Name="RemainedِAmount_txtBox" Grid.Column="2" 
-                    Style="{DynamicResource textBoxStyle}" TabIndex="13" IsReadOnly="True" IsTabStop="False" Margin="2,0,2,0" Height="29" />
-            </Grid>
-            <Border BorderBrush="#FF00416A" BorderThickness="1" Grid.Row="12" Grid.ColumnSpan="6" Margin="3,16,1,17" RenderTransformOrigin="0.5,0.5">
-                <Border.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleY="-1"/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Border.RenderTransform>
-            </Border>
-            <Grid Grid.Row="15" Grid.ColumnSpan="6" Margin="3,0,3,0" VerticalAlignment="Center" Height="35">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Style="{DynamicResource lableStyle}" Content="Late:" Margin="15,48,99,0" Height="31" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.ColumnSpan="2" VerticalAlignment="Top"  />
-                <Label Style="{DynamicResource lableStyle}" Content="Total payments:"  FontSize="18" Margin="2,0,2,0" Height="30" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                <TextBox x:Name="PaymentCount_txtBox" Grid.Column="1"  Style="{DynamicResource textBoxStyle}" 
-                     TabIndex="13" IsReadOnly="True" IsTabStop="False" Width="Auto" Margin="3,0,2,0" Height="27" />
-                <Label Style="{DynamicResource lableStyle}" Content="Paid:"  FontSize="18" HorizontalAlignment="Stretch" Height="30" HorizontalContentAlignment="Right" Margin="2,1,2,0" Grid.Column="2" VerticalAlignment="Top"  />
-                <TextBox x:Name="PaidPaymentCount_txtBox" Grid.Column="3"  Style="{DynamicResource textBoxStyle}" TabIndex="13" 
-                    IsReadOnly="True" IsTabStop="False" Width="Auto" Margin="2,0,2,0" Height="28" />
-                <Label Grid.Column="4" Style="{DynamicResource lableStyle}" Content="Incomplete:"  FontSize="18" HorizontalAlignment="Stretch" Height="30" HorizontalContentAlignment="Right" Margin="1,0,1,0"  />
-                <TextBox x:Name="NotCompleted_txtBox" Grid.Column="5"  Style="{DynamicResource textBoxStyle}" TabIndex="13" 
-                     IsReadOnly="True" IsTabStop="False" Width="Auto" Margin="3,0,2,0" Height="28" />
-            </Grid>
-            <Button x:Name="Account_clear_btn" BorderBrush="{x:Null}" Grid.Column="3" Margin="1,7,106,4" Grid.Row="10" Click="Account_clear_btn_Click" >
-                <Button.Background>
-                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                </Button.Background>
-            </Button>
-            <Grid Grid.Row="16" Grid.ColumnSpan="6" Margin="1,0,5,0" VerticalAlignment="Center" Height="35">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Style="{DynamicResource lableStyle}" Content="Late:" Margin="2,0,2,0" Height="31" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Column="2"  />
-                <TextBox x:Name="NotApprovedPaymentCont_txtBox" 
-                    Style="{DynamicResource textBoxStyle}" TabIndex="13" IsReadOnly="True" IsTabStop="False" Margin="2,-2,2,0" Height="27" Grid.Column="5" VerticalAlignment="Top" />
-                <Label Style="{DynamicResource lableStyle}" Content="Unpaid:"  FontSize="18" HorizontalAlignment="Stretch" Height="31" HorizontalContentAlignment="Right" Margin="2,4,2,0" VerticalAlignment="Top"  />
-                <TextBox x:Name="RemainedPaymentCount_txtBox" Grid.Column="1"  Style="{DynamicResource textBoxStyle}" TabIndex="13" 
-                    IsReadOnly="True" IsTabStop="False" Width="Auto" Margin="3,0,2,0" Height="28" />
-                <TextBox x:Name="DelayedPaymentCont_txtBox" 
-                    Style="{DynamicResource textBoxStyle}" TabIndex="13" IsReadOnly="True" IsTabStop="False" Margin="2,0,2,0" Height="28" Grid.Column="3" />
-                <Label Style="{DynamicResource lableStyle}" Content="Not Approved:"  FontSize="18" HorizontalAlignment="Stretch" Height="30" HorizontalContentAlignment="Right" Margin="3,0,1,0" Grid.Column="4"  />
-            </Grid>
-
-
-        </Grid>
-
-
+        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Cursor="Hand" Grid.Row="1" Command="Helper:Commands.ExportToExcel" Height="25" Width="24" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top">
+            <Button.Background>
+                <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png"></ImageBrush>
+            </Button.Background>
+        </Button>
     </Grid>
 </Window>
