@@ -300,6 +300,9 @@
     <Compile Include="Views\Add_Payment_Window.xaml.cs">
       <DependentUpon>Add_Payment_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Add_Subproject_Window.xaml.cs">
+      <DependentUpon>Add_Subproject_Window.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Add_till.xaml.cs">
       <DependentUpon>Add_till.xaml</DependentUpon>
     </Compile>
@@ -502,6 +505,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Add_Payment_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Add_Subproject_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

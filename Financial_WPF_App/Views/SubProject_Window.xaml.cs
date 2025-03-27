@@ -1,4 +1,5 @@
 ﻿using Financial_WPF_App.Models;
+using Financial_WPF_App.Views;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
@@ -28,16 +29,15 @@ namespace Financial_WPF_App
             }
         }
 
-        private int ID;
-        private City c;
-        private Project p;
-        private SubProject sub; private SubProject_Donor sd;
-        private Donors d;
+        private SubProject sub; 
         private Account a; private Till t;
-        private DataTable SUB_dt, c_dt, p_dt;
-        bool UserMode;
+        private DataTable SUB_dt;
+
         Main_Window_2 main_Window;
         double HOffset = 0;
+
+        List<string> HiddenColumns = new List<string>();
+        List<string> Originally_HiddenColumns = new List<string>();
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
         string HeaderStyle_Name = "SfDataGrid_header";
@@ -48,11 +48,7 @@ namespace Financial_WPF_App
         {
             try
             {
-                c = new City();
-                p = new Project();
                 sub = new SubProject();
-                sd = new SubProject_Donor();
-                d = new Donors();
                 a = new Account();
                 t = new Till();
                 for (int i = 0; i < myDataGrid.Columns.Count; i++)
@@ -94,20 +90,10 @@ namespace Financial_WPF_App
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
+
         private void Load_Data()
         {
-            ID = -1;
-            Clear_Boxes();
-            LoadCityComboBox();
-            LoadProjectComboBox();
-            LoadDonors_ListBox();
             LoadGrid();
-
-            UserMode = false;
-            EndDate_CheckBox.IsChecked = true;
-            endDate_datepicker.IsEnabled = false;
-            endDate_datepicker.Text = "";
-            UserMode = true;
         }
 
         private void LoadGrid()
@@ -122,369 +108,32 @@ namespace Financial_WPF_App
                     myDataGrid.ItemsSource = SUB_dt.DefaultView;
                     if (HOffset != 0)
                         this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+
                 }
                 else
                 {
                     myDataGrid.ItemsSource = null;
                 }
+
+                Bind_Show_Hide_Menu();
             }
 
         }
-
-        private void LoadCityComboBox()
-        {
-            City_comboBox.ItemsSource = null;
-            c_dt = c.Select("", "");
-            if (c_dt != null && c_dt.Rows.Count > 0)
-            {
-                City_comboBox.ItemsSource = c_dt.DefaultView;
-            }
-        }
-
-        private void LoadProjectComboBox()
-        {
-            Project_comboBox.ItemsSource = null;
-            p_dt = p.Select("", "", "");
-            if (p_dt != null && p_dt.Rows.Count > 0)
-            {
-                Project_comboBox.ItemsSource = p_dt.DefaultView;
-            }
-        }
-
-        private void Save_btn_Click(object sender, RoutedEventArgs e)
-        {
-            Save_btn.IsEnabled = false;
-            try
-            {
-                if (Project_comboBox.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select the project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-   
-                }
-                if (City_comboBox.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select the city.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                }
-                if (Name_txtBox.Text == "")
-                {
-                    MessageBox.Show("Please enter the name.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-               
-                }
-                if (beginDate_datepicker.SelectedDate == null)
-                {
-                    MessageBox.Show("Please specify the start date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                
-                }
-                if (donors_listbox.Items.Count < 1)
-                {
-                    MessageBox.Show("Please select one donor at least.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-    
-                }
-
-
-                if (Login.BuildConnection())
-                {
-                    string Name = Login.ReplaceQuotation(Name_txtBox.Text);
-                    int City_ID = Convert.ToInt32(City_comboBox.SelectedValue);
-                    int Project_ID = Convert.ToInt32(Project_comboBox.SelectedValue);
-                    //
-                    string beginDate = ((DateTime)beginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    string endDate = "";
-                    if (EndDate_CheckBox.IsChecked == true && endDate_datepicker.IsEnabled == false)
-                        endDate = "NULL";
-                    else endDate = ((DateTime)endDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                    if (ID != -1)//Edit
-                    {
-
-                        List<string> Add_donors = new List<string>();
-                        List<string> Delete_donors = new List<string>();
-
-                        bool Found;
-
-                        for (int i = 0; i < donors_listbox.Items.Count; i++)
-                        {
-                            Found = false;
-                            for (int j = 0; j < Original_li_subProject.Count; j++)
-                            {
-                                if (donors_listbox.Items[i].ToString() == Original_li_subProject[j])
-                                {
-                                    Found = true;
-                                    break;
-                                }
-                            }
-                            if (Found == false)
-                                Add_donors.Add(donors_listbox.Items[i].ToString());
-                        }
-
-                        for (int j = 0; j < Original_li_subProject.Count; j++)
-                        {
-                            Found = false;
-                            for (int i = 0; i < donors_listbox.Items.Count; i++)
-                            {
-                                if (Original_li_subProject[j] == donors_listbox.Items[i].ToString())
-                                {
-                                    Found = true;
-                                    break;
-                                }
-                            }
-                            if (Found == false)
-                                Delete_donors.Add(Original_li_subProject[j]);
-                        }
-
-                        bool WithPaymentAccount;
-                        if (Project_comboBox.Text == "Micro Projects")
-                            WithPaymentAccount = true;
-                        else
-                            WithPaymentAccount = false;
-                        sub.Update(ID, Name, beginDate, endDate, Project_ID, City_ID, Add_donors, Delete_donors, WithPaymentAccount, "SubProjectWindow");
-                    }
-                    else//Add new
-                    {
-                        // Insert new Subproject, Payments Account with till syr, pay till, and donors
-                        List<string> All_donors = new List<string>();
-                        for (int i = 0; i < donors_listbox.Items.Count; i++)
-                        {
-                            All_donors.Add(donors_listbox.Items[i].ToString());
-                        }
-                        bool WithPaymentAccount;
-                        if (Project_comboBox.Text == "Micro Projects")
-                            WithPaymentAccount = true;
-                        else
-                            WithPaymentAccount = false;
-
-                        sub.Insert(Name, beginDate, endDate, Project_ID, City_ID, All_donors, WithPaymentAccount, "SubProjectWindow");
-                    }
-
-                    Clear_Boxes();
-                    LoadDonors_ListBox();
-                    LoadGrid();
-                    main_Window.Fill_TreeView(true);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
-                {
-                    Login.MyConn.Close();
-                }
-                if (ex.Message.Contains("Cannot delete or update a parent row"))
-                {
-                    MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    LoadDonors_ListBox();
-                }
-
-                else
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-            finally
-            {
-                Save_btn.IsEnabled = true;
-            }
-        }
-
-        private void EndDate_CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                endDate_datepicker.IsEnabled = false;
-                if (UserMode)
-                {
-                    endDate_datepicker.Text = "";
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
-        private void EndDate_CheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                endDate_datepicker.IsEnabled = true;
-                if (UserMode)
-                {
-                    endDate_datepicker.SelectedDate = DateTime.Now;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-
-        }
-
-        private void SubProjectWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            try
-            {
-                if (e.Key == Key.Return)
-                {
-                    Save_btn_Click(sender, e);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
-
-        #region listBoxes
-        string current_item = string.Empty;
-        int index = 0;
-        List<string> Original_li_subProject;
-        List<string> li_subProject;
-        List<string> li;
-
-        private void LoadDonors_ListBox()
-        {
-            string selectedItemText;
-
-            li_subProject = new List<string>();
-            Original_li_subProject = new List<string>();
-
-            li_subProject = sd.Get_SubProject_Donors(ID);
-
-            Original_li_subProject = li_subProject.ToList();
-
-            li = new List<string>();
-            li = d.Select_List();
-
-            for (var i = 0; i < li_subProject.Count; i++)
-            {
-                selectedItemText = li_subProject.ElementAt(i);
-                li.Remove(selectedItemText);
-            }
-
-            alldonors_listbox.ItemsSource = li;
-            donors_listbox.ItemsSource = li_subProject;
-        }
-
-        private void BindSubProjectDonors_ListBox()
-        {
-            alldonors_listbox.ItemsSource = null;
-            alldonors_listbox.ItemsSource = li;
-
-            donors_listbox.ItemsSource = null;
-            donors_listbox.ItemsSource = li_subProject;
-        }
-
-        private void AddDonor_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (alldonors_listbox.SelectedIndex == -1)
-                    return;
-
-                current_item = alldonors_listbox.SelectedValue.ToString();
-                index = alldonors_listbox.SelectedIndex;
-
-                li_subProject.Add(current_item);
-                if (li != null)
-                {
-                    li.RemoveAt(index);
-                }
-                BindSubProjectDonors_ListBox();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void RemoveDonor_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (donors_listbox.SelectedIndex == -1)
-                    return;
-
-                current_item = donors_listbox.SelectedValue.ToString();
-                index = donors_listbox.SelectedIndex;
-
-                li.Add(current_item);
-                li_subProject.Remove(current_item);
-
-                BindSubProjectDonors_ListBox();
-
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-        #endregion
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                DataRowView dataRow = (DataRowView)myDataGrid.SelectedItem;
-                ID = Convert.ToInt32(dataRow[0].ToString());
-                Name_txtBox.Text = dataRow[1].ToString();
-                beginDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow[2].ToString());
-                if (dataRow[3] == DBNull.Value || dataRow[3] == null)
-                    EndDate_CheckBox.IsChecked = true;
-                else
+                DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
+                int Subproject_ID = Convert.ToInt32(dataRow["ID"]);
+
+                Add_Subproject_Window _Window = new Add_Subproject_Window(Subproject_ID, SUB_dt, main_Window);
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
                 {
-                    EndDate_CheckBox.IsChecked = false;
-                    endDate_datepicker.SelectedDate = Convert.ToDateTime(dataRow[3].ToString());
+                    Load_Data();
+                    main_Window.Fill_TreeView(true);
                 }
-                if (dataRow[4] != DBNull.Value)
-                    Project_comboBox.SelectedValue = Convert.ToInt32(dataRow[4].ToString());
-
-
-                if (dataRow[5] != DBNull.Value)
-                    City_comboBox.SelectedValue = Convert.ToInt32(dataRow[5].ToString());
-
-                LoadDonors_ListBox();
-                //donors_grid.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
@@ -508,13 +157,13 @@ namespace Financial_WPF_App
                 if (dialogResult == MessageBoxResult.Yes)
                 {
                     DataRowView dataRow = (DataRowView)myDataGrid.SelectedItem;
-                    ID = Convert.ToInt32(dataRow[0].ToString());
+                    int Subproject_ID = Convert.ToInt32(dataRow[0].ToString());
                     string Sub_Name = dataRow[1].ToString();
 
 
                     if (main_Window.main_tabControl.Items != null && main_Window.main_tabControl.Items.Count != 0)
                     {
-                        DataTable accounts_dt = a.Select(ID.ToString(), "", "", false, "");
+                        DataTable accounts_dt = a.Select(Subproject_ID.ToString(), "", "", false, "");
 
                         if (accounts_dt != null && accounts_dt.Rows.Count > 0)
                         {
@@ -532,9 +181,8 @@ namespace Financial_WPF_App
                         }
                     }
 
-                    sub.Delete(ID, Sub_Name, "SubProjectWindow");
+                    sub.Delete(Subproject_ID, Sub_Name, "SubProjectWindow");
 
-                    ID = -1;
                     LoadGrid();
                     main_Window.Fill_TreeView(true);
                 }
@@ -586,7 +234,6 @@ namespace Financial_WPF_App
         {
             try
             {
-                Clear_Boxes();
                 Load_Data();
             }
             catch (Exception ex)
@@ -601,23 +248,11 @@ namespace Financial_WPF_App
             }
         }
 
-        private void Clear_Boxes()
-        {
-            ID = -1;
-            Project_comboBox.SelectedIndex = -1;
-            City_comboBox.SelectedIndex = -1;
-            Name_txtBox.Text = "";
-            beginDate_datepicker.SelectedDate = DateTime.Now;
-            endDate_datepicker.SelectedDate = null;
-            EndDate_CheckBox.IsChecked = true;
-            alldonors_listbox.ItemsSource = null;
-            donors_listbox.ItemsSource = null;
-        }
-
         private void myDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
             {
+
                 IInputElement element = e.MouseDevice.DirectlyOver;
                 if (element != null && element is FrameworkElement)
                 {
@@ -627,26 +262,44 @@ namespace Financial_WPF_App
                         if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
                         {
                             DataRowView rowview = grid.SelectedItem as DataRowView;
-                            ID = Convert.ToInt32(rowview[0].ToString());
-                            Name_txtBox.Text = rowview[1].ToString();
-                            beginDate_datepicker.SelectedDate = Convert.ToDateTime(rowview[2].ToString());
-                            if (rowview[3] == DBNull.Value || rowview[3] == null)
-                                EndDate_CheckBox.IsChecked = true;
-                            else
+                            int Subproject_ID = Convert.ToInt32(rowview["ID"]);
+
+                            Add_Subproject_Window _Window = new Add_Subproject_Window(Subproject_ID, SUB_dt, main_Window);
+                            bool? dialogResult = _Window.ShowDialog();
+                            if (dialogResult == true)
                             {
-                                EndDate_CheckBox.IsChecked = false;
-                                endDate_datepicker.SelectedDate = Convert.ToDateTime(rowview[3].ToString());
+                                Load_Data();
+                                main_Window.Fill_TreeView(true);
                             }
-                            if (rowview[4] != DBNull.Value)
-                                Project_comboBox.SelectedValue = Convert.ToInt32(rowview[4].ToString());
-
-
-                            if (rowview[5] != DBNull.Value)
-                                City_comboBox.SelectedValue = Convert.ToInt32(rowview[5].ToString());
-
-                            LoadDonors_ListBox();
                         }
                     }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void AddNewAction_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Add_Subproject_Window _Window = new Add_Subproject_Window(main_Window);
+
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
+                {
+                    Load_Data();
+                    main_Window.Fill_TreeView(true);
                 }
             }
             catch (Exception ex)
@@ -660,6 +313,7 @@ namespace Financial_WPF_App
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             if (myDataGrid.View != null)
@@ -673,11 +327,189 @@ namespace Financial_WPF_App
                 Export_btn.CommandTarget = myDataGrid;
             }
         }
+
         void ScrollOwner_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             if (e.HorizontalChange > 0 || e.HorizontalChange < 0)
             {
                 HOffset = e.HorizontalOffset;
+            }
+        }
+
+        private void Bind_Show_Hide_Menu()
+        {
+
+            SolidColorBrush MyWhite = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+            this.ShowMenu.Items.Clear();
+            this.HideMenu.Items.Clear();
+            for (int i = 0; i < myDataGrid.Columns.Count; i++)
+            {
+                string CHeader = myDataGrid.Columns[i].HeaderText.ToString();
+                MenuItem NewItem = new MenuItem();
+                NewItem.Header = CHeader;
+                NewItem.Background = MyWhite;
+                NewItem.StaysOpenOnClick = true;
+                if (!CHeader.Contains("ID") && !CHeader.Contains("id") && !CHeader.Contains("Delete") &&
+                    !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") &&
+                    !CHeader.Contains("Select") && !CHeader.Contains("#") &&
+                    !Originally_HiddenColumns.Contains(CHeader))
+                {
+                    if (myDataGrid.Columns[i].IsHidden == false)
+                    {
+                        bool found = false;
+
+                        for (int j = 0; j < this.HideMenu.Items.Count; j++)
+                        {
+                            if (((MenuItem)this.HideMenu.Items[j]).Header.ToString() == CHeader)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                        {
+                            NewItem.Click += new RoutedEventHandler(HideColumn);
+                            this.HideMenu.Items.Add(NewItem);
+                        }
+
+                    }
+                    else
+                    {
+                        bool found = false;
+
+                        for (int j = 0; j < this.ShowMenu.Items.Count; j++)
+                        {
+                            if (((MenuItem)this.ShowMenu.Items[j]).Header.ToString() == CHeader)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                        {
+                            NewItem.Click += new RoutedEventHandler(ShowColumn);
+                            this.ShowMenu.Items.Add(NewItem);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ShowColumn(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string CHeader = ((MenuItem)sender).Header.ToString();
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    if (myDataGrid.Columns[i].HeaderText.ToString() == CHeader)
+                    {
+                        myDataGrid.Columns[i].IsHidden = false;
+
+                        HiddenColumns.RemoveAt(HiddenColumns.IndexOf(CHeader));
+
+                        //break;
+                    }
+                }
+
+                Bind_Show_Hide_Menu();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void HideColumn(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string CHeader = ((MenuItem)sender).Header.ToString();
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    if (myDataGrid.Columns[i].HeaderText.ToString() == CHeader)
+                    {
+                        myDataGrid.Columns[i].IsHidden = true;
+                        HiddenColumns.Add(CHeader);
+                    }
+                }
+                Bind_Show_Hide_Menu();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void ShowAll_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    string CHeader = myDataGrid.Columns[i].HeaderText.ToString();
+                    if (!CHeader.Contains("ID") && !CHeader.Contains("id") && !CHeader.Contains("Delete") && !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") && !CHeader.Contains("#") && !Originally_HiddenColumns.Contains(CHeader))
+                    {
+                        myDataGrid.Columns[i].IsHidden = false;
+                    }
+                }
+                HiddenColumns.Clear();
+                Bind_Show_Hide_Menu();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)Search_txtBox.Template.FindName("PlaceholderText", Search_txtBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                if (SUB_dt != null)
+                {
+                    SearchDataGrid searchHelper = new SearchDataGrid(SUB_dt);
+
+                    // Call the search method when text changes
+                    searchHelper.Search(Search_txtBox.Text, myDataGrid);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
     }
