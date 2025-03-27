@@ -7,7 +7,7 @@
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:local="clr-namespace:Financial_WPF_App"
         mc:Ignorable="d" Tag="Beneficiary Window"
-        Title="Beneficiary_Window" Style="{StaticResource WindowPopupStyle}" Height="765" WindowStartupLocation="CenterScreen"
+        Title="Beneficiary_Window" Style="{StaticResource WindowPopupStyle}" Width="1280" Height="450" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
 
     <Window.ContextMenu>
@@ -22,18 +22,18 @@
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="1.4*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*"/>
-            <ColumnDefinition Width="65*"/>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="25*"/>
+            <ColumnDefinition Width="50*"/>
         </Grid.ColumnDefinitions>
-        <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="2">
+        <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="3">
             <local:WindowControlBar_Popup x:Name="ControlBar"/>
         </DockPanel>
-        <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Grid.Column="1"  Grid.Row="2">
+        <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Grid.Column="0" Margin="0,5,0,0"  Grid.Row="1">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
             </Border.Effect>
@@ -88,7 +88,7 @@
                 <Label Style="{DynamicResource statistic_lableStyle}" Content="Not Approved:"   HorizontalContentAlignment="Right"  Grid.Row="9" Grid.Column="0"  />
             </Grid>
         </Border>
-        <Border Background="White"  CornerRadius="{StaticResource CornerRadius}" Padding="10" Margin="0,5,0,0"  Grid.Column="1" Grid.Row="1">
+        <Border Background="White"  CornerRadius="{StaticResource CornerRadius}" Padding="10" Margin="0,5,0,0"  Grid.Column="2" Grid.Row="1">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
             </Border.Effect>
@@ -206,14 +206,14 @@
         </Border>
 
 
-        <syncfusion:SfDataGrid  Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Margin="2,35,5,5" x:Name="myDataGrid" 
+        <syncfusion:SfDataGrid  Grid.Column="1" Grid.Row="1"  Margin="2,5,5,45" x:Name="myDataGrid" 
                        Style="{DynamicResource SfDataGrid_body}"
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
                                     ShowGroupDropArea ="False"
                                     Loaded="myDataGrid_Loaded"
-                        SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="359.7" >
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
@@ -236,7 +236,7 @@
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
 
-        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Cursor="Hand" Grid.Row="1" Command="Helper:Commands.ExportToExcel" Height="25" Width="24" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top">
+        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Cursor="Hand" Grid.Row="1" Grid.Column="1" Command="Helper:Commands.ExportToExcel" Height="25" Width="24" HorizontalAlignment="Left" Margin="10,5,0,10" VerticalAlignment="Bottom">
             <Button.Background>
                 <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png"></ImageBrush>
             </Button.Background>
