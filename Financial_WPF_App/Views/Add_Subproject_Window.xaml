@@ -1,0 +1,115 @@
+﻿<Window x:Class="Financial_WPF_App.Views.Add_Subproject_Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        mc:Ignorable="d"
+        Title="Add_Subproject_Window" Height="450" Width="800"  WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="184*"/>
+            <ColumnDefinition Width="230*"/>
+            <ColumnDefinition Width="217*"/>
+            <ColumnDefinition Width="169*"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Column="3"  Style="{DynamicResource lableStyle}" Content="Project:" Height="32" HorizontalContentAlignment="Right" Margin="10,17,7,17" />
+        <ComboBox x:Name="Project_comboBox" 
+            Grid.Column="2"  TabIndex="1" 
+            DisplayMemberPath="Name" SelectedValuePath="ID" Width="auto" FlowDirection="RightToLeft" Height="28" Margin="19,13,19,13" />
+        <Label Grid.Column="1" Style="{DynamicResource lableStyle}" Content="City:" Height="33" Margin="28,19,14,14" HorizontalContentAlignment="Right" />
+        <ComboBox x:Name="City_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID"  FlowDirection="RightToLeft" Height="28" TabIndex="2" Margin="22,13,22,13" VerticalContentAlignment="Center"  />
+        <Label Grid.Column="3" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Center name:" Height="33" Margin="10,12,10,10" HorizontalContentAlignment="Right"/>
+        <TextBox x:Name="Name_txtBox" Grid.Column="2" Grid.Row="1"  TabIndex="3"
+            Style="{DynamicResource textBoxStyle}" Width="Auto" Height="30" Margin="19,12,19,13" />
+        <Label Grid.Column="3" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Start date:" Height="33" HorizontalContentAlignment="Right" Margin="10,12,10,9" />
+        <DatePicker x:Name="beginDate_datepicker" Grid.Column="2" Grid.Row="2" TabIndex="4" HorizontalAlignment="Center" Height="34" Margin="0,5,0,15" Width="179" />
+        <Label Grid.Column="1" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="End date:" Height="33" Margin="28,10,14,11" HorizontalContentAlignment="Right" />
+        <DatePicker x:Name="endDate_datepicker" Grid.Row="2" TabIndex="3" HorizontalAlignment="Left" Height="33" Margin="63,10,0,11" Width="116"  />
+        <CheckBox x:Name="EndDate_CheckBox" Grid.Row="2" Content="TBD"
+            HorizontalAlignment="Left"  VerticalAlignment="Center" FlowDirection="RightToLeft" 
+            Height="17" Margin="10,0,0,0" Width="48" 
+            Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" />
+        <Grid x:Name="donors_grid" Grid.Row="3" Grid.ColumnSpan="4" Margin="162,7,162,8" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="30*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="13*"/>
+                <RowDefinition Height="13*"/>
+                <RowDefinition Height="13*"/>
+                <RowDefinition Height="13*"/>
+                <RowDefinition Height="13*"/>
+                <RowDefinition Height="22*" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Column="2" Grid.Row="0"
+                Style="{DynamicResource lableStyle}" Content="Al donors" 
+                HorizontalAlignment="Stretch"  HorizontalContentAlignment="Center"
+                VerticalAlignment="Stretch"/>
+            <ListBox x:Name="alldonors_listbox" 
+                Grid.Column="2" Grid.Row="1" Grid.RowSpan="5" 
+                Height="auto" Margin="30,10,10,10" 
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="auto">
+                <ListBox.Background>
+                    <SolidColorBrush Color="{DynamicResource Color_HopeBlue1}"/>
+                </ListBox.Background>
+            </ListBox>
+
+            <Button Grid.Column="1" Grid.Row="2" x:Name="add_btn"  
+                Content="&lt;&lt;" Width="35" TabIndex="4"
+                Click="AddDonor_btn_Click" Padding="4" Margin="10.2,2,10,2.2" >
+                <Button.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue1}"/>
+                </Button.BorderBrush>
+                <Button.Background>
+                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue1}"/>
+                </Button.Background>
+                <Button.Foreground>
+                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
+                </Button.Foreground>
+            </Button>
+
+            <Button Grid.Column="1" Grid.Row="4" x:Name="remove_btn" 
+                Content="&gt;&gt;" Height="35" Width="35" TabIndex="4" 
+                Click="RemoveDonor_btn_Click" Padding="4" >
+                <Button.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue1}"/>
+                </Button.BorderBrush>
+                <Button.Background>
+                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue1}"/>
+                </Button.Background>
+                <Button.Foreground>
+                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
+                </Button.Foreground>
+            </Button>
+
+
+            <Label Grid.Column="0" Grid.Row="0" Style="{DynamicResource lableStyle}" 
+                Content="Center dononrs" 
+                Margin="10,0,30,0" Width="auto" HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+
+            <ListBox x:Name="donors_listbox"  Grid.Column="0" Grid.Row="1" Height="auto" 
+                Margin="10,10,30,10" Grid.RowSpan="5" 
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="auto">
+                <ListBox.Background>
+                    <SolidColorBrush Color="{DynamicResource Color_HopeBlue1}"/>
+                </ListBox.Background>
+
+            </ListBox>
+        </Grid>
+        <Button  Style="{DynamicResource SaveButton_Style}"
+            x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" Margin="173,4,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" />
+
+    </Grid>
+</Window>
