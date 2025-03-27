@@ -472,18 +472,18 @@ namespace Financial_WPF_App.Views
             CashAccount_comboBox.SelectedIndex = -1;
             Date_datepicker.SelectedDate = DateTime.Now;
 
-            LoanAmount_txtBox.Clear();
-            AmountAowed_txtBox.Clear();
-            AmountPaid_txtBox.Clear();
-            RemainingAmount_txtBox.Clear();
-            NotApprovedAmount_txtBox.Clear();
+            LoanAmount_txtBox.Content = "";
+            AmountAowed_txtBox.Content = "";
+            AmountPaid_txtBox.Content = "";
+            RemainingAmount_txtBox.Content = "";
+            NotApprovedAmount_txtBox.Content = "";
 
-            TotalPaymentCount_txtBox.Clear();
-            PaidPaymentCount_txtBox.Clear();
-            UnpaidPaymentCount_txtBox.Clear();
-            InComplete_txtBox.Clear();
-            DelayedPaymentCont_txtBox.Clear();
-            NotApprovedPaymentCont_txtBox.Clear();
+            TotalPaymentCount_txtBox.Content = "";
+            PaidPaymentCount_txtBox.Content = "";
+            UnpaidPaymentCount_txtBox.Content = "";
+            InComplete_txtBox.Content = "";
+            DelayedPaymentCont_txtBox.Content = "";
+            NotApprovedPaymentCont_txtBox.Content = "";
         }
 
         private void Fill_Details()
@@ -529,12 +529,12 @@ namespace Financial_WPF_App.Views
             DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
             NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
 
-            TotalPaymentCount_txtBox.Text = TotalPaymentCount.ToString();
-            PaidPaymentCount_txtBox.Text = PaidPaymentCount.ToString();
-            UnpaidPaymentCount_txtBox.Text = UnpaidPaymentCount.ToString();
-            InComplete_txtBox.Text = InCompletePaymentCont.ToString();
-            DelayedPaymentCont_txtBox.Text = DelayedPaymentCont.ToString();
-            NotApprovedPaymentCont_txtBox.Text = NotApprovedPaymentCont.ToString();
+            TotalPaymentCount_txtBox.Content = TotalPaymentCount.ToString();
+            PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
+            UnpaidPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
+            InComplete_txtBox.Content = InCompletePaymentCont.ToString();
+            DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
+            NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
 
 
             double LoanAmount, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount;
@@ -593,11 +593,11 @@ namespace Financial_WPF_App.Views
 
             RemainingAmount = AmountAowed - AmountPaid;
 
-            LoanAmount_txtBox.Text = Login.ConvertToDouble(LoanAmount.ToString());
-            AmountAowed_txtBox.Text = Login.ConvertToDouble(AmountAowed.ToString());
-            AmountPaid_txtBox.Text = Login.ConvertToDouble(AmountPaid.ToString());
-            NotApprovedAmount_txtBox.Text = Login.ConvertToDouble(NotApprovedAmount.ToString());
-            RemainingAmount_txtBox.Text = Login.ConvertToDouble(RemainingAmount.ToString());
+            LoanAmount_txtBox.Content = Login.ConvertToDouble(LoanAmount.ToString());
+            AmountAowed_txtBox.Content = Login.ConvertToDouble(AmountAowed.ToString());
+            AmountPaid_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+            NotApprovedAmount_txtBox.Content = Login.ConvertToDouble(NotApprovedAmount.ToString());
+            RemainingAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
 
 
         }
