@@ -276,6 +276,9 @@
     <Compile Include="Views\Add_Account_Rate_Window.xaml.cs">
       <DependentUpon>Add_Account_Rate_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Add_Employee_Window.xaml.cs">
+      <DependentUpon>Add_Employee_Window.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Add_FiscalBond_Window.xaml.cs">
       <DependentUpon>Add_FiscalBond_Window.xaml</DependentUpon>
     </Compile>
@@ -473,6 +476,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Add_Account_Rate_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Add_Employee_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Financial_WPF_App.Views
@@ -36,8 +37,10 @@ namespace Financial_WPF_App.Views
         private Line l;
         Main_Window_2 main_Window;
 
-        int Employee_ID = -1;
-        DataTable All_Employees_dt, Employee_Subproject_Table, Original_Employee_Subproject_Table, Subproject_dt, Lines_dt;
+        DataTable All_Employees_dt;
+
+        List<string> HiddenColumns = new List<string>();
+        List<string> Originally_HiddenColumns = new List<string>();
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
         string HeaderStyle_Name = "SfDataGrid_header";
@@ -89,17 +92,12 @@ namespace Financial_WPF_App.Views
             myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
-
-            EmployeeDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
-            EmployeeDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
-            EmployeeDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
 
         private void Load_Form()
         {
             Set_privileges();
             Show_Hide();
-            Load_Comboboxes();
             Load_Grid();
         }
 
@@ -141,20 +139,11 @@ namespace Financial_WPF_App.Views
         {
             if (!Add_privileges)
             {
-                Save_btn.Visibility = Visibility.Collapsed;
+                Add_btn.Visibility = Visibility.Collapsed;
             }
             if (!Edit_privileges)
             {
-                Save_btn.Visibility = Visibility.Collapsed;
-                FName_txtBox.IsReadOnly = FaName_txtBox.IsReadOnly = LName_txtBox.IsReadOnly = true;
-
-                Subproject_label.Visibility = Subproject_comboBox.Visibility = Subproject_clear_btn.Visibility =
-                    Line_label.Visibility = Line_comboBox.Visibility = Line_clear_btn.Visibility =
-                    BeginDate_lable.Visibility = BeginDate_datepicker.Visibility =
-                    EndDate_label.Visibility = EndDate_datepicker.Visibility =
-                    Add_btn.Visibility = Visibility.Collapsed;
-
-                foreach (var C in EmployeeDataGrid.Columns)
+                foreach (var C in myDataGrid.Columns)
                     if (C.HeaderText.ToString() == "Edit")
                     {
                         C.IsHidden = true;
@@ -167,6 +156,62 @@ namespace Financial_WPF_App.Views
                     {
                         C.IsHidden = true;
                     }
+            }
+        }
+
+        private void AddNewAction_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Add_Employee_Window _Window = new Add_Employee_Window(main_Window);
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
+                {
+                    Load_Form();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Search_txtBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder = (TextBlock)Search_txtBox.Template.FindName("PlaceholderText", Search_txtBox);
+
+                if (placeholder != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder.Visibility = string.IsNullOrWhiteSpace(Search_txtBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                if (All_Employees_dt != null)
+                {
+                    SearchDataGrid searchHelper = new SearchDataGrid(All_Employees_dt);
+
+                    // Call the search method when text changes
+                    searchHelper.Search(Search_txtBox.Text, myDataGrid);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
 
@@ -209,44 +254,11 @@ namespace Financial_WPF_App.Views
                 All_Employees_dt = temp_dt;
             }
 
-
-
             if (All_Employees_dt != null && All_Employees_dt.Rows.Count > 0)
                 myDataGrid.ItemsSource = All_Employees_dt.DefaultView;
-        }
 
-        private void Load_Comboboxes()
-        {
-            Subproject_dt = s.Select("", "", "", "");
+            Bind_Show_Hide_Menu();
 
-            Subproject_comboBox.ItemsSource = Subproject_dt.DefaultView;
-
-
-            Lines_dt = l.Select_Lines_As_Employee_Position();
-            Line_comboBox.ItemsSource = Lines_dt.DefaultView;
-        }
-
-        private void Clear_Data()
-        {
-            Employee_ID = -1;
-            FName_txtBox.Text = ""; FaName_txtBox.Text = ""; LName_txtBox.Text = "";
-
-            Subproject_comboBox.SelectedIndex = -1;
-            Line_comboBox.SelectedIndex = -1;
-
-            BeginDate_datepicker.SelectedDate = null;
-            EndDate_datepicker.SelectedDate = null;
-
-            EmployeeDataGrid.ItemsSource = null;
-        }
-
-        private void Clear_Subproject()
-        {
-            Subproject_comboBox.SelectedIndex = -1;
-            Line_comboBox.SelectedIndex = -1;
-
-            BeginDate_datepicker.SelectedDate = null;
-            EndDate_datepicker.SelectedDate = null;
         }
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
@@ -262,22 +274,14 @@ namespace Financial_WPF_App.Views
             try
             {
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
-                Employee_ID = Convert.ToInt32(dataRow["Employee_ID"].ToString());
+                int Employee_ID = Convert.ToInt32(dataRow["Employee_ID"].ToString());
 
-                if (dataRow["FName"] != DBNull.Value || dataRow["FName"] != null)
-                    FName_txtBox.Text = dataRow["FName"].ToString();
-
-                if (dataRow["FaName"] != DBNull.Value || dataRow["FaName"] != null)
-                    FaName_txtBox.Text = dataRow["FaName"].ToString();
-
-                if (dataRow["LName"] != DBNull.Value || dataRow["LName"] != null)
-                    LName_txtBox.Text = dataRow["LName"].ToString();
-
-
-                Employee_Subproject_Table = Emp.Select_Detailed_Employee(Employee_ID);
-                Original_Employee_Subproject_Table = Employee_Subproject_Table.Copy();
-
-                EmployeeDataGrid.ItemsSource = Employee_Subproject_Table;
+                Add_Employee_Window _Window = new Add_Employee_Window(Employee_ID, All_Employees_dt, main_Window);
+                bool? dialogResult = _Window.ShowDialog();
+                if (dialogResult == true)
+                {
+                    Load_Form();
+                }
             }
             catch (Exception ex)
             {
@@ -300,13 +304,12 @@ namespace Financial_WPF_App.Views
                 if (dialogResult == MessageBoxResult.Yes)
                 {
                     DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
-                    Employee_ID = Convert.ToInt32(dataRow["Employee_ID"].ToString());
+                    int Employee_ID = Convert.ToInt32(dataRow["Employee_ID"].ToString());
                     string Employee_Name = dataRow["Name"].ToString();
                     Emp.Delete(Employee_ID, Employee_Name, "Employee_Window");
 
                     MessageBox.Show("Deleted successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
-                    Clear_Data();
                     Load_Form();
                 }
             }
@@ -343,22 +346,14 @@ namespace Financial_WPF_App.Views
                             if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
                             {
                                 DataRowView rowview = grid.SelectedItem as DataRowView;
-                                Employee_ID = Convert.ToInt32(rowview["Employee_ID"].ToString());
+                                int Employee_ID = Convert.ToInt32(rowview["Employee_ID"].ToString());
 
-                                if (rowview["FName"] != DBNull.Value || rowview["FName"] != null)
-                                    FName_txtBox.Text = rowview["FName"].ToString();
-
-                                if (rowview["FaName"] != DBNull.Value || rowview["FaName"] != null)
-                                    FaName_txtBox.Text = rowview["FaName"].ToString();
-
-                                if (rowview["LName"] != DBNull.Value || rowview["LName"] != null)
-                                    LName_txtBox.Text = rowview["LName"].ToString();
-
-
-                                Employee_Subproject_Table = Emp.Select_Detailed_Employee(Employee_ID);
-                                Original_Employee_Subproject_Table = Employee_Subproject_Table.Copy();
-
-                                EmployeeDataGrid.ItemsSource = Employee_Subproject_Table;
+                                Add_Employee_Window _Window = new Add_Employee_Window(Employee_ID, All_Employees_dt, main_Window);
+                                bool? dialogResult = _Window.ShowDialog();
+                                if (dialogResult == true)
+                                {
+                                    Load_Form();
+                                }
                             }
                         }
                     }
@@ -377,21 +372,137 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void Bind_Show_Hide_Menu()
+        {
 
-        private void Subproject_DeleteButton_Click(object sender, RoutedEventArgs e)
+            SolidColorBrush MyWhite = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
+            this.ShowMenu.Items.Clear();
+            this.HideMenu.Items.Clear();
+            for (int i = 0; i < myDataGrid.Columns.Count; i++)
+            {
+                string CHeader = myDataGrid.Columns[i].HeaderText.ToString();
+                MenuItem NewItem = new MenuItem();
+                NewItem.Header = CHeader;
+                NewItem.Background = MyWhite;
+                NewItem.StaysOpenOnClick = true;
+                if (!CHeader.Contains("ID") && !CHeader.Contains("id") && !CHeader.Contains("Delete") &&
+                    !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") &&
+                    !CHeader.Contains("Select") && !CHeader.Contains("#") &&
+                    !Originally_HiddenColumns.Contains(CHeader))
+                {
+                    if (myDataGrid.Columns[i].IsHidden == false)
+                    {
+                        bool found = false;
+
+                        for (int j = 0; j < this.HideMenu.Items.Count; j++)
+                        {
+                            if (((MenuItem)this.HideMenu.Items[j]).Header.ToString() == CHeader)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                        {
+                            NewItem.Click += new RoutedEventHandler(HideColumn);
+                            this.HideMenu.Items.Add(NewItem);
+                        }
+
+                    }
+                    else
+                    {
+                        bool found = false;
+
+                        for (int j = 0; j < this.ShowMenu.Items.Count; j++)
+                        {
+                            if (((MenuItem)this.ShowMenu.Items[j]).Header.ToString() == CHeader)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                        {
+                            NewItem.Click += new RoutedEventHandler(ShowColumn);
+                            this.ShowMenu.Items.Add(NewItem);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ShowColumn(object sender, RoutedEventArgs e)
         {
             try
             {
-                DataRowView dataRow = (DataRowView)EmployeeDataGrid.CurrentItem;
-                int Current_Subproject_id = Convert.ToInt32(dataRow["Subproject_ID"].ToString());
-                int Current_Line_id = Convert.ToInt32(dataRow["Line_ID"].ToString());
-
-                System.Data.DataRow[] dtr = Employee_Subproject_Table.Select("Subproject_ID='" + Current_Subproject_id + "' and Line_ID='" + Current_Line_id + "'");
-                foreach (var drow in dtr)
+                string CHeader = ((MenuItem)sender).Header.ToString();
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
                 {
-                    drow.Delete();
+                    if (myDataGrid.Columns[i].HeaderText.ToString() == CHeader)
+                    {
+                        myDataGrid.Columns[i].IsHidden = false;
+
+                        HiddenColumns.RemoveAt(HiddenColumns.IndexOf(CHeader));
+
+                        //break;
+                    }
                 }
-                Employee_Subproject_Table.AcceptChanges();
+
+                Bind_Show_Hide_Menu();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void HideColumn(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string CHeader = ((MenuItem)sender).Header.ToString();
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    if (myDataGrid.Columns[i].HeaderText.ToString() == CHeader)
+                    {
+                        myDataGrid.Columns[i].IsHidden = true;
+                        HiddenColumns.Add(CHeader);
+                    }
+                }
+                Bind_Show_Hide_Menu();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void ShowAll_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    string CHeader = myDataGrid.Columns[i].HeaderText.ToString();
+                    if (!CHeader.Contains("ID") && !CHeader.Contains("id") && !CHeader.Contains("Delete") && !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") && !CHeader.Contains("#") && !Originally_HiddenColumns.Contains(CHeader))
+                    {
+                        myDataGrid.Columns[i].IsHidden = false;
+                    }
+                }
+                HiddenColumns.Clear();
+                Bind_Show_Hide_Menu();
             }
             catch (Exception ex)
             {
@@ -409,7 +520,6 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Clear_Data();
                 Load_Form();
             }
             catch (Exception ex)
@@ -424,208 +534,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Subproject_clear_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Subproject_comboBox.SelectedIndex = -1;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Line_clear_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Line_comboBox.SelectedIndex = -1;
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Add_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (Subproject_comboBox.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select the center.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                }
-
-                if (Line_comboBox.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Please select the position.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                }
-
-                if (BeginDate_datepicker.SelectedDate == null)
-                {
-                    MessageBox.Show("Please select the start date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                }
-
-
-
-                if (EmployeeDataGrid.ItemsSource == null)
-                {
-                    Employee_Subproject_Table = new DataTable();
-                    Employee_Subproject_Table.Columns.Add("Emplyee_Subproject_ID", typeof(int));
-                    Employee_Subproject_Table.Columns.Add("Subproject_ID", typeof(int));
-                    Employee_Subproject_Table.Columns.Add("SubprojectName", typeof(string));
-                    Employee_Subproject_Table.Columns.Add("Line_ID", typeof(int));
-                    Employee_Subproject_Table.Columns.Add("LineName", typeof(string));
-                    Employee_Subproject_Table.Columns.Add("BeginDate", typeof(DateTime));
-                    Employee_Subproject_Table.Columns.Add("EndDate", typeof(DateTime));
-
-                    EmployeeDataGrid.ItemsSource = Employee_Subproject_Table;
-                }
-
-                System.Data.DataRow dr = Employee_Subproject_Table.NewRow();
-
-                dr["Emplyee_Subproject_ID"] = -1;
-                dr["Subproject_ID"] = Convert.ToInt32(Subproject_comboBox.SelectedValue);
-                dr["SubprojectName"] = Subproject_comboBox.Text;
-                dr["Line_ID"] = Convert.ToInt32(Line_comboBox.SelectedValue);
-                dr["LineName"] = Line_comboBox.Text;
-                dr["BeginDate"] = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                if (EndDate_datepicker.SelectedDate != null)
-                    dr["EndDate"] = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                Employee_Subproject_Table.Rows.Add(dr);
-                Employee_Subproject_Table.AcceptChanges();
-
-                Clear_Subproject();
-
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Save_btn_Click(object sender, RoutedEventArgs e)
-        {
-            Save_btn.IsEnabled = false;
-            try
-            {
-                if (FName_txtBox.Text.IsNullOrWhiteSpace() || FaName_txtBox.Text.IsNullOrWhiteSpace() || LName_txtBox.Text.IsNullOrWhiteSpace())
-                {
-                    MessageBox.Show("Please enter the firt name, father name and last name.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                }
-
-                if (Employee_Subproject_Table == null || Employee_Subproject_Table.Rows.Count == 0)
-                {
-                    MessageBox.Show("Please select one center at least.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                }
-
-                if (Login.BuildConnection())
-                {
-                    string FName = FName_txtBox.Text;
-                    string FaName = FaName_txtBox.Text;
-                    string LName = LName_txtBox.Text;
-
-
-                    DataTable Add_Subprojects_dt = new DataTable();
-                    System.Data.DataRow[] rowsToAdd = Employee_Subproject_Table.Select("Emplyee_Subproject_ID = '-1'");
-                    if (rowsToAdd.Count() > 0)
-                        Add_Subprojects_dt = rowsToAdd.CopyToDataTable();
-
-                    if (Employee_ID != -1)//Edit
-                    {
-                        DataTable Delete_Subprojects_dt = new DataTable();
-
-                        var kept_Subprojects = Employee_Subproject_Table.AsEnumerable()
-                            .Where(row => row.Field<int>("Emplyee_Subproject_ID") != -1)
-                            .Select(row => row.Field<int>("Emplyee_Subproject_ID"));
-
-                        // Select rows from dt1 where id is not in dt2Ids
-                        var result = Original_Employee_Subproject_Table.AsEnumerable()
-                                        .Where(row => !kept_Subprojects.Contains(row.Field<int>("Emplyee_Subproject_ID")));
-
-                        if (result.Count() > 0)
-                        {
-                            Delete_Subprojects_dt = result.CopyToDataTable();
-                        }
-
-
-
-                        DataTable Update_Subprojects_dt = new DataTable();
-
-                        var employeeTable = Employee_Subproject_Table.AsEnumerable();
-                        var originalTable = Original_Employee_Subproject_Table.AsEnumerable();
-
-                        var Updated_result = from emp in employeeTable
-                                             join orig in originalTable
-                                             on emp.Field<int>("Emplyee_Subproject_ID") equals orig.Field<int>("Emplyee_Subproject_ID")
-                                             where emp.Field<int>("Emplyee_Subproject_ID") != -1
-                                             && ((emp.IsNull("BeginDate") && !orig.IsNull("BeginDate"))
-                                             || (!emp.IsNull("BeginDate") && orig.IsNull("BeginDate"))
-                                                 || (emp.IsNull("EndDate") && !orig.IsNull("EndDate"))
-                                                 || (!emp.IsNull("EndDate") && orig.IsNull("EndDate"))
-                                                 || (!emp.IsNull("BeginDate") && !orig.IsNull("BeginDate") && emp.Field<DateTime>("BeginDate") != orig.Field<DateTime>("BeginDate"))
-                                                 || (!emp.IsNull("EndDate") && !orig.IsNull("EndDate") && emp.Field<DateTime>("EndDate") != orig.Field<DateTime>("EndDate")))
-                                             select emp;
-
-
-
-                        if (Updated_result.Count() > 0)
-                        {
-                            Update_Subprojects_dt = Updated_result.CopyToDataTable();
-                        }
-
-                        Emp.Update(Employee_ID, FName, FaName, LName, Add_Subprojects_dt, Delete_Subprojects_dt, Update_Subprojects_dt, "Employee_Window");
-                    }
-                    else//Add new
-                    {
-                        Emp.Insert(FName, FaName, LName, Add_Subprojects_dt, "Employee_Window");
-                    }
-                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
-
-                    Clear_Data();
-                    Load_Form();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-            finally
-            {
-                Save_btn.IsEnabled = true;
-            }
-        }
+   
     }
 }
