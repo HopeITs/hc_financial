@@ -5,17 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:local="clr-namespace:Financial_WPF_App"
-        mc:Ignorable="d" Tag="Add Account Rate Window" Height="300"
-        Title="Add_Account_Rate_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        mc:Ignorable="d" Tag="Add Account Rate Window" Height="300" Width="730"
+        Title="Add_Account_Rate_Window" Style="{StaticResource smallWindowPopupStyle}" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid Margin="5">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="210"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="210"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
@@ -29,15 +27,15 @@
             <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="7">
                 <local:WindowControlBar_Popup x:Name="ControlBar"/>
             </DockPanel>
-            <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Rate group name:"  HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-            <TextBox x:Name="Name_txtBox" Grid.Column="1" Grid.Row="1" TabIndex="2"  Style="{DynamicResource FloatingTextBoxStyle}"  VerticalContentAlignment="Stretch"/>
-            <Label x:Name="BeginDate_lable" Grid.Column="0" Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="Start date:"  HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Rate group name:"  HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+            <TextBox x:Name="Name_txtBox" Grid.Column="1" Grid.Row="1" TabIndex="2" Style="{DynamicResource FloatingTextBoxStyle}"  VerticalContentAlignment="Stretch"/>
+            <Label x:Name="BeginDate_lable" Grid.Column="0" Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="Start date:"  HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <DatePicker x:Name="BeginDate_datepicker" Grid.Column="1" TabIndex="3"
-            SelectedDateChanged="BeginDate_datepicker_SelectedDateChanged"  Grid.Row="2"/>
+            SelectedDateChanged="BeginDate_datepicker_SelectedDateChanged"  Grid.Row="2" Height="30"/>
             <Label x:Name="EndDate_lable" Grid.Column="2" Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="End date:"  HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"  />
             <DatePicker x:Name="EndDate_datepicker" TabIndex="4"  Grid.Column="3" 
-            SelectedDateChanged="BeginDate_datepicker_SelectedDateChanged"  Width="175" HorizontalAlignment="Center"  Grid.Row="2"/>
-            <Label x:Name="EndDate_lable_Copy" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="From till:"  Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center"  />
+            SelectedDateChanged="BeginDate_datepicker_SelectedDateChanged"  Grid.Row="2" Height="30"/>
+            <Label x:Name="EndDate_lable_Copy" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="From till:"  Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"  />
             
                 <ComboBox Grid.Row="3" Grid.Column="1" Style="{DynamicResource FloatingComboboxStyle}" x:Name="From_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" SelectionChanged="From_comboBox_SelectionChanged"
                   TabIndex="1" VerticalAlignment="Stretch" />
@@ -49,25 +47,28 @@
             <Label x:Name="EndDate_lable_Copy1" Grid.Column="2" Style="{DynamicResource statistic_lableStyle}" Content="To till:"  Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"  />
             <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="To_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" 
             TabIndex="1"   Grid.Row="3" Grid.Column="3" SelectionChanged="To_comboBox_SelectionChanged" />
-            <Label x:Name="ObserveRate_lable" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Corresponding rate:"  Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center"  />
-            <StackPanel x:Name="ObserveRate_StackPanel" Grid.Column="1" Grid.Row="4" Orientation="Horizontal" Height="30" VerticalAlignment="Top">
-                
-                <ComboBox Style="{DynamicResource FloatingComboboxStyle}" Width="175" x:Name="ObserveRate_comboBox" DisplayMemberPath="Rate group name" SelectedValuePath="ID" 
+            <Label x:Name="ObserveRate_lable" Grid.Column="2" Style="{DynamicResource statistic_lableStyle}" Content="Corresponding rate:"  Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center"  />
+            <Grid x:Name="ObserveRate_StackPanel" Grid.Column="3" Grid.Row="4" Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="ObserveRate_comboBox" DisplayMemberPath="Rate group name" SelectedValuePath="ID" Grid.Column="0"
               TabIndex="1"/>
-                <Button x:Name="ObserveRate_clear_btn" 
+                <Button x:Name="ObserveRate_clear_btn" Grid.Column="1"
 Style="{StaticResource DeleteButtonStyle}"
-Click="ObserveRate_clear_btn_Click" >
+Click="ObserveRate_clear_btn_Click" Margin="6,0,0,0" >
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-            </StackPanel>
+            </Grid>
             <Button Grid.Row="6" Grid.Column="0"
             Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn" Content="Save"
             TabIndex="10" Click="Save_btn_Click"   />
-            <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Value:" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"  />
-            <TextBox x:Name="Value_txtBox"  TabIndex="6" Grid.Column="5" Width="175"
-            Style="{DynamicResource FloatingTextBoxStyle}" IsReadOnly="True" Grid.Row="3" HorizontalAlignment="Left" />
+            <Label Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" Content="Value:" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"  />
+            <TextBox x:Name="Value_txtBox"  TabIndex="6" Grid.Column="1"
+            Style="{DynamicResource FloatingTextBoxStyle}" IsReadOnly="True" Grid.Row="4" />
         </Grid>
     </Grid>
 </Window>

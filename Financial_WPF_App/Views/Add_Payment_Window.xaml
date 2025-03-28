@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"  xmlns:Controls="clr-namespace:Financial_WPF_App.Controls" x:Class="Financial_WPF_App.Views.Add_Payment_Window"
-        mc:Ignorable="d" Tag="Add Payment Window"  d:DesignHeight="700"
+        mc:Ignorable="d" Tag="Add Payment Window"  Height="650"
         Title="Add_Payment_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen"  Closing="Window_Closing">
     <Grid Margin="5">
         <Grid.RowDefinitions>
