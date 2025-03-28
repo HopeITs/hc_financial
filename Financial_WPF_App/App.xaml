@@ -602,39 +602,13 @@
                Visibility="Visible"
                 IsHitTestVisible="True"/>
                                 <!-- Actual TextBox Content -->
-                                <ScrollViewer x:Name="PART_ContentHost" Margin="12,0,0,0"/>
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="0,0,0,0"/>
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
 
-            <!-- UserControlTextBox-Specific Style -->
-            <!--<Style x:Key="TextBoxUserControlStyle" TargetType="uc:AutoCompleteTextBoxUserControl" BasedOn="{StaticResource FloatingBoxesStyle}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="uc:AutoCompleteTextBoxUserControl">
-                            <Grid>
-                                --><!-- Background Border --><!--
-                                <Border Background="{TemplateBinding Background}" 
-BorderBrush="{TemplateBinding BorderBrush}" 
-BorderThickness="{TemplateBinding BorderThickness}"/>
-
-
-                                --><!-- Placeholder Text --><!--
-                                <TextBlock x:Name="PlaceholderText"
-       Text="{TemplateBinding Tag}"
-       Foreground="{StaticResource DarkGray}"
-       FontSize="13"
-       HorizontalAlignment="Center"
-       VerticalAlignment="Center"
-       Visibility="Visible"
-       IsHitTestVisible="True"/>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>-->
 
             <!-- TextBox-Action bar Style -->
             <Style x:Key="TextBoxActionStyle" TargetType="TextBox" BasedOn="{StaticResource FloatingBoxesStyle}">

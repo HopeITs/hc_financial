@@ -230,10 +230,10 @@ namespace Financial_WPF_App
 
                 RemainingAmount = AmountAowed - AmountPaid;
 
-                Rate_txtBox.Text = Login.ConvertToDouble(Rate.ToString());
-                Returned_txtBox.Text = Login.ConvertToDouble(AmountPaid.ToString());
-                NotApprovedAmount_txtBox.Text = Login.ConvertToDouble(NotApprovedAmount.ToString());
-                RemainedِAmount_txtBox.Text = Login.ConvertToDouble(RemainingAmount.ToString());
+                Rate_txtBox.Content = Login.ConvertToDouble(Rate.ToString());
+                Returned_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+                NotApprovedAmount_txtBox.Content = Login.ConvertToDouble(NotApprovedAmount.ToString());
+                RemainedِAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
 
                 Calculate_values();
                 Fill_Payments();
@@ -582,6 +582,55 @@ namespace Financial_WPF_App
             Account_comboBox.SelectedIndex = -1;
         }
 
+        private void FName_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                // Get PlaceholderTextBlock inside the TextBox template
+                var placeholder_first = (TextBlock)FName_txtBox.Template.FindName("PlaceholderText", FName_txtBox);
+                if (placeholder_first != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder_first.Visibility = string.IsNullOrWhiteSpace(placeholder_first.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void FaName_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+
+                var placeholder_fa = (TextBlock)FaName_txtBox.Template.FindName("PlaceholderText", FaName_txtBox);
+                if (placeholder_fa != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder_fa.Visibility = string.IsNullOrWhiteSpace(placeholder_fa.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void Date_datepicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -623,18 +672,18 @@ namespace Financial_WPF_App
                     DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
                     NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
 
-                    PaymentCount_txtBox.Text = TotalPaymentCount.ToString();
-                    PaidPaymentCount_txtBox.Text = PaidPaymentCount.ToString();
-                    RemainedPaymentCount_txtBox.Text = UnpaidPaymentCount.ToString();
-                    NotCompleted_txtBox.Text = InCompletePaymentCont.ToString();
-                    DelayedPaymentCont_txtBox.Text = DelayedPaymentCont.ToString();
-                    NotApprovedPaymentCont_txtBox.Text = NotApprovedPaymentCont.ToString();
+                    PaymentCount_txtBox.Content = TotalPaymentCount.ToString();
+                    PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
+                    RemainedPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
+                    NotCompleted_txtBox.Content = InCompletePaymentCont.ToString();
+                    DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
+                    NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
                 }
                 else
                 {
                     myDataGrid.ItemsSource = null;
-                    Returned_txtBox.Text = RemainedِAmount_txtBox.Text = PaymentCount_txtBox.Text
-                        = NotCompleted_txtBox.Text = RemainedPaymentCount_txtBox.Text = "0.00";
+                    Returned_txtBox.Content = RemainedِAmount_txtBox.Content = PaymentCount_txtBox.Content
+                        = NotCompleted_txtBox.Content = RemainedPaymentCount_txtBox.Content = "0.00";
                 }
             }
 
@@ -645,7 +694,7 @@ namespace Financial_WPF_App
             try
             {
                 int count = myDataGrid.SelectedItems.Count;
-                Selected_textBlock.Text = count.ToString("N0");
+                //Selected_textBlock.Text = count.ToString("N0");
             }
             catch (Exception ex)
             {
@@ -716,10 +765,48 @@ namespace Financial_WPF_App
             if (myDataGrid.View != null)
             {
                 int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
+                //All_textBlock.Text = count.ToString("N0");
 
                 // All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
                 Export_btn.CommandTarget = myDataGrid;
+            }
+        }
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.MinimizeWindow(this);
+        }
+
+        private void Close_Click(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.CloseWindow(this);
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowUtils.TitleBar_MouseDown(this, e);
+        }
+        private void LName_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+               
+                var placeholder_last = (TextBlock)LName_txtBox.Template.FindName("PlaceholderText", LName_txtBox);
+                if (placeholder_last != null)
+                {
+                    // Hide placeholder when user types, show when empty
+                    placeholder_last.Visibility = string.IsNullOrWhiteSpace(placeholder_last.Text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
     }
