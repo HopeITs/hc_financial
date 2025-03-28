@@ -256,7 +256,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-
         private void CalcValue()
         {
             if (BeginDate_datepicker.SelectedDate != null && EndDate_datepicker.SelectedDate != null
@@ -270,7 +269,6 @@ namespace Financial_WPF_App.Views
                 Value_txtBox.Text = value.ToString();
             }
         }
-
 
         private void LoadObserveRate_comboBox()
         {
@@ -469,6 +467,7 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowUtils.MinimizeWindow(this);

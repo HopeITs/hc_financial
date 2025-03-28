@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App.Views"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.Add_Employee_Window"
         mc:Ignorable="d"
-        Title="Add_Employee_Window" Height="600" Width="1000" WindowStartupLocation="CenterScreen">
+        Title="Add_Employee_Window" Height="600" Width="1000" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid Margin="0,0,10,6">
         <Grid.ContextMenu>
             <ContextMenu>

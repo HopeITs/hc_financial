@@ -92,7 +92,7 @@ namespace Financial_WPF_App.Views
 
         private void Load_Employee()
         {
-            DataTable Emp_dt = All_Employees_dt.Select("id = " + Employee_ID + "").CopyToDataTable();
+            DataTable Emp_dt = All_Employees_dt.Select("Employee_ID = " + Employee_ID + "").CopyToDataTable();
 
             if (Emp_dt.Rows[0]["FName"] != DBNull.Value || Emp_dt.Rows[0]["FName"] != null)
                 FName_txtBox.Text = Emp_dt.Rows[0].Field<string>("FName").ToString();
@@ -208,6 +208,11 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DialogResult = true;
         }
 
         private void Subproject_clear_btn_Click(object sender, RoutedEventArgs e)
@@ -386,16 +391,16 @@ namespace Financial_WPF_App.Views
                         }
 
                         Emp.Update(Employee_ID, FName, FaName, LName, Add_Subprojects_dt, Delete_Subprojects_dt, Update_Subprojects_dt, "Employee_Window");
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        this.Close();
                     }
                     else//Add new
                     {
                         Emp.Insert(FName, FaName, LName, Add_Subprojects_dt, "Employee_Window");
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        Clear_Data();
                     }
-                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
-
-                    Clear_Data();
-                    Load_Form();
                 }
             }
             catch (Exception ex)
