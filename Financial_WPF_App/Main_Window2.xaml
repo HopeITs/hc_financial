@@ -374,7 +374,7 @@
 
             <Grid Grid.Row="1" Grid.RowSpan="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="419*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -404,7 +404,7 @@
                     </syncfusion:TabControlExt.DragMarkerColor>
                 </syncfusion:TabControlExt>
 
-                <Grid Grid.ColumnSpan="2"  Background="#FFDCDDDE" Height="47" VerticalAlignment="Center">
+                <Grid Grid.ColumnSpan="2"  Background="#FFDCDDDE" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <!-- Menu -->
                         <RowDefinition Height="*" />

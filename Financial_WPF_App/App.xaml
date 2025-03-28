@@ -269,20 +269,16 @@
                 <Setter Property="WindowStyle" Value="None"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
-                <Style.Triggers>
-                    <Trigger Property="ResizeMode" Value="NoResize"></Trigger>
-                </Style.Triggers>
+                <Setter Property="ResizeMode" Value="NoResize"/>
             </Style>
 
             <Style x:Key="WindowPopupStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
                 <Setter Property="Width" Value="1000"/>
-                <Setter Property="Height" Value="600"/>
-                <Setter Property="ResizeMode" Value="NoResize"/>
+                <Setter Property="Height" Value="500"/>
             </Style>
             <Style x:Key="smallWindowPopupStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
                 <Setter Property="Width" Value="500"/>
-                <Setter Property="Height" Value="600"/>
-                <Setter Property="ResizeMode" Value="NoResize"/>
+                <Setter Property="Height" Value="500"/>
             </Style>
 
             <!-- tell Dragablz tab control to use the Material Design theme -->
@@ -998,7 +994,70 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                 </Setter>
             </Style>
 
-            
+            <Style TargetType="syncfusion:CheckListBoxItem" x:Key="CustomCheckListBoxItemStyle">
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
+                <Setter Property="Padding" Value="15,2,2,2" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Background" Value="White" />
+                <Setter Property="BorderBrush" Value="{StaticResource MidGray}" />
+                <!-- Custom CheckBox Template -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="syncfusion:CheckListBoxItem">
+                            <Grid>
+                                <!-- CheckMark Box -->
+                                <Border x:Name="CheckMarkBorder" Background="{TemplateBinding Background}"
+                Width="12" Height="12"
+                BorderThickness="1"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"/>
+
+                                <!-- CheckMark Icon -->
+                                <Path x:Name="CheckMark"
+              Data="M2,6 L5,9 L10,3"
+              Stroke="{StaticResource MidGray}"
+              StrokeThickness="1.5"
+              Visibility="Collapsed"
+              VerticalAlignment="Center"
+              HorizontalAlignment="Left"/>
+
+                                <!-- CheckBox Label -->
+                                <ContentPresenter
+                          VerticalAlignment="Center"
+                          Margin="20,0,0,0"
+                          TextBlock.Foreground="{TemplateBinding Foreground}" />
+                            </Grid>
+
+                            <!-- Triggers for CheckBox states -->
+                            <ControlTemplate.Triggers>
+                                <!-- When Checked, Show CheckMark -->
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+
+                                <!-- Hover Effect: Keep Background the Same -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource LightGray2}"/>
+                                </Trigger>
+
+                                <!-- Disabled State -->
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="CheckMarkBorder" Property="BorderBrush" Value="{StaticResource MidGray}" />
+                                    <Setter TargetName="CheckMark" Property="Stroke" Value="{StaticResource DarkGray}" />
+                                    <Setter Property="Foreground" Value="{StaticResource MidGray}" />
+                                    <Setter Property="Cursor" Value="Arrow"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
 
             <Style x:Key="CustomDatePickerTextBoxStyle" TargetType="DatePickerTextBox">
@@ -1975,6 +2034,19 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+            <Style TargetType="{x:Type syncfusion:CheckListBox}">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Margin" Value="1,0,1,0"/>
+                <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="ItemContainerStyle" Value="{StaticResource CustomCheckListBoxItemStyle}"/>
+
             </Style>
 
      
