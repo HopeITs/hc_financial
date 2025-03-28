@@ -385,7 +385,7 @@ namespace Financial_WPF_App
             finally
             {
                 Save_btn.IsEnabled = true;
-                GeneratePayments_btn.IsEnabled = false;
+                GeneratePayments_btn.IsEnabled = true;
             }
         }
         private void Save_Beneficiry()
