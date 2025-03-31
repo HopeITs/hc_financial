@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="580"/>
                 <ColumnDefinition Width="390"/>
             </Grid.ColumnDefinitions>
-            <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center">
+            <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
                 </Border.Effect>
@@ -102,7 +102,7 @@
 
                 </Grid>
             </Border>
-            <Border Background="White"  CornerRadius="{StaticResource CornerRadius}" Padding="10" Margin="0,5,0,0"  Grid.Column="1" Grid.Row="1">
+            <Border Background="White"  CornerRadius="{StaticResource CornerRadius}" Padding="10" Margin="0,5,0,0"  Grid.Column="1">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
                 </Border.Effect>

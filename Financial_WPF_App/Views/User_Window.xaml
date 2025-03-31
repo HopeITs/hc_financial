@@ -7,7 +7,10 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         x:Class="Financial_WPF_App.Views.User_Window"
         mc:Ignorable="d"
-        Title="User_Window" Width="1280" Height="620"  WindowStartupLocation="CenterScreen">
+        Title="User_Window" Width="1280" Height="620"  WindowStartupLocation="CenterScreen"
+    xmlns:shared="clr-namespace:Syncfusion.Windows.Shared;assembly=Syncfusion.Shared.WPF">
+
+
     <Grid >
         <Grid.ContextMenu>
             <ContextMenu Name="cm">
@@ -19,16 +22,12 @@
             </ContextMenu>
         </Grid.ContextMenu>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100*" ></RowDefinition>
-        </Grid.RowDefinitions>
-
 
         <Grid  Grid.Column="0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Background="{StaticResource LightGray1}">
                 <DockPanel  LastChildFill="True"  VerticalAlignment="Center">
@@ -98,16 +97,18 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}" Margin="10">
+                <Border Grid.ColumnSpan="2" Grid.Column="2" BorderBrush="{StaticResource DarkGray}" Margin="10">
                     <StackPanel Orientation="Vertical">
                         <Label x:Name="Account_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Account" VerticalAlignment="Stretch" Margin="0,0,0,0" />
-                        <syncfusion:CheckListBox x:Name="Account_CheckListBox" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Account_CheckListBox_ItemChecked"/>
+                        <syncfusion:CheckListBox  x:Name="Account_CheckListBox" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Account_CheckListBox_ItemChecked">
+                        </syncfusion:CheckListBox>
                     </StackPanel>
                 </Border>
-                <Border Grid.Column="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}"  Margin="10">
+                <Border Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}"  Margin="10">
                     <StackPanel Orientation="Vertical">
                         <Label x:Name="Subproject_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0"/>
-                        <syncfusion:CheckListBox x:Name="Subproject_CheckListBox" Margin="0,0,1,0" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Subproject_CheckListBox_ItemChecked"/>
+                        <syncfusion:CheckListBox  x:Name="Subproject_CheckListBox" Margin="0,0,1,0" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Subproject_CheckListBox_ItemChecked" ItemContainerStyle="{StaticResource CustomCheckListBoxItemStyle}"/>
+
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="4" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}"  Margin="10">

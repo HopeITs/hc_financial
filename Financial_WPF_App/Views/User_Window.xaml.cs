@@ -850,6 +850,7 @@ namespace Financial_WPF_App.Views
             else
                 return true;
         }
+        
 
     }
 }

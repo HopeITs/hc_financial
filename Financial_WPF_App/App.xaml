@@ -994,70 +994,9 @@ BorderThickness="{TemplateBinding BorderThickness}"/>
                 </Setter>
             </Style>
 
-            <Style TargetType="syncfusion:CheckListBoxItem" x:Key="CustomCheckListBoxItemStyle">
-                <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
-                <Setter Property="Padding" Value="15,2,2,2" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="FontFamily" Value="Rubik" />
-                <Setter Property="FontWeight" Value="SemiBold" />
-                <Setter Property="FontSize" Value="13" />
-                <Setter Property="Cursor" Value="Hand" />
-                <Setter Property="Background" Value="White" />
-                <Setter Property="BorderBrush" Value="{StaticResource MidGray}" />
-                <!-- Custom CheckBox Template -->
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="syncfusion:CheckListBoxItem">
-                            <Grid>
-                                <!-- CheckMark Box -->
-                                <Border x:Name="CheckMarkBorder" Background="{TemplateBinding Background}"
-                Width="12" Height="12"
-                BorderThickness="1"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"/>
+           
 
-                                <!-- CheckMark Icon -->
-                                <Path x:Name="CheckMark"
-              Data="M2,6 L5,9 L10,3"
-              Stroke="{StaticResource MidGray}"
-              StrokeThickness="1.5"
-              Visibility="Collapsed"
-              VerticalAlignment="Center"
-              HorizontalAlignment="Left"/>
 
-                                <!-- CheckBox Label -->
-                                <ContentPresenter
-                          VerticalAlignment="Center"
-                          Margin="20,0,0,0"
-                          TextBlock.Foreground="{TemplateBinding Foreground}" />
-                            </Grid>
-
-                            <!-- Triggers for CheckBox states -->
-                            <ControlTemplate.Triggers>
-                                <!-- When Checked, Show CheckMark -->
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
-                                </Trigger>
-
-                                <!-- Hover Effect: Keep Background the Same -->
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource LightGray2}"/>
-                                </Trigger>
-
-                                <!-- Disabled State -->
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="CheckMarkBorder" Property="BorderBrush" Value="{StaticResource MidGray}" />
-                                    <Setter TargetName="CheckMark" Property="Stroke" Value="{StaticResource DarkGray}" />
-                                    <Setter Property="Foreground" Value="{StaticResource MidGray}" />
-                                    <Setter Property="Cursor" Value="Arrow"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
 
 
             <Style x:Key="CustomDatePickerTextBoxStyle" TargetType="DatePickerTextBox">
@@ -2035,21 +1974,86 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style TargetType="{x:Type syncfusion:CheckListBox}">
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="VerticalAlignment" Value="Stretch"/>
-                <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                <Setter Property="Margin" Value="1,0,1,0"/>
-                <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
-                <Setter Property="FontFamily" Value="Rubik"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="FontSize" Value="13"/>
-                <Setter Property="ItemContainerStyle" Value="{StaticResource CustomCheckListBoxItemStyle}"/>
 
+            <Style TargetType="{x:Type syncfusion:CheckListBoxItem}" x:Key="CustomCheckListBoxItemStyle">
+                <Setter Property="FontFamily" Value="Rubik" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Background" Value="{StaticResource LightGray2}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                <Setter Property="syncfusion:CheckListBox.CheckBoxAlignment" Value="Left"/>
+                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <Setter Property="IsSelected" Value="{Binding State.IsSelected, Mode=TwoWay, RelativeSource={RelativeSource Mode=Self}}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type syncfusion:CheckListBoxItem}">
+                            <Grid>
+                                <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition x:Name="firstColumn" Width="Auto"/>
+                                            <ColumnDefinition x:Name="secondColumn" Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Remove Default Checkmark by Collapsing CheckBox's CheckMark -->
+                                        <CheckBox x:Name="PART_CheckBox" Focusable="false" IsChecked="{Binding State.IsChecked, RelativeSource={RelativeSource Mode=TemplatedParent}}" Width="12" Height="12"
+                  BorderThickness="1"
+                  BorderBrush="{StaticResource MidGray}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource MidGray}" FontSize="13">
+                                            <!-- Set the Visibility of the default CheckMark to Collapsed -->
+                                            <CheckBox.Template>
+                                                <ControlTemplate TargetType="CheckBox">
+                                                    <Border BorderBrush="{StaticResource MidGray}" BorderThickness="1">
+                                                        <Grid Background="White" >
+                                                            <!-- Remove the default checkmark -->
+                                                            <Path Data="M2,6 L5,9 L10,3" Visibility="Collapsed"/>
+                                                        </Grid>
+                                                    </Border>
+
+                                                </ControlTemplate>
+                                            </CheckBox.Template>
+                                        </CheckBox>
+
+                                        <!-- Custom Checkmark Path (Static Color) -->
+                                        <Path x:Name="CheckMark"
+              Data="M2,6 L5,9 L10,3" 
+                    Stroke="{StaticResource MidGray}"
+                    StrokeThickness="1.5"
+              Visibility="Collapsed"
+                    VerticalAlignment="Center"
+              HorizontalAlignment="Left"/>
+                                        <Border x:Name="contentBd" Grid.Column="1">
+                                            <ContentPresenter x:Name="PART_ContentPresenter" VerticalAlignment="Center"
+                              Margin="20,0,0,0"
+                              TextBlock.Foreground="{StaticResource DarkGray}"/>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                                <Rectangle x:Name="BottomBorder" Fill="{StaticResource MidGray}" Height="1" VerticalAlignment="Center" Visibility="Collapsed"/>
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <!-- When Checked, Show the Custom CheckMark -->
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+
+                                <!-- When Item is Selected, Change Background and Border -->
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Setter Property="Background" TargetName="Bd" Value="{StaticResource LightGray2}"/>
+                                    <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource LightGray2}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
-
-     
+            <Style TargetType="{x:Type syncfusion:CheckListBox}">
+                <Setter Property="ItemContainerStyle" Value="{StaticResource CustomCheckListBoxItemStyle}"/>
+            </Style>
         </ResourceDictionary>
 
 
