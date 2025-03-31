@@ -274,7 +274,7 @@
 
             <Style x:Key="WindowPopupStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
                 <Setter Property="Width" Value="1000"/>
-                <Setter Property="Height" Value="500"/>
+                <Setter Property="Height" Value="550"/>
             </Style>
             <Style x:Key="smallWindowPopupStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
                 <Setter Property="Width" Value="500"/>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"  xmlns:Controls="clr-namespace:Financial_WPF_App.Controls" x:Class="Financial_WPF_App.Views.Add_Payment_Window"
-        mc:Ignorable="d" Tag="Add Payment Window"  Height="650"
+        mc:Ignorable="d" Tag="Add Payment Window" 
         Title="Add_Payment_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen"  Closing="Window_Closing">
     <Grid Margin="5">
         <Grid.RowDefinitions>
@@ -136,17 +136,21 @@
                     <Label x:Name="Notes_Label" Grid.Column="0" Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Description:"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   />
                     <TextBox x:Name="Notes_txtBox" Grid.Row="3" TabIndex="7" Grid.Column="1"
                 Style="{DynamicResource FloatingTextBoxStyle}" />
-                    <StackPanel Grid.Row="4" x:Name="CashAccount_panel" Orientation="Horizontal" Grid.Column="1">
-                        <ComboBox x:Name="CashAccount_comboBox" TabIndex="6" Width="175"
-                    DisplayMemberPath="Name" SelectedValuePath="ID" 
+                    <Grid Grid.Row="4" x:Name="CashAccount_panel" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="CashAccount_comboBox" TabIndex="6"
+                    DisplayMemberPath="Name" SelectedValuePath="ID" Grid.Column="0"
                     Style="{StaticResource FloatingComboboxStyle}"
                     VerticalContentAlignment="Center"/>
-                        <Button x:Name="CashAccount_clear_btn" Style="{StaticResource DeleteButtonStyle}" Click="CashAccount_clear_btn_Click" Height="30" >
+                        <Button x:Name="CashAccount_clear_btn" Style="{StaticResource DeleteButtonStyle}" Click="CashAccount_clear_btn_Click" Height="30" Grid.Column="1">
                             <Button.Background>
                                 <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
                             </Button.Background>
                         </Button>
-                    </StackPanel>
+                    </Grid>
                     <Label Grid.Column="0" Grid.Row="4" x:Name="CashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Cash till:"   VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
                     <Label x:Name="Date_Label" Grid.Column="0" Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Date:"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                     <DatePicker x:Name="Date_datepicker" Grid.Row="5" Grid.Column="1"  TabIndex="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="30" />
