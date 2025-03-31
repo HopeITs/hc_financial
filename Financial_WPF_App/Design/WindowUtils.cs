@@ -3,11 +3,13 @@ using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.ProgressBar;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -151,5 +153,6 @@ namespace Financial_WPF_App
                 }
             }
         }
+       
     }
 }
