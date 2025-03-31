@@ -2000,7 +2000,7 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
               HorizontalAlignment="Left"/>
                                         <Border x:Name="contentBd" Grid.Column="1">
                                             <ContentPresenter x:Name="PART_ContentPresenter" VerticalAlignment="Center"
-                              Margin="20,0,0,0"
+                              Margin="5,0,0,0"
                               TextBlock.Foreground="{StaticResource DarkGray}"/>
                                         </Border>
                                     </Grid>

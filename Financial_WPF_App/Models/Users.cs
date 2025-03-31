@@ -112,7 +112,7 @@ namespace Financial_WPF_App.Models
             query += @"SELECT cashaccount.ID, cashaccount.Name
                 FROM cashaccount;";
 
-            query += @"SELECT cashaccount.ID, CONCAT('Cashier - ',cashaccount.Name) as 'Name'
+            query += @"SELECT cashaccount.ID, 'Cashier' as 'Name'
                 FROM cashaccount;";
 
             query += @"SELECT account.ID, account.Name

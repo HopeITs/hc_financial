@@ -21,7 +21,7 @@ namespace Financial_WPF_App.Views
         public User_Window(Main_Window_2 main_Window)
         {
             InitializeComponent();
-
+            Dispatcher.BeginInvoke(new System.Action(() => Window_Loaded(this, null)), System.Windows.Threading.DispatcherPriority.Loaded);
             this.main_Window = main_Window;
 
             if (OnLoad())
@@ -60,6 +60,12 @@ namespace Financial_WPF_App.Views
         string HeaderStyle_Name = "SfDataGrid_header";
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
+
+
+        private ScrollViewer _cashierScrollViewer;
+        private ScrollViewer _cashAccountScrollViewer;
+        private bool _isSyncingScroll = false;
+
         private bool OnLoad()
         {
             try
@@ -458,6 +464,56 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                _cashierScrollViewer = FindScrollViewer(IsCashier_CashAccount_CheckListBox);
+                _cashAccountScrollViewer = FindScrollViewer(CashAccount_CheckListBox);
+
+                if (_cashierScrollViewer != null && _cashAccountScrollViewer != null)
+                {
+                    _cashierScrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
+                    _cashAccountScrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
+                }
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (_isSyncingScroll || e.VerticalChange == 0)
+                return;
+
+            _isSyncingScroll = true;
+
+            if (sender == _cashierScrollViewer && _cashAccountScrollViewer != null)
+            {
+                _cashAccountScrollViewer.ScrollToVerticalOffset(e.VerticalOffset);
+            }
+            else if (sender == _cashAccountScrollViewer && _cashierScrollViewer != null)
+            {
+                _cashierScrollViewer.ScrollToVerticalOffset(e.VerticalOffset);
+            }
+
+            _isSyncingScroll = false;
+        }
+
+        private ScrollViewer FindScrollViewer(DependencyObject element)
+        {
+            if (element == null) return null;
+
+            if (element is ScrollViewer scrollViewer) return scrollViewer;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+            {
+                var child = VisualTreeHelper.GetChild(element, i);
+                var result = FindScrollViewer(child);
+                if (result != null) return result;
+            }
+
+            return null;
         }
 
         private void Show_Hide_Component()

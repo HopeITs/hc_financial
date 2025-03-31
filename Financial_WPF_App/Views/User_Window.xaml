@@ -100,27 +100,27 @@
                 <Border Grid.ColumnSpan="2" Grid.Column="2" BorderBrush="{StaticResource DarkGray}" Margin="10">
                     <StackPanel Orientation="Vertical">
                         <Label x:Name="Account_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Account" VerticalAlignment="Stretch" Margin="0,0,0,0" />
-                        <syncfusion:CheckListBox  x:Name="Account_CheckListBox" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Account_CheckListBox_ItemChecked">
+                        <syncfusion:CheckListBox  x:Name="Account_CheckListBox" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Account_CheckListBox_ItemChecked" ScrollViewer.HorizontalScrollBarVisibility="Visible">
                         </syncfusion:CheckListBox>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}"  Margin="10">
                     <StackPanel Orientation="Vertical">
                         <Label x:Name="Subproject_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0"/>
-                        <syncfusion:CheckListBox  x:Name="Subproject_CheckListBox" Margin="0,0,1,0" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Subproject_CheckListBox_ItemChecked" ItemContainerStyle="{StaticResource CustomCheckListBoxItemStyle}"/>
+                        <syncfusion:CheckListBox  x:Name="Subproject_CheckListBox" Margin="0,0,1,0" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Subproject_CheckListBox_ItemChecked" ItemContainerStyle="{StaticResource CustomCheckListBoxItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
 
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="4" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}"  Margin="10">
                     <StackPanel Orientation="Vertical">
                         <Label x:Name="ExchangeAccountAccount_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Exchange" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0"/>
-                        <syncfusion:CheckListBox x:Name="ExchangeAccount_CheckListBox" Margin="0,0,1,0" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="ExchangeAccount_CheckListBox_ItemChecked"/>
+                        <syncfusion:CheckListBox x:Name="ExchangeAccount_CheckListBox" Margin="0,0,1,0" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="ExchangeAccount_CheckListBox_ItemChecked" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="6" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}"  Margin="10">
                     <StackPanel Orientation="Vertical">
                         <Label x:Name="PersonalAccount_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Personal"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0"/>
-                        <syncfusion:CheckListBox x:Name="PersonalAccount_CheckListBox" Height="250" Margin="0,0,1,0" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="PersonalAccount_CheckListBox_ItemChecked"/>
+                        <syncfusion:CheckListBox x:Name="PersonalAccount_CheckListBox" Height="250" Margin="0,0,1,0" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="PersonalAccount_CheckListBox_ItemChecked" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="8" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}"  Margin="10">
@@ -128,15 +128,15 @@
                         <Label x:Name="CashAccount_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Cash" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0"/>
                         <Grid Margin="0,0,1,0" Height="250">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
-                            <syncfusion:CheckListBox x:Name="CashAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="1"  ItemChecked="CashAccount_CheckListBox_ItemChecked"/>
-                            <syncfusion:CheckListBox x:Name="IsCashier_CashAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False"  ItemChecked="IsCashier_CashAccount_CheckListBox_ItemChecked"/>
+                            <syncfusion:CheckListBox x:Name="CashAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="0"  ItemChecked="CashAccount_CheckListBox_ItemChecked" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Disabled" />
+                            <syncfusion:CheckListBox x:Name="IsCashier_CashAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="1" ItemChecked="IsCashier_CashAccount_CheckListBox_ItemChecked" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
                         </Grid>
                     </StackPanel>
                 </Border>
-                
+
             </Grid>
         </Grid>
     </Grid>

@@ -13,7 +13,7 @@ namespace Financial_WPF_App
         public App()
         {
             //Register Syncfusion license
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NMaF1cXmhKYVFwWmFZfVtgc19EZVZTRGYuP1ZhSXxWdkdhXX9ZcnFXQmFbWUE=");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzc4ODI1M0AzMjM4MmUzMDJlMzBXdEdJTm1LQlBkL3BWNkM2a29WRFdTWkxQVEw0QnFFd3lYTnFQek9GaTlJPQ==");
         }
     }
 }
