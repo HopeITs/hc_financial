@@ -120,6 +120,7 @@ namespace Financial_WPF_App.Views
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
+
         private void Load_Data()
         {
             Load_Comboboxes_Data();
@@ -148,26 +149,6 @@ namespace Financial_WPF_App.Views
             cashier_dt = ds.Tables[4];
 
             personalaccounts_dt = ds.Tables[5];
-        }
-
-        private void Fill_Comboboxes_Data()
-        {
-            Subproject_CheckListBox.ItemsSource = null;
-            Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
-
-            Account_CheckListBox.ItemsSource = null;
-
-            ExchangeAccount_CheckListBox.ItemsSource = null;
-            ExchangeAccount_CheckListBox.ItemsSource = exchangeaccounts_dt.DefaultView;
-
-            CashAccount_CheckListBox.ItemsSource = null;
-            CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
-
-            IsCashier_CashAccount_CheckListBox.ItemsSource = null;
-            IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
-
-            PersonalAccount_CheckListBox.ItemsSource = null;
-            PersonalAccount_CheckListBox.ItemsSource = personalaccounts_dt.DefaultView;
         }
 
         private void Clear_Lists()
@@ -212,41 +193,46 @@ namespace Financial_WPF_App.Views
                     Subprojects.Remove(Subproject_ID);
                 }
 
-                List<int> tempAccounts = new List<int>();
 
-                if (Accounts.Count > 0)
+                if(Account_CheckListBox.IsEnabled == true)
                 {
-                    tempAccounts = Accounts.ToList();
-                }
-                Accounts.Clear();
+                    List<int> tempAccounts = new List<int>();
 
-                Account_CheckListBox.ItemsSource = null;
-
-                if (Subprojects.Count > 0)
-                {
-                    string filterExpression = string.Join(" OR ", Subprojects.Select(id => "subproject_id = " + id));
-                    System.Data.DataRow[] rows = accounts_dt.Select(filterExpression);
-                    DataTable selected_dt = new DataTable();
-                    if (rows.Length != 0)
+                    if (Accounts.Count > 0)
                     {
-                        selected_dt = rows.CopyToDataTable();
-                        if (selected_dt != null && selected_dt.Rows.Count > 0)
+                        tempAccounts = Accounts.ToList();
+                    }
+                    Accounts.Clear();
+
+                    Account_CheckListBox.ItemsSource = null;
+
+                    if (Subprojects.Count > 0)
+                    {
+                        string filterExpression = string.Join(" OR ", Subprojects.Select(id => "subproject_id = " + id));
+                        System.Data.DataRow[] rows = accounts_dt.Select(filterExpression);
+                        DataTable selected_dt = new DataTable();
+                        if (rows.Length != 0)
                         {
-                            Account_CheckListBox.ItemsSource = selected_dt.DefaultView;
+                            selected_dt = rows.CopyToDataTable();
+                            if (selected_dt != null && selected_dt.Rows.Count > 0)
+                            {
+                                Account_CheckListBox.ItemsSource = selected_dt.DefaultView;
+                            }
                         }
                     }
-                }
 
-                if (tempAccounts.Count > 0)
-                {
-                    for (int i = 0; i < Account_CheckListBox.Items.Count; i++)
+                    if (tempAccounts.Count > 0)
                     {
-                        DataRowView row = (DataRowView)Account_CheckListBox.Items[i];
-                        if (tempAccounts.Contains(Convert.ToInt32(row["ID"])))
+                        for (int i = 0; i < Account_CheckListBox.Items.Count; i++)
                         {
-                            Account_CheckListBox.SelectedItems.Add(Account_CheckListBox.Items[i]);
+                            DataRowView row = (DataRowView)Account_CheckListBox.Items[i];
+                            if (tempAccounts.Contains(Convert.ToInt32(row["ID"])))
+                            {
+                                Account_CheckListBox.SelectedItems.Add(Account_CheckListBox.Items[i]);
+                            }
                         }
                     }
+
                 }
 
             }
@@ -331,7 +317,6 @@ namespace Financial_WPF_App.Views
                 ExchangeAccounts.Remove(ExchangeAccount_ID);
             }
         }
-
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
@@ -477,6 +462,21 @@ namespace Financial_WPF_App.Views
 
         private void Show_Hide_Component()
         {
+            Clear_Lists();
+
+            Subproject_CheckListBox.ItemsSource = null;
+
+            Account_CheckListBox.ItemsSource = null;
+
+            ExchangeAccount_CheckListBox.ItemsSource = null;
+
+            CashAccount_CheckListBox.ItemsSource = null;
+
+            IsCashier_CashAccount_CheckListBox.ItemsSource = null;
+
+            PersonalAccount_CheckListBox.ItemsSource = null;
+
+
             string Selected_Role = "";
             if (Role_comboBox.SelectedIndex != -1)
             {
@@ -484,11 +484,11 @@ namespace Financial_WPF_App.Views
                 Selected_Role = row[0]["Name"].ToString();
             }
 
-            Subproject_Label.Visibility = Subproject_CheckListBox.Visibility =
-                Account_Label.Visibility = Account_CheckListBox.Visibility =
-                CashAccount_Label.Visibility = CashAccount_CheckListBox.Visibility = IsCashier_CashAccount_CheckListBox.Visibility =
-                PersonalAccount_Label.Visibility = PersonalAccount_CheckListBox.Visibility =
-                ExchangeAccountAccount_Label.Visibility = ExchangeAccount_CheckListBox.Visibility = Visibility.Collapsed;
+            Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled =
+                Account_Label.IsEnabled = Account_CheckListBox.IsEnabled =
+                CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled =
+                PersonalAccount_Label.IsEnabled = PersonalAccount_CheckListBox.IsEnabled =
+                ExchangeAccountAccount_Label.IsEnabled = ExchangeAccount_CheckListBox.IsEnabled = false;
 
             if (Selected_Role == "Head Office")
             {
@@ -496,31 +496,51 @@ namespace Financial_WPF_App.Views
             }
             else if (Selected_Role == "Project Manager")
             {
-                Subproject_Label.Visibility = Subproject_CheckListBox.Visibility = Visibility.Visible;
+                Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
+
+                Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled = true;
             }
             else if (Selected_Role == "Financial Manager")
             {
-                Subproject_Label.Visibility = Subproject_CheckListBox.Visibility =
-                    CashAccount_Label.Visibility = CashAccount_CheckListBox.Visibility = IsCashier_CashAccount_CheckListBox.Visibility =
-                    PersonalAccount_Label.Visibility = PersonalAccount_CheckListBox.Visibility =
-                    ExchangeAccountAccount_Label.Visibility = ExchangeAccount_CheckListBox.Visibility = Visibility.Visible;
+                Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
+                ExchangeAccount_CheckListBox.ItemsSource = exchangeaccounts_dt.DefaultView;
+                CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
+                IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
+                PersonalAccount_CheckListBox.ItemsSource = personalaccounts_dt.DefaultView;
+
+                Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled =
+                    CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled =
+                    PersonalAccount_Label.IsEnabled = PersonalAccount_CheckListBox.IsEnabled =
+                    ExchangeAccountAccount_Label.IsEnabled = ExchangeAccount_CheckListBox.IsEnabled = true;
             }
             else if (Selected_Role == "Accountant")
             {
-                Subproject_Label.Visibility = Subproject_CheckListBox.Visibility =
-                    Account_Label.Visibility = Account_CheckListBox.Visibility =
-                    CashAccount_Label.Visibility = CashAccount_CheckListBox.Visibility = IsCashier_CashAccount_CheckListBox.Visibility =
-                    PersonalAccount_Label.Visibility = PersonalAccount_CheckListBox.Visibility = Visibility.Visible;
+                Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
+                CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
+                IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
+                PersonalAccount_CheckListBox.ItemsSource = personalaccounts_dt.DefaultView;
+
+                Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled =
+                    Account_Label.IsEnabled = Account_CheckListBox.IsEnabled =
+                    CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled =
+                    PersonalAccount_Label.IsEnabled = PersonalAccount_CheckListBox.IsEnabled = true;
             }
             else if (Selected_Role == "Cashier")
             {
-                CashAccount_Label.Visibility = CashAccount_CheckListBox.Visibility = IsCashier_CashAccount_CheckListBox.Visibility = Visibility.Visible;
+                CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
+                IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
+
+                CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled = true;
             }
             else if (Selected_Role == "Employee")
             {
-                Subproject_Label.Visibility = Subproject_CheckListBox.Visibility =
-                    Account_Label.Visibility = Account_CheckListBox.Visibility =
-                    CashAccount_Label.Visibility = CashAccount_CheckListBox.Visibility = IsCashier_CashAccount_CheckListBox.Visibility = Visibility.Visible;
+                Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
+                CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
+                IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
+
+                Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled =
+                    Account_Label.IsEnabled = Account_CheckListBox.IsEnabled =
+                    CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled = true;
             }
             else if (Selected_Role == "Donor")
             {
@@ -725,7 +745,7 @@ namespace Financial_WPF_App.Views
                     Username = Username_txtBox.Text;
 
                     bool usernameExists = users_dt.AsEnumerable()
-                                .Any(row => row.Field<string>("username") == Username);
+                                .Any(row => (row.Field<string>("username") == Username && row.Field<int>("user_id") != User_ID));
 
                     if (usernameExists)
                     {
@@ -761,12 +781,12 @@ namespace Financial_WPF_App.Views
                 {
                     if (Check_Cahier())
                     {
-                        MessageBox.Show("Cannot select more than one cashier for the same account.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        MessageBox.Show("Can not select more than one cashier for the same account.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         return;
                     }
                 }
 
-                if (Account_CheckListBox.Visibility == Visibility.Visible) { Subprojects.Clear(); Original_Subprojects.Clear(); }
+                if (Account_CheckListBox.IsEnabled == true) { Subprojects.Clear(); Original_Subprojects.Clear(); }
 
                 if (User_ID == -1)
                 {
@@ -825,8 +845,6 @@ namespace Financial_WPF_App.Views
             try
             {
                 Show_Hide_Component();
-                Clear_Lists();
-                Fill_Comboboxes_Data();
             }
             catch (Exception ex)
             {
