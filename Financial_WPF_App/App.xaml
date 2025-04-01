@@ -7,12 +7,13 @@
              xmlns:uc ="clr-namespace:Financial_WPF_App.Controls"
              xmlns:helper="clr-namespace:Financial_WPF_App.helper"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:design="clr-namespace:Financial_WPF_App.Design"
              StartupUri="Main_Window2.xaml">
     
     <Application.Resources>
-
+        
         <ResourceDictionary>
-
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />-->
@@ -56,7 +57,7 @@
                 
             </ResourceDictionary.MergedDictionaries>
 
-
+            <design:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
             <!--New Style-->
            
             <!-- Global font for TextBlock -->
@@ -274,7 +275,7 @@
 
             <Style x:Key="WindowPopupStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
                 <Setter Property="Width" Value="1000"/>
-                <Setter Property="Height" Value="500"/>
+                <Setter Property="Height" Value="550"/>
             </Style>
             <Style x:Key="smallWindowPopupStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
                 <Setter Property="Width" Value="500"/>
@@ -584,19 +585,19 @@
                             <Grid>
                                 <!-- Background Border -->
                                 <Border Background="{TemplateBinding Background}" 
-        BorderBrush="{TemplateBinding BorderBrush}" 
-        BorderThickness="{TemplateBinding BorderThickness}"/>
-
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"/>
 
                                 <!-- Placeholder Text -->
                                 <TextBlock x:Name="PlaceholderText"
-               Text="{TemplateBinding Tag}"
-               Foreground="{StaticResource MidGray}"
-               FontSize="13"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               Visibility="Visible"
-                IsHitTestVisible="True"/>
+                               Text="{TemplateBinding Tag}"
+                               Foreground="{StaticResource MidGray}"
+                               FontSize="13"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Visibility="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource  TextToVisibilityConverter}}"
+                               IsHitTestVisible="False"/>
+
                                 <!-- Actual TextBox Content -->
                                 <ScrollViewer x:Name="PART_ContentHost" Margin="0,0,0,0"/>
                             </Grid>
@@ -604,6 +605,9 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+
+
 
 
             <!-- TextBox-Action bar Style -->
@@ -671,8 +675,9 @@
                                Visibility="Visible"
                                IsHitTestVisible="True"/>
                                 <!-- Actual TextBox Content -->
-                                <ScrollViewer x:Name="PART_ContentHost" Margin="12,0,0,0"/>
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="0,0,0,0"/>
                             </Grid>
+                            
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>

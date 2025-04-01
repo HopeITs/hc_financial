@@ -223,6 +223,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Design\tagItemInfo.cs" />
+    <Compile Include="Design\TextToVisibilityConverter.cs" />
     <Compile Include="Design\WindowControlBar_Popup.xaml.cs">
       <DependentUpon>WindowControlBar_Popup.xaml</DependentUpon>
     </Compile>
