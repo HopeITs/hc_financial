@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
         mc:Ignorable="d" Tag="Add Sub Project Window"
-        Title="Add_Subproject_Window" Style="{StaticResource smallWindowPopupStyle}" Width="560" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        Title="Add_Subproject_Window" Style="{StaticResource WindowPopupStyle}" Width="700"  WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -17,24 +17,24 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="4">
             <local:WindowControlBar_Popup x:Name="ControlBar"/>
         </DockPanel>
-        <Label Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="Project:"  VerticalContentAlignment="Center" Grid.Row="2" HorizontalAlignment="Left" Margin="0,0,0,7" VerticalAlignment="Bottom" />
-        <ComboBox x:Name="Project_comboBox" Style="{StaticResource FloatingComboboxStyle}" Width="175"
+        <Label Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="Project:"  VerticalContentAlignment="Center" Grid.Row="2"  VerticalAlignment="Center" />
+        <ComboBox x:Name="Project_comboBox" Style="{StaticResource FloatingComboboxStyle}"
             Grid.Column="1"  TabIndex="1" 
             DisplayMemberPath="Name" SelectedValuePath="ID" Grid.Row="2" />
         <Label Grid.Column="2" Style="{DynamicResource statistic_lableStyle}" Content="City:"  VerticalContentAlignment="Center"  Grid.Row="2" />
-        <ComboBox x:Name="City_comboBox" Grid.Column="3" DisplayMemberPath="Name" SelectedValuePath="ID"   TabIndex="2" Width="175"  VerticalContentAlignment="Center"   Style="{StaticResource FloatingComboboxStyle}" Grid.Row="2"/>
-        <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Center name:"  VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,0,1,0"/>
+        <ComboBox x:Name="City_comboBox" Grid.Column="3" DisplayMemberPath="Name" SelectedValuePath="ID"   TabIndex="2"  VerticalContentAlignment="Center"   Style="{StaticResource FloatingComboboxStyle}" Grid.Row="2"/>
+        <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Center name:"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
         <TextBox x:Name="Name_txtBox" Grid.Column="1" Grid.Row="1"  TabIndex="3"
             Style="{DynamicResource FloatingTextBoxStyle}"/>
-        <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Start date:" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,0,1,0" />
+        <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Start date:" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
         <DatePicker x:Name="beginDate_datepicker" Grid.Row="3" TabIndex="4"  VerticalContentAlignment="Center" Grid.Column="1" Height="30" />
         <Label Grid.Column="2" Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="End date:"  VerticalContentAlignment="Center"/>
         
@@ -42,12 +42,11 @@
                 Style="{DynamicResource statistic_lableStyle}" Content="All Donors" 
                 HorizontalAlignment="Stretch"  HorizontalContentAlignment="Center"
                 VerticalAlignment="Bottom" Margin="1,10,1,0" Height="30"/>
-            <ListBox x:Name="alldonors_listbox" Width="175" Background="{DynamicResource LightGray1}" BorderBrush="{x:Null}" FontSize="12" FontFamily="Rubik" Padding="5" FontWeight="SemiBold" Foreground="{StaticResource DarkGray}"
+            <ListBox x:Name="alldonors_listbox" Background="{DynamicResource LightGray1}" BorderBrush="{x:Null}" FontSize="12" FontFamily="Rubik" Padding="5" FontWeight="SemiBold" Foreground="{StaticResource DarkGray}"
                 Grid.Column="3" Grid.Row="5"
-                VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            </ListBox>
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-            <Button Grid.Column="2" Grid.Row="5" x:Name="add_btn"  
+        <Button Grid.Column="2" Grid.Row="5" x:Name="add_btn"  
                 Content="&lt;&lt;" Width="25" Height="25" TabIndex="4"
                 Click="AddDonor_btn_Click"  BorderBrush="{StaticResource LightGray1}" Background="{StaticResource LightGray2}" Foreground="{StaticResource DarkGray}" Margin="0,-33,0,0">
             </Button>
@@ -63,7 +62,7 @@
                 Margin="1,10,1,0" Width="auto" HorizontalAlignment="Stretch" 
                 VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Height="30"/>
 
-        <ListBox x:Name="donors_listbox"  Grid.Column="1" Grid.Row="5" BorderBrush="{x:Null}" Width="175" Background="{DynamicResource LightGray1}" FontSize="12" Padding="5" FontFamily="Rubik" FontWeight="SemiBold" Foreground="{StaticResource DarkGray}"
+        <ListBox x:Name="donors_listbox"  Grid.Column="1" Grid.Row="5" BorderBrush="{x:Null}" Background="{DynamicResource LightGray1}" FontSize="12" Padding="5" FontFamily="Rubik" FontWeight="SemiBold" Foreground="{StaticResource DarkGray}"
                
                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
         <Button  Style="{DynamicResource ButtonColoredStyle}" Content="Save"
