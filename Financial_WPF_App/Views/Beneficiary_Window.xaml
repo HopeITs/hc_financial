@@ -7,7 +7,7 @@
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:local="clr-namespace:Financial_WPF_App"
         mc:Ignorable="d" Tag="Beneficiary Window"
-        Title="Beneficiary_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen"
+        Title="Beneficiary_Window" Style="{StaticResource WindowPopupStyle}" Width="1075" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
 
     <Window.ContextMenu>
@@ -32,13 +32,13 @@
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="1.2*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="280"/>
-                    <ColumnDefinition Width="690"/>
+                    <ColumnDefinition Width="360"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Grid.Column="1" Margin="0,5,0,0"  Grid.Row="1">
                     <Border.Effect>
@@ -114,29 +114,29 @@
                         </Grid.ColumnDefinitions>
                         <Label Style="{DynamicResource statistic_lableStyle}" Content="Project Number:"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
                         <TextBox x:Name="MP_ID_txtBox" Grid.Column="3"  Grid.Row="0" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="1" Width="175" />
-                        <Label Grid.Row="0" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Project Title:" Margin="11,0,1,0" HorizontalAlignment="Right"  />
+                        <Label Grid.Row="0" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Project Title:" Margin="0,0,1,0" HorizontalAlignment="Right"  />
                         <TextBox x:Name="MP_Name_txtBox" Grid.Column="1"  Grid.Row="0" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="2" Width="175"/>
 
-                        <Label Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Beneficiary Name:"   HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                        <Label Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Beneficiary Name:"   HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0"  />
 
-                        <Label Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="Names of partners:"  HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                        <Label Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="Names of partners:"  HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0"  />
                         <TextBox x:Name="Partners_txtBox" Grid.Column="1" Grid.Row="2" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="6"   Grid.ColumnSpan="3" />
 
-                        <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="ID number:"  Grid.Column="0" HorizontalAlignment="Right"  HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                        <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="ID number:"  Grid.Column="0" HorizontalAlignment="Right"  HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0"  />
                         <TextBox x:Name="NationalNumber_txtBox" Grid.Column="1" Grid.Row="3" Width="175" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="7"   />
 
                         <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Mobile number:" HorizontalAlignment="Right"  Grid.Column="2"  HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
                         <TextBox x:Name="Mobile_txtBox" Grid.Column="3" Grid.Row="3" Width="175" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="8"   />
 
 
-                        <Label Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" Content="Loan amount:" HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                        <Label Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" Content="Loan amount:" HorizontalAlignment="Right" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0"  />
                         <TextBox x:Name="Amount_txtBox" Grid.Column="1" Grid.Row="4" Width="175" LostFocus="Amount_txtBox_LostFocus" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="9" HorizontalContentAlignment="Stretch" />
 
                         <Label Grid.Column="2"  Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" Content="Amount owed:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left"  />
                         <TextBox x:Name="ToReturn_Amount_txtBox" Grid.Column="3" Width="175" Grid.Row="4" TabIndex="10" LostFocus="ToReturn_Amount_txtBox_LostFocus" Style="{DynamicResource FloatingTextBoxStyle}"  HorizontalContentAlignment="Stretch"    />
 
 
-                        <Label Grid.Column="0" Grid.Row="6" Style="{DynamicResource statistic_lableStyle}" Content="Financing date:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" />
+                        <Label Grid.Column="0" Grid.Row="6" Style="{DynamicResource statistic_lableStyle}" Content="Financing date:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0" />
                         <DatePicker x:Name="Date_datepicker" Grid.Column="1"  Grid.Row="6" TabIndex="11" Width="175"
                     SelectedDateChanged="Date_datepicker_SelectedDateChanged" 
                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" 
@@ -146,29 +146,33 @@
                         <DatePicker x:Name="FirstPaymentDate_datepicker" Grid.Column="3"  Grid.Row="6" TabIndex="12" Width="175"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"  />
 
-                        <Label Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Payment:" Grid.Column="0" HorizontalAlignment="Right"   HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                        <Label Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Payment:" Grid.Column="0" HorizontalAlignment="Right"   HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0"  />
                         <TextBox x:Name="Payment_txtBox" Grid.Column="1" Grid.Row="5" Width="175"
              LostFocus="Payment_txtBox_LostFocus"
              Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="13" />
 
-                        <Label Grid.Column="0" Grid.Row="7" Style="{DynamicResource statistic_lableStyle}" Content="Receipt number:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                        <Label Grid.Column="0" Grid.Row="7" Style="{DynamicResource statistic_lableStyle}" Content="Receipt number:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0"  />
                         <TextBox x:Name="ReceiptNumber_txtBox" Grid.Column="1" Grid.Row="7"  Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="14" Width="175"  />
 
                         <Label Grid.Column="2" Grid.Row="7" Style="{DynamicResource statistic_lableStyle}" Content="Order Number:"   HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" />
                         <TextBox x:Name="OrderNumber_txtBox" Grid.Column="3" Grid.Row="7" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="15" Width="175"  VerticalContentAlignment="Stretch"/>
 
-                        <Label Grid.Column="0" Grid.Row="8" Style="{DynamicResource statistic_lableStyle}" Content="Group account:"  HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
-                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="8" Height="30">
-                            <ComboBox x:Name="Account_comboBox"  Style="{StaticResource FloatingComboboxStyle}" Width="145" DisplayMemberPath="Name" SelectedValuePath="ID" TabIndex="17"  VerticalContentAlignment="Stretch"  />
-                            <Button x:Name="Account_clear_btn" Style="{StaticResource DeleteButtonStyle}" Height="30" BorderBrush="{x:Null}" Grid.Column="3" Grid.Row="10" Click="Account_clear_btn_Click" >
+                        <Label Grid.Column="0" Grid.Row="8" Style="{DynamicResource statistic_lableStyle}" Content="Group account:"  HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0"  />
+                        <Grid  Grid.Column="1" Grid.Row="8" Height="30" Grid.ColumnSpan="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="Account_comboBox" Grid.Column="0" Style="{StaticResource FloatingComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID" TabIndex="17"  VerticalContentAlignment="Stretch"  />
+                            <Button x:Name="Account_clear_btn" Grid.Column="1" Style="{StaticResource DeleteButtonStyle}" Height="30" BorderBrush="{x:Null}" Click="Account_clear_btn_Click" >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
                                 </Button.Background>
                             </Button>
-                        </StackPanel>
+                        </Grid>
 
 
-                        <Label Grid.Column="0" Grid.Row="9" Style="{DynamicResource statistic_lableStyle}" Content="Notes:" HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" />
+                        <Label Grid.Column="0" Grid.Row="9" Style="{DynamicResource statistic_lableStyle}" Content="Notes:" HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,0,1,0" />
                         <TextBox x:Name="Notes_txtBox" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="9" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="18" Grid.ColumnSpan="3" HorizontalContentAlignment="Left" />
                         <Button Grid.Row="10" Grid.Column="0" x:Name="Original_AvgRate_help" Width="20" Height="20" BorderBrush="{x:Null}" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Right" Margin="0,0,5,0" >
 
@@ -190,25 +194,25 @@
                             <Button  Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn"  TabIndex="20" Grid.Column="1"
                  Click="Save_btn_Click" Content="Save" VerticalAlignment="Bottom" />
                         </Grid>
-                        <Label Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Payments interval (M):" Grid.Column="2" HorizontalAlignment="Right"  HorizontalContentAlignment="Left"   />
+                        <Label Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Payments interval (M):" Grid.Column="2" HorizontalAlignment="Right"  HorizontalContentAlignment="Left" Margin="0,0,1,0"   />
                         <TextBox x:Name="Payment_interval_TextBox" Grid.Column="3"  Grid.Row="5" TabIndex="10" LostFocus="ToReturn_Amount_txtBox_LostFocus"
                     Style="{DynamicResource FloatingTextBoxStyle}"  HorizontalContentAlignment="Stretch"   />
                         <TextBox Grid.Column="1" x:Name="FName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center" TabIndex="3" Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="First Name" TextChanged="FName_txtBox_TextChanged"/>
-                        <TextBox Grid.Column="2" x:Name="FaName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center"  TabIndex="4"  Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="Father Name" TextChanged="FaName_txtBox_TextChanged"/>
+                        <TextBox Grid.Column="2" x:Name="FaName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center"  TabIndex="4"  Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="Father Name" TextChanged="FaName_txtBox_TextChanged" Width="175"/>
                         <TextBox x:Name="LName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center"  TabIndex="5" Grid.Column="3" Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="Last Name" TextChanged="LName_txtBox_TextChanged"/>
 
                     </Grid>
                 </Border>
 
 
-                <syncfusion:SfDataGrid  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"   Margin="2,35,20,5" x:Name="myDataGrid" 
+                <syncfusion:SfDataGrid  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"  x:Name="myDataGrid" Margin="2,35,20,5"
                        Style="{DynamicResource SfDataGrid_body}"
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
                                     ShowGroupDropArea ="False"
                                     Loaded="myDataGrid_Loaded"
-                        SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="660" >
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
