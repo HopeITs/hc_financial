@@ -1,12 +1,8 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
-using Google.Protobuf.Collections;
-using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI.Relational;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.Windows.Shared;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;

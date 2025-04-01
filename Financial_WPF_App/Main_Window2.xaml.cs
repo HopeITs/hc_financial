@@ -1,5 +1,4 @@
-﻿using ControlzEx.Controls;
-using Financial_WPF_App.Design;
+﻿using Financial_WPF_App.Design;
 using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
@@ -22,7 +21,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static Financial_WPF_App.Helper.TreeViewItemViewModel;
 using Login = Financial_WPF_App.Models.Login;
 
 namespace Financial_WPF_App

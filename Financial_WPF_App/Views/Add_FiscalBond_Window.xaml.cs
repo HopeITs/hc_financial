@@ -1,9 +1,6 @@
 ﻿using Financial_WPF_App.Models;
-using Syncfusion.Windows.Shared;
-using Syncfusion.XlsIO.Implementation.PivotAnalysis;
 using System;
 using System.Data;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;

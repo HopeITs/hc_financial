@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Syncfusion.UI.Xaml.Grid;
 using System.Data;
 using System.Linq;
-using Syncfusion.UI.Xaml.Grid;
 
 public class SearchDataGrid
 {

@@ -1,6 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using Syncfusion.Pdf.Barcode;
-using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data;

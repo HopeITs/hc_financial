@@ -1,6 +1,5 @@
 ﻿
 using MySql.Data.MySqlClient;
-using Syncfusion.Windows.Shared;
 using System;
 using System.Data;
 using System.Text.RegularExpressions;

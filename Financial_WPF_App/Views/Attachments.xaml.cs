@@ -1,10 +1,8 @@
 ﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Microsoft.Win32;
-using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;

@@ -1,6 +1,5 @@
 ﻿using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Cells;
-using System.Drawing;
 using System.Windows;
 
 namespace Financial_WPF_App.Helper

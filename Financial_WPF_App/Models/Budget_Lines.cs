@@ -1,9 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using static Financial_WPF_App.Models.Beneficiary;
 
 namespace Financial_WPF_App.Models
 {

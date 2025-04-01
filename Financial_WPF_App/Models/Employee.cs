@@ -2,7 +2,6 @@
 using System;
 using System.Data;
 using System.Text.RegularExpressions;
-using static Financial_WPF_App.Helper.TreeViewItemViewModel;
 
 namespace Financial_WPF_App.Models
 {

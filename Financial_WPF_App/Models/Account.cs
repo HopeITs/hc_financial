@@ -1,13 +1,10 @@
 ﻿using MySql.Data.MySqlClient;
-using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlTypes;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace Financial_WPF_App.Models
 {

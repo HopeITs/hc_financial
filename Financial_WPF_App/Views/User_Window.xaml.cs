@@ -1,4 +1,5 @@
 ﻿using Financial_WPF_App.Models;
+using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Syncfusion.UI.Xaml.Grid;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
 namespace Financial_WPF_App.Views

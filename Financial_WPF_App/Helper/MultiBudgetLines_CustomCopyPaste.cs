@@ -1,9 +1,7 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
-using Mysqlx.Crud;
 using Syncfusion.UI.Xaml.Grid;
 using System;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;

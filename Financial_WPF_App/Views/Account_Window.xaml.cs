@@ -6,19 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 
 namespace Financial_WPF_App
 {
     public partial class Account_Window : Window
     {
-
         public Account_Window(string Category, string AccType, string Project_ID, string SubProject_ID, Main_Window_2 main_Window)
         {
             InitializeComponent();

@@ -1,7 +1,6 @@
-﻿using System.Windows;
+﻿using Microsoft.Xaml.Behaviors;
+using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Xaml.Behaviors;
-using Financial_WPF_App.helper; // Adjust the namespace if needed
 
 namespace Financial_WPF_App.helper
 {

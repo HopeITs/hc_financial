@@ -3,7 +3,6 @@ using Financial_WPF_App.Models;
 using System;
 using System.Data;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Windows;
+﻿using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace Financial_WPF_App.Helper

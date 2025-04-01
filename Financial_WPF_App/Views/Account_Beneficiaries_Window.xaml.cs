@@ -9,12 +9,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Syncfusion.UI.Xaml.Grid;
 namespace Financial_WPF_App.Views
 {
     public partial class Account_Beneficiaries_Window : Window
