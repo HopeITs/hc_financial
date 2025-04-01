@@ -3,150 +3,110 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
+        xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.Add_Employee_Window"
-        mc:Ignorable="d"
-        Title="Add_Employee_Window" Height="600" Width="1000" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
-    <Grid Margin="0,0,10,6">
-        <Grid.ContextMenu>
-            <ContextMenu>
-                <MenuItem Header="Refresh" Click = "Refresh_Click" >
-                    <MenuItem.Icon>
-                        <Image Source="/Images/refresh32.png" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </ContextMenu>
-        </Grid.ContextMenu>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10*"/>
-            <ColumnDefinition Width="15*"/>
-            <ColumnDefinition Width="15*"/>
-            <ColumnDefinition Width="15*"/>
-            <ColumnDefinition Width="9*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="17*"/>
-            <RowDefinition Height="69*"/>
-            <RowDefinition Height="121*"/>
-            <RowDefinition Height="247*"/>
-            <RowDefinition Height="72*"/>
-        </Grid.RowDefinitions>
-        <Label Style="{DynamicResource lableStyle}" Content="Employee:" Margin="1,1,1,1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Grid.Column="4" Grid.Row="1"  />
-        <TextBox Grid.Column="3" x:Name="FName_txtBox" TextWrapping="Wrap" FontSize="14"   Margin="2,0,2,0" VerticalContentAlignment="Center" FlowDirection="RightToLeft" TabIndex="3" Grid.Row="1" VerticalAlignment="Center" Height="25" />
-        <TextBlock Grid.Column="3" x:Name="Placeholder1" IsHitTestVisible="False" TextWrapping="Wrap" Text="First name" Margin="2,0,2,0" Foreground="DarkGray" FlowDirection="RightToLeft" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center" Height="19">
-            <TextBlock.Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Text, ElementName=FName_txtBox}" Value="">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-        <TextBox Grid.Column="2" x:Name="FaName_txtBox" TextWrapping="Wrap" Width="Auto" FontSize="14" VerticalContentAlignment="Center" FlowDirection="RightToLeft" TabIndex="4" Margin="2,0,2,0" Grid.Row="1" VerticalAlignment="Center" Height="25" />
-        <TextBlock Grid.Column="2" x:Name="Placeholder2" IsHitTestVisible="False" TextWrapping="Wrap" Text="Father name" Margin="2,0,2,0" Foreground="DarkGray" FlowDirection="RightToLeft" Grid.Row="1" VerticalAlignment="Center" Height="19">
-            <TextBlock.Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Text, ElementName=FaName_txtBox}" Value="">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-        <TextBox x:Name="LName_txtBox" TextWrapping="Wrap" Width="Auto" FontSize="14"   Margin="2,0,2,0" VerticalContentAlignment="Center" FlowDirection="RightToLeft" TabIndex="5" Grid.Row="1" VerticalAlignment="Center" Height="25" Grid.Column="1" />
-        <TextBlock x:Name="Placeholder3" IsHitTestVisible="False" TextWrapping="Wrap" Text="Family name" Foreground="DarkGray" Margin="1,0,2,0" FlowDirection="RightToLeft" Grid.Row="1" VerticalAlignment="Center" Height="19" Grid.Column="1">
-            <TextBlock.Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Text, ElementName=LName_txtBox}" Value="">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-        <Grid Grid.Row="2" Grid.ColumnSpan="5" Margin="2,2,1,2">
+        mc:Ignorable="d" Tag="Add Employee Window"
+        Title="Add_Employee_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+    <Grid Margin="5">
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="8*"/>
-                <ColumnDefinition Width="18*"/>
-                <ColumnDefinition Width="11*"/>
-                <ColumnDefinition Width="18*"/>
-                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="355*"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
-            <Label x:Name="Subproject_label" Style="{DynamicResource lableStyle}" Content="Center:" Margin="1,2,1,2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Grid.Column="4"  />
-            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Column="3" Margin="1,2,1,2" >
-                <ComboBox x:Name="Subproject_comboBox" TabIndex="3" 
-                    DisplayMemberPath="Name" SelectedValuePath="ID" 
-                    FlowDirection="RightToLeft" Width="147" MinWidth="130" FontSize="16"
-                    VerticalContentAlignment="Center" Height="30"/>
-                <Button x:Name="Subproject_clear_btn" BorderBrush="{x:Null}" Width="25" Height="25" Click="Subproject_clear_btn_Click" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-            </StackPanel>
-            <Label x:Name="Line_label" Style="{DynamicResource lableStyle}" Content="Position:" Margin="1,2,1,2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Grid.Column="2"  />
-            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="1,3,1,1" Grid.Column="1" >
-                <ComboBox x:Name="Line_comboBox" TabIndex="3" 
-                    DisplayMemberPath="Line" SelectedValuePath="line_ID" 
-                    FlowDirection="RightToLeft" Width="146" MinWidth="130" FontSize="16"
-                    VerticalContentAlignment="Center" Height="30"/>
-                <Button x:Name="Line_clear_btn" BorderBrush="{x:Null}" Width="25" Height="25" Click="Line_clear_btn_Click" >
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-            </StackPanel>
-            <Label x:Name="BeginDate_lable" Style="{DynamicResource lableStyle}" Content="Start date:" Margin="1,2,1,2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Grid.Column="4" Grid.Row="1"  />
-            <Label x:Name="EndDate_label" Style="{DynamicResource lableStyle}" Content="End date:" Margin="1,2,1,2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Grid.Column="2" Grid.Row="1"  />
-            <DatePicker x:Name="BeginDate_datepicker"  Grid.Row="1" TabIndex="11" FontFamily="Segoe UI" 
-                HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" 
-                FontSize="14" FlowDirection="RightToLeft" Margin="2,0,2,0" Height="28" Grid.Column="3" />
-            <DatePicker x:Name="EndDate_datepicker"  Grid.Row="1" TabIndex="11" FontFamily="Segoe UI" HorizontalContentAlignment="Stretch" 
-                FontSize="14" FlowDirection="RightToLeft" Margin="70,19,2,18" Height="28" Grid.Column="1" />
-            <Button Style="{DynamicResource Add_Style}" 
-                x:Name="Add_btn" TabIndex="15" Margin="34,18,43,18" Width="NaN" Click="Add_btn_Click" Grid.Row="1"  />
-        </Grid>
+            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="5">
+                <local:WindowControlBar_Popup x:Name="ControlBar"/>
+            </DockPanel>
 
-        <syncfusion:SfDataGrid x:Name="EmployeeDataGrid"                                         
+            <Label Style="{DynamicResource statistic_lableStyle}" Content="Employee:"   Grid.Column="0" Grid.Row="1"  />
+
+            <TextBox Grid.Column="1" x:Name="FName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center" TabIndex="3" Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="First Name"/>
+            <TextBox Grid.Column="2" x:Name="FaName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center"  TabIndex="4"  Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="Father Name"/>
+            <TextBox x:Name="LName_txtBox" TextWrapping="Wrap"  VerticalContentAlignment="Center"  TabIndex="5" Grid.Column="3" Grid.Row="1" Style="{StaticResource FloatingTextBoxStyle}" Tag="Last Name"/>
+
+
+
+
+
+            <Label x:Name="Subproject_label" Style="{DynamicResource statistic_lableStyle}" Content="Center:" Grid.Row="2" Grid.Column="0" />
+            <Grid  Grid.Row="2" Grid.Column="1" Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="Subproject_comboBox" TabIndex="3" Style="{StaticResource FloatingComboboxStyle}" Grid.Column="0"
+        DisplayMemberPath="Name" SelectedValuePath="ID" />
+                <Button x:Name="Subproject_clear_btn"  Click="Subproject_clear_btn_Click"  Style="{StaticResource DeleteButtonStyle}" Grid.Column="1" Width="25" Height="30">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+            <Label x:Name="Line_label" Style="{DynamicResource statistic_lableStyle}" Content="Position:" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right"  />
+            <Grid   Grid.Column="3" Grid.Row="2" Height="30" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="Line_comboBox" TabIndex="3" Style="{StaticResource FloatingComboboxStyle}" Grid.Column="0"
+        DisplayMemberPath="Line" SelectedValuePath="line_ID" />
+                <Button x:Name="Line_clear_btn" Style="{StaticResource DeleteButtonStyle}" Click="Line_clear_btn_Click" Grid.Column="1" Height="30">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+            <Label x:Name="BeginDate_lable" Style="{DynamicResource statistic_lableStyle}" Grid.Row="3"  Content="Start date:" />
+            <Label x:Name="EndDate_label" Style="{DynamicResource statistic_lableStyle}" Content="End date:" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" />
+            <DatePicker x:Name="BeginDate_datepicker"   TabIndex="11" Grid.Row="3" Grid.Column="1" Height="30"
+     />
+            <DatePicker x:Name="EndDate_datepicker"  TabIndex="11" Grid.Row="3" Grid.Column="3" Height="30"/>
+            <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Insert" ToolTipService.InitialShowDelay="100"
+    x:Name="Add_btn" TabIndex="15"  Click="Add_btn_Click" Grid.Row="3" Grid.Column="4" HorizontalAlignment="Left" Margin="5,0,1,0"  >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/NewEntry.png"/>
+                </Button.Background>
+            </Button>
+            <Button  Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn"  TabIndex="20" Content="Save" Grid.Row="5" Grid.Column="0" 
+Click="Save_btn_Click" 
+HorizontalContentAlignment="Center" 
+VerticalContentAlignment="Center"  />
+
+            <syncfusion:SfDataGrid x:Name="EmployeeDataGrid"                                         
             Style="{DynamicResource SfDataGrid_body}"
             HeaderStyle="{DynamicResource SfDataGrid_header}"
             RowStyle="{DynamicResource SfDataGrid_RowStyle}"
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  AllowFiltering="False" ShowGroupDropArea="False"
-            Margin="2,10,4,10" Grid.Row="3" Grid.ColumnSpan="5" NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2">
-            <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" HeaderText="Center"  MappingName="SubprojectName" />
-                <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Position"  MappingName="LineName" />
-                <syncfusion:GridDateTimeColumn x:Name="BeginDate_DataGridColumn" HeaderText="Start date" MappingName="BeginDate"
+             Grid.Row="4" NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2" Grid.ColumnSpan="9" Margin="2,5,5,5">
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" HeaderText="Center"  MappingName="SubprojectName" />
+                    <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Position"  MappingName="LineName" />
+                    <syncfusion:GridDateTimeColumn x:Name="BeginDate_DataGridColumn" HeaderText="Start date" MappingName="BeginDate"
                     CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   AllowEditing="True"/>
-                <syncfusion:GridDateTimeColumn x:Name="EndDate_DataGridColumn" HeaderText="End date" MappingName="EndDate"
+                    <syncfusion:GridDateTimeColumn x:Name="EndDate_DataGridColumn" HeaderText="End date" MappingName="EndDate"
                     CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"  AllowEditing="True" />
 
-                <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
-                    <syncfusion:GridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Style="{StaticResource Delete_Style}" Click="Subproject_DeleteButton_Click"/>
-                        </DataTemplate>
-                    </syncfusion:GridTemplateColumn.CellTemplate>
-                </syncfusion:GridTemplateColumn>
+                    <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource Delete_Style}" Click="Subproject_DeleteButton_Click"/>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
 
-            </syncfusion:SfDataGrid.Columns>
-        </syncfusion:SfDataGrid>
-        <Button  Style="{DynamicResource SaveButton_Style}" x:Name="Save_btn"  TabIndex="20"
-            Click="Save_btn_Click" 
-            HorizontalContentAlignment="Center" 
-            VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="4" Height="43" Width="96" Margin="59,0,0,0"  />
+                </syncfusion:SfDataGrid.Columns>
+            </syncfusion:SfDataGrid>
+        </Grid>
     </Grid>
 </Window>
