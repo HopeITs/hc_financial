@@ -2028,6 +2028,31 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
             <Style TargetType="{x:Type syncfusion:CheckListBox}">
                 <Setter Property="ItemContainerStyle" Value="{StaticResource CustomCheckListBoxItemStyle}"/>
             </Style>
+            <Style TargetType="ListBoxItem">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="Padding" Value="0,5,5,0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <!-- Hover Effect -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource LightGray2}"/>
+                                </Trigger>
+                                <!-- Selected Item Effect -->
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource LightGray2}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
 
 
