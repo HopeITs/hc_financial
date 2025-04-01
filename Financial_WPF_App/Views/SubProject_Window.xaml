@@ -4,17 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        xmlns:local="clr-namespace:Financial_WPF_App.Helper"
+        xmlns:local="clr-namespace:Financial_WPF_App"
+        xmlns:helper="clr-namespace:Financial_WPF_App.Helper"
         mc:Ignorable="d"
-        Title="SubProjectWindow"  Height="614" Width="1280"   
-        WindowStartupLocation="CenterScreen"
-        FontFamily="Myriad Arabic" FontSize="16">
-    <Window.Resources>
-
-    </Window.Resources>
-    <Window.Foreground>
-        <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue2}"/>
-    </Window.Foreground>
+        Title="SubProjectWindow"  Width="1280" Height="620"
+        WindowStartupLocation="CenterScreen" >
     <Grid>
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
@@ -25,35 +19,20 @@
                 </MenuItem>
             </ContextMenu>
         </Grid.ContextMenu>
-        <Grid >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48*"></ColumnDefinition>
-                <ColumnDefinition Width="65*"></ColumnDefinition>
-                <ColumnDefinition Width="649*"></ColumnDefinition>
-                <ColumnDefinition Width="190*"></ColumnDefinition>
-                <ColumnDefinition Width="48*"></ColumnDefinition>
-
-            </Grid.ColumnDefinitions>
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="6*"></RowDefinition>
-                <RowDefinition Height="53*"/>
-                <RowDefinition Height="15*"></RowDefinition>
-                <RowDefinition Height="37*"></RowDefinition>
-                <RowDefinition Height="37*"></RowDefinition>
-                <RowDefinition Height="37*"></RowDefinition>
-                <RowDefinition Height="37*" ></RowDefinition>
-                <RowDefinition Height="61*" ></RowDefinition>
-                <RowDefinition Height="274*" ></RowDefinition>
-                <RowDefinition Height="41.785" ></RowDefinition>
-            </Grid.RowDefinitions>
-
-            <syncfusion:SfDataGrid Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="2" FrozenColumnCount="2"
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="233*"/>
+            </Grid.RowDefinitions >
+            <syncfusion:SfDataGrid  Grid.Row="3" FrozenColumnCount="2"
                       x:Name="myDataGrid"  
                             Style="{DynamicResource SfDataGrid_body}"
                                HeaderStyle="{DynamicResource SfDataGrid_header}"
                                RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
-                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" Margin="11,10,8,8" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" Grid.RowSpan="7">
+                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" Grid.RowSpan="7" Margin="2,5,5,5">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
@@ -86,18 +65,23 @@
 
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-            <StackPanel Orientation="Horizontal" Grid.Row="8" FlowDirection="RightToLeft" Grid.ColumnSpan="5" Margin="-1,266,0,2" Grid.RowSpan="2" >
-                <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border Style="{StaticResource BorderStackPanelStyle}" >
-                    <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
-                </Border>
-
-                <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" />
-                <Border Style="{StaticResource BorderStackPanelStyle}">
-                    <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"  />
-                </Border>
-            </StackPanel>
-            <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40" Grid.ColumnSpan="5" Margin="0,6,0,7" Grid.Row="1">
+            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}"  Grid.Row="2" Height="40">
                 <WrapPanel Orientation="Horizontal" Width="Auto">
                     <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                         <Menu.Resources>
@@ -216,7 +200,7 @@
                                 <TranslateTransform/>
                             </TransformGroup>
                         </StackPanel.RenderTransform>
-                        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="local:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
+                        <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="helper:Commands.ExportToExcel"  Width="30" Height="25" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
                             <Button.Background>
                                 <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
                             </Button.Background>
@@ -230,7 +214,7 @@
                         </Button>
                     </StackPanel>
                 </WrapPanel>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                     </StackPanel>

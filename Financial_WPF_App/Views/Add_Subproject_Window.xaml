@@ -3,116 +3,86 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Financial_WPF_App.Views"
-        mc:Ignorable="d"
-        Title="Add_Subproject_Window" Height="450" Width="671"  WindowStartupLocation="CenterScreen" Closing="Window_Closing">
-    <Grid>
+        xmlns:local="clr-namespace:Financial_WPF_App"
+        mc:Ignorable="d" Tag="Add Sub Project Window"
+        Title="Add_Subproject_Window" Style="{StaticResource WindowPopupStyle}" Width="700"  WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+    <Grid Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="173*"/>
-            <ColumnDefinition Width="71*"/>
-            <ColumnDefinition Width="11*"/>
-            <ColumnDefinition Width="173*"/>
-            <ColumnDefinition Width="71*"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width=".5*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Column="4"  Style="{DynamicResource lableStyle}" Content="Project:" Margin="3,11,3,11" VerticalContentAlignment="Center" />
-        <ComboBox x:Name="Project_comboBox" 
-            Grid.Column="3"  TabIndex="1" 
-            DisplayMemberPath="Name" SelectedValuePath="ID" Width="auto" FlowDirection="RightToLeft" Margin="6,13,6,13" />
-        <Label Grid.Column="1" Style="{DynamicResource lableStyle}" Content="City:" Margin="3,11,3,10" VerticalContentAlignment="Center" Grid.ColumnSpan="2" />
-        <ComboBox x:Name="City_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID"  FlowDirection="RightToLeft" TabIndex="2" Margin="6,13,6,13" VerticalContentAlignment="Center"  />
-        <Label Grid.Column="4" Grid.Row="1" Style="{DynamicResource lableStyle}" Content="Center name:" Margin="3,11,3,11" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="Name_txtBox" Grid.Column="3" Grid.Row="1"  TabIndex="3"
-            Style="{DynamicResource textBoxStyle}" Width="Auto" Margin="6,12,6,13" />
-        <Label Grid.Column="4" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="Start date:" Margin="3,10,3,11" VerticalContentAlignment="Center" />
-        <DatePicker x:Name="beginDate_datepicker" Grid.Column="3" Grid.Row="2" TabIndex="4" Margin="6,8,6,12" VerticalContentAlignment="Center" />
-        <Label Grid.Column="1" Grid.Row="2" Style="{DynamicResource lableStyle}" Content="End date:" Margin="3,10,3,11" VerticalContentAlignment="Center" Grid.ColumnSpan="2" />
-        <Grid x:Name="donors_grid" Grid.Row="3" Grid.ColumnSpan="5" Margin="28,7,26,8" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30*"/>
-                <ColumnDefinition Width="8*"/>
-                <ColumnDefinition Width="30*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="13*"/>
-                <RowDefinition Height="13*"/>
-                <RowDefinition Height="13*"/>
-                <RowDefinition Height="13*"/>
-                <RowDefinition Height="13*"/>
-                <RowDefinition Height="22*" />
-            </Grid.RowDefinitions>
-
-            <Label Grid.Column="2" Grid.Row="0"
-                Style="{DynamicResource lableStyle}" Content="Al donors" 
+        <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="4">
+            <local:WindowControlBar_Popup x:Name="ControlBar"/>
+        </DockPanel>
+        <Label Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="Project:"  VerticalContentAlignment="Center" Grid.Row="2"  VerticalAlignment="Center" />
+        <ComboBox x:Name="Project_comboBox" Style="{StaticResource FloatingComboboxStyle}"
+            Grid.Column="1"  TabIndex="1" 
+            DisplayMemberPath="Name" SelectedValuePath="ID" Grid.Row="2" />
+        <Label Grid.Column="2" Style="{DynamicResource statistic_lableStyle}" Content="City:"  VerticalContentAlignment="Center"  Grid.Row="2" />
+        <ComboBox x:Name="City_comboBox" Grid.Column="3" DisplayMemberPath="Name" SelectedValuePath="ID"   TabIndex="2"  VerticalContentAlignment="Center"   Style="{StaticResource FloatingComboboxStyle}" Grid.Row="2"/>
+        <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Center name:"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+        <TextBox x:Name="Name_txtBox" Grid.Column="1" Grid.Row="1"  TabIndex="3"
+            Style="{DynamicResource FloatingTextBoxStyle}"/>
+        <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Start date:" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+        <DatePicker x:Name="beginDate_datepicker" Grid.Row="3" TabIndex="4"  VerticalContentAlignment="Center" Grid.Column="1" Height="30" />
+        <Label Grid.Column="2" Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="End date:"  VerticalContentAlignment="Center"/>
+        
+            <Label Grid.Column="3" Grid.Row="4"
+                Style="{DynamicResource statistic_lableStyle}" Content="All Donors" 
                 HorizontalAlignment="Stretch"  HorizontalContentAlignment="Center"
-                VerticalAlignment="Stretch"/>
-            <ListBox x:Name="alldonors_listbox" 
-                Grid.Column="2" Grid.Row="1" Grid.RowSpan="5" 
-                Height="auto" Margin="30,10,10,10" 
-                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="auto">
-                <ListBox.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeBlue1}"/>
-                </ListBox.Background>
-            </ListBox>
+                VerticalAlignment="Bottom" Margin="1,10,1,0" Height="30"/>
+            <ListBox x:Name="alldonors_listbox" Background="{DynamicResource LightGray1}" BorderBrush="{x:Null}" FontSize="12" FontFamily="Rubik" Padding="5" FontWeight="SemiBold" Foreground="{StaticResource DarkGray}"
+                Grid.Column="3" Grid.Row="5"
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-            <Button Grid.Column="1" Grid.Row="2" x:Name="add_btn"  
-                Content="&lt;&lt;" Width="35" TabIndex="4"
-                Click="AddDonor_btn_Click" Padding="4" Margin="10.2,2,10,2.2" >
-                <Button.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue1}"/>
-                </Button.BorderBrush>
-                <Button.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue1}"/>
-                </Button.Background>
-                <Button.Foreground>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Button.Foreground>
+        <Button Grid.Column="2" Grid.Row="5" x:Name="add_btn"  
+                Content="&lt;&lt;" Width="25" Height="25" TabIndex="4"
+                Click="AddDonor_btn_Click"  BorderBrush="{StaticResource LightGray1}" Background="{StaticResource LightGray2}" Foreground="{StaticResource DarkGray}" Margin="0,-33,0,0">
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="4" x:Name="remove_btn" 
-                Content="&gt;&gt;" Height="35" Width="35" TabIndex="4" 
-                Click="RemoveDonor_btn_Click" Padding="4" >
-                <Button.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue1}"/>
-                </Button.BorderBrush>
-                <Button.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeDarkBlue1}"/>
-                </Button.Background>
-                <Button.Foreground>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeGrey}"/>
-                </Button.Foreground>
+            <Button Grid.Column="2" Grid.Row="5" x:Name="remove_btn" BorderBrush="{StaticResource LightGray1}" Background="{StaticResource LightGray2}" Foreground="{StaticResource DarkGray}"
+                Content="&gt;&gt;" Height="25" TabIndex="4" Width="25"
+                Click="RemoveDonor_btn_Click" Margin="0,52,0,0">
             </Button>
 
 
-            <Label Grid.Column="0" Grid.Row="0" Style="{DynamicResource lableStyle}" 
-                Content="Center dononrs" 
-                Margin="10,0,30,0" Width="auto" HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+            <Label Grid.Column="1" Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" 
+                Content="Center Donors" 
+                Margin="1,10,1,0" Width="auto" HorizontalAlignment="Stretch" 
+                VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Height="30"/>
 
-            <ListBox x:Name="donors_listbox"  Grid.Column="0" Grid.Row="1" Height="auto" 
-                Margin="10,10,30,10" Grid.RowSpan="5" 
-                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="auto">
-                <ListBox.Background>
-                    <SolidColorBrush Color="{DynamicResource Color_HopeBlue1}"/>
-                </ListBox.Background>
-
-            </ListBox>
+        <ListBox x:Name="donors_listbox"  Grid.Column="1" Grid.Row="5" BorderBrush="{x:Null}" Background="{DynamicResource LightGray1}" FontSize="12" Padding="5" FontFamily="Rubik" FontWeight="SemiBold" Foreground="{StaticResource DarkGray}"
+               
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+        <Button  Style="{DynamicResource ButtonColoredStyle}" Content="Save"
+            x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" Grid.Row="6" />
+        <Grid Grid.Row="3" Grid.Column="3" Height="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <DatePicker  x:Name="endDate_datepicker" Grid.Column="0" TabIndex="15" FirstDayOfWeek="Monday" Margin="1,0,1,0"/>
+            <Border x:Name="EndDate_Border" Width="26" Height="30" MouseDown="Border_MouseDown" Grid.Column="1" Background="{StaticResource LightGray1}" ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
+            ToolTipService.ShowDuration="5000"
+            ToolTipService.BetweenShowDelay="200" Margin="3,0,0,0">
+                <CheckBox x:Name="EndDate_CheckBox" TabIndex="16"  ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
+            ToolTipService.ShowDuration="5000"
+            ToolTipService.BetweenShowDelay="200" Style="{StaticResource CheckBoxStyle}"
+            Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" HorizontalAlignment="Center" Width="12"
+            />
+            </Border>
         </Grid>
-        <Button  Style="{DynamicResource SaveButton_Style}"
-            x:Name="Save_btn" TabIndex="4" Click="Save_btn_Click" FlowDirection="LeftToRight" Margin="41,0,0,0" Grid.Column="1" Grid.Row="4" Height="32" Width="86" Grid.ColumnSpan="3" />
-        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,3,8,4" Grid.Row="2">
-            <DatePicker x:Name="endDate_datepicker" TabIndex="3" Width="180"  Height="33"  />
-            <CheckBox x:Name="EndDate_CheckBox" Content="TBD"
-            FlowDirection="RightToLeft" 
-            Height="17" Width="48" 
-            Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" />
-        </StackPanel>
 
     </Grid>
 </Window>
