@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
         mc:Ignorable="d" Tag="Add Sub Project Window"
-        Title="Add_Subproject_Window" Style="{StaticResource smallWindowPopupStyle}" Width="540" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        Title="Add_Subproject_Window" Style="{StaticResource smallWindowPopupStyle}" Width="560" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -17,9 +17,9 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="4">
