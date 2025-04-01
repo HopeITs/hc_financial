@@ -21,8 +21,8 @@ namespace Financial_WPF_App
             InitializeComponent();
             Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 
-            First_col.Width = new GridLength(85, GridUnitType.Star);
-            Second_col.Width = new GridLength(45, GridUnitType.Star);
+            //First_col.Width = new GridLength(85, GridUnitType.Star);
+            //Second_col.Width = new GridLength(45, GridUnitType.Star);
             EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
 
 
@@ -60,8 +60,8 @@ namespace Financial_WPF_App
             Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 
             EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
-            First_col.Width = new GridLength(97, GridUnitType.Star);
-            Second_col.Width = new GridLength(2.3, GridUnitType.Star);
+            //First_col.Width = new GridLength(97, GridUnitType.Star);
+            //Second_col.Width = new GridLength(2.3, GridUnitType.Star);
             this.main_Window = main_Window;
 
             this.Acc_ID = Account_ID;
@@ -84,8 +84,8 @@ namespace Financial_WPF_App
             Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 
             EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
-            First_col.Width = new GridLength(97, GridUnitType.Star);
-            Second_col.Width = new GridLength(2.3, GridUnitType.Star);
+            //First_col.Width = new GridLength(97, GridUnitType.Star);
+            //Second_col.Width = new GridLength(2.3, GridUnitType.Star);
             this.main_Window = main_Window;
 
             this.Acc_ID = Account_ID;
@@ -225,21 +225,21 @@ namespace Financial_WPF_App
         private void OnMainWindowStateChanged(WindowState newState)
         {
             _currentWindowState = newState;
-            if (newState == WindowState.Normal && myExpander.IsExpanded)
-            {
-                First_col.Width = new GridLength(220, GridUnitType.Star);
-                Second_col.Width = new GridLength(160, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
-            {
-                First_col.Width = new GridLength(85, GridUnitType.Star);
-                Second_col.Width = new GridLength(45, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
-            {
-                First_col.Width = new GridLength(220, GridUnitType.Star);
-                Second_col.Width = new GridLength(160, GridUnitType.Star);
-            }
+            //if (newState == WindowState.Normal && myExpander.IsExpanded)
+            //{
+            //    First_col.Width = new GridLength(220, GridUnitType.Star);
+            //    Second_col.Width = new GridLength(160, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            //{
+            //    First_col.Width = new GridLength(85, GridUnitType.Star);
+            //    Second_col.Width = new GridLength(45, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            //{
+            //    First_col.Width = new GridLength(220, GridUnitType.Star);
+            //    Second_col.Width = new GridLength(160, GridUnitType.Star);
+            //}
         }
 
 
@@ -2210,23 +2210,25 @@ namespace Financial_WPF_App
 
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
         {
-            if (_currentWindowState == WindowState.Normal)
-            {
-                First_col.Width = new GridLength(220, GridUnitType.Star);
-                Second_col.Width = new GridLength(160, GridUnitType.Star);
-            }
-            else if (_currentWindowState == WindowState.Maximized)
-            {
-                First_col.Width = new GridLength(85, GridUnitType.Star);
-                Second_col.Width = new GridLength(45, GridUnitType.Star);
-            }
+            myExpander.Width = double.NaN;
+            //if (_currentWindowState == WindowState.Normal)
+            //{
+            //    First_col.Width = new GridLength(220, GridUnitType.Star);
+            //    Second_col.Width = new GridLength(160, GridUnitType.Star);
+            //}
+            //else if (_currentWindowState == WindowState.Maximized)
+            //{
+            //    First_col.Width = new GridLength(85, GridUnitType.Star);
+            //    Second_col.Width = new GridLength(45, GridUnitType.Star);
+            //}
 
         }
 
         private void myExpander_Collapsed(object sender, RoutedEventArgs e)
         {
-            First_col.Width = new GridLength(97, GridUnitType.Star);
-            Second_col.Width = new GridLength(2.3, GridUnitType.Star);
+            myExpander.Width = 30;
+            //    First_col.Width = new GridLength(97, GridUnitType.Star);
+            //    Second_col.Width = new GridLength(2.3, GridUnitType.Star);
         }
 
 
