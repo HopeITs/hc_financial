@@ -132,7 +132,7 @@
                                 <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
                             <syncfusion:CheckListBox x:Name="CashAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="0"  ItemChecked="CashAccount_CheckListBox_ItemChecked" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Disabled" />
-                            <syncfusion:CheckListBox x:Name="IsCashier_CashAccount_CheckListBox" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="1" ItemChecked="IsCashier_CashAccount_CheckListBox_ItemChecked" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
+                            <syncfusion:CheckListBox x:Name="IsCashier_CashAccount_CheckListBox" DisplayMemberPath="isCashier" SelectedValuePath="ID" IsSelectAllEnabled="False" Grid.Column="1" ItemChecked="IsCashier_CashAccount_CheckListBox_ItemChecked" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
                         </Grid>
                     </StackPanel>
                 </Border>

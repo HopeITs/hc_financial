@@ -109,11 +109,8 @@ namespace Financial_WPF_App.Models
                 WHERE account.Accounttype_id = (select id from accounttype where name = 'Exchange')
                 GROUP BY account.ID;";
 
-            query += @"SELECT cashaccount.ID, cashaccount.Name
-                FROM cashaccount;";
-
-            query += @"SELECT cashaccount.ID, 'Cashier' as 'Name'
-                FROM cashaccount;";
+            query += @"SELECT cashaccount.ID, cashaccount.Name, 'Cashier' as 'isCashier'
+                FROM cashaccount ORDER BY `ID` ASC;";
 
             query += @"SELECT account.ID, account.Name
                 FROM account

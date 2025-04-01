@@ -37,7 +37,7 @@ namespace Financial_WPF_App.Views
         Main_Window_2 main_Window;
         private Users u;
         private Models.City city;
-        DataTable role_dt, users_dt, subprojects_dt, accounts_dt, cashaccounts_dt, cashier_dt, personalaccounts_dt, exchangeaccounts_dt;
+        DataTable role_dt, users_dt, subprojects_dt, accounts_dt, cashaccounts_dt, personalaccounts_dt, exchangeaccounts_dt;
 
         List<int> Original_Subprojects;
         List<int> Original_Accounts;
@@ -152,9 +152,7 @@ namespace Financial_WPF_App.Views
 
             cashaccounts_dt = ds.Tables[3];
 
-            cashier_dt = ds.Tables[4];
-
-            personalaccounts_dt = ds.Tables[5];
+            personalaccounts_dt = ds.Tables[4];
         }
 
         private void Clear_Lists()
@@ -561,7 +559,7 @@ namespace Financial_WPF_App.Views
                 Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
                 ExchangeAccount_CheckListBox.ItemsSource = exchangeaccounts_dt.DefaultView;
                 CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
-                IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
+                IsCashier_CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
                 PersonalAccount_CheckListBox.ItemsSource = personalaccounts_dt.DefaultView;
 
                 Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled =
@@ -573,7 +571,7 @@ namespace Financial_WPF_App.Views
             {
                 Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
                 CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
-                IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
+                IsCashier_CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
                 PersonalAccount_CheckListBox.ItemsSource = personalaccounts_dt.DefaultView;
 
                 Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled =
@@ -584,7 +582,7 @@ namespace Financial_WPF_App.Views
             else if (Selected_Role == "Cashier")
             {
                 CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
-                IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
+                IsCashier_CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
 
                 CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled = true;
             }
@@ -592,7 +590,7 @@ namespace Financial_WPF_App.Views
             {
                 Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
                 CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
-                IsCashier_CashAccount_CheckListBox.ItemsSource = cashier_dt.DefaultView;
+                IsCashier_CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
 
                 Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled =
                     Account_Label.IsEnabled = Account_CheckListBox.IsEnabled =
