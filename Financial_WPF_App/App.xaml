@@ -1692,7 +1692,6 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
 
             <Style TargetType="Button">
                 <Setter Property="FontFamily" Value="Rubik" />
-                <Setter Property="Background" Value="{StaticResource ButtonImage}"></Setter>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -1709,8 +1708,6 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <!--<Setter Property="Foreground" Value="Blue" />-->
                                     <Setter Property="Cursor" Value="Hand" />
-                                     <!--If we don't tell the background to change on hover, it will remain the same--> 
-                                    <Setter Property="Background" Value="{StaticResource ButtonImage_H}"></Setter>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
