@@ -186,24 +186,11 @@ Loaded="myDataGrid_Loaded"
                         <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                IsHidden="True" />
                         <syncfusion:GridTextColumn MappingName="Name" HeaderText="Account"/>
-                        <syncfusion:GridTextColumn MappingName="ProjectNumber" HeaderText="Project Number"/>
                         <syncfusion:GridDateTimeColumn HeaderText= "Start Date" MappingName="BeginDate"
                                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
                         <syncfusion:GridDateTimeColumn HeaderText= "End Date" MappingName="EndDate"
                                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
-                        <syncfusion:GridNumericColumn  HeaderText="Total Budget"  MappingName="TotalAmount"
-                                   NumberDecimalDigits="2"
-                                   NumberDecimalSeparator="."
-                                   NumberGroupSizes="3"
-                                   NumberGroupSeparator=","/>
-                        <syncfusion:GridTextColumn MappingName="AmountType" HeaderText="Currency"/>
                         <syncfusion:GridTextColumn MappingName="IsClosed" HeaderText="Status"/>
-                        <syncfusion:GridTextColumn MappingName="Donors_ID" HeaderText="Donor_ID" 
-                               IsHidden="True" />
-                        <syncfusion:GridTextColumn MappingName="Donors" HeaderText="Donors"/>
-                        <syncfusion:GridTextColumn MappingName="SubProject_ID" HeaderText="SubProject_ID" 
-                               IsHidden="True" />
-
                         <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                             <syncfusion:GridTemplateColumn.CellTemplate>
                                 <DataTemplate>
