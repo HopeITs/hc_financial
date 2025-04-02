@@ -62,6 +62,7 @@ namespace Financial_WPF_App.Views
             t = new Till();
             r = new Rate();
             bl = new Budget_Lines();
+            myExpander_Collapsed(this, new RoutedEventArgs());
             myExpander.IsExpanded = false;
             PassException = true;
             Load_Data();
