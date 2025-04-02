@@ -241,7 +241,6 @@ namespace Financial_WPF_App
             //}
         }
 
-
         private void Apply_Color_Theme()
         {
 
@@ -336,6 +335,9 @@ namespace Financial_WPF_App
             if (Acc_ID != -1)
             {
                 tabControl1.Visibility = Visibility.Visible; //Update
+
+                
+                myExpander_Collapsed(this, new RoutedEventArgs());
                 myExpander.IsExpanded = false;
 
                 Fill_Account(Acc_ID);
@@ -401,6 +403,8 @@ namespace Financial_WPF_App
                 EndDate_datepicker.Text = "";
                 UserMode = true;
                 tabControl1.Visibility = Visibility.Hidden; //Create New//
+                myExpander_Expanded(this, new RoutedEventArgs());
+                myExpander.IsExpanded = true;
             }
         }
 
@@ -2206,7 +2210,6 @@ namespace Financial_WPF_App
         //    ExpanderPopup.IsOpen = !ExpanderPopup.IsOpen;
         //}
 
-
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
         {
             myExpander.Width = double.NaN;
@@ -2229,7 +2232,6 @@ namespace Financial_WPF_App
             //    First_col.Width = new GridLength(97, GridUnitType.Star);
             //    Second_col.Width = new GridLength(2.3, GridUnitType.Star);
         }
-
 
         private void IsClosed_btn_Click(object sender, RoutedEventArgs e)
         {

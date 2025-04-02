@@ -193,9 +193,11 @@ namespace Financial_WPF_App.Views
                 {
                     Fill_AccountView();
                     myExpander.Visibility = Visibility.Visible;
-                    myExpander.Width = double.NaN;
-                    if (Scroll_Viewer != null)
-                        Scroll_Viewer.Visibility = Visibility.Visible;
+
+                    myExpander_Collapsed(this, new RoutedEventArgs());
+                    myExpander.IsExpanded = false;
+
+
                     OnMainWindowStateChanged(_currentWindowState);
                     Search_StackPanel.Margin = new Thickness(0, 0, 35, 0);
                     myDataGrid.Margin = new Thickness(5, 5, 35, 5);
