@@ -6,8 +6,8 @@
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:Controls="clr-namespace:Financial_WPF_App.Controls" xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.CashAction_Window"
-        mc:Ignorable="d" Tag="Cash Action Window"
-        Title="CashAction_Window" Style="{StaticResource WindowPopupStyle}"
+        mc:Ignorable="d" Tag="Cash Action Window "
+        Title="CashAction_Window" Style="{StaticResource WindowPopupStyle}" Width="780"
     KeyboardNavigation.TabNavigation="Cycle" WindowStartupLocation="CenterScreen">
 
     <Window.ContextMenu>
@@ -25,13 +25,12 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="5"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="45"/>
                 <RowDefinition Height="40"/>
@@ -39,26 +38,22 @@
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="355*"/>
-                <RowDefinition Height="30"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="5">
                 <local:WindowControlBar_Popup x:Name="ControlBar"/>
             </DockPanel>
 
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="5" Orientation="Horizontal">
-                    <Label Content="Account: " Style="{DynamicResource statistic_lableStyle}" 
-                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"   />
-                <Label Content="Account" Style="{DynamicResource statistic_lableStyle}" 
+                <!--<Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Content="Account" Style="{DynamicResource statistic_lableStyle}" 
                         x:Name="AccountName_lable"
-                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"   />
+                        HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch"   />-->
 
                     <!--<Label Content="الصــــندوق: " Style="{DynamicResource title_lableStyle}" 
                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"   />
                 <Label Content="syr " Style="{DynamicResource title_lableStyle}" 
                        x:Name="TillName_lable"
                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"   />-->
-                </StackPanel>
+            
 
                 <!--<TextBox x:Name="MircoProject_ID_txtBox" TabIndex="3"
                      Grid.Column="3" Grid.Row="1"  
@@ -106,14 +101,14 @@ x:Name="InsertAction_btn" TabIndex="15" Click="InsertAction_btn_Click" Horizonta
             <Label Grid.Column="0" Grid.Row="7" x:Name="Donor_lable" Style="{DynamicResource statistic_lableStyle}" Content="Denomination:"/>
                
                 
-            <syncfusion:SfDataGrid x:Name="Actions_DataGrid" Grid.Row="8"  Grid.ColumnSpan="5" 
+            <syncfusion:SfDataGrid x:Name="Actions_DataGrid" Grid.Row="8"  Grid.ColumnSpan="4" 
                 Style="{DynamicResource SfDataGrid_body}"
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AllowFiltering="False"  
-                ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,5,5,5">
+                ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,5,5,0">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn MappingName="cashaction_denominations_id" HeaderText="cashaction_denominations_id"  IsHidden="True"/>
                     <syncfusion:GridNumericColumn  HeaderText="Amount"  MappingName="Amount" 
@@ -150,7 +145,7 @@ x:Name="InsertAction_btn" TabIndex="15" Click="InsertAction_btn_Click" Horizonta
                 <Grid Grid.Row="10" Grid.Column="0">
                     <Button 
                     Style="{DynamicResource ButtonColoredStyle}" 
-                    x:Name="Save_btn" TabIndex="15" Click="Save_btn_Click" Content="Save" />
+                    x:Name="Save_btn" TabIndex="15" Click="Save_btn_Click" Content="Save" Margin="10,0,1,0" />
                 </Grid>
 
 

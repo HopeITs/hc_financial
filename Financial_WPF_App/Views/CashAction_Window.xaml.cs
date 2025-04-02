@@ -86,7 +86,8 @@ namespace Financial_WPF_App.Views
                 u = new Users();
                 d = new Denominations();
                 Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
-                AccountName_lable.Content = Account_Name;
+                //AccountName_lable.Content = "(" + Account_Name + ")";
+                CashTill.Tag += " (" + Account_Name + ")";
                 Load_Form();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();

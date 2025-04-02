@@ -6,12 +6,12 @@
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:local="clr-namespace:Financial_WPF_App"
         mc:Ignorable="d" Tag="Add Fiscal Bond Window"
-        Title="Add_FiscalBond_Window" Height="350"
+        Title="Add_FiscalBond_Window" Height="350" Width="330"
         Style="{StaticResource smallWindowPopupStyle}" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid Margin="5">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="50*"/>
             </Grid.ColumnDefinitions>

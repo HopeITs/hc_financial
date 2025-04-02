@@ -7,7 +7,7 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Budget_Window" 
         mc:Ignorable="d" Tag="Budget Window"
-        Title="Budget_Window" 
+        Title="Budget_Window"  
         WindowStartupLocation="CenterScreen" KeyDown="ProjectWindow_KeyDown"
         Style="{StaticResource WindowPopupStyle}">
     <Window.ContextMenu>
@@ -42,11 +42,11 @@
                         </Button.Background>
                     </Button>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" >
                     <Label Style="{DynamicResource statistic_lableStyle}" Content="Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <TextBox x:Name="Name_txtBox"  Style="{DynamicResource CustomTextBoxActionStyle}" Width="175" TabIndex="2" HorizontalContentAlignment="Stretch"  />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" Margin="0,5,0,0">
+                <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" SnapsToDevicePixels="True">
                     <Label Style="{DynamicResource statistic_lableStyle}" Content="Project:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <ComboBox x:Name="Project_comboBox" Style="{StaticResource ActionComboboxStyle}" PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown"  Width="175"
                         TabIndex="2">
@@ -62,10 +62,10 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <Button x:Name="Project_clear_btn" Grid.Column="1"  BorderBrush="{x:Null}" Style="{StaticResource ActionDeleteButtonStyle}"
-                    Click="Project_clear_btn_Click"  VerticalAlignment="Top" Height="30" Margin="5,0,1,0">
+                    Click="Project_clear_btn_Click"  VerticalAlignment="Top" Height="30" >
                     </Button>
                 </StackPanel>
-                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="Save_btn" Click="Save_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Project" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,2,1,0" Width="22" Height="23">
+                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="Save_btn" Click="Save_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Project" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,0,0,0" Width="22" Height="23">
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
                     </Button.Background>

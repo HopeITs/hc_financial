@@ -34,7 +34,7 @@
                 </Button.Style>
             </Button>
             <!-- Close Button -->
-        <Button HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="Close" Width="15" Height="15" Grid.Column="2" BorderBrush="{x:Null}" Foreground="{x:Null}" FontWeight="Normal" Background="{StaticResource ButtonImageClose}" Click="Close_Click" Margin="0,0,30,0"/>
+        <Button HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="Close" Width="15" Height="15" Grid.Column="2" BorderBrush="{x:Null}" Foreground="{x:Null}" FontWeight="Normal" Background="{StaticResource ButtonImageClose}" Click="Close_Click" Margin="0,0,28,0"/>
     </StackPanel>
     <!--</DockPanel>-->
 </UserControl>
