@@ -1669,7 +1669,8 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                myExpander.Width =30;
+                myExpander.Width = double.NaN;
+
                 //if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
                 //{
                 //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
@@ -1698,7 +1699,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                myExpander.Width = double.NaN;
+                myExpander.Width = 30;
                 //if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
                 //{
                 //    Grid_col.Width = new GridLength(130, GridUnitType.Star);

@@ -479,7 +479,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AutoGenerateColumns="True"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-                Margin="1,1,0,0" Grid.Row="1" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded">
+                Margin="1,1,0,0" Grid.Row="1" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded" Width="370">
                         <syncfusion:SfDataGrid.TableSummaryRows>
                             <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                                        Title="Total:">
