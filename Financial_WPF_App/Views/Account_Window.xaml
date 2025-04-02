@@ -143,7 +143,7 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </Window.Resources>
-    <Grid >
+    <Grid>
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
                 <MenuItem Header="Refresh Account" Click = "Refresh_Click" >
@@ -155,11 +155,8 @@
         </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="First_col"  Width="68*"/>
-            <ColumnDefinition x:Name="Second_col" Width="32*"/>
+            <ColumnDefinition x:Name="Second_col" Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100*" />
-        </Grid.RowDefinitions>
 
         <TabControl Grid.ColumnSpan="2" x:Name="tabControl1" Style="{StaticResource TabControlStyle}" Grid.Column="0"></TabControl>
 
@@ -168,8 +165,8 @@
          Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalAlignment="Right" >
             <Grid x:Name="FloatingExpanderContent" Margin="20,7,20,30" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="137"/>
-                    <ColumnDefinition Width="210"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30*"/>
@@ -191,22 +188,22 @@
                 </Grid.RowDefinitions>
 
                 <Label Style="{DynamicResource FloatingExpanderlableStyle}" Content="Account Name:" Grid.Column="0"/>
-                <TextBox Style="{DynamicResource FloatingTextBoxStyle}" Grid.Column="1" x:Name="Name_txtBox" TabIndex="0" Margin="1,0,0,0"/>
+                <TextBox Style="{DynamicResource FloatingTextBoxStyle}" Width="200" Grid.Column="1" x:Name="Name_txtBox" TabIndex="0" Margin="1,0,0,0"/>
 
                 <Label Grid.Row="1" x:Name="City_lable" Style="{DynamicResource FloatingExpanderlableStyle}" Content="City:"  Grid.Column="0"/>
-                <Grid Grid.Column="1" Grid.Row="1" Height="30" >
+                <Grid Grid.Column="1" Grid.Row="1" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="City_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" 
                              TabIndex="1" Grid.Row="0" Grid.Column="0"/>
-                    <Button x:Name="City_clear_btn" Grid.Column="1" TabIndex="2" Style="{DynamicResource DeleteButtonStyle}"
+                    <Button x:Name="City_clear_btn" Grid.Column="1" TabIndex="2" Width="25" Height="30" Style="{DynamicResource DeleteButtonStyle}"
                          Grid.Row="1" Click="City_clear_btn_Click"/>
                 </Grid>
 
                 <Label Grid.Row="2" x:Name="Project_lable" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Project:" Grid.Column="0" />
-                <Grid Grid.Column="1" Grid.Row="2" Height="30">
+                <Grid Grid.Column="1" Grid.Row="2" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -214,13 +211,13 @@
                     <ComboBox x:Name="Project_comboBox" Style="{DynamicResource FloatingComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"
              TabIndex="3" 
               SelectionChanged="Project_comboBox_SelectionChanged" Grid.Row="0" Grid.Column="0"/>
-                    <Button x:Name="Project_clear_btn" Grid.Column="1" TabIndex="4"
+                    <Button x:Name="Project_clear_btn" Grid.Column="1" TabIndex="4" Width="25" Height="30"
                         Click="Project_clear_btn_Click"  Grid.Row="0" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
                 </Grid>
 
                 <Label x:Name="SubProject_label" Grid.Row="3" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Center:" Grid.Column="0" />
-                <Grid Grid.Column="1" Grid.Row="3" Height="30">
+                <Grid Grid.Column="1" Grid.Row="3" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -241,13 +238,13 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <Button x:Name="SubProject_clear_btn" TabIndex="6" Grid.Column="1" Grid.Row="0"
+                    <Button x:Name="SubProject_clear_btn" TabIndex="6" Grid.Column="1" Grid.Row="0" Width="25" Height="30"
                             Click="SubProject_clear_btn_Click" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
                 </Grid>
 
                 <Label x:Name="Donor_label" Grid.Row="4" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Donor:" Grid.Column="0" />
-                <Grid Grid.Row="4" Grid.Column="1" Height="30">
+                <Grid Grid.Row="4" Grid.Column="1" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -266,13 +263,13 @@
                         </ComboBox.ItemTemplate>
 
                     </ComboBox>
-                    <Button x:Name="Donor_clear_btn" Grid.Column="1" TabIndex="8" Grid.Row="0"
+                    <Button x:Name="Donor_clear_btn" Grid.Column="1" TabIndex="8" Grid.Row="0" Width="25" Height="30"
         Click="Donor_clear_btn_Click" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
                 </Grid>
 
                 <Label x:Name="PersonalAccount_label" Grid.Row="5" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Personal account:" Grid.Column="0" />
-                <Grid Grid.Column="1" Grid.Row="5" Height="30" >
+                <Grid Grid.Column="1" Grid.Row="5" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -283,7 +280,7 @@
 
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="PersonalAcc_comboBox" Width="220" 
+                                <CheckBox x:Name="PersonalAcc_comboBox" Width="200" 
               Click="PersonalAcc_Checkbox_Item_Clicked"
             Content="{Binding PersonalAcc_Name}" 
             Style="{DynamicResource CheckBoxStyle}"
@@ -292,13 +289,13 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <Button x:Name="PersonalAccount_clear_btn" TabIndex="10" Grid.Column="1"
+                    <Button x:Name="PersonalAccount_clear_btn" TabIndex="10" Grid.Column="1" Width="25" Height="30"
 Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
                 </Grid>
 
                 <Label x:Name="ExchangeAccount_label" Grid.Row="6" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Exchange account:" Grid.Column="0" />
-                <Grid Grid.Column="1" Grid.Row="6" Height="30">
+                <Grid Grid.Column="1" Grid.Row="6" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -307,7 +304,7 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                        TabIndex="11" PreviewKeyDown="comboBox_PreviewKeyDown" PreviewTextInput="comboBox_PreviewTextInput" >
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="ExchangeAcc_comboBox" Width="220" 
+                                <CheckBox x:Name="ExchangeAcc_comboBox" 
                Click="ExchangeAcc_Checkbox_Item_Clicked"
             Content="{Binding ExchangeAcc_Name}" 
             Style="{DynamicResource CheckBoxStyle}"
@@ -316,19 +313,19 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <Button x:Name="ExchangeAccount_clear_btn" TabIndex="12" Grid.Column="1"
+                    <Button x:Name="ExchangeAccount_clear_btn" TabIndex="12" Grid.Column="1" Width="25" Height="30"
                         Click="ExchangeAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyle}">
                     </Button>
                 </Grid>
 
                 <Label x:Name="ProjectNumber_label" Grid.Row="7" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Project Number:"  Grid.Column="0" />
-                <TextBox Style="{DynamicResource FloatingTextBoxStyle}" x:Name="ProjectNumber_txtBox" TabIndex="13"  Grid.Row="7" Grid.Column="1"/>
+                <TextBox Style="{DynamicResource FloatingTextBoxStyle}" Width="200" x:Name="ProjectNumber_txtBox" TabIndex="13"  Grid.Row="7" Grid.Column="1"/>
 
                 <Label x:Name="BeginDate_label" Grid.Row="8" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Start Date:"  Grid.Column="0" />
-                <DatePicker  Height="30" x:Name="BeginDate_datepicker" Grid.Column="1" Grid.Row="8" FirstDayOfWeek="Monday" TabIndex="14"/>
+                <DatePicker  Height="30" x:Name="BeginDate_datepicker" Width="200" Grid.Column="1" Grid.Row="8" FirstDayOfWeek="Monday" TabIndex="14"/>
 
                 <Label x:Name="EndDate_label" Grid.Row="9" Style="{DynamicResource FloatingExpanderlableStyle}" Content="End Date:" />
-                <Grid Grid.Row="9" Grid.Column="1" Height="30">
+                <Grid Grid.Row="9" Grid.Column="1" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -346,9 +343,9 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                 </Grid>
 
                 <Label x:Name="TotalAmount_label" Grid.Row="10" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Total Budget:" Grid.Column="0" />
-                <Grid Grid.Row="10" Grid.Column="1">
+                <Grid Grid.Row="10" Grid.Column="1" Width="200">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.7*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="TotalAmount_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" 
@@ -358,7 +355,7 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                 </Grid>
 
                 <Label x:Name="IsClosed_label" Grid.Row="11" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Account Status:" Grid.Column="0" />
-                <Button x:Name="IsClosed_btn" Grid.Column="1" Grid.Row="11" 
+                <Button x:Name="IsClosed_btn" Grid.Column="1" Grid.Row="11"  Width="200"
                     Style="{DynamicResource HoverBoxesStyle}" TabIndex="18"  
                     Click="IsClosed_btn_Click" HorizontalContentAlignment="Center" Content="Open" 
                         BorderThickness="1" Height="30" Padding="2,2,2,2">
@@ -374,7 +371,7 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                     Click="Save_btn_Click" Margin="0,8,0,3" Content="Save" VerticalAlignment="Stretch" Grid.RowSpan="2" HorizontalAlignment="Stretch"  />
                 <Label x:Name="AddAdminAcc_Label" Style="{DynamicResource FloatingExpanderlableStyle}" 
                             Content="Add administrative account:" Margin="-5,3,80,2" Grid.ColumnSpan="2" Grid.Row="12"  />
-                    <Button Style="{DynamicResource AddButtonStyle}" 
+                    <Button Style="{DynamicResource AddButtonStyle}"
                             x:Name="AddAdminAcc_btn" TabIndex="15" Click="AddAdminAcc_btn_Click" Width="26" Grid.Column="1" HorizontalAlignment="Left" Margin="183,0,0,0" Grid.Row="12">
                         <Button.Background>
                             <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>

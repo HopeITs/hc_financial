@@ -182,10 +182,10 @@ namespace Financial_WPF_App.Views
                          sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = sum_RemainedAfterPay_lbl.Content =
                             avg_amounts_lbl.Content = avg_amounts_usd_lbl.Content = num_Done_lbl.Content = num_Ongoing_lbl.Content = num_Allprojects_lbl.Content = "0.0";
 
-
                 myExpander.Visibility = Visibility.Hidden;
+                myExpander.Width = 0;
+
                 myDataGrid.Margin = new Thickness(2, 5, 5, 5);
-                Expander_col.Width = new GridLength(0, GridUnitType.Star);
                 Search_StackPanel.Margin = new Thickness(0, 0, 5, 0);
                 Fill_Till_comboBox();
                 Fill_Grid();
@@ -193,8 +193,12 @@ namespace Financial_WPF_App.Views
                 {
                     Fill_AccountView();
                     myExpander.Visibility = Visibility.Visible;
+                    myExpander.Width = double.NaN;
+                    if (Scroll_Viewer != null)
+                        Scroll_Viewer.Visibility = Visibility.Visible;
                     OnMainWindowStateChanged(_currentWindowState);
-                    Search_StackPanel.Margin = new Thickness(0, 0, 45, 0);
+                    Search_StackPanel.Margin = new Thickness(0, 0, 35, 0);
+                    myDataGrid.Margin = new Thickness(5, 5, 35, 5);
                     //Grid_col.Width = new GridLength(50, GridUnitType.Star);
                     //Expander_col.Width = new GridLength(30, GridUnitType.Star);
                 }
@@ -405,17 +409,22 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                if (_currentWindowState  == WindowState.Normal && myExpander.IsExpanded)
-                {
-                    Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(50, GridUnitType.Star);
-                }
-                else
-                {
-                    Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(30, GridUnitType.Star);
-                }
-                
+                myExpander.Width = double.NaN;
+                if (Scroll_Viewer != null)
+                    Scroll_Viewer.Visibility = Visibility.Visible;
+                    
+                //Grid_col.Width = GridLength.Auto;
+                //if (_currentWindowState  == WindowState.Normal && myExpander.IsExpanded)
+                //{
+                //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+                //}
+                //else
+                //{
+                //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+                //}
+
             }
             catch (Exception ex)
             {
@@ -433,17 +442,21 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
-                {
-                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(8, GridUnitType.Star);
-                }
-                else if (_currentWindowState == WindowState.Maximized)
-                {
-                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(6, GridUnitType.Star);
-                }
-                
+                //Grid_col.Width = new GridLength(30,GridUnitType.Star);
+                myExpander.Width = 30;
+                if (Scroll_Viewer != null)
+                    Scroll_Viewer.Visibility = Visibility.Hidden;
+                //if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
+                //{
+                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(8, GridUnitType.Star);
+                //}
+                //else if (_currentWindowState == WindowState.Maximized)
+                //{
+                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+                //}
+
             }
             catch (Exception ex)
             {
@@ -1215,27 +1228,27 @@ namespace Financial_WPF_App.Views
 
         private void OnMainWindowStateChanged(WindowState newState)
         {
-            _currentWindowState = newState;
-            if (newState == WindowState.Normal && myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                Expander_col.Width = new GridLength(50, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                Expander_col.Width = new GridLength(30, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(7, GridUnitType.Star);
-            }
-            else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(6, GridUnitType.Star);
-            }
+            //_currentWindowState = newState;
+            //if (newState == WindowState.Normal && myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(7, GridUnitType.Star);
+            //}
+            //else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+            //}
         }
     }
 }
