@@ -19,7 +19,7 @@ namespace Financial_WPF_App
         public Account_Window(string Category, string AccType, string Project_ID, string SubProject_ID, Main_Window_2 main_Window)
         {
             InitializeComponent();
-            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
+            //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             //First_col.Width = new GridLength(85, GridUnitType.Star);
             //Second_col.Width = new GridLength(45, GridUnitType.Star);
             EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
