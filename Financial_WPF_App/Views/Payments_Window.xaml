@@ -285,7 +285,7 @@
                                 </Button>
                             </StackPanel>
                         </WrapPanel>
-                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,45,0">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,10,0">
                             <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Tag="False" Click="NotApproved_RadioButton_Click"/>
                             <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap"/>
                         </StackPanel>
@@ -294,15 +294,15 @@
                 </Grid>
                 <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Name="Grid_col" Width="70*" ></ColumnDefinition>
-                        <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
+                        <ColumnDefinition Name="Grid_col" Width="Auto" ></ColumnDefinition>
+                        <ColumnDefinition Name="Expander_col" Width="*" ></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <syncfusion:SfDataGrid x:Name="myDataGrid" Grid.Column="0"
+                    <syncfusion:SfDataGrid x:Name="myDataGrid" Grid.Column="1"
             Style="{DynamicResource SfDataGrid_body}"
             HeaderStyle="{DynamicResource SfDataGrid_header}"
             RowStyle="{DynamicResource SfDataGrid_RowStyle}"
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"                              
-            SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick">
+            SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" Margin="2,5,10,5">
 
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
@@ -381,11 +381,11 @@
 
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
-                    <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True" Margin="5"
+                    <Expander x:Name="myExpander" FlowDirection="RightToLeft" Grid.Column="0" IsExpanded="True" Margin="5"
 ExpandDirection="Left" Style="{StaticResource AccountExpander}"
 Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E">
 
-                        <Grid Margin="20,0,20,0">
+                        <Grid Margin="20,7,20,30">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
@@ -399,7 +399,7 @@ Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalConten
     TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
     AutoGenerateColumns="True"
     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-    Margin="1,1,0,0" Grid.Row="1" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded">
+    Margin="1,1,0,0" Grid.Row="1" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded" Width="370">
                                 <syncfusion:SfDataGrid.TableSummaryRows>
                                     <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                                 Title="Total:">
@@ -422,17 +422,17 @@ Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalConten
                             </syncfusion:SfDataGrid>
                             <Grid Grid.Row="0" Margin="0,5,0,5" Height="25">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <!-- For the button -->
                                     <ColumnDefinition Width="*"/>
+                                    <!-- For the button -->
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Button Style="{DynamicResource AddButtonStyle}" x:Name="Cash_Export_btn" Command="local:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1">
+                                <Button Style="{DynamicResource AddButtonStyle}" x:Name="Cash_Export_btn" Command="local:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
                                     <Button.Background>
                                         <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
                                     </Button.Background>
                                 </Button>
 
-                                <Label Grid.Column="1" Style="{DynamicResource NoteStyle}" FontSize="14" FontFamily="Rubik" FontWeight="Medium" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                                <Label Grid.Column="0" Style="{DynamicResource NoteStyle}" FontSize="14" FontFamily="Rubik" FontWeight="Medium" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
 HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
  Content="Balances"
  Margin="1,0,1,0" VerticalAlignment="Stretch" />

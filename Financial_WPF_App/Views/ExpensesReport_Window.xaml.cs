@@ -25,7 +25,7 @@ namespace Financial_WPF_App.Views
             InitializeComponent();
             this.main_Window = main_Window;
             this.Account_ID = Account_ID;
-            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
+            //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 
             OnLoad();
         }
@@ -63,7 +63,6 @@ namespace Financial_WPF_App.Views
             r = new Rate();
             bl = new Budget_Lines();
             myExpander.IsExpanded = false;
-            Expenses_DataGridView.Margin = new Thickness(2, 5, 0, 5);
             PassException = true;
             Load_Data();
             Apply_Color_Theme();
@@ -231,16 +230,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
-                {
-                    Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(50, GridUnitType.Star);
-                }
-                else
-                {
-                    Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(30, GridUnitType.Star);
-                }
+                myExpander.Width = double.NaN;
+                //if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
+                //{
+                //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+                //}
+                //else
+                //{
+                //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+                //}
 
             }
             catch (Exception ex)
@@ -259,16 +259,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
-                {
-                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(7, GridUnitType.Star);
-                }
-                else if (_currentWindowState == WindowState.Maximized)
-                {
-                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(6, GridUnitType.Star);
-                }
+                myExpander.Width = 30;
+                //if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
+                //{
+                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(7, GridUnitType.Star);
+                //}
+                //else if (_currentWindowState == WindowState.Maximized)
+                //{
+                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+                //}
 
             }
             catch (Exception ex)

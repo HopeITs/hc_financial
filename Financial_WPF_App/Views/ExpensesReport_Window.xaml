@@ -180,7 +180,7 @@
                         </StackPanel>
                         <StackPanel  x:Name="Budget_panel" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,-6">
                             <Label Grid.Column="7"  Style="{DynamicResource statistic_lableStyle}" Content="Budget:" Margin="1,3,1,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                            <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="Budgets_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" SelectionChanged="Budgets_comboBox_SelectionChanged" Width="145"/>
+                            <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="Budgets_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" SelectionChanged="Budgets_comboBox_SelectionChanged" />
                             <Button x:Name="Budget_help" ToolTip="The budget only appears if lines have been added to it." ToolTipService.InitialShowDelay="100" Width="20" Height="20" BorderBrush="{x:Null}" Margin="4,0,0,0">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
@@ -189,10 +189,10 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="13,0,0,-6">
                             <Label Grid.Column="7"  Style="{DynamicResource statistic_lableStyle}" Content="View:" Margin="1,3,1,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                            <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="View_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" SelectionChanged="View_comboBox_SelectionChanged" Width="183" />
+                            <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="View_comboBox" DisplayMemberPath="Name" SelectedValuePath="ID" SelectionChanged="View_comboBox_SelectionChanged" />
                         </StackPanel>
                     </WrapPanel>
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,45,0" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,35,0" VerticalAlignment="Center">
                         <StackPanel  x:Name="Panel1" Orientation="Horizontal" >
                             <RadioButton x:Name="Total_RadioButton" Content="Show total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Height="25" Width="126" HorizontalAlignment="Right" Checked="Total_RadioButton_Checked"/>
                             <RadioButton x:Name="PerDonor_RadioButton" Content="Show per donor" Height="25" Width="150" Style="{DynamicResource RadioButtonStyle}" HorizontalAlignment="Right" Checked="PerDonor_RadioButton_Checked" VerticalAlignment="Center"/>
@@ -205,13 +205,13 @@
             <Grid Grid.Row="3">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Name="Grid_col" Width="70*" ></ColumnDefinition>
-                    <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
+                    <ColumnDefinition Name="Grid_col" Width="Auto" ></ColumnDefinition>
+                    <ColumnDefinition Name="Expander_col" Width="*" ></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0">
+                <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="233*"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
                     <syncfusion:SfDataGrid  x:Name="Expenses_DataGridView"
         Style="{DynamicResource SfDataGrid_body}"
@@ -224,17 +224,17 @@
                AutoGenerateColumns="True" SelectionChanged="Expenses_DataGridView_SelectionChanged"
                AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" 
                Loaded="DataGridView_Loaded"                              
-                Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSourceChanged="Expenses_DataGridView_ItemsSourceChanged" GroupExpanded="Expenses_DataGridView_GroupExpanded"/>
+                Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemsSourceChanged="Expenses_DataGridView_ItemsSourceChanged" GroupExpanded="Expenses_DataGridView_GroupExpanded" Grid.Column="1" Margin="2,5,35,5"/>
                     <Grid Grid.Row="1" VerticalAlignment="Center" Margin="0,0,25,0">
-                        <Label Style="{DynamicResource NoteStyle}" Content="Red-highlighted row refers to expenses exceeded expectations." Margin="2,1,-20,1"/>
+                        <Label Style="{DynamicResource NoteStyle}" Content="Red-highlighted row refers to expenses exceeded expectations." Margin="2,1,-20,1" HorizontalAlignment="Left"/>
                     </Grid>
                 </Grid>
 
-                <Expander  Grid.Column="1"   x:Name="myExpander" Margin="5"
+                <Expander  Grid.Column="0"   x:Name="myExpander" Margin="5" FlowDirection="RightToLeft"
         ExpandDirection="Left" IsExpanded="True" Style="{StaticResource AccountExpander}"
         Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" 
         VerticalContentAlignment="Stretch">
-                    <Grid Margin="20,0,20,0">
+                    <Grid Margin="20,7,20,30">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
@@ -244,31 +244,31 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <!-- Label fixed -->
-                                <ColumnDefinition Width="*"/>
-                                <!-- ComboBox flexible -->
                                 <ColumnDefinition Width="Auto"/>
+                                <!-- ComboBox flexible -->
+                                <ColumnDefinition Width="*"/>
                                 <!-- Save button -->
                                 <ColumnDefinition Width="Auto"/>
                                 <!-- Help button -->
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0"
+                            <Label Grid.Column="4"
                    Style="{DynamicResource statistic_lableStyle}"
                    Content="AvgRate:"
                    HorizontalContentAlignment="Left"
                    VerticalAlignment="Center"
                    Width="68" Height="33" Margin="0,0,1,0"/>
 
-                            <ComboBox Grid.Column="1"
+                            <ComboBox Grid.Column="2"
                       Style="{DynamicResource FloatingComboboxStyle}"
                       x:Name="AvgRate_comboBox"
                       DisplayMemberPath="Rate group name"
                       SelectedValuePath="ID"
                       FlowDirection="LeftToRight"
-                      Height="29"
+                      Height="30"
                       VerticalAlignment="Center"/>
 
-                            <Border Grid.Column="2" Background="{StaticResource LightGray1}" Margin="3,1,0,1">
+                            <Border Grid.Column="1" Background="{StaticResource LightGray1}" Margin="3,1,0,1" Height="30">
                                 <Button Style="{DynamicResource AddButtonStyle}"
                         ToolTip="Save"
                         ToolTipService.InitialShowDelay="100"
@@ -283,7 +283,7 @@
                                 </Button>
                             </Border>
 
-                            <Button Grid.Column="3"
+                            <Button Grid.Column="0"
                     x:Name="AvgRate_help"
                     ToolTip="Only AvgRates which contains exchange operation to the budget currency appears."
                     ToolTipService.InitialShowDelay="100"
@@ -291,7 +291,7 @@
                     Height="15"
                     BorderBrush="{x:Null}"
                     Margin="3,0,0,0"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center" FlowDirection="LeftToRight">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
                                 </Button.Background>
@@ -304,7 +304,7 @@ HeaderStyle="{DynamicResource SfDataGrid_header}"
 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGroupDropArea ="False"
-  AllowFiltering="False" Grid.Row="2" Margin="2,5,0,5">
+  AllowFiltering="False" Grid.Row="2" Margin="2,5,0,5" Width="375">
 
                             <syncfusion:SfDataGrid.Columns>
                                 <syncfusion:GridTextColumn x:Name="budg_avgetrate_id_DataGridColumn" HeaderText="budg_avgetrate_id"  MappingName="budg_avgetrate_id" IsHidden="True"/>

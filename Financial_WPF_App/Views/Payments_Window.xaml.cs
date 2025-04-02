@@ -22,7 +22,7 @@ namespace Financial_WPF_App.Views
         public Payments_Window(Main_Window_2 main_Window, string SubProject_ID)
         {
             InitializeComponent();
-            Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
+            //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             this.main_Window = main_Window;
             if (SubProject_ID != "")
                 this.SubProject_ID = Int32.Parse(SubProject_ID);
@@ -75,7 +75,6 @@ namespace Financial_WPF_App.Views
                 }
 
                 myExpander.IsExpanded = false;
-                myDataGrid.Margin = new Thickness(2, 5, 0, 5);
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
@@ -701,16 +700,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
-                {
-                    Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(50, GridUnitType.Star);
-                }
-                else
-                {
-                    Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(30, GridUnitType.Star);
-                }
+                myExpander.Width = double.NaN;
+                //if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
+                //{
+                //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+                //}
+                //else
+                //{
+                //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+                //}
 
             }
             catch (Exception ex)
@@ -729,16 +729,17 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
-                {
-                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(8, GridUnitType.Star);
-                }
-                else if (_currentWindowState == WindowState.Maximized)
-                {
-                    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                    Expander_col.Width = new GridLength(6, GridUnitType.Star);
-                }
+                myExpander.Width = 30;
+                //if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
+                //{
+                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(8, GridUnitType.Star);
+                //}
+                //else if (_currentWindowState == WindowState.Maximized)
+                //{
+                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+                //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+                //}
 
             }
             catch (Exception ex)
