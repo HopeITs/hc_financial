@@ -86,7 +86,7 @@
             Grid.Row="3" MouseDoubleClick="myDataGrid_MouseDoubleClick" Margin="2,5,0,5">
 
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID"/>
+                <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID" IsHidden="True"/>
                 <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Name"  MappingName="Name" />
                 <syncfusion:GridTextColumn x:Name="Type_DataGridColumn" HeaderText="Type"  MappingName="Type" />
                 <syncfusion:GridTextColumn x:Name="Kind_DataGridColumn" HeaderText="Kind"  MappingName="Kind" />

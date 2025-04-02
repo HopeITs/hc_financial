@@ -53,7 +53,7 @@
                     </WrapPanel>
                 </DockPanel>
             </Grid>
-            <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2"                                            
+            <syncfusion:SfDataGrid x:Name="myDataGrid"                                            
       Style="{DynamicResource SfDataGrid_body}"
       HeaderStyle="{DynamicResource SfDataGrid_header}"
       RowStyle="{DynamicResource SfDataGrid_RowStyle}"

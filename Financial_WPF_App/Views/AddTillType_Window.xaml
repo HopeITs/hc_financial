@@ -32,7 +32,7 @@
                 <local:WindowControlBar_Popup x:Name="ControlBar"/>
             </DockPanel>
 
-            <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="2" Grid.Row="1"                                      
+            <syncfusion:SfDataGrid x:Name="myDataGrid" Grid.Row="1"                                      
     Style="{DynamicResource SfDataGrid_body}"
     HeaderStyle="{DynamicResource SfDataGrid_header}"
     RowStyle="{DynamicResource SfDataGrid_RowStyle}"

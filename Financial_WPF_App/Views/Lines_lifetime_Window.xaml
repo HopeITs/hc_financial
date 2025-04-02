@@ -175,7 +175,7 @@ PopupAnimation="Fade">
                         </WrapPanel>
                     </DockPanel>
                 </Grid>
-                <syncfusion:SfDataGrid Grid.ColumnSpan="8" FrozenColumnCount="3"
+                <syncfusion:SfDataGrid Grid.ColumnSpan="8"
                 x:Name="myDataGrid" SelectionChanged="myDataGrid_SelectionChanged"
                 Style="{DynamicResource SfDataGrid_body}"
                 HeaderStyle="{DynamicResource SfDataGrid_header}"

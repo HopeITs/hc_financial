@@ -72,7 +72,6 @@
     RowStyle="{DynamicResource SfDataGrid_RowStyle}"
     AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
     TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"                  
-    FrozenColumnCount="1"
     AutoGenerateColumns="True" 
     MouseDoubleClick="myDataGrid_MouseDoubleClick" 
     Loaded="myDataGrid_Loaded" 

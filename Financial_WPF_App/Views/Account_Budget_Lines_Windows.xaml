@@ -231,7 +231,7 @@
                     </StackPanel>
                 </DockPanel>
             </Grid>
-            <syncfusion:SfDataGrid Grid.Row="3" FrozenColumnCount="3"
+            <syncfusion:SfDataGrid Grid.Row="3" FrozenColumnCount="1"
           x:Name="myDataGrid"  
           Style="{DynamicResource SfDataGrid_body}"
           HeaderStyle="{DynamicResource SfDataGrid_header}"

@@ -190,7 +190,7 @@
 
 
 
-        <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="3"
+        <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="6"
                 Style="{DynamicResource SfDataGrid_body}" SelectionChanged="myDataGrid_SelectionChanged" 
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"

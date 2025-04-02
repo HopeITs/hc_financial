@@ -27,7 +27,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="233*"/>
             </Grid.RowDefinitions >
-            <syncfusion:SfDataGrid x:Name="myDataGrid"    SelectionChanged="myDataGrid_SelectionChanged"                                      
+            <syncfusion:SfDataGrid x:Name="myDataGrid"  FrozenColumnCount ="1"  SelectionChanged="myDataGrid_SelectionChanged"                                      
     Style="{DynamicResource SfDataGrid_body}"
     HeaderStyle="{DynamicResource SfDataGrid_header}"
     RowStyle="{DynamicResource SfDataGrid_RowStyle}"
