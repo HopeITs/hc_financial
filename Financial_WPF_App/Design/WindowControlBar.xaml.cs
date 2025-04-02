@@ -25,7 +25,12 @@ namespace Financial_WPF_App
             {
                 _customWindowState = parentWindow.WindowState;
             }
+            else
+            {
+                _customWindowState = WindowState.Maximized;
+            }
         }
+
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
