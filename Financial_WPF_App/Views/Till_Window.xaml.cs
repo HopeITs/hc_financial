@@ -110,6 +110,7 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
 
+                myExpander_Collapsed(this, new RoutedEventArgs());
                 myExpander.IsExpanded = false;
 
                 Load_Data();
