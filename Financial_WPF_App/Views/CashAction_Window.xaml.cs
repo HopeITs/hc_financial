@@ -1,6 +1,10 @@
 ﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
+using Syncfusion.Data;
+using Syncfusion.UI.Xaml.Grid;
 using System;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -425,11 +429,25 @@ namespace Financial_WPF_App.Views
 
         private void Calc_TotalNet()
         {
-            double Net = Actions_dt.AsEnumerable().Sum(row => row.Field<double>("Income")) -
-                    Actions_dt.AsEnumerable().Sum(row => row.Field<double>("Expand"));
+            double Income = Actions_dt.AsEnumerable().Sum(row => row.Field<double>("Income"));
+            double Expand = Actions_dt.AsEnumerable().Sum(row => row.Field<double>("Expand"));
+            double Net = Income - Expand;
 
-            Net_lable.Content = Login.ConvertToDouble(Net.ToString());
+            if (Actions_DataGrid.TableSummaryRows.Count > 0)
+            {
+                Actions_DataGrid.TableSummaryRows[0].SummaryColumns.Clear();
+                Actions_DataGrid.TableSummaryRows.RemoveAt(0);
+            }
+
+            Actions_DataGrid.TableSummaryRows.Add(new GridTableSummaryRow()
+            {
+                ShowSummaryInRow = true,
+                Title = " Income:" + Income.ToString("N2") + " | Outcome:" + Expand.ToString("N2") + " | Total:" + Net.ToString("N2"),
+                SummaryColumns = new ObservableCollection<ISummaryColumn>() { }
+            });
+
         }
+
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowUtils.MinimizeWindow(this);

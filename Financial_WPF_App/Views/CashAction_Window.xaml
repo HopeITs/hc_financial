@@ -114,70 +114,47 @@ x:Name="InsertAction_btn" TabIndex="15" Click="InsertAction_btn_Click" Horizonta
                 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
                 AllowFiltering="False"  
                 ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,5,5,5">
-                    <syncfusion:SfDataGrid.Columns>
-                        <syncfusion:GridTextColumn MappingName="cashaction_denominations_id" HeaderText="cashaction_denominations_id"  IsHidden="True"/>
-                        <syncfusion:GridNumericColumn  HeaderText="Amount"  MappingName="Amount" 
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn MappingName="cashaction_denominations_id" HeaderText="cashaction_denominations_id"  IsHidden="True"/>
+                    <syncfusion:GridNumericColumn  HeaderText="Amount"  MappingName="Amount" 
                         NumberDecimalDigits="2"
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
                         NumberGroupSeparator=","/>
-                        <syncfusion:GridNumericColumn  HeaderText="Income"  MappingName="Income" 
+                    <syncfusion:GridNumericColumn  HeaderText="Income"  MappingName="Income" 
                         NumberDecimalDigits="2"
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
                         NumberGroupSeparator="," IsHidden="True"/>
-                        <syncfusion:GridNumericColumn  HeaderText="Expand"  MappingName="Expand" 
+                    <syncfusion:GridNumericColumn  HeaderText="Expand"  MappingName="Expand" 
                         NumberDecimalDigits="2"
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
                         NumberGroupSeparator="," IsHidden="True"/>
-                        <syncfusion:GridTextColumn MappingName="denominations_id" HeaderText="denominations_id" 
+                    <syncfusion:GridTextColumn MappingName="denominations_id" HeaderText="denominations_id" 
                         IsHidden="True" />
-                        <syncfusion:GridTextColumn MappingName="denominations_name" HeaderText="Denomination"/>
-                        <syncfusion:GridTextColumn MappingName="actiontype_shortname" HeaderText="actiontype_shortname" 
+                    <syncfusion:GridTextColumn MappingName="denominations_name" HeaderText="Denomination"/>
+                    <syncfusion:GridTextColumn MappingName="actiontype_shortname" HeaderText="actiontype_shortname" 
                         IsHidden="True" />
-                        <syncfusion:GridTextColumn MappingName="actiontype_name" HeaderText="Operation type"/>
+                    <syncfusion:GridTextColumn MappingName="actiontype_name" HeaderText="Operation type"/>
 
-                        <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
-                            <syncfusion:GridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Style="{StaticResource Delete_Style}" Click="Donor_DeleteButton_Click"/>
-                                </DataTemplate>
-                            </syncfusion:GridTemplateColumn.CellTemplate>
-                        </syncfusion:GridTemplateColumn>
-                    </syncfusion:SfDataGrid.Columns>
-
-
-                    <syncfusion:SfDataGrid.TableSummaryRows>
-                        <syncfusion:GridTableSummaryRow Title=" Income: {TotalIncome} | Outcome:  {TotalExpand}" ShowSummaryInRow="True">
-                            <syncfusion:GridSummaryRow.SummaryColumns>
-                                <syncfusion:GridSummaryColumn Name="TotalIncome"                                                      
-                                                Format="'{Sum:N2}'"
-                                                MappingName="Income"
-                                                SummaryType="DoubleAggregate" />
-
-                                <syncfusion:GridSummaryColumn Name="TotalExpand"
-                                                Format="'{Sum:N2}'"
-                                                MappingName="Expand"
-                                                SummaryType="DoubleAggregate" />
-
-                            </syncfusion:GridSummaryRow.SummaryColumns>
-                        </syncfusion:GridTableSummaryRow>
-                    </syncfusion:SfDataGrid.TableSummaryRows>
-
-                </syncfusion:SfDataGrid>
+                    <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource Delete_Style}" Click="Donor_DeleteButton_Click"/>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+                </syncfusion:SfDataGrid.Columns>
+            </syncfusion:SfDataGrid>
                 <Grid Grid.Row="10" Grid.Column="0">
                     <Button 
                     Style="{DynamicResource ButtonColoredStyle}" 
                     x:Name="Save_btn" TabIndex="15" Click="Save_btn_Click" Content="Save" />
                 </Grid>
-            <StackPanel Orientation="Horizontal" Grid.Column="5" Grid.Row="9" HorizontalAlignment="Right">
-                <Label  x:Name="Total_lable" Style="{DynamicResource statistic_lableStyle}" Content="Total:"  />
-                <Label Grid.Column="4" Grid.Row="9" x:Name="Net_lable" Style="{DynamicResource statistic_lableStyle}" Content="0.00"  />
-            </StackPanel>
-                
-            
-                <Label x:Name="E_Notes_Label" Grid.Column="0" Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Description EN:"  />
+
+
+            <Label x:Name="E_Notes_Label" Grid.Column="0" Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Description EN:"  />
             <TextBox x:Name="E_Notes_txtBox" Grid.RowSpan="2" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"  TextWrapping="Wrap" HorizontalContentAlignment="Left" Style="{DynamicResource FloatingTextBoxStyle}" 
                     Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="3" TabIndex="2" Height="80" />
             </Grid>
