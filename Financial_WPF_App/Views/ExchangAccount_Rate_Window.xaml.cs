@@ -718,6 +718,8 @@ namespace Financial_WPF_App.Views
                     // Call the search method when text changes
                     searchHelper.Search(Search_txtBox.Text, myDataGrid);
                 }
+
+                move_Columns();
             }
             catch (Exception ex)
             {

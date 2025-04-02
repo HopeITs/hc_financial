@@ -456,6 +456,8 @@ namespace Financial_WPF_App.Views
                     // Call the search method when text changes
                     searchHelper.Search(Search_txtBox.Text, myDataGrid);
                 }
+
+                move_Columns();
             }
             catch (Exception ex)
             {
@@ -468,7 +470,6 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
-
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
@@ -788,6 +789,7 @@ namespace Financial_WPF_App.Views
                 Delete_Selected_btn.IsEnabled = true;
             }
         }
+
     }
 }
 

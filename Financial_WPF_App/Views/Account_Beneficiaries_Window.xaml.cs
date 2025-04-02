@@ -737,7 +737,7 @@ namespace Financial_WPF_App.Views
 
         private void move_Columns()
         {
-            if (myDataGrid.Columns.Count > 2)
+            if (myDataGrid.Columns.Count > 4)
             {
                 bool EditMoved = false;
                 bool DeleteMoved = false;
@@ -895,6 +895,8 @@ namespace Financial_WPF_App.Views
                     // Call the search method when text changes
                     searchHelper.Search(Search_txtBox.Text, myDataGrid);
                 }
+
+                move_Columns();
             }
             catch (Exception ex)
             {
