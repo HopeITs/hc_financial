@@ -287,7 +287,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                             </TextBlock>-->
                     </StackPanel>
                 </WrapPanel>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,45,0">
+                <StackPanel x:Name="Search_StackPanel" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right"  Margin="0,0,35,0">
                     <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Click="NotApproved_RadioButton_Click" Tag="False" Margin="0,9,0,9" VerticalAlignment="Stretch" Width="170"/>
                     <!--<CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource ComboBoxActionStyle}" x:Name="ExactSearch_checkBox" Content="Full Match"  Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch" Width="89" Margin="0,0,10,0"/>-->
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TabIndex="10"/>
@@ -296,8 +296,8 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
         </Grid>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Name="Grid_col" Width="70*" ></ColumnDefinition>
-                <ColumnDefinition Name="Expander_col" Width="30*" ></ColumnDefinition>
+                <ColumnDefinition Name="Grid_col" Width="Auto" ></ColumnDefinition>
+                <ColumnDefinition Name="Expander_col" Width="*" ></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="6"                                            
                 Style="{DynamicResource SfDataGrid_body}"
@@ -308,7 +308,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                 MouseDoubleClick="myDataGrid_MouseDoubleClick" 
                 Loaded="myDataGrid_Loaded" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                Grid.Column="0" Grid.Row="1" FilterChanged="myDataGrid_FilterChanged" >
+                Grid.Column="1" Grid.Row="1" FilterChanged="myDataGrid_FilterChanged" Margin="2,5,35,5" >
 
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" MappingName="ID" HeaderText="Operation ID"/>
@@ -461,11 +461,11 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
 
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-            <Expander x:Name="myExpander" Grid.Column="1" IsExpanded="True" Margin="5"
+            <Expander x:Name="myExpander" Grid.Column="0" IsExpanded="False" Width="Auto" Margin="5" FlowDirection="RightToLeft"
             ExpandDirection="Right" Style="{StaticResource AccountExpander}"
             Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E">
-                
-                <Grid Margin="20,0,20,0">
+
+                <Grid Margin="20,7,20,30">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -502,17 +502,17 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                     </syncfusion:SfDataGrid>
                     <Grid Grid.Row="0" Margin="0,5,0,5" Height="25">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <!-- For the button -->
                             <ColumnDefinition Width="*"/>
+                            <!-- For the button -->
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Button Style="{DynamicResource AddButtonStyle}" x:Name="Cash_Export_btn" Command="local:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1">
+                        <Button Style="{DynamicResource AddButtonStyle}" x:Name="Cash_Export_btn" Command="local:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
                             <Button.Background>
                                 <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
                             </Button.Background>
                         </Button>
 
-                        <Label Grid.Column="1" Style="{DynamicResource NoteStyle}" FontSize="14" FontFamily="Rubik" FontWeight="Medium" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
+                        <Label Grid.Column="0" Style="{DynamicResource NoteStyle}" FontSize="14" FontFamily="Rubik" FontWeight="Medium" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
           HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
            Content="Balances"
            Margin="1,0,1,0" VerticalAlignment="Stretch" />
