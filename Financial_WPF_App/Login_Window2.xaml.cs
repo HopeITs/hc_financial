@@ -197,7 +197,6 @@ namespace Financial_WPF_App
             }
         }
 
-
         private void Remember_Me_Butten_Copy_Click(object sender, RoutedEventArgs e)
         {
             try

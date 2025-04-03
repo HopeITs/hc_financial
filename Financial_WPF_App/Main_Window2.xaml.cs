@@ -97,8 +97,8 @@ namespace Financial_WPF_App
 
         private void Show_Hide()
         {
-            AddNew_MenuItem.Visibility =  Reports_MenuItem.Visibility =  Log_MenuItem.Visibility = 
-            Accounting_Entries_MenuItem.Visibility =  Employee_MenuItem.Visibility =  Approval_MenuItem.Visibility = Visibility.Visible;
+            AddNew_MenuItem.Visibility = Reports_MenuItem.Visibility = Log_MenuItem.Visibility =
+            Accounting_Entries_MenuItem.Visibility = Employee_MenuItem.Visibility = Approval_MenuItem.Visibility = Visibility.Visible;
 
 
             string role = Properties.Settings.Default.Role;
@@ -526,12 +526,15 @@ namespace Financial_WPF_App
             AllAccounts_ds = c.Select_Tree_View();
             if (AllAccounts_ds != null)
             {
-
                 List<TreeViewItemState> expandedItems = TreeViewExpandedState.GetExpandedItems(MyTreeView);
 
                 PopulateTreeView();
 
-                TreeViewExpandedState.RestoreTreeViewExpandedState(MyTreeView, expandedItems);
+                if (keepExpanded)
+                {
+                    TreeViewExpandedState.RestoreTreeViewExpandedState(MyTreeView, expandedItems);
+
+                }
 
             }
             RClicked_ID = -1; RClicked_Name = "";
@@ -967,7 +970,7 @@ namespace Financial_WPF_App
 
                                 subprojectItem.Items.Add(AllPBonds);
                             }
-            
+
                         }
 
                         // Add accounts as child items
@@ -1145,7 +1148,7 @@ namespace Financial_WPF_App
                                     FiscalBond_Window All_FiscalBonds = new FiscalBond_Window(this, Sub_ID, "Budget");
                                     Create_tabItem(All_FiscalBonds, textBlock.Text + "-" + Header_Text, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                 }
-                            }    
+                            }
                         }
                     }
                 }
@@ -1205,7 +1208,7 @@ namespace Financial_WPF_App
                         string Acc_Categort = itemInfo.Category;
 
                         string Acc_Name = HeaderTextExtractor.ExtractText(accountItem.Header);
-           
+
                         ItemsControl parent = GetSelectedTreeViewItemParent(accountItem);
 
                         System.Windows.Controls.TreeViewItem treeitem = parent as System.Windows.Controls.TreeViewItem;
@@ -1269,7 +1272,7 @@ namespace Financial_WPF_App
                     int Acc_ID = Convert.ToInt32(itemInfo.ID.ToString());
 
                     string Acc_Name = HeaderTextExtractor.ExtractText(accountItem.Header);
-          
+
 
                     Account_Window account_Window = new Account_Window(Acc_ID, "Cash", this);
                     Create_tabItem(account_Window, Acc_Name, (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
@@ -1364,7 +1367,7 @@ namespace Financial_WPF_App
                         {
                             switch (textBlock.Text)
                             {
-                                case "Create New Bond":                              
+                                case "Create New Bond":
                                     Add_FiscalBond_Window _FBWindow = new Add_FiscalBond_Window(this);
                                     bool? dialogResult = _FBWindow.ShowDialog();
                                     if (dialogResult == true)
