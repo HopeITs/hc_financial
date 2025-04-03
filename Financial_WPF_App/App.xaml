@@ -651,7 +651,7 @@
                                                IsHitTestVisible="True"/>
 
                                 <!-- Actual TextBox Content -->
-                                <ScrollViewer x:Name="PART_ContentHost" Margin="45,0,0,0"/>
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="10,0,0,0"/>
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
