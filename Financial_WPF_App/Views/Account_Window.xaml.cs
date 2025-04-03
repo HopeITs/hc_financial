@@ -346,8 +346,10 @@ namespace Financial_WPF_App
 
                 if (!Edit_privileges)
                 {
-                    //myExpander.IsEnabled = false;
-                    myExpander.Visibility = Visibility.Collapsed;
+                    myExpander.IsEnabled = false;
+                    ToolTipService.SetToolTip(myExpander, "You do not have permission to edit.");
+                    ToolTipService.SetShowOnDisabled(myExpander, true);
+                    ToolTipService.SetInitialShowDelay(myExpander, 100);
                 }
                    
                 if (Category == "Budget")
