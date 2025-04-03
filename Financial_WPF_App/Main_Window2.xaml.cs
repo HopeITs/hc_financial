@@ -181,28 +181,52 @@ namespace Financial_WPF_App
 
         public void Create_tabItem(Window window, string header, System.Windows.Media.Brush main_color)
         {
-            TabItemExt oTab = new TabItemExt();
-            oTab.Content = window.Content;
-            oTab.Header = header;
-            oTab.Foreground = main_color;
-            // Store the original Foreground color in the Tag property
-            oTab.Tag = main_color;
-            oTab.FontFamily = new System.Windows.Media.FontFamily("Rubik");
-            oTab.FlowDirection = FlowDirection.LeftToRight;
-            // Add the TabItemExt to the TabControlExt
+            bool Found = false;
+            TabItemExt existingTab = null;
 
-
-            // Attach property change listener for IsPinned
-            DependencyPropertyDescriptor descriptor = DependencyPropertyDescriptor.FromProperty(
-                TabItemExt.IsPinnedProperty, typeof(TabItemExt));
-
-            if (descriptor != null)
+            if (main_tabControl.Items != null && main_tabControl.Items.Count != 0)
             {
-                descriptor.AddValueChanged(oTab, TabItem_IsPinnedChanged);
+                foreach (TabItemExt tab in main_tabControl.Items)
+                {
+                    if (tab.Header.ToString() == header)
+                    {
+                        Found = true;
+                        existingTab = tab;
+                        break; 
+                    }
+                }
             }
 
-            main_tabControl.Items.Add(oTab);
-            main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
+            if (Found && existingTab != null)
+            {
+                main_tabControl.SelectedItem = existingTab;
+            }
+            else
+            {
+                TabItemExt oTab = new TabItemExt();
+                oTab.Content = window.Content;
+                oTab.Header = header;
+                oTab.Foreground = main_color;
+                // Store the original Foreground color in the Tag property
+                oTab.Tag = main_color;
+                oTab.FontFamily = new System.Windows.Media.FontFamily("Rubik");
+                oTab.FlowDirection = FlowDirection.LeftToRight;
+                // Add the TabItemExt to the TabControlExt
+
+
+                // Attach property change listener for IsPinned
+                DependencyPropertyDescriptor descriptor = DependencyPropertyDescriptor.FromProperty(
+                    TabItemExt.IsPinnedProperty, typeof(TabItemExt));
+
+                if (descriptor != null)
+                {
+                    descriptor.AddValueChanged(oTab, TabItem_IsPinnedChanged);
+                }
+
+                main_tabControl.Items.Add(oTab);
+                main_tabControl.SelectedIndex = main_tabControl.Items.Count - 1;
+            }
+          
 
         }
 
