@@ -180,7 +180,7 @@ PopupAnimation="Fade">
                             </Button>
                         </StackPanel>
                     </WrapPanel>
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,35,0">
                         <StackPanel x:Name="Panel1"  Orientation="Horizontal">
                             <RadioButton x:Name="PerDonor_RadioButton" Content="Show Per Donor" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Checked="PerDonor_RadioButton_Checked" Tag="False" Margin="0,6,0,9"/>
                             <RadioButton x:Name="Total_RadioButton" Content="Show Total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Checked="Total_RadioButton_Checked" Tag="False" Margin="0,6,0,9"/>
@@ -204,7 +204,7 @@ PopupAnimation="Fade">
                                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
                                Grid.ColumnSpan="2" HorizontalAlignment="Stretch"
                                AutoGenerateColumns="True" 
-                               SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" Margin="2,5,40,0" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3" MouseDoubleClick="myDataGrid_MouseDoubleClick">
+                               SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" Margin="2,5,35,0" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3" MouseDoubleClick="myDataGrid_MouseDoubleClick">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>

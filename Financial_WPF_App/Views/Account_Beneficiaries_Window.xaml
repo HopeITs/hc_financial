@@ -15,7 +15,7 @@
         <Helper:CustomAlternatingRowStyleSelector x:Key="AlternatingrowStyleSelector" />
     </Window.Resources>
 
-    <Grid >
+    <Grid Background="{StaticResource LightGray2}" >
         <Grid.ContextMenu>
             <ContextMenu Name="cm">
                 <MenuItem Header="Refresh Beneficiaries" Click = "Refresh_Click" >

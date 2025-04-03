@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.Add_Employee_Window"
-        mc:Ignorable="d" Tag="Add Employee Window"
+        mc:Ignorable="d" Tag="Add Employee Window" Width="760"
         Title="Add_Employee_Window" Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid Margin="5">
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -72,7 +72,7 @@
      />
             <DatePicker x:Name="EndDate_datepicker"  TabIndex="11" Grid.Row="3" Grid.Column="3" Height="30"/>
             <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Insert" ToolTipService.InitialShowDelay="100"
-    x:Name="Add_btn" TabIndex="15"  Click="Add_btn_Click" Grid.Row="3" Grid.Column="4" HorizontalAlignment="Left" Margin="5,0,1,0"  >
+    x:Name="Add_btn" TabIndex="15"  Click="Add_btn_Click" Grid.Row="3" Grid.Column="4" HorizontalAlignment="Stretch" Margin="2,0,5,0" VerticalAlignment="Stretch"  >
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Buttons/NewEntry.png"/>
                 </Button.Background>

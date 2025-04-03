@@ -202,7 +202,7 @@ PopupAnimation="Fade">
                         </Button>
                     </StackPanel>
                 </WrapPanel>
-                <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                 </StackPanel>
             </DockPanel>
@@ -218,7 +218,7 @@ PopupAnimation="Fade">
                 SelectionChanged="myDataGrid_SelectionChanged" 
                 Loaded="myDataGrid_Loaded" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" Grid.ColumnSpan="2" >
+                Grid.Row="3" FilterChanged="myDataGrid_FilterChanged" Grid.ColumnSpan="2" Margin="2,5,5,5" >
 
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="City_DataGridColumn" MappingName="City_Name" HeaderText="City"/>

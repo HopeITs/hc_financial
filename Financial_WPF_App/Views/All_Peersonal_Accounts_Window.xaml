@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="All_Peersonal_Accounts_Window" Width="1280" Height="720"
         FontFamily="Myriad Arabic" FontSize="20" WindowStartupLocation="CenterScreen">
-    <Grid>
+    <Grid Background="{StaticResource LightGray2}">
 
         <Grid >
             <Grid.ContextMenu>
@@ -20,7 +20,7 @@
                     </MenuItem>
                 </ContextMenu>
             </Grid.ContextMenu>
-            <Grid  Grid.Column="0" Margin="10,0,10,0" >
+            <Grid  Grid.Column="0" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

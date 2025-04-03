@@ -11,8 +11,8 @@
         mc:Ignorable="d"
         Title="FiscalBond_Window" Height="620" Width="1180" 
         WindowStartupLocation="CenterScreen" >
-  
-    <Grid  Grid.Column="0" >
+
+    <Grid  Grid.Column="0" Background="{StaticResource LightGray2}">
         <Grid.ContextMenu>
             <ContextMenu Name="cm">
                 <MenuItem Header="Refresh" Click = "Refresh_Click" >

@@ -195,7 +195,7 @@
                                 </Button>
                             </StackPanel>
                         </WrapPanel>
-                        <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                        <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,35,0">
                             <RadioButton x:Name="PerDonor_RadioButton" Content="Show Per Donor" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Checked="PerDonor_RadioButton_Checked" Tag="False" Margin="0,9,0,9"/>
                             <RadioButton x:Name="Total_RadioButton" Content="Show Total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Checked="Total_RadioButton_Checked" Tag="False" Margin="0,9,0,9"/>
                             <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
@@ -209,7 +209,7 @@
                       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                       AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"  
                                    AutoGenerateColumns="True"
-                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="5" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" >
+                      SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" Grid.ColumnSpan="5" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" Margin="2,5,35,5" >
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                             <syncfusion:GridTemplateColumn.CellTemplate>

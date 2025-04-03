@@ -7,9 +7,9 @@
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         mc:Ignorable="d"
         Title="All_Accounts_Window" Width="1280" Height="720"
-        FontFamily="Myriad Arabic" FontSize="20" WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen">
 
-    <Grid>
+    <Grid Background="{StaticResource LightGray2}">
         <Grid.ContextMenu>
             <ContextMenu Name="cm">
                 <MenuItem Header="Refresh" Click = "Refresh_Click" >
@@ -20,7 +20,7 @@
             </ContextMenu>
         </Grid.ContextMenu>
 
-        <Grid  Grid.Column="0" Margin="10,0,10,0" >
+        <Grid  Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>

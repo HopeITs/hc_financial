@@ -224,7 +224,7 @@
                             <Button x:Name="Budget_clear_btn" Style="{DynamicResource ActionDeleteButtonStyle}" BorderBrush="{x:Null}" Width="25" Click="Budget_clear_btn_Click" Height="28" ></Button>
                         </StackPanel>
                     </WrapPanel>
-                    <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                    <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,35,0">
                         <RadioButton x:Name="PerDonor_RadioButton" Content="Show Per Donor" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Checked="PerDonor_RadioButton_Checked" Tag="False" Margin="0,9,0,9"/>
                         <RadioButton x:Name="Total_RadioButton" Content="Show Total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Checked="Total_RadioButton_Checked" Tag="False" Margin="0,9,0,9"/>
                         <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
@@ -242,7 +242,7 @@
                        AutoGenerateColumns="True"
                        SelectionChanged="myDataGrid_SelectionChanged"
                        NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2"
-                       Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged">
+                       Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CurrentCellEndEdit="myDataGrid_CurrentCellEndEdit" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Margin="2,5,35,5">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>

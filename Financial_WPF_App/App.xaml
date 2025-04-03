@@ -601,6 +601,12 @@
                                 <!-- Actual TextBox Content -->
                                 <ScrollViewer x:Name="PART_ContentHost" Margin="0,0,0,0"/>
                             </Grid>
+                            <!-- Triggers -->
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="PlaceholderText" Property="Foreground" Value="{StaticResource LightGray2}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -645,7 +651,7 @@
                                                IsHitTestVisible="True"/>
 
                                 <!-- Actual TextBox Content -->
-                                <ScrollViewer x:Name="PART_ContentHost" Margin="45,0,0,0"/>
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="10,0,0,0"/>
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
