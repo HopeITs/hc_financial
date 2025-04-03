@@ -13,11 +13,10 @@ namespace Financial_WPF_App
 {
     public partial class AddTillType : Window
     {
-        public AddTillType(Add_till AddTIll, Main_Window_2 main_Window)
+        public AddTillType(Main_Window_2 main_Window)
         {
             InitializeComponent();
             this.main_Window = main_Window;
-            this.AddTIll = AddTIll;
             if (OnLoad())
             {
 

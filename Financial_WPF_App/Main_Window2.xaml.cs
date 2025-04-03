@@ -2099,6 +2099,25 @@ namespace Financial_WPF_App
             }
         }
 
+        private void Currency_MenuItemAdv_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Window _Window = new AddTillType(this);
+                _Window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void Fixed_Assets_Report_MenuItemAdv_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -2274,6 +2293,8 @@ namespace Financial_WPF_App
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
+
     }
 }
 

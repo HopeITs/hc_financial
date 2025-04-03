@@ -29,12 +29,5 @@
         <Button Grid.Row="2" Grid.Column="3"
         	Style="{DynamicResource ButtonColoredStyle}" x:Name="Save_btn" Content="Save"
         	TabIndex="10"  Click="Save_btn_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   />
-
-        <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Add New Till" ToolTipService.InitialShowDelay="100"
-        x:Name="AddNewTillType_btn" TabIndex="2" Click="AddNewTillType_btn_Click" Width="22" Height="22" Grid.Column="2"  Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Button.Background>
-                <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
-            </Button.Background>
-        </Button>
     </Grid>
 </Window>

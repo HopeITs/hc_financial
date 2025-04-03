@@ -125,24 +125,5 @@ namespace Financial_WPF_App.Views
                 Save_btn.IsEnabled = true;
             }
         }
-
-        private void AddNewTillType_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Window _Window = new AddTillType(this, main_Window);
-                _Window.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else
-                { MessageBox.Show(ex.Message, "Error"); }
-            }
-
-        }
     }
 }
