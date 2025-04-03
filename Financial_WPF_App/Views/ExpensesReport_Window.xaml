@@ -15,7 +15,7 @@
         <Helper:CellStyleSelector x:Key="cellStyleSelector" />
     </Window.Resources>
 
-    <Grid>
+    <Grid >
         <Grid >
             <Grid.ContextMenu>
                 <ContextMenu x:Name="cm">

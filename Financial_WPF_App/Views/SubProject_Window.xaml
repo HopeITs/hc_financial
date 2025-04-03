@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="SubProjectWindow"  Width="1280" Height="620"
         WindowStartupLocation="CenterScreen" >
-    <Grid>
+    <Grid Background="{StaticResource LightGray2}">
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
                 <MenuItem Header="Refresh" Click = "Refresh_Click" >

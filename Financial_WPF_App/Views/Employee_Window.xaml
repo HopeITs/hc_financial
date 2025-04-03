@@ -10,7 +10,7 @@
         Title="Employee_Window"
          Width="1280" Height="620">
 
-    <Grid>
+    <Grid Background="{StaticResource LightGray2}">
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
                 <MenuItem Header="Refresh" Click = "Refresh_Click" >

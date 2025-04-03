@@ -543,6 +543,31 @@ namespace Financial_WPF_App.Views
                 PersonalAccount_Label.IsEnabled = PersonalAccount_CheckListBox.IsEnabled =
                 ExchangeAccountAccount_Label.IsEnabled = ExchangeAccount_CheckListBox.IsEnabled = false;
 
+            Subproject_Label.BorderBrush = Subproject_CheckListBox.BorderBrush =
+                Account_Label.BorderBrush = Account_CheckListBox.BorderBrush =
+                CashAccount_Label.BorderBrush = CashAccount_CheckListBox.BorderBrush = IsCashier_CashAccount_CheckListBox.BorderBrush =
+                PersonalAccount_Label.BorderBrush = PersonalAccount_CheckListBox.BorderBrush =
+                ExchangeAccountAccount_Label.BorderBrush = ExchangeAccount_CheckListBox.BorderBrush = (SolidColorBrush)Application.Current.Resources["MidGray"];
+
+            Subproject_Label.Foreground = Subproject_CheckListBox.Foreground =
+                Account_Label.Foreground = Account_CheckListBox.Foreground =
+                CashAccount_Label.Foreground = CashAccount_CheckListBox.Foreground = IsCashier_CashAccount_CheckListBox.Foreground =
+                PersonalAccount_Label.Foreground = PersonalAccount_CheckListBox.Foreground =
+                ExchangeAccountAccount_Label.Foreground = ExchangeAccount_CheckListBox.Foreground = (SolidColorBrush)Application.Current.Resources["LightGray1"];
+
+            Subproject_Label.BorderThickness = Subproject_CheckListBox.BorderThickness =
+                Account_Label.BorderThickness = Account_CheckListBox.BorderThickness =
+                CashAccount_Label.BorderThickness = CashAccount_CheckListBox.BorderThickness = IsCashier_CashAccount_CheckListBox.BorderThickness =
+                PersonalAccount_Label.BorderThickness = PersonalAccount_CheckListBox.BorderThickness =
+                ExchangeAccountAccount_Label.BorderThickness = ExchangeAccount_CheckListBox.BorderThickness = new Thickness(1);
+
+            Subproject_Label.Background = 
+                Account_Label.Background = 
+                CashAccount_Label.Background = 
+                PersonalAccount_Label.Background =
+                ExchangeAccountAccount_Label.Background = (SolidColorBrush)Application.Current.Resources["White"];
+
+
             if (Selected_Role == "Head Office")
             {
 
@@ -552,6 +577,9 @@ namespace Financial_WPF_App.Views
                 Subproject_CheckListBox.ItemsSource = subprojects_dt.DefaultView;
 
                 Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled = true;
+                Subproject_Label.Background = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+                Subproject_Label.Foreground = (SolidColorBrush)Application.Current.Resources["White"];
+                Subproject_Label.BorderThickness = Subproject_CheckListBox.BorderThickness = new Thickness(0);
             }
             else if (Selected_Role == "Financial Manager")
             {
@@ -565,6 +593,16 @@ namespace Financial_WPF_App.Views
                     CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled =
                     PersonalAccount_Label.IsEnabled = PersonalAccount_CheckListBox.IsEnabled =
                     ExchangeAccountAccount_Label.IsEnabled = ExchangeAccount_CheckListBox.IsEnabled = true;
+                Subproject_Label.Background = 
+                    CashAccount_Label.Background =  
+                    PersonalAccount_Label.Background = 
+                    ExchangeAccountAccount_Label.Background = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+                Subproject_Label.Foreground =
+                    CashAccount_Label.Foreground =
+                    PersonalAccount_Label.Foreground =
+                    ExchangeAccountAccount_Label.Foreground = (SolidColorBrush)Application.Current.Resources["White"];
+
             }
             else if (Selected_Role == "Accountant")
             {
@@ -577,6 +615,18 @@ namespace Financial_WPF_App.Views
                     Account_Label.IsEnabled = Account_CheckListBox.IsEnabled =
                     CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled =
                     PersonalAccount_Label.IsEnabled = PersonalAccount_CheckListBox.IsEnabled = true;
+
+                Subproject_Label.Background = 
+                    Account_Label.Background = 
+                    CashAccount_Label.Background =
+                    PersonalAccount_Label.Background =  (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+                Subproject_Label.Foreground =
+                   Account_Label.Foreground =
+                   CashAccount_Label.Foreground =
+                   PersonalAccount_Label.Foreground = (SolidColorBrush)Application.Current.Resources["White"];
+
+
             }
             else if (Selected_Role == "Cashier")
             {
@@ -584,6 +634,7 @@ namespace Financial_WPF_App.Views
                 IsCashier_CashAccount_CheckListBox.ItemsSource = cashaccounts_dt.DefaultView;
 
                 CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled = true;
+
             }
             else if (Selected_Role == "Employee")
             {
@@ -594,6 +645,14 @@ namespace Financial_WPF_App.Views
                 Subproject_Label.IsEnabled = Subproject_CheckListBox.IsEnabled =
                     Account_Label.IsEnabled = Account_CheckListBox.IsEnabled =
                     CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled = true;
+
+                Subproject_Label.Background = 
+                    Account_Label.Background =
+                    CashAccount_Label.Background  = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+
+                Subproject_Label.Foreground =
+                    Account_Label.Foreground =
+                    CashAccount_Label.Foreground = (SolidColorBrush)Application.Current.Resources["White"];
             }
             else if (Selected_Role == "Donor")
             {

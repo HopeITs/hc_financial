@@ -54,11 +54,12 @@ namespace Financial_WPF_App.Views
                 {
                     //Total_Panel.Visibility = Visibility.Visible;
                     Balances_StackPanel.Visibility = Net_StackPanel.Visibility = Differace_StackPanel.Visibility = Visibility.Visible;
+                    myDataGrid.Margin = new Thickness(2, 5, 35, 5);
                 }
                 else
                 {
                     Balances_StackPanel.Visibility = Net_StackPanel.Visibility = Differace_StackPanel.Visibility = Visibility.Collapsed;
-
+                    myDataGrid.Margin = new Thickness(2, 5, 5, 5);
                     //Total_Panel.Visibility = Visibility.Collapsed;
                     myDataGrid.TableSummaryRows.Clear();
                 }

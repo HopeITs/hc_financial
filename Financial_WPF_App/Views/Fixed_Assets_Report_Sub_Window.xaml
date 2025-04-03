@@ -7,8 +7,8 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Views.Fixed_Assets_Report_Sub_Window"
         mc:Ignorable="d"
         Title="Fixed_Assets_Report_Sub_Window" Width="1280" Height="620" FontFamily="Myriad Arabic" FontSize="18" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid  Grid.Column="0" Margin="10,0,10,0" >
+    <Grid Background="{StaticResource LightGray2}">
+        <Grid  Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -158,7 +158,7 @@ PopupAnimation="Fade">
                             </Button>
                         </StackPanel>
                     </WrapPanel>
-                    <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,40,0">
+                    <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
                         <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                     </StackPanel>
                 </DockPanel>
@@ -173,7 +173,7 @@ PopupAnimation="Fade">
                 HorizontalAlignment="Stretch"
                 AutoGenerateColumns="True"
                 SelectionChanged="myDataGrid_SelectionChanged"
-                Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3"/>
+                Loaded="myDataGrid_Loaded" VerticalAlignment="Stretch" AutoGeneratingColumn="myDataGrid_AutoGeneratingColumn" ItemsSourceChanged="myDataGrid_ItemsSourceChanged" FilterChanged="myDataGrid_FilterChanged" Grid.Row="3" Margin="2,5,5,5"/>
         </Grid>
     </Grid>
 </Window>
