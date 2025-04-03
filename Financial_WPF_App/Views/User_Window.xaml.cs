@@ -559,7 +559,7 @@ namespace Financial_WPF_App.Views
                 Account_Label.BorderThickness = Account_CheckListBox.BorderThickness =
                 CashAccount_Label.BorderThickness = CashAccount_CheckListBox.BorderThickness = IsCashier_CashAccount_CheckListBox.BorderThickness =
                 PersonalAccount_Label.BorderThickness = PersonalAccount_CheckListBox.BorderThickness =
-                ExchangeAccountAccount_Label.BorderThickness = ExchangeAccount_CheckListBox.BorderThickness = new Thickness(1);
+                ExchangeAccountAccount_Label.BorderThickness = ExchangeAccount_CheckListBox.BorderThickness = new Thickness(.5);
 
             Subproject_Label.Background = 
                 Account_Label.Background = 
