@@ -77,6 +77,7 @@ namespace Financial_WPF_App.Views
                 p = new Payment();
                 Acc = new Account();
 
+                MircoProject_ID_autoSuggestionUserControl.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
                 Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
 
                 for (int i = 0; i < payDataGrid.Columns.Count; i++)
