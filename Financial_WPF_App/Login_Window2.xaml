@@ -464,7 +464,7 @@
             <BeginStoryboard Storyboard="{StaticResource Power_On}"/>
         </EventTrigger>
 
- 
+
 
 
 
@@ -508,12 +508,12 @@
             <!-- Background Image -->
             <Image Source="/Images/Login/Cover.png" Stretch="UniformToFill" />
             <!-- Buttons Over Image -->
-            <Rectangle x:Name="WEB_RED" HorizontalAlignment="Left" Height="12" Margin="332,358,0,0" VerticalAlignment="Top" Width="23">
+            <Rectangle x:Name="WEB_RED" HorizontalAlignment="Left" VerticalAlignment="Top" Width="43" Height="28" Margin="172,339,0,0" >
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="/Images/Login/Asset 58.png"/>
+                    <ImageBrush ImageSource="/Images/Login/Online2.png"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Button x:Name="WEB_Butten" Content="" Margin="331,357,309,329" BorderBrush="{x:Null}" Click="WEB_Butten_Click" Style="{DynamicResource ButtonHoverStyle}" RenderTransformOrigin="0.5,0.5" ToolTip="Our Website" Cursor="Hand" Tag="/Images/Login/Asset 58.png">
+            <Button x:Name="WEB_Butten" Content="" BorderBrush="{x:Null}" Click="WEB_Butten_Click" Style="{DynamicResource ButtonHoverStyle}" RenderTransformOrigin="0.5,0.5" ToolTip="Our Website" Cursor="Hand" Tag="/Images/Login/Online2" Width="47" Height="31" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="170,337,0,0">
                 <Button.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform />
@@ -523,36 +523,36 @@
                     </TransformGroup>
                 </Button.RenderTransform>
                 <Button.Background>
-                    <ImageBrush ImageSource="/Images/Login/WEB.png"/>
+                    <ImageBrush ImageSource="/Images/Login/Online.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <Rectangle x:Name="rectangle" Margin="94,306,370,309" StrokeThickness="0"/>
-            <Button x:Name="Shutdown_btn_Copy" Content="" Margin="357,357,283,311" BorderBrush="{x:Null}" Height="32"   Click="Close_Click">
+            <Rectangle x:Name="rectangle"  StrokeThickness="0" Width="130" Height="71" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="128,155,0,0"/>
+            <Button x:Name="Shutdown_btn_Copy" Content="" BorderBrush="{x:Null}" Height="55"   Click="Close_Click" Width="45" Margin="-20,0,0,-181">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/power2.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Shutdown_btn" Content="" Margin="357,357,283,311" BorderBrush="{x:Null}"  Click="Shutdown_btn_Click" ToolTip="Shut Down" Cursor="Hand" Width="25" Height="32" Style="{DynamicResource ButtonHoverStyle}">
+            <Button x:Name="Shutdown_btn" Content="" BorderBrush="{x:Null}"  Click="Shutdown_btn_Click" ToolTip="Shut Down" Cursor="Hand" Width="45" Height="55" Style="{DynamicResource ButtonHoverStyle}" Margin="-20,0,0,-181">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/power.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Online_Butten_Copy" Content="Button" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click" ToolTip="Online Database" Cursor="Hand" Width="25" Height="23">
+            <Button x:Name="Online_Butten_Copy" Content="Button" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click" ToolTip="Online Database" Cursor="Hand" Width="41" Height="21" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="173,313,0,0">
                 <Button.Background>
-                    <ImageBrush ImageSource="/Images/Login/Online.png"/>
+                    <ImageBrush ImageSource="/Images/Login/Asset 58.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Online_Butten" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click"  ToolTip="Offline Database" Cursor="Hand" d:IsHidden="True">
+            <Button x:Name="Online_Butten" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click"  ToolTip="Offline Database" Cursor="Hand" d:IsHidden="True" Width="44" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="171,312,0,0">
                 <Button.Background>
-                    <ImageBrush ImageSource="/Images/Login/Online2.png"/>
+                    <ImageBrush ImageSource="/Images/Login/WEB.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Remember_Me_Butten_Copy" Content="" Margin="305,357,335,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Copy_Click" ToolTip="Remember Me" Cursor="Hand">
+            <Button x:Name="Remember_Me_Butten_Copy" Content="" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Copy_Click" ToolTip="Remember Me" Cursor="Hand" Width="43" Height="55" Margin="-208,0,0,-181">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Remember.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Remember_Me_Butten" Content="" Margin="357,320,118,148" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Click" RenderTransformOrigin="0.5,0.5" ToolTip="Remember Me" Cursor="Hand" Width="25" Height="32">
+            <Button x:Name="Remember_Me_Butten" Content="" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Click" RenderTransformOrigin="0.5,0.5" ToolTip="Remember Me" Cursor="Hand" Width="46" Height="57" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="123,312,0,0">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Remember2.png"/>
                 </Button.Background>
@@ -638,16 +638,16 @@
                 <!--<Button x:Name="Close" Width="15" Height="15" Grid.Column="1" Click="Close_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" FontWeight="Normal" Grid.ColumnSpan="2" Background="{StaticResource ButtonImageClose}"/>-->
             </Grid>
             <!-- Logo -->
-                <Image Grid.Row="1" Source="/Images/Login/App Logo.ico" Width="267"/>
-            
+            <Image Grid.Row="1" Source="/Images/Login/App Logo.ico" Width="267"/>
 
 
-                <!--Username-->
+
+            <!--Username-->
             <Border Style="{StaticResource BorderStyle}" Grid.Row="2" Effect="{StaticResource ShadowEffect}" Height="40" Width="250">
-                <TextBox x:Name="username_txt" TabIndex="1" Tag="Username" Style="{StaticResource TextBoxStyle}"/>
+                <TextBox x:Name="username_txt" TabIndex="1" Tag="Username" FontWeight="Normal" Style="{StaticResource TextBoxStyle}"/>
             </Border>
-            
-                <!--Password-->
+
+            <!--Password-->
             <Border Margin="0,15,0,0" 
         Style="{StaticResource BorderStyle}"  
         Grid.Row="3" 
