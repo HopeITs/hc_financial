@@ -2003,7 +2003,7 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
 
             <!-- PasswordBox Style -->
             <Style x:Key="PasswordBoxStyle" TargetType="PasswordBox">
-                <Setter Property="Margin" Value="20,2,2,2"/>
+                <Setter Property="Margin" Value="20,0,0,0"/>
                 <Setter Property="Height" Value="40"/>
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="0"/>

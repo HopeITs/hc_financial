@@ -648,18 +648,60 @@
             </Border>
             
                 <!--Password-->
-            <Border Margin="0,15,0,0" Style="{StaticResource BorderStyle}"  Grid.Row="3" Effect="{StaticResource ShadowEffect}" Height="40"  Width="250">
+            <Border Margin="0,15,0,0" 
+        Style="{StaticResource BorderStyle}"  
+        Grid.Row="3" 
+        Effect="{StaticResource ShadowEffect}" 
+        Height="40"  
+        Width="250">
                 <Grid>
                     <!-- Placeholder Text -->
-                    <TextBlock x:Name="Password" Text="Password" FontSize="16" Style="{StaticResource PlaceholderPasswordStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Center"></TextBlock>
-                    <!-- PasswordBox -->
-                    <PasswordBox  x:Name="password_txt1" TabIndex="2" 
-        Style="{StaticResource PasswordBoxStyle}"
-         FontSize="16" PasswordChar="*"
-         PasswordChanged="OnPasswordChange" Height="40">
-                    </PasswordBox>
+                    <TextBlock x:Name="Password" 
+                   Text="Password" 
+                   FontSize="16" 
+                   Style="{StaticResource PlaceholderPasswordStyle}" 
+                   HorizontalAlignment="Stretch" 
+                   VerticalAlignment="Center"/>
+
+                    <!-- PasswordBox (Default Visible) -->
+                    <PasswordBox x:Name="password_txt1" 
+                     TabIndex="2" 
+                     Style="{StaticResource PasswordBoxStyle}"
+                     FontSize="16" 
+                     PasswordChanged="OnPasswordChange"
+                     Height="40"/>
+
+                    <!-- TextBox for Showing Password (Initially Hidden) -->
+                    <TextBox x:Name="password_txt_visible"
+                 Style="{StaticResource TextBoxStyle}"
+                 FontSize="16" 
+                 Visibility="Collapsed"
+                 Height="40"
+                 IsReadOnly="True"/>
+
+                    <!-- Show Password Icon (Initially Visible) -->
+                    <Image x:Name="ShowPasswordIcon" 
+               Source="/Images/Login/show_password.png" 
+               Width="15" Height="15" 
+               VerticalAlignment="Center" 
+               HorizontalAlignment="Right"
+               Margin="0,0,10,0"
+               Cursor="Hand"
+               MouseDown="TogglePasswordVisibility"/>
+
+                    <!-- Hide Password Icon (Initially Hidden) -->
+                    <Image x:Name="HidePasswordIcon" 
+               Source="/Images/Login/hide_password.png" 
+               Width="15" Height="15" 
+               VerticalAlignment="Center" 
+               HorizontalAlignment="Right"
+               Margin="0,0,10,0"
+               Cursor="Hand"
+               Visibility="Collapsed"
+               MouseDown="TogglePasswordVisibility"/>
                 </Grid>
             </Border>
+
             <Grid Grid.Row="4" Width="250" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,15,0,0">
                 <Button x:Name="Login_Butten" Grid.Column="1" Content="Login"  IsDefault="True" Height="30"
         RenderTransformOrigin="0.5,0.5" Style="{StaticResource ButtonColoredStyle}" 

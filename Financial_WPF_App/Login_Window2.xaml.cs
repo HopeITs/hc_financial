@@ -75,6 +75,8 @@ namespace Financial_WPF_App
                     password_txt1.Password = "";
                 }
                 username_txt.Select(username_txt.Text.Length, username_txt.Text.Length);
+                ShowPasswordIcon.Visibility = Visibility.Collapsed;
+                HidePasswordIcon.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
@@ -82,6 +84,7 @@ namespace Financial_WPF_App
             }
         }
 
+        private bool isPasswordVisible = false;
         private Users u;
         private DataTable user_dt;
         Main_Window_2 main_Window;
@@ -309,6 +312,33 @@ namespace Financial_WPF_App
         private void Login_Butten_Click(object sender, RoutedEventArgs e)
         {    
             sb1.Begin();
+        }
+        private void TogglePasswordVisibility(object sender, MouseButtonEventArgs e)
+        {
+            isPasswordVisible = !isPasswordVisible;
+
+            if (isPasswordVisible)
+            {
+                // Show the TextBox and hide PasswordBox
+                password_txt_visible.Text = password_txt1.Password;
+                password_txt_visible.Visibility = Visibility.Visible;
+                password_txt1.Visibility = Visibility.Collapsed;
+
+                // Toggle icons
+                ShowPasswordIcon.Visibility = Visibility.Visible;
+                HidePasswordIcon.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                // Hide the TextBox and show PasswordBox
+                password_txt1.Password = password_txt_visible.Text;
+                password_txt1.Visibility = Visibility.Visible;
+                password_txt_visible.Visibility = Visibility.Collapsed;
+
+                // Toggle icons
+                ShowPasswordIcon.Visibility = Visibility.Collapsed;
+                HidePasswordIcon.Visibility = Visibility.Visible;
+            }
         }
     }
 }
