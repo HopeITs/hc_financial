@@ -224,7 +224,7 @@
 
                     </Grid.ColumnDefinitions>
                     <ComboBox Style="{DynamicResource FloatingComboboxStyle}" x:Name="SubProject_comboBox" Grid.Column="0" Grid.Row="0"
-                              TabIndex="5" SelectionChanged="SubProject_comboBox_SelectionChanged" 
+                              TabIndex="5"
                               PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown" >
 
                         <ComboBox.ItemTemplate>

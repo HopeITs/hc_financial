@@ -1373,65 +1373,6 @@ namespace Financial_WPF_App
 
         }
 
-        private void SubProject_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                Donor_comboBox.ItemsSource = null;
-                Donor_comboBox.Text = "0 Selected";
-                string IDs = "";
-                if (objSubProjectList != null && objSubProjectList.Count > 0)
-                {
-                    foreach (var subproject in objSubProjectList)
-                    {
-                        if (subproject.Sub_Check_Status == true)
-                        {
-                            IDs += subproject.SubID.ToString() + ",";
-                        }
-                    }
-                }
-
-
-                if (IDs != "")
-                {
-                    IDs = IDs.Remove(IDs.Length - 1);
-
-                    DataRow[] rows = donor_dt.Select("SubProject_ID in (" + IDs + ")");
-                    DataTable selected_dt = new DataTable();
-                    if (rows.Length != 0)
-                    {
-                        selected_dt = rows.CopyToDataTable();
-                        if (selected_dt != null && selected_dt.Rows.Count > 0)
-                        {
-                            objDonorList = new List<SubProject_Donor>();
-                            for (int i = 0; i < selected_dt.Rows.Count; i++)
-                            {
-                                SubProject_Donor obj = new SubProject_Donor();
-                                obj.Donor_ID = selected_dt.Rows[i].Field<int>(0);
-                                obj.DonorName = selected_dt.Rows[i].Field<string>(1);
-                                obj.SubProject_ID = selected_dt.Rows[i].Field<int>(2);
-                                objDonorList.Add(obj);
-                            }
-                            Donor_comboBox.ItemsSource = objDonorList;
-                            int count = objDonorList.Count(item => item.Check_Status == true);
-                            Donor_comboBox.Text = count.ToString() + " Selected";
-
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
         private void TotalAmount_txtBox_LostFocus(object sender, RoutedEventArgs e)
         {
             try
@@ -2103,7 +2044,7 @@ namespace Financial_WPF_App
                         SubProject_comboBox.Text = count.ToString() + " Selected";
                     }
 
-                    SubProject_comboBox_SelectionChanged(SubProject_comboBox, null);
+                    Update_Donor_ComboBox();
                 }
 
                 int SubProjectCount = objSubProjectList.Count(item => item.Sub_Check_Status == true);
@@ -2118,6 +2059,52 @@ namespace Financial_WPF_App
                 else if (ex.Message.Contains("Duplicate entry"))
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Update_Donor_ComboBox()
+        {
+            Donor_comboBox.ItemsSource = null;
+            Donor_comboBox.Text = "0 Selected";
+            string IDs = "";
+            if (objSubProjectList != null && objSubProjectList.Count > 0)
+            {
+                foreach (var subproject in objSubProjectList)
+                {
+                    if (subproject.Sub_Check_Status == true)
+                    {
+                        IDs += subproject.SubID.ToString() + ",";
+                    }
+                }
+            }
+
+
+            if (IDs != "")
+            {
+                IDs = IDs.Remove(IDs.Length - 1);
+
+                DataRow[] rows = donor_dt.Select("SubProject_ID in (" + IDs + ")");
+                DataTable selected_dt = new DataTable();
+                if (rows.Length != 0)
+                {
+                    selected_dt = rows.CopyToDataTable();
+                    if (selected_dt != null && selected_dt.Rows.Count > 0)
+                    {
+                        objDonorList = new List<SubProject_Donor>();
+                        for (int i = 0; i < selected_dt.Rows.Count; i++)
+                        {
+                            SubProject_Donor obj = new SubProject_Donor();
+                            obj.Donor_ID = selected_dt.Rows[i].Field<int>(0);
+                            obj.DonorName = selected_dt.Rows[i].Field<string>(1);
+                            obj.SubProject_ID = selected_dt.Rows[i].Field<int>(2);
+                            objDonorList.Add(obj);
+                        }
+                        Donor_comboBox.ItemsSource = objDonorList;
+                        int count = objDonorList.Count(item => item.Check_Status == true);
+                        Donor_comboBox.Text = count.ToString() + " Selected";
+
+                    }
+                }
             }
         }
 
@@ -2195,11 +2182,6 @@ namespace Financial_WPF_App
             }
             e.Handled = true;
         }
-        //private void OnToggleExpanderClick(object sender, RoutedEventArgs e)
-        //{
-        //    // Toggle the visibility of the Popup
-        //    ExpanderPopup.IsOpen = !ExpanderPopup.IsOpen;
-        //}
 
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
         {
@@ -2286,18 +2268,6 @@ namespace Financial_WPF_App
             EndDate_CheckBox.IsChecked = true;
             TotalAmount_txtBox.Text = "";
             AmountType_comboBox.SelectedIndex = -1;
-        }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-
-            // Prevent closing the dropdown when an item is selected
-            if (comboBox != null && !comboBox.IsDropDownOpen)
-            {
-                // Keep dropdown open when an item is selected
-                comboBox.IsDropDownOpen = true;
-            }
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
