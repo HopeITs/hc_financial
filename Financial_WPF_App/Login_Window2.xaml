@@ -513,7 +513,7 @@
                     <ImageBrush ImageSource="/Images/Login/Online2.png"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Button x:Name="WEB_Butten" Content="" BorderBrush="{x:Null}" Click="WEB_Butten_Click" Style="{DynamicResource ButtonHoverStyle}" RenderTransformOrigin="0.5,0.5" ToolTip="Our Website" Cursor="Hand" Tag="/Images/Login/Online2" Width="47" Height="31" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="170,337,0,0">
+            <Button x:Name="WEB_Butten" Content="" BorderBrush="{x:Null}" Click="WEB_Butten_Click" Style="{DynamicResource ButtonHoverStyle}" RenderTransformOrigin="0.5,0.5" ToolTipService.InitialShowDelay="100" ToolTip="Our Website" Cursor="Hand" Tag="/Images/Login/Online2" Width="47" Height="31" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="170,337,0,0">
                 <Button.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform />
@@ -532,12 +532,12 @@
                     <ImageBrush ImageSource="/Images/Login/power2.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Shutdown_btn" Content="" BorderBrush="{x:Null}"  Click="Shutdown_btn_Click" ToolTip="Shut Down" Cursor="Hand" Width="45" Height="55" Style="{DynamicResource ButtonHoverStyle}" Margin="-20,0,0,-181">
+            <Button x:Name="Shutdown_btn" Content="" BorderBrush="{x:Null}"  Click="Shutdown_btn_Click" ToolTipService.InitialShowDelay="100" ToolTip="Shut Down" Cursor="Hand" Width="45" Height="55" Style="{DynamicResource ButtonHoverStyle}" Margin="-20,0,0,-181">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/power.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Online_Butten_Copy" Content="Button" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click" ToolTip="Online Database" Cursor="Hand" Width="41" Height="21" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="173,313,0,0">
+            <Button x:Name="Online_Butten_Copy" Content="Button" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click" ToolTipService.InitialShowDelay="100" ToolTip="Online Database" Cursor="Hand" Width="41" Height="21" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="173,313,0,0">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Asset 58.png"/>
                 </Button.Background>
@@ -547,7 +547,7 @@
                     <ImageBrush ImageSource="/Images/Login/WEB.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Remember_Me_Butten_Copy" Content="" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Copy_Click" ToolTip="Remember Me" Cursor="Hand" Width="45" Height="55" Margin="-208,0,0,-181">
+            <Button x:Name="Remember_Me_Butten_Copy" Content="" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Copy_Click" ToolTipService.InitialShowDelay="100" ToolTip="Remember Me" Cursor="Hand" Width="45" Height="55" Margin="-208,0,0,-181">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Remember2.png"/>
                 </Button.Background>
