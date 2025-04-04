@@ -612,12 +612,12 @@
                         <Style TargetType="ComboBoxItem">
                             <Setter Property="Background" Value="{StaticResource LightGray1}"/>
                             <Setter Property="Foreground" Value="{StaticResource DarkGray}"/>
-                            <Setter Property="Margin" Value="0,5,0,5"/>
+                            <Setter Property="Margin" Value="0,8,0,8"/>
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ComboBoxItem">
-                                        <Border Name="Border" Background="{StaticResource LightGray1}" Padding="20,2,2,2">
+                                        <Border Name="Border" Background="{StaticResource LightGray1}" Margin="20,0,0,0">
                                             <ContentPresenter />
                                         </Border>
                                         <ControlTemplate.Triggers>
@@ -815,7 +815,7 @@
             <!-- Global Combobox CheckBox Style -->
             <Style TargetType="CheckBox" x:Key="CheckBoxStyle">
                 <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
-                <Setter Property="Padding" Value="15,2,2,2" />
+                <Setter Property="Margin" Value="-15,0,0,0" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="FontFamily" Value="Rubik" />
@@ -848,8 +848,8 @@
 
                                 <!-- CheckBox Label -->
                                 <ContentPresenter
+                                    Margin="15,0,0,0"
                                       VerticalAlignment="Center"
-                                      Margin="20,0,0,0"
                                       TextBlock.Foreground="{TemplateBinding Foreground}" />
                             </Grid>
 
