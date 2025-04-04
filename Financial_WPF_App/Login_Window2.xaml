@@ -45,7 +45,7 @@
             </ObjectAnimationUsingKeyFrames>
 
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Power_On">
-                <DiscreteDoubleKeyFrame KeyTime="0" Value="25"/>
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="21"/>
             </DoubleAnimationUsingKeyFrames>
 
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.Content)" Storyboard.TargetName="Power_On">
@@ -179,7 +179,7 @@
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Login Please"/>
             </ObjectAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
-                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
             </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0" Value="#17778D"/>
@@ -243,7 +243,7 @@
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Username/Password"/>
             </ObjectAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
-                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="15"/>
             </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0:0:0.283" Value="#BE1F24"/>
@@ -288,7 +288,7 @@
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Network"/>
             </ObjectAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
-                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
             </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0:0:0.283" Value="#BE1F24"/>
@@ -332,7 +332,7 @@
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Server/Database"/>
             </ObjectAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
-                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="16"/>
             </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0:0:0.283" Value="#BE1F24"/>
@@ -376,7 +376,7 @@
                 <DiscreteObjectKeyFrame KeyTime="0" Value="Other"/>
             </ObjectAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ContentControl.FontSize)" Storyboard.TargetName="Login__Please">
-                <DiscreteDoubleKeyFrame KeyTime="0" Value="30"/>
+                <DiscreteDoubleKeyFrame KeyTime="0" Value="22"/>
             </DoubleAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="Login__Please">
                 <EasingColorKeyFrame KeyTime="0:0:0.283" Value="#BE1F24"/>
@@ -547,14 +547,14 @@
                     <ImageBrush ImageSource="/Images/Login/WEB.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Remember_Me_Butten_Copy" Content="" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Copy_Click" ToolTip="Remember Me" Cursor="Hand" Width="43" Height="55" Margin="-208,0,0,-181">
+            <Button x:Name="Remember_Me_Butten_Copy" Content="" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Copy_Click" ToolTip="Remember Me" Cursor="Hand" Width="45" Height="55" Margin="-208,0,0,-181">
                 <Button.Background>
-                    <ImageBrush ImageSource="/Images/Login/Remember.png"/>
+                    <ImageBrush ImageSource="/Images/Login/Remember2.png"/>
                 </Button.Background>
             </Button>
             <Button x:Name="Remember_Me_Butten" Content="" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Click" RenderTransformOrigin="0.5,0.5" ToolTip="Remember Me" Cursor="Hand" Width="46" Height="57" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="123,312,0,0">
                 <Button.Background>
-                    <ImageBrush ImageSource="/Images/Login/Remember2.png"/>
+                    <ImageBrush ImageSource="/Images/Login/Remember.png"/>
                 </Button.Background>
             </Button>
 
@@ -578,8 +578,8 @@
                     </TransformGroup>
                 </CheckBox.RenderTransform>
             </CheckBox>
-            <Grid Margin="94,306,372,311">
-                <Label x:Name="Welcome" Content="Welcome" FontSize="22" Foreground="#FF17778D" Height="83"  Width="199" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" Padding="5,5,5,31">
+            <Grid>
+                <Label x:Name="Welcome" Content="Welcome" FontSize="22" Foreground="#FF17778D" Height="73"  Width="134" Margin="126,154,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.5,0.5" Padding="5,5,5,31">
                     <Label.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -594,14 +594,14 @@
                         </DataTemplate>
                     </Label.ContentTemplate>
                 </Label>
-                <Label x:Name="Power_On" Content="POWER ON" FontSize="22" HorizontalAlignment="Center" Height="83" VerticalAlignment="Center" Width="200" VerticalContentAlignment="Center" Foreground="#FF17778D" RenderTransformOrigin="0.5,0.5" HorizontalContentAlignment="Center" Padding="5,5,5,5">
+                <Label x:Name="Power_On" Content="POWER ON" FontSize="22" HorizontalAlignment="Left" Height="73" VerticalAlignment="Top" Width="134" VerticalContentAlignment="Center" Foreground="#FF17778D" RenderTransformOrigin="0.5,0.5" HorizontalContentAlignment="Center" Padding="5,5,5,5" Margin="126,154,0,0">
                     <Label.ContentTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" FontFamily="Digital-7"/>
                         </DataTemplate>
                     </Label.ContentTemplate>
                 </Label>
-                <Label x:Name="Login__Please" FontSize="22" Height="83"  Width="199" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Please Login" Foreground="#FF17778D" RenderTransformOrigin="0.5,0.5" Padding="5,31,5,5">
+                <Label x:Name="Login__Please" FontSize="15" Height="73"  Width="134" Margin="126,154,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Please Login" Foreground="#FF17778D" RenderTransformOrigin="0.5,0.5" Padding="5,31,5,5">
                     <Label.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
