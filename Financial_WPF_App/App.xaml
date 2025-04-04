@@ -124,120 +124,19 @@
                 <Setter Property="BorderBrush" Value="{StaticResource DarkGray}"/>
                 <Setter Property="BorderThickness" Value="0.5"/>
             </Style>
-            <Style x:Key="PlaceholderTextStyle" TargetType="TextBlock">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
-                <Setter Property="Opacity" Value="0.6"/>
-                <Setter Property="IsHitTestVisible" Value="False"/>
-                <Setter Property="Visibility" Value="Collapsed"/>
-                <Style.Triggers>
-                    <!-- Show placeholder when the TextBox is empty -->
-                    <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="">
-                        <Setter Property="Visibility" Value="Visible" />
-                    </DataTrigger>
-                    <!-- Show placeholder when the TextBox has a null value -->
-                    <DataTrigger Binding="{Binding Text, ElementName=username_txt}" Value="{x:Null}">
-                        <Setter Property="Visibility" Value="Visible" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-            <Style x:Key="PlaceholderPasswordStyle" TargetType="TextBlock">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
-                <Setter Property="Opacity" Value="0.6"/>
-                <Setter Property="IsHitTestVisible" Value="False"/>
-                <Setter Property="Visibility" Value="Collapsed"/>
-                <Style.Triggers>
-                    <!-- Show placeholder for PasswordBox when empty -->
-                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="">
-                        <Setter Property="Visibility" Value="Visible" />
-                    </DataTrigger>
-                    <!-- Show placeholder for PasswordBox when null -->
-                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="{x:Null}">
-                        <Setter Property="Visibility" Value="Visible" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-            <Style x:Key="TextBoxStyle" TargetType="TextBox">
-                <Setter Property="Height" Value="50"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
-                <Setter Property="SelectionBrush" Value="{StaticResource GreenBlue}"/>
-                <Setter Property="SelectionTextBrush" Value="{StaticResource White}"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="TextBox">
-                            <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
-                                <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <!-- PasswordBox Style -->
-            <Style x:Key="PasswordBoxStyle" TargetType="PasswordBox">
-                <Setter Property="Height" Value="50"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
-                <Setter Property="SelectionBrush" Value="{StaticResource GreenBlue}"/>
-                <Setter Property="SelectionTextBrush" Value="{StaticResource White}"/>
-                <Setter Property="PasswordChar" Value="*" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="PasswordBox">
-                            <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
-                                <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
             
-            <!-- Global Button Style -->
-            <Style x:Key="ButtonStyle" TargetType="Button">
+           
+
+            <Style x:Key="ButtonColoredStyle" TargetType="Button">
+                <Setter Property="Height" Value="27" />
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Margin" Value="1,0,1,0"/>
                 <Setter Property="Cursor" Value="Hand" />
                 <Setter Property="FontFamily" Value="Rubik" />
                 <Setter Property="BorderBrush" Value="{x:Null}" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Foreground" Value="{StaticResource LightGray2}" />
-                <Setter Property="Background" Value="{StaticResource GreenBlue}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="Border" 
-                            CornerRadius="{StaticResource CornerRadius}" 
-                            Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="#FF1A8BA1" />
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="#FF14576B" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-
-            <Style x:Key="ButtonColoredStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
-                <Setter Property="Height" Value="27" />
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="FontSize" Value="14"/>
-                <Setter Property="Margin" Value="1,0,1,0"/>
-                <Setter Property="Foreground" Value="{StaticResource White}" />
                 <Setter Property="Background" Value="{StaticResource GreenBlue}" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -2060,6 +1959,88 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            
+            <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource FloatingTextBoxStyle}">
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="{StaticResource MidGray}" />
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="FontFamily" Value="Rubik"/>
+                <!--<Setter Property="Padding" Value="15,2,2,2"/>-->
+                <Setter Property="Opacity" Value=".6" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Grid>
+                                <!-- Background Border -->
+                                <Border Background="{TemplateBinding Background}" 
+            BorderBrush="{TemplateBinding BorderBrush}" 
+            BorderThickness="{TemplateBinding BorderThickness}"/>
+
+                                <!-- Placeholder Text -->
+                                <TextBlock x:Name="PlaceholderText"
+               Text="{TemplateBinding Tag}" Margin="20,0,1,0"
+               Foreground="{StaticResource MidGray}"
+               FontSize="16"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"
+                                           
+               Visibility="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource  TextToVisibilityConverter}}"
+               IsHitTestVisible="False"/>
+
+                                <!-- Actual TextBox Content -->
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="0,0,0,0"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- PasswordBox Style -->
+            <Style x:Key="PasswordBoxStyle" TargetType="PasswordBox">
+                <Setter Property="Margin" Value="20,2,2,2"/>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="SelectionBrush" Value="{StaticResource LightGray2}"/>
+                <Setter Property="SelectionTextBrush" Value="{StaticResource LightGray2}"/>
+                <Setter Property="PasswordChar" Value="*" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="PasswordBox">
+                            <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
+                                <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="PlaceholderPasswordStyle" TargetType="TextBlock">
+                <Setter Property="Margin" Value="20,2,2,2"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
+                <Setter Property="Opacity" Value="0.7"/>
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <!-- Show placeholder for PasswordBox when empty -->
+                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <!-- Show placeholder for PasswordBox when null -->
+                    <DataTrigger Binding="{Binding Password, ElementName=password_txt1}" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
 

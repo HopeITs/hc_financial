@@ -6,10 +6,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:System="clr-namespace:System;assembly=mscorlib" 
-        mc:Ignorable="d" Height="700" Width="1330" 
+        mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" SnapsToDevicePixels="True"
         AllowsTransparency="True" Icon="Logo.ico" 
-        Style="{DynamicResource WindowStyle}">
+        Style="{DynamicResource WindowPopupStyle}" Height="500">
 
     <Window.Resources>
         <Storyboard x:Key="WEB Click">
@@ -506,7 +506,7 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <!-- Background Image -->
-            <Image Source="/Images/Login/Cover.png" Stretch="Uniform" />
+            <Image Source="/Images/Login/Cover.png" Stretch="UniformToFill" />
             <!-- Buttons Over Image -->
             <Rectangle x:Name="WEB_RED" HorizontalAlignment="Left" Height="12" Margin="332,358,0,0" VerticalAlignment="Top" Width="23">
                 <Rectangle.Fill>
@@ -537,7 +537,7 @@
                     <ImageBrush ImageSource="/Images/Login/power.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Online_Butten_Copy" Content="Button" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click" ToolTip="Online Database" Cursor="Hand" Width="25">
+            <Button x:Name="Online_Butten_Copy" Content="Button" Margin="331,371,309,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Online_Butten_Click" ToolTip="Online Database" Cursor="Hand" Width="25" Height="23">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Online.png"/>
                 </Button.Background>
@@ -552,7 +552,7 @@
                     <ImageBrush ImageSource="/Images/Login/Remember.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="Remember_Me_Butten" Content="" Margin="305,357,335,311" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Click" RenderTransformOrigin="0.5,0.5" ToolTip="Remember Me" Cursor="Hand" Width="25" Height="32">
+            <Button x:Name="Remember_Me_Butten" Content="" Margin="357,320,118,148" BorderBrush="{x:Null}" Foreground="{x:Null}" Style="{DynamicResource ButtonToggleStyle}" Click="Remember_Me_Butten_Click" RenderTransformOrigin="0.5,0.5" ToolTip="Remember Me" Cursor="Hand" Width="25" Height="32">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Login/Remember2.png"/>
                 </Button.Background>
@@ -620,64 +620,55 @@
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
                 <!-- Controls row -->
+                <RowDefinition Height="*" />
+
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <!-- Main content row -->
             </Grid.RowDefinitions>
-            <Grid Margin="632,16,13,436" Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <!--<ColumnDefinition Width="*" />-->
-                </Grid.ColumnDefinitions>
-
+            <Grid Grid.Row="0">
                 <!-- Minimize Button -->
-                <Button Width="15" Height="15" Grid.Column="0" Click="Minimize_Click"  BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{StaticResource ButtonImageMinimize}"></Button>
+                <Button Width="15" Height="15" Grid.Column="0" Click="Minimize_Click"  BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{StaticResource ButtonImageMinimize}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,15,15,0"></Button>
                 <!-- Close Button -->
                 <!--<Button x:Name="Close" Width="15" Height="15" Grid.Column="1" Click="Close_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" FontWeight="Normal" Grid.ColumnSpan="2" Background="{StaticResource ButtonImageClose}"/>-->
-
             </Grid>
             <!-- Logo -->
-            <Image Source="/Images/Login/App Logo.ico" Margin="121,149,121,141" />
+                <Image Grid.Row="1" Source="/Images/Login/App Logo.ico" Width="267"/>
+            
 
 
-            <!-- Main content -->
-            <!--Username-->
-            <Border Style="{StaticResource BorderStyle}"
-                Margin="164,350,164,72"  Effect="{StaticResource ShadowEffect}">
-                <Grid>
-                    <!-- Placeholder Text -->
-                    <TextBlock x:Name="Text" Text="Username" Style="{StaticResource PlaceholderTextStyle}"
-                  
-                   Margin="15,0,0,0" FontSize="16" Width="310">
-                    </TextBlock>
-
-                    <!-- Input TextBox -->
-                    <TextBox x:Name="username_txt" TabIndex="1" Style="{StaticResource TextBoxStyle}"
-                        FontSize="16"  Margin="15,0,0,0"></TextBox>
-                </Grid>
+                <!--Username-->
+            <Border Style="{StaticResource BorderStyle}" Grid.Row="2" Effect="{StaticResource ShadowEffect}" Height="40" Width="250">
+                <TextBox x:Name="username_txt" TabIndex="1" Tag="Username" Style="{StaticResource TextBoxStyle}"/>
             </Border>
-            <!--Password-->
-            <Border Style="{StaticResource BorderStyle}" Margin="164,416,164,6" Effect="{StaticResource ShadowEffect}">
+            
+                <!--Password-->
+            <Border Margin="0,15,0,0" Style="{StaticResource BorderStyle}"  Grid.Row="3" Effect="{StaticResource ShadowEffect}" Height="40"  Width="250">
                 <Grid>
                     <!-- Placeholder Text -->
-                    <TextBlock x:Name="Password" Text="Password" Margin="15,0,0,0" FontSize="16"  Width="313" Style="{StaticResource PlaceholderPasswordStyle}"></TextBlock>
-
-
+                    <TextBlock x:Name="Password" Text="Password" FontSize="16" Style="{StaticResource PlaceholderPasswordStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Center"></TextBlock>
                     <!-- PasswordBox -->
                     <PasswordBox  x:Name="password_txt1" TabIndex="2" 
-                    Style="{StaticResource PasswordBoxStyle}"
-                     FontSize="16" PasswordChar="*"
-                     PasswordChanged="OnPasswordChange" Margin="15,0,0,0">
+        Style="{StaticResource PasswordBoxStyle}"
+         FontSize="16" PasswordChar="*"
+         PasswordChanged="OnPasswordChange" Height="40">
                     </PasswordBox>
                 </Grid>
             </Border>
+            <Grid Grid.Row="4" Width="250" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,15,0,0">
+                <Button x:Name="Login_Butten" Grid.Column="1" Content="Login"  IsDefault="True" Height="30"
+        RenderTransformOrigin="0.5,0.5" Style="{StaticResource ButtonColoredStyle}" 
+        Grid.Row="1" FontSize="17" Click="Login_Butten_Click" VerticalAlignment="Center" HorizontalAlignment="Right" Width="70">
+                </Button>
+            </Grid>
 
-            <Button x:Name="Login_Butten" Content="Login"  IsDefault="True" Margin="426,7,163,187"
-                    RenderTransformOrigin="0.5,0.5" Style="{StaticResource ButtonStyle}" 
-                    Grid.Row="1" FontSize="17" Click="Login_Butten_Click">
-            </Button>
-            <Label x:Name="Version_Label" Content="Version" Style="{StaticResource Version_Label}" Margin="0,203,0,0" Grid.Row="1" Width="659" HorizontalContentAlignment="Right"/>
+
+            <Label x:Name="Version_Label" Content="Version" Style="{StaticResource Version_Label}"  Grid.Row="5" HorizontalContentAlignment="Right" VerticalAlignment="Bottom"/>
         </Grid>
     </Grid>
 </Window>
