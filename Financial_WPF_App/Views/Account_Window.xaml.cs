@@ -19,11 +19,6 @@ namespace Financial_WPF_App
         public Account_Window(string Category, string AccType, string Project_ID, string SubProject_ID, Main_Window_2 main_Window)
         {
             InitializeComponent();
-            //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
-            //First_col.Width = new GridLength(85, GridUnitType.Star);
-            //Second_col.Width = new GridLength(45, GridUnitType.Star);
-            EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
-
 
             this.main_Window = main_Window;
             this.Acc_ID = -1;
@@ -58,9 +53,6 @@ namespace Financial_WPF_App
             InitializeComponent();
             Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 
-            EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
-            //First_col.Width = new GridLength(97, GridUnitType.Star);
-            //Second_col.Width = new GridLength(2.3, GridUnitType.Star);
             this.main_Window = main_Window;
 
             this.Acc_ID = Account_ID;
@@ -82,9 +74,6 @@ namespace Financial_WPF_App
             InitializeComponent();
             Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 
-            EventManager.RegisterClassHandler(typeof(ComboBox), UIElement.PreviewMouseDownEvent, new MouseButtonEventHandler(ComboBox_PreviewMouseDown));
-            //First_col.Width = new GridLength(97, GridUnitType.Star);
-            //Second_col.Width = new GridLength(2.3, GridUnitType.Star);
             this.main_Window = main_Window;
 
             this.Acc_ID = Account_ID;
@@ -2297,18 +2286,6 @@ namespace Financial_WPF_App
             EndDate_CheckBox.IsChecked = true;
             TotalAmount_txtBox.Text = "";
             AmountType_comboBox.SelectedIndex = -1;
-        }
-
-        private void ComboBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-
-            // Prevent closing the dropdown when an item is selected
-            if (comboBox != null && !comboBox.IsDropDownOpen)
-            {
-                // Keep dropdown open when an item is selected
-                comboBox.IsDropDownOpen = true;
-            }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
