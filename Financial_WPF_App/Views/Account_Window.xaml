@@ -335,7 +335,7 @@ Click="PersonalAccount_clear_btn_Click" Style="{DynamicResource DeleteButtonStyl
                             ToolTipService.ShowDuration="5000"
                             ToolTipService.BetweenShowDelay="200" Margin="3,0,0,0">
                         <CheckBox x:Name="EndDate_CheckBox" TabIndex="16"  ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
-                            ToolTipService.ShowDuration="5000"
+                            ToolTipService.ShowDuration="5000" Margin="0,0,0,0"
                             ToolTipService.BetweenShowDelay="200" Style="{StaticResource CheckBoxStyle}"
                             Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" HorizontalAlignment="Center" Width="12"
                             />

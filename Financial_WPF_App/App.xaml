@@ -807,11 +807,16 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="0">
                                 <Image Name="DeleteImage" 
            Source="/Images/Buttons/delete_actionbar.png" 
            Stretch="Fill"/>
                             </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1955,6 +1960,11 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
                             </Grid>
 
                             <ControlTemplate.Triggers>
+                                <!-- Hover Effect (Overrides Selection Background) -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{StaticResource LightGray1}" />
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource LightGray1}" />
+                                </Trigger>
                                 <!-- When Checked, Show the Custom CheckMark -->
                                 <Trigger Property="IsChecked" Value="True">
                                     <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
@@ -1966,6 +1976,7 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
                                     <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource LightGray2}"/>
                                     <Setter Property="Foreground" Value="{StaticResource MidGray}"/>
                                 </Trigger>
+                               
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>

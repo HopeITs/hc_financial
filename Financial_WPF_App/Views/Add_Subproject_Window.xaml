@@ -76,7 +76,7 @@
             <Border x:Name="EndDate_Border" Width="26" Height="30" MouseDown="Border_MouseDown" Grid.Column="1" Background="{StaticResource LightGray1}" ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
             ToolTipService.ShowDuration="5000"
             ToolTipService.BetweenShowDelay="200" Margin="3,0,0,0">
-                <CheckBox x:Name="EndDate_CheckBox" TabIndex="16"  ToolTip="TBD" ToolTipService.InitialShowDelay="100" 
+                <CheckBox x:Name="EndDate_CheckBox" TabIndex="16"  ToolTip="TBD" ToolTipService.InitialShowDelay="100" Margin="0,0,0,0"
             ToolTipService.ShowDuration="5000"
             ToolTipService.BetweenShowDelay="200" Style="{StaticResource CheckBoxStyle}"
             Checked="EndDate_CheckBox_Checked" Unchecked="EndDate_CheckBox_Unchecked" HorizontalAlignment="Center" Width="12"
