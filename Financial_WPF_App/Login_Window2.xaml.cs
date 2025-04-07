@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Financial_WPF_App
 {
@@ -205,6 +206,11 @@ namespace Financial_WPF_App
             try
             {
                 Remember_checkBox_Copy.IsChecked = false;
+
+                Settings.Default.RememberMe = false;
+                Settings.Default.password = "";
+                Settings.Default.Save();
+
             }
             catch (Exception ex)
             {
@@ -313,6 +319,7 @@ namespace Financial_WPF_App
         {    
             sb1.Begin();
         }
+
         private void TogglePasswordVisibility(object sender, MouseButtonEventArgs e)
         {
             isPasswordVisible = !isPasswordVisible;
