@@ -47,14 +47,64 @@
                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
         <Button Grid.Column="2" Grid.Row="5" x:Name="add_btn"  
-                Content="&lt;&lt;" Width="25" Height="25" TabIndex="4"
+                Content="&lt;&lt;" Width="25" Height="25" TabIndex="4" Cursor="Hand"
                 Click="AddDonor_btn_Click"  BorderBrush="{StaticResource LightGray1}" Background="{StaticResource LightGray2}" Foreground="{StaticResource DarkGray}" Margin="0,-33,0,0">
-            </Button>
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="{StaticResource LightGray2}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource LightGray1}" />
+                    <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="{StaticResource LightGray1}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
 
-            <Button Grid.Column="2" Grid.Row="5" x:Name="remove_btn" BorderBrush="{StaticResource LightGray1}" Background="{StaticResource LightGray2}" Foreground="{StaticResource DarkGray}"
-                Content="&gt;&gt;" Height="25" TabIndex="4" Width="25"
+        <Button Grid.Column="2" Grid.Row="5" x:Name="remove_btn" BorderBrush="{StaticResource LightGray1}" Background="{StaticResource LightGray2}" Foreground="{StaticResource DarkGray}"
+                Content="&gt;&gt;" Height="25" TabIndex="4" Width="25" Cursor="Hand"
                 Click="RemoveDonor_btn_Click" Margin="0,52,0,0">
-            </Button>
+            <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{StaticResource LightGray2}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource LightGray1}" />
+                        <Setter Property="Foreground" Value="{StaticResource DarkGray}" />
+                        <Setter Property="Cursor" Value="Hand" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="{StaticResource LightGray1}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+        </Button>
 
 
             <Label Grid.Column="1" Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" 
