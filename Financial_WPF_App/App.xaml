@@ -772,11 +772,16 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="0">
                                 <Image Name="DeleteImage" 
                            Source="/Images/Buttons/delete.png" 
                            Stretch="Fill"/>
                             </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -1735,29 +1740,45 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
 
 
             <Style x:Key="Edit_Style" TargetType="{x:Type Button}" BasedOn="{StaticResource DGButtonStyle}">
-                
+                <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Button.Background">
                     <Setter.Value>
                         <ImageBrush ImageSource="Images/Icons/dg_edit.png" Stretch="Uniform" />
                     </Setter.Value>
                 </Setter>
-                
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="0.6"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style x:Key="Delete_Style" TargetType="{x:Type Button}" BasedOn="{StaticResource DGButtonStyle}">
+                <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Button.Background">
                     <Setter.Value>
                         <ImageBrush ImageSource="Images/Icons/dg_delete.png" Stretch="Uniform" />
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="0.6"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style x:Key="Attachment_Style" TargetType="{x:Type Button}" BasedOn="{StaticResource DGButtonStyle}">
+                <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Button.Background">
                     <Setter.Value>
                         <ImageBrush ImageSource="Images/Icons/dg_attach.png" Stretch="Uniform" />
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="0.6"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style x:Key="AddCell_Style" TargetType="{x:Type Button}">
@@ -1804,19 +1825,31 @@ BasedOn="{StaticResource {x:Type syncfusion:GridHeaderCellControl}}">
             </Style>
 
             <Style x:Key="View_Style" TargetType="{x:Type Button}" BasedOn="{StaticResource DGButtonStyle}">
+                <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Button.Background">
                     <Setter.Value>
                         <ImageBrush ImageSource="Images/Icons/dg_view.png" Stretch="Uniform" />
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="0.6"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style x:Key="Download_Style" TargetType="{x:Type Button}" BasedOn="{StaticResource DGButtonStyle}">
+                <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Button.Background">
                     <Setter.Value>
                         <ImageBrush ImageSource="Images/Icons/dg_download.png" Stretch="Uniform" />
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="0.6"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
             
             <Style x:Key="Export_Style" TargetType="{x:Type Button}">
