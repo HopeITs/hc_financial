@@ -674,10 +674,9 @@
                     <!-- TextBox for Showing Password (Initially Hidden) -->
                     <TextBox x:Name="password_txt_visible"
                  Style="{StaticResource TextBoxStyle}"
-                 FontSize="16" 
+                 FontSize="16" TextChanged="password_txt_visible_TextChanged"
                  Visibility="Collapsed"
-                 Height="40"
-                 IsReadOnly="True"/>
+                 Height="40"/>
 
                     <!-- Show Password Icon (Initially Visible) -->
                     <Image x:Name="ShowPasswordIcon" 

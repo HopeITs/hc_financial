@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
@@ -332,8 +333,8 @@ namespace Financial_WPF_App
                 password_txt1.Visibility = Visibility.Collapsed;
 
                 // Toggle icons
-                ShowPasswordIcon.Visibility = Visibility.Visible;
-                HidePasswordIcon.Visibility = Visibility.Collapsed;
+                ShowPasswordIcon.Visibility = Visibility.Collapsed;
+                HidePasswordIcon.Visibility = Visibility.Visible;
             }
             else
             {
@@ -343,8 +344,15 @@ namespace Financial_WPF_App
                 password_txt_visible.Visibility = Visibility.Collapsed;
 
                 // Toggle icons
-                ShowPasswordIcon.Visibility = Visibility.Collapsed;
-                HidePasswordIcon.Visibility = Visibility.Visible;
+                ShowPasswordIcon.Visibility = Visibility.Visible;
+                HidePasswordIcon.Visibility = Visibility.Collapsed;
+            }
+        }
+        private void password_txt_visible_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (isPasswordVisible)
+            {
+                password_txt1.Password = password_txt_visible.Text;
             }
         }
     }
