@@ -694,27 +694,27 @@ namespace Financial_WPF_App.Views
                 {
                     if (Type_comboBox.SelectedIndex != -1)
                     {
-                        if (Type_comboBox.SelectedItem.ToString().Contains("Income"))
+                        if (Type_comboBox.SelectedValue.ToString().Contains("Income"))
                         {
                             inserted_value = "I";
                         }
-                        else if (Type_comboBox.SelectedItem.ToString().Contains("Adv. Payment"))
+                        else if (Type_comboBox.SelectedValue.ToString().Contains("Adv. Payment"))
                         {
                             inserted_value = "O";
                         }
-                        else if (Type_comboBox.SelectedItem.ToString().Contains("Returned"))
+                        else if (Type_comboBox.SelectedValue.ToString().Contains("Returned"))
                         {
                             inserted_value = "R";
                         }
-                        else if (Type_comboBox.SelectedItem.ToString().Contains("Expenses"))
+                        else if (Type_comboBox.SelectedValue.ToString().Contains("Expenses"))
                         {
                             inserted_value = "E";
                         }
-                        else if (Type_comboBox.SelectedItem.ToString().Contains("Exchange"))
+                        else if (Type_comboBox.SelectedValue.ToString().Contains("Exchange"))
                         {
                             inserted_value = "Ex";
                         }
-                        else if (Type_comboBox.SelectedItem.ToString().Contains("Move"))
+                        else if (Type_comboBox.SelectedValue.ToString().Contains("Move"))
                         {
                             inserted_value = "M";
                         }
@@ -1662,6 +1662,7 @@ namespace Financial_WPF_App.Views
                 Error_textBlock.Text = Attachment_copyPasteHandler.TotalErrorRows.ToString("N0");
             }
         }
+
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowUtils.MinimizeWindow(this);

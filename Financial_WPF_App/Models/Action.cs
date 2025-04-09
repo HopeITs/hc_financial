@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 
 namespace Financial_WPF_App.Models
@@ -379,7 +380,7 @@ namespace Financial_WPF_App.Models
 
             string condition = " WHERE 1 and Lower(tilltypes.Name) <> 'pay' ";
 
-            if(Account_Type != "")
+            if (Account_Type != "")
             {
                 condition += " and LOWER(accounttype.name) = @Account_Type";
             }
