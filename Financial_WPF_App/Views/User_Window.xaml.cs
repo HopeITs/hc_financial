@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 
 namespace Financial_WPF_App.Views
@@ -20,7 +21,6 @@ namespace Financial_WPF_App.Views
         public User_Window(Main_Window_2 main_Window)
         {
             InitializeComponent();
-            Dispatcher.BeginInvoke(new System.Action(() => Window_Loaded(this, null)), System.Windows.Threading.DispatcherPriority.Loaded);
             this.main_Window = main_Window;
 
             if (OnLoad())
@@ -463,19 +463,29 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void CashAccount_CheckListBox_LayoutUpdated(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke(new System.Action(() =>
+            if (_cashierScrollViewer == null || _cashAccountScrollViewer == null)
             {
-                _cashierScrollViewer = FindScrollViewer(IsCashier_CashAccount_CheckListBox);
-                _cashAccountScrollViewer = FindScrollViewer(CashAccount_CheckListBox);
+                TryAttachScrollSync();
+            }
+            else
+            {
+                // Unsubscribe after success to avoid repeated work
+                CashAccount_CheckListBox.LayoutUpdated -= CashAccount_CheckListBox_LayoutUpdated;
+            }
+        }
 
-                if (_cashierScrollViewer != null && _cashAccountScrollViewer != null)
-                {
-                    _cashierScrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
-                    _cashAccountScrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
-                }
-            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        private void TryAttachScrollSync()
+        {
+            _cashierScrollViewer = FindScrollViewer(IsCashier_CashAccount_CheckListBox);
+            _cashAccountScrollViewer = FindScrollViewer(CashAccount_CheckListBox);
+
+            if (_cashierScrollViewer != null && _cashAccountScrollViewer != null)
+            {
+                _cashierScrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
+                _cashAccountScrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
+            }
         }
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -501,13 +511,15 @@ namespace Financial_WPF_App.Views
         {
             if (element == null) return null;
 
-            if (element is ScrollViewer scrollViewer) return scrollViewer;
+            if (element is ScrollViewer viewer)
+                return viewer;
 
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
             {
                 var child = VisualTreeHelper.GetChild(element, i);
                 var result = FindScrollViewer(child);
-                if (result != null) return result;
+                if (result != null)
+                    return result;
             }
 
             return null;

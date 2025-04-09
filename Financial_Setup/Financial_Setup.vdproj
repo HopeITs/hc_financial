@@ -1066,7 +1066,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:v4.6.1                                                                           "
+                "FrameworkVersion" = "8:v4.6.1                                                                            "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=671728"
                 }
@@ -2576,15 +2576,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Cashing"
-        "ProductCode" = "8:{2680AB85-6925-4782-8FF2-FBB978EDE05B}"
-        "PackageCode" = "8:{97138C4C-C161-4760-90F6-4BCA8C16744A}"
+        "ProductCode" = "8:{4A39702A-1EFF-4251-B181-2EEEC524CC07}"
+        "PackageCode" = "8:{8C4A14DE-C8AE-4B20-BD82-4C55BCC523A5}"
         "UpgradeCode" = "8:{FA8ACE2C-C0BE-462F-933D-A47742515111}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.0.1"
+        "ProductVersion" = "8:2.0.2"
         "Manufacturer" = "8:Hope Center"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
