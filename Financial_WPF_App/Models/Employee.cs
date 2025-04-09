@@ -14,7 +14,9 @@ namespace Financial_WPF_App.Models
             sc.Parameters.AddWithValue("@Employee_ID", Employee_ID);
             sc.Parameters.AddWithValue("@Subproject_ID", Subproject_ID);
 
-            string query = @" SELECT employee.id AS 'Employee_ID',  employee.FirstName as 'FName', employee.FatherName as 'FaName',employee.LastName as 'LName', CONCAT(employee.FirstName,' ',employee.LastName) as 'Name',
+            string query = @" SELECT employee.id AS 'Employee_ID',  employee.FirstName as 'FName', employee.FatherName as 'FaName',employee.LastName as 'LName',
+                        CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
+                        CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END as 'Name',
                         GROUP_CONCAT(subproject.Name) as 'SubprojectName',GROUP_CONCAT(subproject.id) as 'Subproject_ID', GROUP_CONCAT(line.Name) as 'lineName'
                         FROM employee LEFT JOIN employee_subproject ON employee_subproject.employee_id = employee.ID 
                         left join subproject on subproject.id = employee_subproject.subproject_id
@@ -44,7 +46,11 @@ namespace Financial_WPF_App.Models
         {
             MySqlCommand sc = new MySqlCommand();
 
-            string query = @"SELECT employee.id as 'Employee_ID', CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) as 'Employee_Name', employee_subproject.id AS 'Emplyee_Subproject_ID', subproject.ID AS 'Subproject_ID', subproject.Name AS 'SubprojectName', line.ID AS 'Line_ID', line.Name AS 'LineName', employee_subproject.BeginDate AS 'BeginDate', employee_subproject.EndDate AS 'EndDate'
+            string query = @"SELECT employee.id as 'Employee_ID',
+                    CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
+                    CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END as 'Employee_Name',
+
+                    employee_subproject.id AS 'Emplyee_Subproject_ID', subproject.ID AS 'Subproject_ID', subproject.Name AS 'SubprojectName', line.ID AS 'Line_ID', line.Name AS 'LineName', employee_subproject.BeginDate AS 'BeginDate', employee_subproject.EndDate AS 'EndDate'
 
                     FROM employee LEFT JOIN employee_subproject ON employee_subproject.employee_id = employee.ID 
                     left join subproject on subproject.id = employee_subproject.subproject_id
@@ -77,7 +83,12 @@ namespace Financial_WPF_App.Models
         {
             MySqlCommand sc = new MySqlCommand();
 
-            string query = @"SELECT employee_salary.id as 'Employee_Salary_ID', employee.id AS 'Employee_ID', CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) AS 'Name',subproject.ID AS 'Subproject_ID', subproject.Name AS 'Subproject', line.id AS 'Line_ID', line.Name AS 'Line', employee_subproject.id AS 'employee_subproject_id', employee_salary.id AS 'employee_salary_id',
+            string query = @"SELECT employee_salary.id as 'Employee_Salary_ID', employee.id AS 'Employee_ID',
+
+                                CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
+                                CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END as 'Name',
+
+                                subproject.ID AS 'Subproject_ID', subproject.Name AS 'Subproject', line.id AS 'Line_ID', line.Name AS 'Line', employee_subproject.id AS 'employee_subproject_id', employee_salary.id AS 'employee_salary_id',
                                 employee_salary.month AS 'Date', employee_salary.basic AS 'Basic', employee_salary.adjustment AS 'Adjustment',
                                 employee_salary.basic_usd AS 'USD_Basic', employee_salary.adjustment_usd AS 'USD_Adjustment'
                                 FROM employee LEFT JOIN employee_subproject ON employee.id = employee_subproject.employee_id
@@ -112,7 +123,8 @@ namespace Financial_WPF_App.Models
             MySqlCommand sc = new MySqlCommand();
             sc.Parameters.AddWithValue("@Subproject_ID", Subproject_ID);
 
-            string query = @" SELECT employee_salary.id as 'Employee_Salary_ID', employee.id AS `Employee_ID`, CONCAT(employee.FirstName,' ',employee.LastName) AS `Employee_Name`,
+            string query = @" SELECT employee_salary.id as 'Employee_Salary_ID', employee.id AS `Employee_ID`, CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
+                            CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END AS `Employee_Name`,
                             employee_salary.Month, employee_subproject.subproject_id 
                             FROM employee_subproject LEFT JOIN employee ON employee.id = employee_subproject.employee_id
                             LEFT JOIN employee_salary ON employee_salary.employee_subproject_id = employee_subproject.id

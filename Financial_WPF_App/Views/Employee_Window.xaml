@@ -37,7 +37,6 @@
     MouseDoubleClick="myDataGrid_MouseDoubleClick" Grid.Row="3" Margin="2,5,5,5" >
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Employee"  MappingName="Name" />
-                    <syncfusion:GridTextColumn x:Name="FatherName_DataGridColumn" HeaderText="Father name"  MappingName="FaName" />
                     <syncfusion:GridTextColumn x:Name="Subprojects_DataGridColumn" HeaderText="Center"  MappingName="SubprojectName" />
                     <syncfusion:GridTextColumn x:Name="lines_DataGridColumn" HeaderText="Position"  MappingName="lineName" />
 

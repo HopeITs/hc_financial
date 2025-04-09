@@ -187,7 +187,16 @@ namespace Financial_WPF_App.Helper
             else if (e.Column.ColumnName == "Month")
             {
                 bool exists = false;
-                string[] formats = { "M-yyyy", "MM-yyyy", "MMM-yyyy", "MMM-yyyy", "M/yyyy", "MM/yyyy", "MMM/yyyy", "MMM/yyyy" };
+                string[] formats = {
+                                        "M-yyyy", "MM-yyyy", "MMM-yyyy", "MMMM-yyyy",
+                                        "M/yyyy", "MM/yyyy", "MMM/yyyy", "MMMM/yyyy",
+                                        "yyyy-M", "yyyy-MM", "yyyy/MM", "yyyy-MMM", "yyyy-MMMM",
+                                        "MMMyyyy", "MMM yyyy", "MMMM yyyy",
+                                        "MMM-yy", "MMMM-yy", "MM-yy", "M-yy",
+                                        "MMM/yy", "MMMM/yy", "yy-MMM", "yy-MM", "yy/MM",
+                                        "MMM yy", "MMMM yy"
+                                    };
+
                 DateTime Adate;
                 bool isDate = DateTime.TryParseExact(
                          e.ProposedValue.ToString(),

@@ -47,7 +47,8 @@ namespace Financial_WPF_App.Models
                  (case action.`IsReceipt` when 0 then 'receipt' when 1 then 'invoice' when 2 then 'payslip' else '' end) as 'IsReceipt' ,
                  action.`ReceiptNote` , action.Employee_Salary_ID,
                  (SELECT employee.id FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action.Employee_Salary_ID) AS 'Employee_ID',
-                 (SELECT Concat(employee.FirstName,' ',employee.LastName) FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action.Employee_Salary_ID) AS 'Employee_Name',
+                 (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
+                 CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action.Employee_Salary_ID) AS 'Employee_Name',
                  all_avgrates.id as 'AvgRateID',all_avgrates.value as 'AvgRateValue', all_avgrates.Name as 'AvgRateName',
                  (action.`Amount`/ all_avgrates.value) as 'USD_Value',
                  budget_line.budget_id as 'Budget_ID', linecategory.id as 'LineCategory_ID', action.`BudgetLine_ID`, line.Name as 'Line', budget.Name as 'Budget',
@@ -156,7 +157,8 @@ namespace Financial_WPF_App.Models
                 (case action_not_approved.`IsReceipt` when 0 then 'receipt' when 1 then 'invoice' when 2 then 'payslip' else '' end) as 'IsReceipt' ,
                 action_not_approved.`ReceiptNote` ,action_not_approved.Employee_Salary_ID,
                 (SELECT employee.id FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action_not_approved.Employee_Salary_ID) AS 'Employee_ID',
-                (SELECT Concat(employee.FirstName,' ',employee.LastName) FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action_not_approved.Employee_Salary_ID) AS 'Employee_Name',
+                (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
+                CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action_not_approved.Employee_Salary_ID) AS 'Employee_Name',
                 all_avgrates.id as 'AvgRateID',all_avgrates.value as 'AvgRateValue', all_avgrates.Name as 'AvgRateName',
                 (action_not_approved.`Amount`/ all_avgrates.value) as 'USD_Value',
                 budget_line.budget_id as 'Budget_ID', linecategory.id as 'LineCategory_ID', action_not_approved.`BudgetLine_ID`, line.Name as 'Line', budget.Name as 'Budget',
@@ -280,7 +282,8 @@ namespace Financial_WPF_App.Models
                 (case action_deleted.`IsReceipt` when 0 then 'receipt' when 1 then 'invoice' when 2 then 'payslip' else '' end) as 'IsReceipt' ,
                 action_deleted.`ReceiptNote` ,action_deleted.Employee_Salary_ID,
                 (SELECT employee.id FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action_deleted.Employee_Salary_ID) AS 'Employee_ID',
-                (SELECT Concat(employee.FirstName,' ',employee.LastName) FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action_deleted.Employee_Salary_ID) AS 'Employee_Name',
+                (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
+                CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action_deleted.Employee_Salary_ID) AS 'Employee_Name',
                 all_avgrates.id as 'AvgRateID',all_avgrates.value as 'AvgRateValue', all_avgrates.Name as 'AvgRateName',
                 (action_deleted.`Amount`/ all_avgrates.value) as 'USD_Value',
                 budget_line.budget_id as 'Budget_ID', linecategory.id as 'LineCategory_ID', action_deleted.`BudgetLine_ID`, line.Name as 'Line', budget.Name as 'Budget',
@@ -532,7 +535,8 @@ namespace Financial_WPF_App.Models
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
                         (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
                         action.Note,action.E_Note,
-                        (SELECT Concat(employee.FirstName,' ',employee.LastName) FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action.Employee_Salary_ID) AS 'Employee_Name',
+                        (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
+                        CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action.Employee_Salary_ID) AS 'Employee_Name',
                         (case action.IsReceipt when 0 then 'receipt' when 1 then 'invoice' when 2 then 'payslip' else '' end) as `IsReceipt`, action.ReceiptNote ,
                         action.`rate` as 'Rate', (Case when actiontype.shortname = 'Ex' then (action.Amount * action.rate) else 0 END) as `Exchanged`,
                         all_avgrates.Name as `AvgRateName`, all_avgrates.value as `AvgRateValue`, (action.Amount/ all_avgrates.value) as `USD_Value`,

@@ -48,6 +48,7 @@ namespace Financial_WPF_App.Views
             Apply_Color_Theme();
             Apply_DataGrid_Color_Theme();
         }
+
         private void Apply_Color_Theme()
         {
 

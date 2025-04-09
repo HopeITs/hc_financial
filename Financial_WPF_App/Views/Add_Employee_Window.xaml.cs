@@ -324,7 +324,7 @@ namespace Financial_WPF_App.Views
             Save_btn.IsEnabled = false;
             try
             {
-                if (FName_txtBox.Text.IsNullOrWhiteSpace() || FaName_txtBox.Text.IsNullOrWhiteSpace() || LName_txtBox.Text.IsNullOrWhiteSpace())
+                if (FName_txtBox.Text.IsNullOrWhiteSpace() || LName_txtBox.Text.IsNullOrWhiteSpace())
                 {
                     MessageBox.Show("Please enter the firt name, father name and last name.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
