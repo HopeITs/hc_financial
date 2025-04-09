@@ -123,7 +123,7 @@ namespace Financial_WPF_App.Helper
                 bool exists = false;
 
                 _Subproject_ID = _all_Tills_dt.AsEnumerable()
-                                     .Where(row => row.Field<string>("Subproject_Name")?.ToLower().Equals(e.ProposedValue.ToString().ToLower()) == true)
+                                     .Where(row => row.Field<string>("Subproject_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                                      .Select(row => row.Field<int>("Subproject_ID"))
                                      .DefaultIfEmpty(-1)
                                      .FirstOrDefault();
@@ -150,8 +150,8 @@ namespace Financial_WPF_App.Helper
                 if (_Account_Type == "Project")
                 {
                     _Account_ID = _all_Tills_dt.AsEnumerable()
-                            .Where(row => row.Field<string>("Subproject_Name")?.Equals(e.Row["Subproject"].ToString()) == true
-                            && row.Field<string>("Account_Name")?.Equals(e.ProposedValue.ToString()) == true)
+                            .Where(row => row.Field<string>("Subproject_Name")?.ToLower().Trim().Equals(e.Row["Subproject"].ToString().ToLower().Trim()) == true
+                            && row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                             .Select(row => row.Field<int>("Account_ID"))
                             .DefaultIfEmpty(-1)
                             .FirstOrDefault();
@@ -159,7 +159,7 @@ namespace Financial_WPF_App.Helper
                 else
                 {
                     _Account_ID = _all_Tills_dt.AsEnumerable()
-                        .Where(row => row.Field<string>("Account_Name")?.Equals(e.ProposedValue.ToString()) == true)
+                        .Where(row => row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                         .Select(row => row.Field<int>("Account_ID"))
                         .DefaultIfEmpty(-1)
                         .FirstOrDefault();
@@ -169,8 +169,8 @@ namespace Financial_WPF_App.Helper
                 if (_Account_ID != -1)
                 {
                     _Till_ID = _all_Tills_dt.AsEnumerable()
-                        .Where(row => row.Field<string>("Account_Name")?.Equals(e.ProposedValue.ToString()) == true
-                        && row.Field<string>("Name")?.Equals(_Till_Type.ToString()) == true)
+                        .Where(row => row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true
+                        && row.Field<string>("Name")?.ToLower().Trim().Equals(_Till_Type.ToString().ToLower().Trim()) == true)
                         .Select(row => row.Field<int>("Till_ID"))
                         .DefaultIfEmpty(-1)
                         .FirstOrDefault();

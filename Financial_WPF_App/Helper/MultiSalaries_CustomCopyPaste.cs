@@ -104,6 +104,7 @@ namespace Financial_WPF_App.Helper
             _USD_Basic = 0;
             _USD_Adjustment = 0;
         }
+
         private void Column_Changing(object sender, DataColumnChangeEventArgs e)
         {
             string Last_Column_Name = e.Row.Table.Columns[e.Row.Table.Columns.Count - 1].ColumnName;
@@ -113,7 +114,7 @@ namespace Financial_WPF_App.Helper
                 bool exists = false;
                 if (_Employee_Subprojects_dt.Rows.Count > 0)
                     _Employee_ID = _Employee_Subprojects_dt.AsEnumerable()
-                            .Where(row => row.Field<string>("Employee_Name")?.Equals(e.ProposedValue.ToString()) == true)
+                            .Where(row => row.Field<string>("Employee_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                             .Select(row => row.Field<int>("Employee_ID"))
                             .DefaultIfEmpty(-1)
                             .FirstOrDefault();
@@ -138,8 +139,8 @@ namespace Financial_WPF_App.Helper
                 bool exists = false;
 
                 if (_Employee_Subprojects_dt.Rows.Count > 0)
-                    exists = _Employee_Subprojects_dt.AsEnumerable().Any(row => row.Field<string>("Employee_Name")?.Equals(e.Row["Name"].ToString()) == true
-                && row.Field<string>("SubprojectName")?.Equals(e.ProposedValue.ToString()) == true);
+                    exists = _Employee_Subprojects_dt.AsEnumerable().Any(row => row.Field<string>("Employee_Name")?.ToLower().Trim().Equals(e.Row["Name"].ToString().ToLower().Trim()) == true
+                && row.Field<string>("SubprojectName")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true);
 
                 if (exists)
                 {
@@ -158,9 +159,9 @@ namespace Financial_WPF_App.Helper
                 bool exists = false;
                 if (_Employee_Subprojects_dt.Rows.Count > 0)
                     _Employee_Subproject_ID = _Employee_Subprojects_dt.AsEnumerable()
-                            .Where(row => row.Field<string>("Employee_Name")?.Equals(e.Row["Name"].ToString()) == true
-                             && row.Field<string>("SubprojectName")?.Equals(e.Row["Center"].ToString()) == true
-                             && row.Field<string>("LineName")?.Equals(e.ProposedValue.ToString()) == true)
+                            .Where(row => row.Field<string>("Employee_Name")?.ToLower().Trim().Equals(e.Row["Name"].ToString().ToLower().Trim()) == true
+                             && row.Field<string>("SubprojectName")?.ToLower().Trim().Equals(e.Row["Center"].ToString().ToLower().Trim()) == true
+                             && row.Field<string>("LineName")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                             .Select(row => row.Field<int>("Emplyee_Subproject_ID"))
                             .DefaultIfEmpty(-1)
                             .FirstOrDefault();
@@ -252,6 +253,8 @@ namespace Financial_WPF_App.Helper
                     e.Row.RowError = "There are errors in this row.";
                 }
             }
+
+
             if (e.Column.ColumnName == Last_Column_Name)
             {
                 TotalPastedRows++;

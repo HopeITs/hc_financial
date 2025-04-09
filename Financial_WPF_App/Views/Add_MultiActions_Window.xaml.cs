@@ -694,27 +694,27 @@ namespace Financial_WPF_App.Views
                 {
                     if (Type_comboBox.SelectedIndex != -1)
                     {
-                        if (Type_comboBox.SelectedValue.ToString().Contains("Income"))
+                        if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                         {
                             inserted_value = "I";
                         }
-                        else if (Type_comboBox.SelectedValue.ToString().Contains("Adv. Payment"))
+                        else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Outcome_Item")
                         {
                             inserted_value = "O";
                         }
-                        else if (Type_comboBox.SelectedValue.ToString().Contains("Returned"))
+                        else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Returned_Item")
                         {
                             inserted_value = "R";
                         }
-                        else if (Type_comboBox.SelectedValue.ToString().Contains("Expenses"))
+                        else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                         {
                             inserted_value = "E";
                         }
-                        else if (Type_comboBox.SelectedValue.ToString().Contains("Exchange"))
+                        else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Exchange_Item")
                         {
                             inserted_value = "Ex";
                         }
-                        else if (Type_comboBox.SelectedValue.ToString().Contains("Move"))
+                        else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Move_Item")
                         {
                             inserted_value = "M";
                         }

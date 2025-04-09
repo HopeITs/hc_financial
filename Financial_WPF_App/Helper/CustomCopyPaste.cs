@@ -211,7 +211,7 @@ namespace Financial_WPF_App.Helper
                 bool exists = false;
 
                 _Subproject_ID = _all_Tills_dt.AsEnumerable()
-                                     .Where(row => row.Field<string>("Subproject_Name")?.ToLower().Equals(e.ProposedValue.ToString().ToLower()) == true)
+                                     .Where(row => row.Field<string>("Subproject_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                                      .Select(row => row.Field<int>("Subproject_ID"))
                                      .DefaultIfEmpty(-1)
                                      .FirstOrDefault();
@@ -231,8 +231,6 @@ namespace Financial_WPF_App.Helper
                     e.Row.RowError = "There are errors in this row.";
                 }
             }
-
-
             else if (e.Column.ColumnName == "Account")
             {
                 bool exists = false;
@@ -240,8 +238,8 @@ namespace Financial_WPF_App.Helper
                 if (_Account_Type == "Project")
                 {
                     _Account_ID = _all_Tills_dt.AsEnumerable()
-                            .Where(row => row.Field<string>("Subproject_Name")?.Equals(e.Row["Subproject"].ToString()) == true
-                            && row.Field<string>("Account_Name")?.Equals(e.ProposedValue.ToString()) == true)
+                            .Where(row => row.Field<string>("Subproject_Name")?.ToLower().Trim().Equals(e.Row["Subproject"].ToString().ToLower().Trim()) == true
+                            && row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                             .Select(row => row.Field<int>("Account_ID"))
                             .DefaultIfEmpty(-1)
                             .FirstOrDefault();
@@ -249,7 +247,7 @@ namespace Financial_WPF_App.Helper
                 else
                 {
                     _Account_ID = _all_Tills_dt.AsEnumerable()
-                        .Where(row => row.Field<string>("Account_Name")?.Equals(e.ProposedValue.ToString()) == true)
+                        .Where(row => row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                         .Select(row => row.Field<int>("Account_ID"))
                         .DefaultIfEmpty(-1)
                         .FirstOrDefault();
@@ -259,7 +257,7 @@ namespace Financial_WPF_App.Helper
                 if (_Account_ID != -1)
                 {
                     _Till_ID = _all_Tills_dt.AsEnumerable()
-                        .Where(row => row.Field<string>("Account_Name")?.Equals(e.ProposedValue.ToString()) == true
+                        .Where(row => row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true
                         && row.Field<string>("Name")?.Equals(_Till_Type.ToString()) == true)
                         .Select(row => row.Field<int>("Till_ID"))
                         .DefaultIfEmpty(-1)
@@ -477,12 +475,11 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
 
-
                 if (_ExchangeToForeign_privileges)
                 {
                     if (_t_dt.Rows.Count > 0)
                         _ObserveTill_ID = _t_dt.AsEnumerable()
-                         .Where(row => row.Field<string>("Type")?.ToLower() == e.ProposedValue.ToString().ToLower())
+                         .Where(row => row.Field<string>("Type")?.ToLower().Trim() == e.ProposedValue.ToString().ToLower().Trim())
                          .Select(row => row.Field<int>("ID"))
                          .DefaultIfEmpty(-1)
                          .FirstOrDefault();
@@ -491,7 +488,7 @@ namespace Financial_WPF_App.Helper
                 {
                     if (_t_dt.Rows.Count > 0)
                         _ObserveTill_ID = _t_dt.AsEnumerable()
-                          .Where(row => row.Field<string>("Type")?.ToLower().Equals(e.ProposedValue.ToString().ToLower()) == true &&
+                          .Where(row => row.Field<string>("Type")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true &&
                             row.Field<string>("Type")?.ToLower().Equals("syr") == true)
                           .Select(row => row.Field<int>("ID"))
                           .DefaultIfEmpty(-1)
@@ -529,7 +526,7 @@ namespace Financial_WPF_App.Helper
                     {
                         if (_AvgRate_dt.Rows.Count > 0)
                         {
-                            System.Data.DataRow[] rows = _AvgRate_dt.Select("BeginDate <= '" + ActionDate + "' and EndDate >= '" + ActionDate + "' and totp = '" + e.ProposedValue.ToString().ToLower() + "'");
+                            System.Data.DataRow[] rows = _AvgRate_dt.Select("BeginDate <= '" + ActionDate + "' and EndDate >= '" + ActionDate + "' and totp = '" + e.ProposedValue.ToString().ToLower().Trim() + "'");
 
                             // Create a HashSet with the values from the 'Name' column
                             var names = new HashSet<string>(rows?.Select(row => row.Field<string>("Name")) ?? Enumerable.Empty<string>());
@@ -557,14 +554,14 @@ namespace Financial_WPF_App.Helper
                     if (_Till_Type.ToLower() == "syr")
                     {
                         _ObserveTill_ID = _Accounts_dt.AsEnumerable()
-                                .Where(row => row.Field<string>("Type")?.Equals(e.ProposedValue.ToString()) == true)
+                                .Where(row => row.Field<string>("Type")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                                 .Select(row => row.Field<int>("ID"))
                                 .DefaultIfEmpty(-1)
                                 .FirstOrDefault();
                     }
                     else
                     {
-                        string donorName = e.Row["Donor"].ToString().Replace("'", "''");
+                        string donorName = e.Row["Donor"].ToString().Replace("'", "''").ToLower().Trim();
                         System.Data.DataRow[] donorrow = _Donors_dt.Select("Name='" + donorName + "'");
 
                         int DonorID = Convert.ToInt32(donorrow[0]["ID"].ToString());
@@ -574,7 +571,7 @@ namespace Financial_WPF_App.Helper
                                 row.Field<string>("Donor_ID")?.Contains("," + DonorID + ",") == true ||
                                 row.Field<string>("Donor_ID")?.EndsWith("," + DonorID) == true ||
                                 row.Field<string>("Donor_ID")?.Equals(DonorID.ToString()) == true) &&
-                                row.Field<string>("Type") == e.ProposedValue.ToString())
+                                row.Field<string>("Type").ToLower().Trim() == e.ProposedValue.ToString().ToLower().Trim())
                                 .Select(row => row.Field<int>("ID"))
                                 .DefaultIfEmpty(-1)
                                 .FirstOrDefault();
@@ -603,7 +600,7 @@ namespace Financial_WPF_App.Helper
 
                 if (_cashAccounts_dt.Rows.Count > 0)
                     _CashAccount_ID = _cashAccounts_dt.AsEnumerable()
-                         .Where(row => row.Field<string>("Name")?.Equals(e.ProposedValue.ToString()) == true)
+                         .Where(row => row.Field<string>("Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                          .Select(row => row.Field<int>("ID"))
                          .DefaultIfEmpty(-1)
                          .FirstOrDefault();
@@ -631,7 +628,10 @@ namespace Financial_WPF_App.Helper
                 {
                     if (_Accounts_dt.Rows.Count > 0)
                     {
-                        System.Data.DataRow[] accrow = _Accounts_dt.Select("Type='" + e.Row["Corresponding account"].ToString() + "'");
+
+                        System.Data.DataRow[] accrow = _Accounts_dt.AsEnumerable()
+                        .Where(r => r["Type"].ToString().ToLower().Trim() == e.Row["Corresponding account"].ToString().ToLower().Trim())
+                        .ToArray();
 
                         if (accrow.Length > 0)
                         {
@@ -643,7 +643,7 @@ namespace Financial_WPF_App.Helper
                                  row.Field<string>("SubProject_ID")?.Contains("," + SubID + ",") == true ||
                                  row.Field<string>("SubProject_ID")?.EndsWith("," + SubID) == true ||
                                  row.Field<string>("SubProject_ID")?.Equals(SubID.ToString()) == true) &&
-                                 row.Field<string>("Name") == e.ProposedValue.ToString())
+                                 row.Field<string>("Name").ToLower().Trim() == e.ProposedValue.ToString().ToLower().Trim())
                                  .Select(row => row.Field<int>("ID"))
                                  .DefaultIfEmpty(-1)
                                  .FirstOrDefault();
@@ -659,7 +659,7 @@ namespace Financial_WPF_App.Helper
                 }
                 else
                 {
-                    if (e.Row["Corresponding till"].ToString().ToLower() != "syr")
+                    if (e.Row["Corresponding till"].ToString().ToLower().Trim() != "syr")
                     {
                         exists = true;
 
@@ -669,7 +669,7 @@ namespace Financial_WPF_App.Helper
                     {
                         if (_cashAccounts_dt.Rows.Count > 0)
                             _ObserveCashAccount_ID = _cashAccounts_dt.AsEnumerable()
-                             .Where(row => row.Field<string>("Name")?.Equals(e.ProposedValue.ToString()) == true)
+                             .Where(row => row.Field<string>("Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                              .Select(row => row.Field<int>("ID"))
                              .DefaultIfEmpty(-1)
                              .FirstOrDefault();
@@ -706,8 +706,8 @@ namespace Financial_WPF_App.Helper
                 {
                     if (_ExAcc_dt.Rows.Count > 0)
                         _ExchangeAcc_ID = _ExAcc_dt.AsEnumerable()
-                             .Where(row => row.Field<string>("ToTill")?.ToLower().Equals(e.Row["Corresponding till"].ToString().ToLower()) == true
-                             && row.Field<string>("Name")?.Equals(e.ProposedValue.ToString()) == true)
+                             .Where(row => row.Field<string>("ToTill")?.ToLower().Trim().Equals(e.Row["Corresponding till"].ToString().ToLower().Trim()) == true
+                             && row.Field<string>("Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                              .Select(row => row.Field<int>("ID"))
                              .DefaultIfEmpty(-1)
                              .FirstOrDefault();
@@ -739,7 +739,7 @@ namespace Financial_WPF_App.Helper
                 }
                 else
                 {
-                    if (_Till_Type.ToLower() != "syr" && e.Row["Corresponding till"].ToString().ToLower() != "syr")
+                    if (_Till_Type.ToLower() != "syr" && e.Row["Corresponding till"].ToString().ToLower().Trim() != "syr")
                     {
                         exists = true;
                         e.ProposedValue = "";
@@ -748,7 +748,9 @@ namespace Financial_WPF_App.Helper
                     {
                         if (_ExAcc_dt.Rows.Count > 0)
                         {
-                            System.Data.DataRow[] exaccrow = _ExAcc_dt.Select("Name='" + e.Row["Exchange account"].ToString() + "'");
+                            System.Data.DataRow[] exaccrow = _ExAcc_dt.AsEnumerable()
+                            .Where(r => r["Name"].ToString().ToLower().Trim() == e.Row["Exchange account"].ToString().ToLower().Trim())
+                            .ToArray();
 
                             if (exaccrow.Length > 0)
                             {
@@ -760,7 +762,7 @@ namespace Financial_WPF_App.Helper
                                      row.Field<string>("ExchangeAccount_ID")?.Contains("," + ExAcc_ID + ",") == true ||
                                      row.Field<string>("ExchangeAccount_ID")?.EndsWith("," + ExAcc_ID) == true ||
                                      row.Field<string>("ExchangeAccount_ID")?.Equals(ExAcc_ID.ToString()) == true) &&
-                                     row.Field<string>("Name") == e.ProposedValue.ToString())
+                                     row.Field<string>("Name").ToLower().Trim() == e.ProposedValue.ToString().ToLower().Trim())
                                      .Select(row => row.Field<int>("ID"))
                                      .DefaultIfEmpty(-1)
                                      .FirstOrDefault();
@@ -797,7 +799,9 @@ namespace Financial_WPF_App.Helper
                         if (_Lines_dt.Rows.Count > 0)
                         {
                             //string d = e.Row["Budget"].ToString();
-                            System.Data.DataRow[] budgetrow = _Lines_dt.Select("budget_Name = '" + e.Row["Budget"].ToString() + "'");
+                            System.Data.DataRow[] budgetrow = _Lines_dt.AsEnumerable()
+                            .Where(r => r["budget_Name"].ToString().ToLower().Trim() == e.Row["Budget"].ToString().ToLower().Trim())
+                            .ToArray();
 
                             int BudgetType_ID = -1;
                             if (budgetrow.Length > 0)
@@ -809,7 +813,7 @@ namespace Financial_WPF_App.Helper
                                  {
                                      var fromtp_id = row.Field<object>("fromtp_id");
                                      return (fromtp_id is int id && id == BudgetType_ID)
-                                         && row.Field<string>("Name")?.Equals(e.ProposedValue.ToString()) == true;
+                                         && row.Field<string>("Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true;
                                  })
                                  .Select(row => row.Field<int>("ID"))
                                  .DefaultIfEmpty(-1)
@@ -821,7 +825,7 @@ namespace Financial_WPF_App.Helper
                     {
                         if (_Original_AvgRate_dt.Rows.Count > 0)
                             _Rate_ID = _Original_AvgRate_dt.AsEnumerable()
-                              .Where(row => row.Field<string>("Name")?.Equals(e.ProposedValue.ToString()) == true)
+                              .Where(row => row.Field<string>("Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                               .Select(row => row.Field<int>("ID"))
                               .DefaultIfEmpty(-1)
                               .FirstOrDefault();
@@ -863,17 +867,17 @@ namespace Financial_WPF_App.Helper
                 }
                 else
                 {
-                    if (e.ProposedValue.ToString().ToLower() == "receipt")
+                    if (e.ProposedValue.ToString().ToLower().Trim() == "receipt")
                     {
                         exists = true;
                         _IsReceipt = 0;
                     }
-                    if (e.ProposedValue.ToString().ToLower() == "invoice")
+                    if (e.ProposedValue.ToString().ToLower().Trim() == "invoice")
                     {
                         exists = true;
                         _IsReceipt = 1;
                     }
-                    if (e.ProposedValue.ToString().ToLower() == "payslip")
+                    if (e.ProposedValue.ToString().ToLower().Trim() == "payslip")
                     {
                         exists = true;
                         _IsReceipt = 2;
@@ -899,14 +903,14 @@ namespace Financial_WPF_App.Helper
                          DateTimeStyles.None,
                          out ActionMonth);
 
-                if (e.Row["Document type"].ToString() == "payslip")
+                if (e.Row["Document type"].ToString().ToLower().Trim() == "payslip")
                 {
                     if (isDate)
                     {
                         if (_Employee_dt.Rows.Count > 0)
                             _Employee_Salary_ID = _Employee_dt.AsEnumerable()
                                  .Where(row => ((DateTime)row["Month"]).ToString("yyyy/MM") == ActionMonth.ToString("yyyy/MM")
-                                 && row.Field<string>("Employee_Name")?.ToLower().Equals(e.ProposedValue.ToString().ToLower()) == true)
+                                 && row.Field<string>("Employee_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                                  .Select(row => row.Field<int>("Employee_Salary_ID"))
                                  .DefaultIfEmpty(-1)
                                  .FirstOrDefault();
@@ -935,7 +939,6 @@ namespace Financial_WPF_App.Helper
 
             }
             else if (e.Column.ColumnName == "Document number")
-
             {
                 bool exists = false;
                 if (e.ProposedValue.ToString().IsNullOrWhiteSpace())
@@ -963,7 +966,7 @@ namespace Financial_WPF_App.Helper
                 bool exists = false;
                 if (_Donors_dt.Rows.Count > 0)
                     _Donor_ID = _Donors_dt.AsEnumerable()
-                         .Where(row => row.Field<string>("Name")?.Equals(e.ProposedValue.ToString()) == true)
+                         .Where(row => row.Field<string>("Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                          .Select(row => row.Field<int>("ID"))
                          .DefaultIfEmpty(-1)
                          .FirstOrDefault();
@@ -986,7 +989,7 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
                 if (_budgets_dt.Rows.Count > 0)
-                    exists = _budgets_dt.AsEnumerable().Any(row => row.Field<string>("budget_Name") == e.ProposedValue.ToString());
+                    exists = _budgets_dt.AsEnumerable().Any(row => row.Field<string>("budget_Name").ToLower().Trim() == e.ProposedValue.ToString().ToLower().Trim());
 
                 if (!exists)
                 {
@@ -1003,7 +1006,9 @@ namespace Financial_WPF_App.Helper
 
                 if (_budgets_dt.Rows.Count > 0)
                 {
-                    System.Data.DataRow[] budgetrow = _budgets_dt.Select("budget_Name='" + e.Row["Budget"].ToString() + "'");
+                    System.Data.DataRow[] budgetrow = _budgets_dt.AsEnumerable()
+                        .Where(r => r["budget_Name"].ToString().ToLower().Trim() == e.Row["Budget"].ToString().ToLower().Trim())
+                        .ToArray();
 
                     if (budgetrow.Length > 0)
                     {
@@ -1014,7 +1019,7 @@ namespace Financial_WPF_App.Helper
                              .Where(row =>
                              {
                                  var budget_ID = row.Field<object>("budget_ID");
-                                 return row.Field<string>("line_Name")?.Equals(e.ProposedValue.ToString()) == true
+                                 return row.Field<string>("line_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true
                                      && (budget_ID is int id && id == Selected_budgetID);
                              })
                              .Select(row => row.Field<int>("budget_line_ID"))

@@ -379,7 +379,7 @@ namespace Financial_WPF_App.Helper
 
                 if (_Accounts_dt.Rows.Count > 0)
                     _Account_ID = _Accounts_dt.AsEnumerable()
-                                .Where(row => row.Field<string>("Name")?.Equals(e.ProposedValue.ToString()) == true)
+                                .Where(row => row.Field<string>("Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                                 .Select(row => row.Field<int>("ID"))
                                 .DefaultIfEmpty(-1)
                                 .FirstOrDefault();

@@ -120,7 +120,7 @@ namespace Financial_WPF_App.Helper
 
                 if (_MissingLiens_dt.Rows.Count > 0)
                     _Line_ID = _MissingLiens_dt.AsEnumerable()
-                             .Where(row => row.Field<string>("Line")?.Equals(e.ProposedValue.ToString()) == true)
+                             .Where(row => row.Field<string>("Line")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                              .Select(row => row.Field<int>("Line_ID"))
                              .DefaultIfEmpty(-1)
                              .FirstOrDefault();
