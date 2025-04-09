@@ -333,8 +333,9 @@ namespace Financial_WPF_App
                 password_txt1.Visibility = Visibility.Collapsed;
 
                 // Toggle icons
-                ShowPasswordIcon.Visibility = Visibility.Collapsed;
-                HidePasswordIcon.Visibility = Visibility.Visible;
+                ShowPasswordIcon.Visibility = Visibility.Visible;
+                HidePasswordIcon.Visibility = Visibility.Collapsed;
+         
             }
             else
             {
@@ -344,8 +345,8 @@ namespace Financial_WPF_App
                 password_txt_visible.Visibility = Visibility.Collapsed;
 
                 // Toggle icons
-                ShowPasswordIcon.Visibility = Visibility.Visible;
-                HidePasswordIcon.Visibility = Visibility.Collapsed;
+                ShowPasswordIcon.Visibility = Visibility.Collapsed;
+                HidePasswordIcon.Visibility = Visibility.Visible;
             }
         }
         private void password_txt_visible_TextChanged(object sender, TextChangedEventArgs e)

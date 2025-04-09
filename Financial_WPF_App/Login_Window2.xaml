@@ -664,7 +664,7 @@
                    VerticalAlignment="Center"/>
 
                     <!-- PasswordBox (Default Visible) -->
-                    <PasswordBox x:Name="password_txt1" 
+                    <PasswordBox x:Name="password_txt1"
                      TabIndex="2" 
                      Style="{StaticResource PasswordBoxStyle}"
                      FontSize="16" 
