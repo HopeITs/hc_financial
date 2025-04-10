@@ -13,7 +13,7 @@
     xmlns:controlzex="urn:controlzex"
     x:Name="Main_Window2"  
     x:Class="Financial_WPF_App.Main_Window_2" mc:Ignorable="d"
-    Title="" Height="720" Width="1280" WindowState="Maximized" SizeToContent="Manual" ResizeMode="CanResize"
+    Title="" SizeToContent="Manual" ResizeMode="CanResize"
     FontSize="12" Icon="Logo.ico" Closing="Main_Window2_Closing" Closed="Main_Window2_Closed" AllowsTransparency="True" WindowStyle="None" Background="Transparent" Loaded="Window_Loaded">
     <Window.Resources>
         <!-- Converter Instance -->

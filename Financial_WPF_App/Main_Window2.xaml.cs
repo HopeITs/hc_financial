@@ -18,11 +18,11 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Login = Financial_WPF_App.Models.Login;
-
 namespace Financial_WPF_App
 {
     public partial class Main_Window_2 : Window
@@ -47,6 +47,31 @@ namespace Financial_WPF_App
             On_Load();
 
         }
+        private Rect GetWorkingArea(Window window)
+        {
+            var handle = new WindowInteropHelper(window).Handle;
+            var screen = System.Windows.Forms.Screen.FromHandle(handle);
+
+            // Get DPI scale
+            var source = HwndSource.FromHwnd(handle);
+            double dpiX = 1.0, dpiY = 1.0;
+            if (source != null)
+            {
+                dpiX = source.CompositionTarget.TransformToDevice.M11;
+                dpiY = source.CompositionTarget.TransformToDevice.M22;
+            }
+
+            // Convert WinForms pixels to WPF units
+            var workingArea = screen.WorkingArea;
+            return new Rect(
+                workingArea.Left / dpiX,
+                workingArea.Top / dpiY,
+                workingArea.Width / dpiX,
+                workingArea.Height / dpiY
+            );
+        }
+
+
         private void OnUserControlWindowStateChanged(WindowState newState)
         {
             _currentWindowState = newState;
@@ -174,9 +199,11 @@ namespace Financial_WPF_App
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var workArea = SystemParameters.WorkArea; // Gets the area excluding the taskbar
-            this.MaxWidth = workArea.Width + 5;
-            this.MaxHeight = workArea.Height + 5;
+            Rect workingArea = GetWorkingArea(this);
+            this.Left = workingArea.Left;
+            this.Top = workingArea.Top;
+            this.Width = workingArea.Width;
+            this.Height = workingArea.Height;
         }
 
         public void Create_tabItem(Window window, string header, System.Windows.Media.Brush main_color)
