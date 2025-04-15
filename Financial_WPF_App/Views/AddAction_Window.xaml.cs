@@ -314,7 +314,8 @@ namespace Financial_WPF_App
                 Type_comboBox.IsEnabled = false;
                 DestinationTill_comboBox.IsEnabled = false;
                 ExchangeAcc_comboBox.IsEnabled = false;
-                DestinationTill_clear_btn.IsEnabled = ExchangeAcc_clear_btn.IsEnabled = false;
+                ExchangeCash_comboBox.IsEnabled=false;
+                DestinationTill_clear_btn.IsEnabled = ExchangeAcc_clear_btn.IsEnabled = ExchangeCash_clear_btn.IsEnabled = false;
 
                 if (Type_ComboBox_Exchange_Item.IsSelected)
                 {
@@ -3098,7 +3099,7 @@ namespace Financial_WPF_App
                     {
                         ExchangeAcc_ID = Convert.ToInt32(ExchangeAcc_comboBox.SelectedValue);
 
-                        if (ExchangeCash_comboBox.IsEnabled == true)
+                        if (ExchangeCash_comboBox.IsEnabled == true || (Action_ID > 0 && ExchangeCash_comboBox.SelectedIndex != -1))
                         {
                             if (ExchangeCash_comboBox.SelectedIndex == -1)
                             {
