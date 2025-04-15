@@ -408,7 +408,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
 
                     <syncfusion:GridTextColumn x:Name="Attachments_Count_DataGridColumn" MappingName="Attachments_count" HeaderText="Attachments Count"/>
 
-                    <syncfusion:GridTemplateColumn HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Attachment_DataGridColumn" HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Attachment_Style}" Click="Attachment_Button_Click"/>
@@ -417,7 +417,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                     </syncfusion:GridTemplateColumn>
 
 
-                    <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Edit_DataGridColumn" HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click"/>
@@ -425,7 +425,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                         </syncfusion:GridTemplateColumn.CellTemplate>
                     </syncfusion:GridTemplateColumn>
 
-                    <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>

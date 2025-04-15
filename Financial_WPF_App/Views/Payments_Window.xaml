@@ -338,7 +338,7 @@
                             <syncfusion:GridDateTimeColumn x:Name="Approved_at_DataGridColumn" HeaderText="Confirmation date" MappingName="Approved_at"
                     CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
 
-                            <syncfusion:GridTemplateColumn HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                            <syncfusion:GridTemplateColumn x:Name="Edit_DataGridColumn" HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                                 <syncfusion:GridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Style="{StaticResource Edit_Style}" Click="EditButton_Click"/>
@@ -346,7 +346,7 @@
                                 </syncfusion:GridTemplateColumn.CellTemplate>
                             </syncfusion:GridTemplateColumn>
 
-                            <syncfusion:GridTemplateColumn HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                            <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                                 <syncfusion:GridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
