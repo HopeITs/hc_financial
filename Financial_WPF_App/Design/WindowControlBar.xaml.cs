@@ -1,9 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Window = System.Windows.Window;
 namespace Financial_WPF_App
 {
@@ -17,22 +20,34 @@ namespace Financial_WPF_App
     {
         public event Action<WindowState> WindowStateChanged; // Event to notify MainWindow
         private WindowState _customWindowState;
-        private bool isMaximized = false;
+
+        public static readonly DependencyProperty IsMaximizedProperty =
+        DependencyProperty.Register("IsMaximized", typeof(bool), typeof(WindowControlBar), new PropertyMetadata(true));
+
+        public bool IsMaximized
+        {
+            get => (bool)GetValue(IsMaximizedProperty);
+            set => SetValue(IsMaximizedProperty, value);
+        }
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         private Rect previousWindowRect;
+        private Window parentWindow = (Main_Window_2)System.Windows.Application.Current.MainWindow;
         public WindowControlBar()
         {
             InitializeComponent();
-            var parentWindow = Window.GetWindow(this);
-            if (parentWindow != null)
-            {
-                _customWindowState = parentWindow.WindowState;
-            }
-            else
-            {
-                _customWindowState = WindowState.Maximized;
-            }
+            Resize_btn.Background = (Brush)System.Windows.Application.Current.Resources["ButtonImageMaximize"];
+            
+            
+            DataContext = this;
+            
         }
-
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
@@ -44,11 +59,11 @@ namespace Financial_WPF_App
 
 
         private Rect previousBounds;
-        private double restoreWidth = 1280;  // Set desired restore size
-        private double restoreHeight = 700;
-        private Rect GetWorkingArea(Window window)
+        public double restoreWidth = 1280;  // Set desired restore size
+        public double restoreHeight = 700;
+        private Rect GetWorkingArea()
         {
-            var handle = new WindowInteropHelper(window).Handle;
+            var handle = new WindowInteropHelper(parentWindow).Handle;
             var screen = Screen.FromHandle(handle);
 
             // Get DPI scale
@@ -70,32 +85,35 @@ namespace Financial_WPF_App
             );
         }
 
-        private void Resize_Click(object sender, RoutedEventArgs e)
+        public void Resize_Click(object sender, RoutedEventArgs e)
         {
-            var window = Window.GetWindow(this);
-            if (window == null) return;
+            resize_function();
+        }
 
-            Rect workingArea = GetWorkingArea(window);
-
-            if (!isMaximized)
+        public void resize_function()
+        {
+            Rect workingArea = GetWorkingArea();
+            if (!IsMaximized)
             {
                 // Maximize to current screen's working area
-                window.Left = workingArea.Left;
-                window.Top = workingArea.Top;
-                window.Width = workingArea.Width;
-                window.Height = workingArea.Height;
+                parentWindow.Left = workingArea.Left;
+                parentWindow.Top = workingArea.Top;
+                parentWindow.Width = workingArea.Width;
+                parentWindow.Height = workingArea.Height;
 
-                isMaximized = true;
+                IsMaximized = true;
+                Resize_btn.Background = (Brush)System.Windows.Application.Current.Resources["ButtonImageMaximize"];
             }
             else
             {
                 // Restore centered to current screen
-                window.Width = restoreWidth;
-                window.Height = restoreHeight;
-                window.Left = workingArea.Left + (workingArea.Width - restoreWidth) / 2;
-                window.Top = workingArea.Top + (workingArea.Height - restoreHeight) / 2;
+                parentWindow.Width = restoreWidth;
+                parentWindow.Height = restoreHeight;
+                parentWindow.Left = workingArea.Left + (workingArea.Width - restoreWidth) / 2;
+                parentWindow.Top = workingArea.Top + (workingArea.Height - restoreHeight) / 2;
 
-                isMaximized = false;
+                IsMaximized = false;
+                Resize_btn.Background = (Brush)System.Windows.Application.Current.Resources["ButtonImageRestore"];
             }
         }
 
@@ -105,45 +123,24 @@ namespace Financial_WPF_App
         }
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var window = Window.GetWindow(this);
-            if (window != null && e.ChangedButton == MouseButton.Left)
+            if (e.ClickCount == 2)
             {
-                try
-                {
-                    window.DragMove();
-                }
-                catch (InvalidOperationException)
-                {
-                    // DragMove can throw an exception if called under certain conditions (e.g., mouse not down anymore).
-                }
-            }
-        }
-
-        private void UserControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            var window = Window.GetWindow(this);
-            if (window == null) return;
-
-            Rect workingArea = GetWorkingArea(window); // make sure you have this method
-
-            if (!isMaximized)
-            {
-                window.Left = workingArea.Left;
-                window.Top = workingArea.Top;
-                window.Width = workingArea.Width;
-                window.Height = workingArea.Height;
-
-                isMaximized = true;
+                resize_function();
             }
             else
             {
-                window.Width = restoreWidth;
-                window.Height = restoreHeight;
-                window.Left = workingArea.Left + (workingArea.Width - restoreWidth) / 2;
-                window.Top = workingArea.Top + (workingArea.Height - restoreHeight) / 2;
+                parentWindow.DragMove();
+                Rect workingArea = GetWorkingArea();
+                parentWindow.Width = restoreWidth;
+                parentWindow.Height = restoreHeight;
+                parentWindow.Left = workingArea.Left + (workingArea.Width - restoreWidth) / 2;
+                parentWindow.Top = workingArea.Top + (workingArea.Height - restoreHeight) / 2;
 
-                isMaximized = false;
+                IsMaximized = false;
+                Resize_btn.Background = (Brush)System.Windows.Application.Current.Resources["ButtonImageRestore"];
+                
             }
+            //WindowUtils.TitleBar_MouseDown(this, e);
         }
     }
 }
