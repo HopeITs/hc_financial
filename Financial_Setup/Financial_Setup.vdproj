@@ -1066,7 +1066,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:v4.6.1                                                                            "
+                "FrameworkVersion" = "8:v4.6.1                                                                             "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=671728"
                 }
@@ -2577,7 +2577,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Cashing"
         "ProductCode" = "8:{4A39702A-1EFF-4251-B181-2EEEC524CC07}"
-        "PackageCode" = "8:{8C4A14DE-C8AE-4B20-BD82-4C55BCC523A5}"
+        "PackageCode" = "8:{547923BC-66B7-4C6A-B06F-4608150D9CC8}"
         "UpgradeCode" = "8:{FA8ACE2C-C0BE-462F-933D-A47742515111}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -2594,7 +2594,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_4B0CC70F44B74628A1C0234A30A4C9DA"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -2722,7 +2722,7 @@
             "Target" = "8:_13AEB9D798E84D06A50E81E882A29E49"
             "Folder" = "8:_DF5017B7245A41D2A76028F8F2F52D3C"
             "WorkingFolder" = "8:_FC3E5C84A5A5411AB0FFFBA95BA741EC"
-            "Icon" = "8:"
+            "Icon" = "8:_4B0CC70F44B74628A1C0234A30A4C9DA"
             "Feature" = "8:"
             }
         }
