@@ -5,6 +5,7 @@ using Financial_WPF_App.Properties;
 using Financial_WPF_App.Views;
 using Syncfusion.Data.Extensions;
 using Syncfusion.Windows.Tools.Controls;
+using Syncfusion.XlsIO.Implementation.PivotAnalysis;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,23 +19,24 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Login = Financial_WPF_App.Models.Login;
-
 namespace Financial_WPF_App
 {
     public partial class Main_Window_2 : Window
     {
         public static event Action<WindowState> WindowStateChanged; // Notify AccountWindow
         private WindowState _currentWindowState = WindowState.Normal; // Store state
-
+        WindowControlBar _windowControl;
         public Main_Window_2()
         {
             InitializeComponent();
+            _windowControl = new WindowControlBar();
             // Subscribe to UserControl event
-            ControlBar.WindowStateChanged += OnUserControlWindowStateChanged;
+            //ControlBar.WindowStateChanged += OnUserControlWindowStateChanged;
 
             Version_Label.Content = $"Version: {Assembly.GetExecutingAssembly().GetName().Version}";
 
@@ -47,27 +49,29 @@ namespace Financial_WPF_App
             On_Load();
 
         }
-        private void OnUserControlWindowStateChanged(WindowState newState)
-        {
-            _currentWindowState = newState;
-            this.WindowState = newState; // Apply state change
 
-            // Notify AccountWindow
-            WindowStateChanged?.Invoke(_currentWindowState);
-        }
+
+        //private void OnUserControlWindowStateChanged(WindowState newState)
+        //{
+        //    _currentWindowState = newState;
+        //    this.WindowState = newState; // Apply state change
+
+        //    // Notify AccountWindow
+        //    WindowStateChanged?.Invoke(_currentWindowState);
+        //}
 
         private void On_Load()
         {
             try
             {
                 Window window = new Login_Window2(this);
+                
                 sub = new SubProject();
                 Acc = new Account();
                 c = new City();
                 t = new Till();
                 fb = new FiscalBond();
                 v = new Models.Version();
-
                 Shutdown_Mode = new ShutdownMode();
                 bool? result = window.ShowDialog();
                 if (result ?? true)
@@ -76,10 +80,9 @@ namespace Financial_WPF_App
                     UserRole_label.Content = Settings.Default.Role;
 
                     Update_Online_Button();
-                    window.WindowState = WindowState.Maximized;
                     Login.Shutdown_Mode = ShutdownMode.OnMainWindowClose;
                     Fill_TreeView(false);
-
+                   
                     Show_Hide();
                 }
             }
@@ -172,12 +175,6 @@ namespace Financial_WPF_App
 
 
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            var workArea = SystemParameters.WorkArea; // Gets the area excluding the taskbar
-            this.MaxWidth = workArea.Width + 5;
-            this.MaxHeight = workArea.Height + 5;
-        }
 
         public void Create_tabItem(Window window, string header, System.Windows.Media.Brush main_color)
         {
@@ -2233,27 +2230,7 @@ namespace Financial_WPF_App
             WindowUtils.CloseWindow(this); // Calls the WindowUtils method
         }
 
-        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            WindowUtils.TitleBar_MouseDown(this, e);
-        }
-
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            // Check if the window is minimized
-            if (this.WindowState == WindowState.Minimized)
-            {
-                // Resize the window when minimized
-                this.Width = 1330;  // Set desired width
-                this.Height = 700; // Set desired height
-            }
-            else if (this.WindowState == WindowState.Normal)
-            {
-                // Restore the original size when window is restored
-                this.Width = 1920;  // Original width
-                this.Height = 1021; // Original height
-            }
-        }
+        
 
         private void main_tabControl_OnCloseAllTabs(object sender, CloseTabEventArgs e)
         {
@@ -2318,7 +2295,11 @@ namespace Financial_WPF_App
             }
         }
 
-
+        private void Main_Window2_Loaded(object sender, RoutedEventArgs e)
+        {
+            _windowControl.IsMaximized = false;
+            _windowControl.resize_function();
+        }
     }
 }
 

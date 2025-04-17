@@ -13,8 +13,8 @@
     xmlns:controlzex="urn:controlzex"
     x:Name="Main_Window2"  
     x:Class="Financial_WPF_App.Main_Window_2" mc:Ignorable="d"
-    Title="" Height="720" Width="1280" WindowState="Maximized" SizeToContent="Manual" ResizeMode="CanResize"
-    FontSize="12" Icon="Logo.ico" Closing="Main_Window2_Closing" Closed="Main_Window2_Closed" AllowsTransparency="True" WindowStyle="None" Background="Transparent" Loaded="Window_Loaded">
+    Title="" SizeToContent="Manual" ResizeMode="CanResize"
+    FontSize="12" Icon="Logo.ico" Closing="Main_Window2_Closing" Closed="Main_Window2_Closed" AllowsTransparency="True" WindowStyle="None" Background="Transparent" Loaded="Main_Window2_Loaded">
     <Window.Resources>
         <!-- Converter Instance -->
         <local:TreeViewItemHeaderContainsWordConverter x:Key="HeaderWordConverter"/>
@@ -367,8 +367,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <!-- Custom Title Bar -->
-            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Margin="0,0,0,-12">
-                <local:WindowControlBar x:Name="ControlBar" HorizontalAlignment="Right"/>
+            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top"  Margin="0,0,0,-12">
+                <local:WindowControlBar x:Name="ControlBar" HorizontalAlignment="Stretch"/>
             </DockPanel>
 
 
