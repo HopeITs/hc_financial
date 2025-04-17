@@ -48,7 +48,7 @@ Margin="1,1,1,5"  AllowFiltering="False" CurrentCellEndEdit="myDataGrid_CurrentC
                 <syncfusion:GridTextColumn x:Name="Donor_DataGridColumn" HeaderText="Donor"  MappingName="Name" AllowEditing="True"/>
                 <syncfusion:GridTextColumn x:Name="Abbrivation_DataGridColumn" HeaderText="Abbrivation"  MappingName="Abb_Name" AllowEditing="True"/>
 
-                <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn"  HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" MappingName =" "  HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                     <syncfusion:GridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>

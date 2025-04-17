@@ -311,7 +311,7 @@
 
                 <syncfusion:GridTextColumn x:Name="Attachments_Count_DataGridColumn" MappingName="Attachments_count" HeaderText="Attachments Count"/>
 
-                <syncfusion:GridTemplateColumn x:Name="Attachment_DataGridColumn" HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                <syncfusion:GridTemplateColumn x:Name="Attachment_DataGridColumn" MappingName =" " HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                     <syncfusion:GridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Style="{StaticResource Attachment_Style}" Click="Attachment_Button_Click"/>

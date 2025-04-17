@@ -53,9 +53,9 @@ x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" Verti
                     <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="id"  MappingName="id" IsHidden="True"/>
                     <syncfusion:GridTextColumn x:Name="ActionID_DataGridColumn" HeaderText="action_id"  MappingName="action_id" IsHidden="True"/>
 
-                    <syncfusion:GridTextColumn x:Name="Attachment_DataGridColumn" HeaderText="Attachment"  MappingName="attach_name" />
+                    <syncfusion:GridTextColumn x:Name="Attachment_DataGridColumn"  HeaderText="Attachment"  MappingName="attach_name" />
 
-                    <syncfusion:GridTemplateColumn x:Name="View_DataGridColumn" HeaderText="View" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="View_DataGridColumn" MappingName =" " HeaderText="View" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource View_Style}" Click="View_Button_Click"/>
@@ -63,7 +63,7 @@ x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" Verti
                         </syncfusion:GridTemplateColumn.CellTemplate>
                     </syncfusion:GridTemplateColumn>
 
-                    <syncfusion:GridTemplateColumn x:Name="Download_DataGridColumn" HeaderText="Download" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Download_DataGridColumn" MappingName =" " HeaderText="Download" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Download_Style}" Click="Download_Button_Click"/>
@@ -71,7 +71,7 @@ x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" Verti
                         </syncfusion:GridTemplateColumn.CellTemplate>
                     </syncfusion:GridTemplateColumn>
 
-                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" MappingName =" " HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>

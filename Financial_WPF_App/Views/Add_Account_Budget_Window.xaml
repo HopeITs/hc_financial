@@ -77,7 +77,7 @@
                 NumberGroupSizes="3"
                 NumberGroupSeparator=","/>
 
-                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" MappingName =" " HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Delete_Style}" Click="Donor_DeleteButton_Click"/>
