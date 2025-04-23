@@ -190,6 +190,8 @@ PopupAnimation="Fade">
                         <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Center"/>
                         <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="Account_Name" HeaderText="Account"/>
                         <syncfusion:GridTextColumn x:Name="Budget_DataGridColumn" HeaderText="Budget"  MappingName="Budget" />
+                        <syncfusion:GridTextColumn x:Name="Donor_DataGridColumn" HeaderText="Donor"  MappingName="Donor" />
+
                         <syncfusion:GridTextColumn x:Name="LineType_DataGridColumn" HeaderText="Line Type"  MappingName="Line Type" />
                         <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Line"  MappingName="Line" />
                         <syncfusion:GridDateTimeColumn x:Name="Action_DataGridColumn" HeaderText="Operation Date" MappingName="ActionDate"

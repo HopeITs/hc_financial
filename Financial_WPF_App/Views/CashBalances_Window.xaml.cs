@@ -36,7 +36,7 @@ namespace Financial_WPF_App.Views
         private int CashAccount_ID;
         private Account acc;
         DataSet ds;
-        private DataTable Report_dt, Net_dt;
+        private DataTable Report_dt, CashAccount_Net_dt, Net_dt;
         Main_Window_2 main_Window;
         double HOffset = 0;
 
@@ -122,19 +122,80 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Grid()
         {
-            ds = acc.Select_Cash_Report(CashAccount_ID);
             Report_dt = new DataTable();
+            CashAccount_Net_dt = new DataTable();
             Net_dt = new DataTable();
 
-            if (ds.Tables.Count > 0)
+            if(CashAccount_ID > 0)
             {
+                ds = acc.Select_Cash_Report(CashAccount_ID);
                 Report_dt = ds.Tables[0];
+                Net_dt = ds.Tables[1];
 
-                if (ds.Tables.Count > 1)
-                {
-                    Net_dt = ds.Tables[1];
-                }
             }
+            else
+            {
+                ds = acc.Select_Cash_Report();
+                Report_dt = ds.Tables[0];
+                CashAccount_Net_dt = ds.Tables[1];
+
+
+                // Base matching columns from CashAccount_Net_dt
+                var validColumns = CashAccount_Net_dt.AsEnumerable()
+                                      .Select(r => r.Field<string>("CashAccount_Name"))
+                                      .ToHashSet();
+
+                // Only used for netRow and diffRow
+                var matchingColumns = Report_dt.Columns.Cast<System.Data.DataColumn>()
+                                            .Where(c => validColumns.Contains(c.ColumnName))
+                                            .ToList();
+
+                // Extended set: matchingColumns + "Net Account" columns (for totalRow only)
+                var totalColumns = Report_dt.Columns.Cast<System.Data.DataColumn>()
+                   .Where(c => validColumns.Contains(c.ColumnName) ||
+                               c.ColumnName.ToLower().Contains("net account"))
+                   .ToList();
+
+
+                System.Data.DataRow totalRow = Report_dt.NewRow();
+                totalRow["Account"] = "Total";
+
+                foreach (var col in totalColumns)
+                {
+                    totalRow[col.ColumnName] = Report_dt.AsEnumerable()
+                        .Sum(r => r[col.ColumnName] != DBNull.Value ? Convert.ToDouble(r[col.ColumnName]) : 0);
+                }
+                Report_dt.Rows.Add(totalRow);
+
+
+
+                System.Data.DataRow netRow = Report_dt.NewRow();
+                netRow["Account"] = "Cash till net";
+
+                foreach (var col in matchingColumns)
+                {
+                    var match = CashAccount_Net_dt.AsEnumerable()
+                                   .FirstOrDefault(r => r.Field<string>("CashAccount_Name") == col.ColumnName);
+                    if (match != null)
+                        netRow[col.ColumnName] = match.Field<double>("CashAccount_Net");
+                }
+                Report_dt.Rows.Add(netRow);
+
+                // diffRow
+                System.Data.DataRow diffRow = Report_dt.NewRow();
+                diffRow["Account"] = "Difference";
+
+                foreach (var col in matchingColumns)
+                {
+                    double total = Convert.ToDouble(totalRow[col.ColumnName]);
+                    double net = Convert.ToDouble(netRow[col.ColumnName]);
+                    diffRow[col.ColumnName] = total - net;
+                }
+                Report_dt.Rows.Add(diffRow);
+
+            }
+
+
 
             if (Report_dt != null && Report_dt.Rows.Count > 0)
             {

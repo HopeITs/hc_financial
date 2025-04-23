@@ -530,7 +530,7 @@ namespace Financial_WPF_App.Models
         {
 
             string query = @"SELECT city.Name AS `City_Name`, project.Name AS `Project_Name`, subproject.Name AS `Subproject_Name`, account.Name as `Account_Name`,
-                        budget.Name as `Budget`,linecategory.Name as `Line Type`, line.Name as `Line`,
+                        budget.Name as `Budget`, Group_Concat(donor.Name) as `Donor`,linecategory.Name as `Line Type`, line.Name as `Line`,
                         action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
                         (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
@@ -549,6 +549,8 @@ namespace Financial_WPF_App.Models
                         LEFT JOIN budget_line on action.BudgetLine_ID = budget_line.id
                         LEFT JOIN line on line.id = budget_line.line_id
                         LEFT JOIN budget on budget.id = budget_line.budget_id
+                        LEFT JOIN budget_donor on budget_donor.budget_id = budget.id
+                        LEFT JOIN donor on donor.id = budget_donor.donor_id
                         LEFT JOIN linecategory on linecategory.id = line.Category_ID
                         LEFT JOIN cashaccount on cashaccount.id = action.CashAccount_ID
                         LEFT JOIN cashaccount obs_cashaccount on obs_cashaccount.id = action.ObserveCashAccount_ID

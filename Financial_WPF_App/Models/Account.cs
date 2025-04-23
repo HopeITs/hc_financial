@@ -68,7 +68,7 @@ namespace Financial_WPF_App.Models
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@Type", Type);
                 sc.Parameters.AddWithValue("@City_ID", City_ID);
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -107,7 +107,7 @@ namespace Financial_WPF_App.Models
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -120,8 +120,7 @@ namespace Financial_WPF_App.Models
         public DataSet Select_Cash_Report(int CashAccount_ID)
         {
             string query = "";
-            if (CashAccount_ID > 0)
-            {
+          
                 query = @"SELECT cash_balances.Account_id AS 'Account_ID', cash_balances.City_Name AS 'City', cash_balances.Subproject_Name AS 'Center', 
                                 cash_balances.Account_Name AS 'Account', cash_balances.Account_Type as 'Account_Type', cash_balances.tilltype_Name as 'tilltype_Name', cash_balances.Subproject_ID as 'Subproject_ID', cash_balances.Category_Name as 'Category',
                                 Case when cash_balances.account_IsColsed = 1 then 'Closed' when cash_balances.account_IsColsed = 0 then 'Open' end as 'Status Account',
@@ -133,11 +132,7 @@ namespace Financial_WPF_App.Models
                                 FROM cash_balances
                                 WHERE cash_balances.CashAccount_id = @CashAccount_ID
                                 GROUP BY cash_balances.CashAccount_id;";
-            }
-            else
-            {
-                query = "CALL get_cash_report();";
-            }
+         
 
 
             DataSet ds = new DataSet();
@@ -145,7 +140,29 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@CashAccount_ID", CashAccount_ID);
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(ds);
+                Login.MyConn.Close();
+            }
+            return ds;
+        }
+
+        public DataSet Select_Cash_Report()
+        {
+            string query = "";
+
+            //query = "CALL get_cash_report();";
+
+            query = "CALL test();";
+
+            DataSet ds = new DataSet();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -170,7 +187,7 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -193,7 +210,7 @@ namespace Financial_WPF_App.Models
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -206,10 +223,10 @@ namespace Financial_WPF_App.Models
         public DataTable Select_ExchangeAccount_Rate(int Acc_ID, int FromTill_ID, int ToTill_ID)
         {
             string query = "";
-  
-            
-                query = @"CALL get_ExchangeAccount_Rates(@Acc_ID,@FromTill_ID,@ToTill_ID);";
-  
+
+
+            query = @"CALL get_ExchangeAccount_Rates(@Acc_ID,@FromTill_ID,@ToTill_ID);";
+
 
 
             DataTable dt = new DataTable();
@@ -219,7 +236,7 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Acc_ID", Acc_ID);
                 sc.Parameters.AddWithValue("@FromTill_ID", FromTill_ID);
                 sc.Parameters.AddWithValue("@ToTill_ID", ToTill_ID);
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -229,7 +246,7 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public int Insert(string name, string projectNumber, string beginDate, string endDate, float totalAmount, int amountType_ID,int City_ID, int IsClosed, int SubProject_ID, List<string> Add_donors, List<string> Auto_Tills, string Form_Name, string AccType)
+        public int Insert(string name, string projectNumber, string beginDate, string endDate, float totalAmount, int amountType_ID, int City_ID, int IsClosed, int SubProject_ID, List<string> Add_donors, List<string> Auto_Tills, string Form_Name, string AccType)
         {
             string query = "";
             string log_query = "";
@@ -347,7 +364,7 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 Account_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -357,7 +374,7 @@ namespace Financial_WPF_App.Models
             return Account_ID;
         }
 
-        public int Insert_Cash_Account(string name, List<string> Add_SubProject, List<string> Add_Acc,int City_ID, string Form_Name)
+        public int Insert_Cash_Account(string name, List<string> Add_SubProject, List<string> Add_Acc, int City_ID, string Form_Name)
         {
             string query = "";
             string log_query = "";
@@ -426,7 +443,7 @@ namespace Financial_WPF_App.Models
                         query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'INSERT', 'cashaccount_subproject', @S_ID" + i + ", CONCAT('subproject Name = ', (SELECT subproject.name from subproject where subproject.id = @SubProjectID" + i + ")), CONCAT('account ID = ', @Acc_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     }
                 }
-                
+
                 if (Add_Acc.Count != 0)
                 {
                     for (int i = 0; i < Add_Acc.Count; i++)
@@ -439,7 +456,7 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 Account_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -580,7 +597,7 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 ExchangeAccount_Rate_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -695,10 +712,10 @@ namespace Financial_WPF_App.Models
                         query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'INSERT', 'account_donor', @D_ID" + i + ", CONCAT('Dononr Name = ', (SELECT donor.name from donor where id = @AddDonorID" + i + ")), CONCAT('account ID = ', @Acc_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     }
                 }
-              
+
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -706,7 +723,7 @@ namespace Financial_WPF_App.Models
             }
         } //Checked
 
-        public void Update_Cash_Account(int Acc_ID, string name, List<string> Add_SubProject, List<string> Delete_SubProject, List<string> Add_Acc, List<string> Delete_Acc,int City_ID, string Form_Name)
+        public void Update_Cash_Account(int Acc_ID, string name, List<string> Add_SubProject, List<string> Delete_SubProject, List<string> Add_Acc, List<string> Delete_Acc, int City_ID, string Form_Name)
         {
             string query = "";
             string log_query = "";
@@ -818,13 +835,13 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
                 Login.MyConn.Close();
             }
-        } 
+        }
 
 
         public void Delete(int ID, string Acc_Name, string Form_Name)
@@ -859,7 +876,7 @@ namespace Financial_WPF_App.Models
 
                     query += " COMMIT;";
 
-                    sc.CommandTimeout = 120;sc.CommandText = query;
+                    sc.CommandTimeout = 120; sc.CommandText = query;
                     sc.Connection = Login.MyConn;
                     sc.ExecuteScalar();
 
@@ -899,7 +916,7 @@ namespace Financial_WPF_App.Models
 
                     query += " COMMIT;";
 
-                    sc.CommandTimeout = 120;sc.CommandText = query;
+                    sc.CommandTimeout = 120; sc.CommandText = query;
                     sc.Connection = Login.MyConn;
                     sc.ExecuteScalar();
 
@@ -939,7 +956,7 @@ namespace Financial_WPF_App.Models
 
                     query += " COMMIT;";
 
-                    sc.CommandTimeout = 120;sc.CommandText = query;
+                    sc.CommandTimeout = 120; sc.CommandText = query;
                     sc.Connection = Login.MyConn;
                     sc.ExecuteScalar();
 
@@ -970,7 +987,7 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -995,7 +1012,7 @@ namespace Financial_WPF_App.Models
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@FromTill", FromTill.ToLower());
                 sc.Parameters.AddWithValue("@ToTill", ToTill.ToLower());
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -1020,7 +1037,7 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@CashAccount_ID", CashAccount_ID);
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -1044,7 +1061,7 @@ namespace Financial_WPF_App.Models
             {
                 query += " AND account.ID <> @Acc_ID";
             }
-            if(Donor_ID != -1)
+            if (Donor_ID != -1)
             {
                 query += " AND (SELECT COUNT(id) from account_donor where account_donor.account_id = account.ID and account_donor.donor_id = @Donor_ID) > 0";
             }
@@ -1056,7 +1073,7 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@FromTill", FromTill.ToLower());
                 sc.Parameters.AddWithValue("@Acc_ID", Acc_ID);
                 sc.Parameters.AddWithValue("@Donor_ID", Donor_ID);
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -1072,18 +1089,18 @@ namespace Financial_WPF_App.Models
             query += @"SELECT donor.ID, donor.Name, account_donor.account_id
                             FROM account_donor LEFT JOIN donor ON donor.ID = account_donor.Donor_id";
 
-            if(Acc_ID != -1)
+            if (Acc_ID != -1)
             {
                 query += " WHERE account_donor.Account_id = @Acc_ID";
             }
 
-    
+
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@Acc_ID", Acc_ID);
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
