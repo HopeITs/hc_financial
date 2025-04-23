@@ -131,7 +131,6 @@ namespace Financial_WPF_App.Views
                 ds = acc.Select_Cash_Report(CashAccount_ID);
                 Report_dt = ds.Tables[0];
                 Net_dt = ds.Tables[1];
-
             }
             else
             {
@@ -204,6 +203,15 @@ namespace Financial_WPF_App.Views
 
                 //All_textBlock.Text = Report_dt.Rows.Count.ToString();
 
+                foreach (System.Data.DataColumn col in Report_dt.Columns)
+                {
+                    if (col.ColumnName.Contains("."))
+                    {
+                        string cleanName = col.ColumnName.Replace(".", "");
+                        col.ColumnName = cleanName;
+                    }
+                }
+
                 myDataGrid.ItemsSource = Report_dt.DefaultView;
                 if (HOffset != 0)
                     this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
@@ -252,6 +260,9 @@ namespace Financial_WPF_App.Views
         {
             try
             {
+                var x = e.Column;
+                string y = x.MappingName;
+
                 if (e.Column is GridNumericColumn)
                 {
                     (e.Column as GridNumericColumn).NumberDecimalDigits = 2;
