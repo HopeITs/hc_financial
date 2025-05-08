@@ -24,17 +24,35 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Login = Financial_WPF_App.Models.Login;
+using System.Windows.Shell;
+
+
 namespace Financial_WPF_App
 {
     public partial class Main_Window_2 : Window
     {
         public static event Action<WindowState> WindowStateChanged; // Notify AccountWindow
         private WindowState _currentWindowState = WindowState.Normal; // Store state
+         
         WindowControlBar _windowControl;
         public Main_Window_2()
         {
             InitializeComponent();
-            _windowControl = new WindowControlBar();
+            this.StateChanged += Window_StateChanged;
+            // Apply custom chrome behavior here
+            var chrome = new WindowChrome
+            {
+                CornerRadius = new CornerRadius(0),
+                GlassFrameThickness = new Thickness(0),
+                ResizeBorderThickness = new Thickness(6),
+                CaptionHeight = 30,
+            };
+
+            WindowChrome.SetWindowChrome(this, chrome);
+            var w = Window.GetWindow(this);
+            w.WindowState = WindowState.Maximized;
+            Resize_btn.Background = (Brush)System.Windows.Application.Current.Resources["ButtonImageMaximize"];
+            //_windowControl = new WindowControlBar();
             // Subscribe to UserControl event
             //ControlBar.WindowStateChanged += OnUserControlWindowStateChanged;
 
@@ -49,17 +67,33 @@ namespace Financial_WPF_App
             On_Load();
 
         }
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(this).Handle);
+                var workingArea = screen.WorkingArea;
+
+                MaxWidth = workingArea.Width / GetSystemDpiFactor() + 5;
+                MaxHeight = workingArea.Height / GetSystemDpiFactor() + 5;
 
 
-        //private void OnUserControlWindowStateChanged(WindowState newState)
-        //{
-        //    _currentWindowState = newState;
-        //    this.WindowState = newState; // Apply state change
+                Resize_btn.Background = (Brush)Application.Current.Resources["ButtonImageMaximize"];
+            }
+            else
+            {
+                MaxWidth = double.PositiveInfinity;
+                MaxHeight = double.PositiveInfinity;
+                Resize_btn.Background = (Brush)Application.Current.Resources["ButtonImageRestore"];
+            }
+        }
 
-        //    // Notify AccountWindow
-        //    WindowStateChanged?.Invoke(_currentWindowState);
-        //}
-
+        private double GetSystemDpiFactor()
+        {
+            // Typically 1.0 for 96 DPI, 1.25 for 120 DPI, etc.
+            var source = PresentationSource.FromVisual(this);
+            return source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
+        }
         private void On_Load()
         {
             try
@@ -2215,20 +2249,20 @@ namespace Financial_WPF_App
             }
         }
 
-        private void Minimize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
-        }
+        //private void Minimize_Click(object sender, RoutedEventArgs e)
+        //{
+        //    WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
+        //}
 
         private void Resize_Click(object sender, RoutedEventArgs e)
         {
             WindowUtils.ResizeWindow(this); // Calls the WindowUtils method
         }
 
-        private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            WindowUtils.CloseWindow(this); // Calls the WindowUtils method
-        }
+        //private void Close_Click(object sender, RoutedEventArgs e)
+        //{
+        //    WindowUtils.CloseWindow(this); // Calls the WindowUtils method
+        //}
 
         
 
@@ -2297,8 +2331,36 @@ namespace Financial_WPF_App
 
         private void Main_Window2_Loaded(object sender, RoutedEventArgs e)
         {
-            _windowControl.IsMaximized = false;
-            _windowControl.resize_function();
+            var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(this).Handle);
+            var workingArea = screen.WorkingArea;
+
+            MaxWidth = workingArea.Width / GetSystemDpiFactor() + 5;
+            MaxHeight = workingArea.Height / GetSystemDpiFactor() + 5;
+        }
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+        private void MaximizeRestore_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal)
+            {
+                
+                WindowState = WindowState.Maximized;
+                Resize_btn.Background = (Brush)System.Windows.Application.Current.Resources["ButtonImageMaximize"];
+            }
+            else
+            {
+                WindowState = WindowState.Normal;
+                WindowStartupLocation = WindowStartupLocation.Manual;
+                Left = (SystemParameters.WorkArea.Width - Width) / 2 + SystemParameters.WorkArea.Left;
+                Top = (SystemParameters.WorkArea.Height - Height) / 2 + SystemParameters.WorkArea.Top;
+                Resize_btn.Background = (Brush)System.Windows.Application.Current.Resources["ButtonImageRestore"];
+            }
         }
     }
 }

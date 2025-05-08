@@ -3,17 +3,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
     xmlns:local="clr-namespace:Financial_WPF_App" 
     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
     xmlns:Themes="clr-namespace:Dragablz.Themes;assembly=Dragablz" 
     xmlns:Converters="clr-namespace:Dragablz.Converters;assembly=Dragablz"
     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
     xmlns:controlzex="urn:controlzex"
-    x:Name="Main_Window2"  
+    x:Name="Main_Window2"
     x:Class="Financial_WPF_App.Main_Window_2" mc:Ignorable="d"
-    Title="" SizeToContent="Manual" ResizeMode="CanResize"
+    Title="" ResizeMode="CanResize"
     FontSize="12" Icon="Logo.ico" Closing="Main_Window2_Closing" Closed="Main_Window2_Closed" AllowsTransparency="True" WindowStyle="None" Background="Transparent" Loaded="Main_Window2_Loaded">
     <Window.Resources>
         <!-- Converter Instance -->
@@ -355,9 +355,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
     </Window.Resources>
+    
     <Grid Background="White">
+        
         <!-- Content Over Background -->
         <Grid  x:Name="main_grid">
             <Grid.RowDefinitions>
@@ -367,12 +368,24 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <!-- Custom Title Bar -->
-            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top"  Margin="0,0,0,-12">
-                <local:WindowControlBar x:Name="ControlBar" HorizontalAlignment="Stretch"/>
+            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top"  Grid.Row="0">
+                <Grid  HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- Minimize Button -->
+                    <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="15" Height="15" Grid.Column="0" Click="Minimize_Click"  Background="{StaticResource ButtonImageMinimize}" BorderBrush="{x:Null}" Foreground="{x:Null}" Margin="0,5,25,0" />
+                    <!-- Resize Button -->
+                    <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Grid.Column="1" x:Name="Resize_btn" Background="{x:Null}" Click="MaximizeRestore_Click" Width="15" Height="15" BorderBrush="{x:Null}" Foreground="{x:Null}" Cursor="Hand" Margin="0,5,25,0"/>
+                    <!-- Close Button -->
+                    <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="Close" Width="15" Height="15" Grid.Column="2" BorderBrush="{x:Null}" Foreground="{x:Null}" FontWeight="Normal" Background="{StaticResource ButtonImageClose}" Click="Close_Click" Margin="0,5,25,0"/>
+                </Grid>
             </DockPanel>
 
-
-            <Grid Grid.Row="1" Grid.RowSpan="2">
+            <Grid Grid.Row="1" Grid.RowSpan="2" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="419*"/>
@@ -404,7 +417,7 @@
                     </syncfusion:TabControlExt.DragMarkerColor>
                 </syncfusion:TabControlExt>
 
-                <Grid Grid.ColumnSpan="2"  Background="#FFDCDDDE" VerticalAlignment="Center">
+                <Grid Grid.ColumnSpan="2"  Background="{DynamicResource LightGray1}" VerticalAlignment="Center" Margin="0,-0.5,0,0">
                     <Grid.RowDefinitions>
                         <!-- Menu -->
                         <RowDefinition Height="*" />
@@ -575,7 +588,7 @@
                         </Border>
                     </Grid>
                 </Expander>
-                <Label x:Name="Version_Label" Content="Version" Style="{StaticResource Version_Label}" Margin="10,621,30,0" Grid.Row="1" HorizontalContentAlignment="Right" Grid.Column="1" VerticalAlignment="Bottom"/>
+                <Label  x:Name="Version_Label" Content="Version" Style="{StaticResource Version_Label}" Margin="10,0,30,0" Grid.Row="1" HorizontalContentAlignment="Right" Grid.Column="1" VerticalAlignment="Bottom"/>
             </Grid>
         </Grid>
     </Grid>
