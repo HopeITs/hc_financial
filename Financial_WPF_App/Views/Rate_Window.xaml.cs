@@ -4,6 +4,7 @@ using Financial_WPF_App.Properties;
 using Syncfusion.Data.Extensions;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
+using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -519,7 +520,7 @@ namespace Financial_WPF_App.Views
 
             for (int i = 0; i < MyDatagrid.Columns.Count; i++)
             {
-                if (MyDatagrid.Columns[i].MappingName != null)
+                if (MyDatagrid.Columns[i].MappingName != null && !MyDatagrid.Columns[i].MappingName.IsNullOrWhiteSpace())
                 {
                     int moved = 0;
                     if (!BudgetDononr.Any(name => MyDatagrid.Columns[i].MappingName.Contains(name)))
