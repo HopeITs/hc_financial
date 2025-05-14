@@ -1,5 +1,6 @@
 ﻿using Financial_WPF_App.Models;
 using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -281,8 +282,12 @@ namespace Financial_WPF_App.Helper
             if (e.Column.ColumnName == Last_Column_Name)
             {
                 TotalPastedRows++;
-                if (e.Row.RowError == "There are errors in this row.")
+
+                if (!e.Row.RowError.IsNullOrWhiteSpace())
                     TotalErrorRows++;
+
+                //if (e.Row.RowError == "There are errors in this row.")
+                //    TotalErrorRows++;
 
                 if (!Login.MultiAttachment_AnyError)
                 {

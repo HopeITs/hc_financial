@@ -1,6 +1,7 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.Windows.Shared;
 using System;
 using System.Data;
 using System.Globalization;
@@ -195,12 +196,43 @@ namespace Financial_WPF_App.Helper
                 bool exists = false;
 
                 DateTime Adate;
-                bool isDate = DateTime.TryParseExact(
-                         e.ProposedValue.ToString(),
-                         "dd/MM/yyyy",
-                         CultureInfo.InvariantCulture,
-                         DateTimeStyles.None,
-                         out Adate);
+                bool isDate = false;
+                object val = e.ProposedValue;
+                string text = val?.ToString() ?? "";
+
+                // 1) If it's already a DateTime, cast directly
+                if (val is DateTime dt)
+                {
+                    Adate = dt;
+                    isDate = true;
+                }
+                // 2) If it's a numeric OLE date (Excel’s internal serial), convert
+                else if (double.TryParse(
+                             text,
+                             NumberStyles.Any,
+                             CultureInfo.InvariantCulture,
+                             out double oaSerial))
+                {
+                    Adate = DateTime.FromOADate(oaSerial);
+                    isDate = true;
+                }
+                // 3) Otherwise let .NET try parsing with CurrentCulture OR InvariantCulture
+                else if (
+                    DateTime.TryParse(
+                        text,
+                        CultureInfo.CurrentCulture,
+                        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
+                        out Adate)
+                    ||
+                    DateTime.TryParse(
+                        text,
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
+                        out Adate)
+                )
+                {
+                    isDate = true;
+                }
 
                 if (isDate)
                 {
@@ -220,8 +252,13 @@ namespace Financial_WPF_App.Helper
             if (e.Column.ColumnName == Last_Column_Name)
             {
                 TotalPastedRows++;
-                if (e.Row.RowError == "There are errors in this row.")
+
+                if (!e.Row.RowError.IsNullOrWhiteSpace())
                     TotalErrorRows++;
+
+
+                //if (e.Row.RowError == "There are errors in this row.")
+                //    TotalErrorRows++;
 
                 if (!Login.MultiPayments_AnyError)
                 {

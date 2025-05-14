@@ -430,12 +430,58 @@ namespace Financial_WPF_App.Helper
             else if (e.Column.ColumnName == "Operation date")
             {
                 DateTime Adate;
-                bool isDate = DateTime.TryParseExact(
-                         e.ProposedValue.ToString(),
-                         "dd/MM/yyyy",
-                         CultureInfo.InvariantCulture,
-                         DateTimeStyles.None,
-                         out Adate);
+                bool isDate = false;
+                object val = e.ProposedValue;
+                string text = val?.ToString() ?? "";
+
+                // 1) If it's already a DateTime, cast directly
+                if (val is DateTime dt)
+                {
+                    Adate = dt;
+                    isDate = true;
+                }
+                // 2) If it's a numeric OLE date (Excel’s internal serial), convert
+                else if (double.TryParse(
+                             text,
+                             NumberStyles.Any,
+                             CultureInfo.InvariantCulture,
+                             out double oaSerial))
+                {
+                    Adate = DateTime.FromOADate(oaSerial);
+                    isDate = true;
+                }
+                // 3) Otherwise let .NET try parsing with CurrentCulture OR InvariantCulture
+                else if (
+                    DateTime.TryParse(
+                        text,
+                        CultureInfo.CurrentCulture,
+                        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
+                        out Adate)
+                    ||
+                    DateTime.TryParse(
+                        text,
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
+                        out Adate)
+                )
+                {
+                    isDate = true;
+                }
+
+                if (isDate)
+                {
+                    _ActionDate = Adate.ToString("yyyy/MM/dd");
+                }
+                else
+                {
+                    Login.MultiAction_AnyError = true;
+                    e.Row.SetColumnError(
+                        e.Column.ColumnName,
+                        "This column only accepts dates in any standard format.");
+                    e.Row.RowError = "There are errors in this row.";
+                }
+
+
                 if (isDate)
                 {
                     _ActionDate = Adate.ToString("yyyy/MM/dd");
@@ -514,13 +560,49 @@ namespace Financial_WPF_App.Helper
                 if (_inserted_value == "Ex" & _Account_Type == "Project")
                 {
                     bool Avgexists = false;
+
+
                     DateTime ActionDate;
-                    bool isDate = DateTime.TryParseExact(
-                             e.Row["Operation date"].ToString(),
-                             "dd/MM/yyyy",
-                             CultureInfo.InvariantCulture,
-                             DateTimeStyles.None,
-                             out ActionDate);
+                    bool isDate = false;
+                    object val = e.Row["Operation date"].ToString();
+                    string text = val?.ToString() ?? "";
+
+                    // 1) If it's already a DateTime, cast directly
+                    if (val is DateTime dt)
+                    {
+                        ActionDate = dt;
+                        isDate = true;
+                    }
+                    // 2) If it's a numeric OLE date (Excel’s internal serial), convert
+                    else if (double.TryParse(
+                                 text,
+                                 NumberStyles.Any,
+                                 CultureInfo.InvariantCulture,
+                                 out double oaSerial))
+                    {
+                        ActionDate = DateTime.FromOADate(oaSerial);
+                        isDate = true;
+                    }
+                    // 3) Otherwise let .NET try parsing with CurrentCulture OR InvariantCulture
+                    else if (
+                        DateTime.TryParse(
+                            text,
+                            CultureInfo.CurrentCulture,
+                            DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
+                            out ActionDate)
+                        ||
+                        DateTime.TryParse(
+                            text,
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
+                            out ActionDate)
+                    )
+                    {
+                        isDate = true;
+                    }
+
+
+
 
                     if (isDate)
                     {
@@ -895,13 +977,46 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
 
+
                 DateTime ActionMonth;
-                bool isDate = DateTime.TryParseExact(
-                         e.Row["Operation date"].ToString(),
-                         "dd/MM/yyyy",
-                         CultureInfo.InvariantCulture,
-                         DateTimeStyles.None,
-                         out ActionMonth);
+                bool isDate = false;
+                object val = e.Row["Operation date"].ToString();
+                string text = val?.ToString() ?? "";
+
+                // 1) If it's already a DateTime, cast directly
+                if (val is DateTime dt)
+                {
+                    ActionMonth = dt;
+                    isDate = true;
+                }
+                // 2) If it's a numeric OLE date (Excel’s internal serial), convert
+                else if (double.TryParse(
+                             text,
+                             NumberStyles.Any,
+                             CultureInfo.InvariantCulture,
+                             out double oaSerial))
+                {
+                    ActionMonth = DateTime.FromOADate(oaSerial);
+                    isDate = true;
+                }
+                // 3) Otherwise let .NET try parsing with CurrentCulture OR InvariantCulture
+                else if (
+                    DateTime.TryParse(
+                        text,
+                        CultureInfo.CurrentCulture,
+                        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
+                        out ActionMonth)
+                    ||
+                    DateTime.TryParse(
+                        text,
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
+                        out ActionMonth)
+                )
+                {
+                    isDate = true;
+                }
+
 
                 if (e.Row["Document type"].ToString().ToLower().Trim() == "payslip")
                 {
@@ -1052,8 +1167,16 @@ namespace Financial_WPF_App.Helper
             if (e.Column.ColumnName == Last_Column_Name)
             {
                 TotalPastedRows++;
-                if (e.Row.RowError == "There are errors in this row.")
+
+                if (!e.Row.RowError.IsNullOrWhiteSpace())
                     TotalErrorRows++;
+
+
+                //if (e.Row.RowError == "There are errors in this row." ||
+                //    e.Row.RowError == "Please ensure that there is at least one AvgRate that matches the conversion currency and extends for a period that includes the transaction date.")
+                //    TotalErrorRows++;
+
+
 
                 if (!Login.MultiAction_AnyError)
                 {
