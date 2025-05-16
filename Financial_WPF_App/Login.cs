@@ -100,10 +100,10 @@ namespace Financial_WPF_App.Models
 
             if (!test_online)
                 ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + database +
-                            ";Uid=hcsyria;Password=Hope2018Center;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
+                            ";Uid=sary;Password=HopeIT_sary2020;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
             else
                 ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + test_database +
-                            ";Uid=hcsyria;Password=Hope2018Center;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
+                            ";Uid=sary;Password=HopeIT_sary2020;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
             if (!test_offline)
                 ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + database +
