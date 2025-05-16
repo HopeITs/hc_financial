@@ -87,7 +87,7 @@ namespace Financial_WPF_App
         private void Apply_Color_Theme()
         {
 
-   
+
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
@@ -108,57 +108,48 @@ namespace Financial_WPF_App
 
         private void LoadGrid()
         {
-
-            if (Login.BuildConnection())
+            dt = line.Select("", "");
+            if (dt != null && dt.Rows.Count > 0)
             {
-                dt = line.Select("", "");
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = dt.DefaultView;
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
+                myDataGrid.ItemsSource = dt.DefaultView;
             }
-
+            else
+            {
+                myDataGrid.ItemsSource = null;
+            }
         }
 
         private void Load_Comboboxes_Data()
         {
-            if (Login.BuildConnection())
+            cat_dt = cat.Select("");
+            if (cat_dt != null && cat_dt.Rows.Count > 0)
             {
-                cat_dt = cat.Select("");
-                if (cat_dt != null && cat_dt.Rows.Count > 0)
-                {
-                    Category_comboBox.ItemsSource = cat_dt.DefaultView;
-                }
-                else
-                {
-                    Category_comboBox.ItemsSource = null;
-                }
-
-                Project_comboBox.ItemsSource = null;
-                Project_comboBox.Text = "0 Selected";
-                projects_dt = project.Select("", "", "");
-
-                if (projects_dt != null && projects_dt.Rows.Count > 0)
-                {
-                    objProjectList = new List<Local_Project>();
-
-                    for (int i = 0; i < projects_dt.Rows.Count; i++)
-                    {
-                        Local_Project obj = new Local_Project();
-                        obj.ID = projects_dt.Rows[i].Field<int>(0);
-                        obj.Name = projects_dt.Rows[i].Field<string>(1);
-                        objProjectList.Add(obj);
-                    }
-                    Project_comboBox.ItemsSource = objProjectList;
-                    int count = objProjectList.Count(item => item.Project_Check_Status == true);
-                    Project_comboBox.Text = count.ToString() + " Selected";
-                }
+                Category_comboBox.ItemsSource = cat_dt.DefaultView;
+            }
+            else
+            {
+                Category_comboBox.ItemsSource = null;
             }
 
+            Project_comboBox.ItemsSource = null;
+            Project_comboBox.Text = "0 Selected";
+            projects_dt = project.Select("", "", "");
+
+            if (projects_dt != null && projects_dt.Rows.Count > 0)
+            {
+                objProjectList = new List<Local_Project>();
+
+                for (int i = 0; i < projects_dt.Rows.Count; i++)
+                {
+                    Local_Project obj = new Local_Project();
+                    obj.ID = projects_dt.Rows[i].Field<int>(0);
+                    obj.Name = projects_dt.Rows[i].Field<string>(1);
+                    objProjectList.Add(obj);
+                }
+                Project_comboBox.ItemsSource = objProjectList;
+                int count = objProjectList.Count(item => item.Project_Check_Status == true);
+                Project_comboBox.Text = count.ToString() + " Selected";
+            }
         }
 
         private void Save_btn_Click(object sender, RoutedEventArgs e)
@@ -196,78 +187,76 @@ namespace Financial_WPF_App
                     return;
                 }
 
-                if (Login.BuildConnection())
-                {
-                    string Name = Login.ReplaceQuotation(Name_txtBox.Text);
-                    int Category_ID = Convert.ToInt32(Category_comboBox.SelectedValue);
+                string Name = Login.ReplaceQuotation(Name_txtBox.Text);
+                int Category_ID = Convert.ToInt32(Category_comboBox.SelectedValue);
 
-                    List<string> Add_Projects = new List<string>();
-                    List<string> Delete_Projects = new List<string>();
+                List<string> Add_Projects = new List<string>();
+                List<string> Delete_Projects = new List<string>();
 
-                    bool Found;
+                bool Found;
 
-                    if (objProjectList != null && objProjectList.Count > 0)
-                        foreach (var Project in objProjectList)
-                        {
-                            if (Project.Project_Check_Status == true)
-                            {
-                                Found = false;
-                                if (Original_ProjectList != null && Original_ProjectList.Count > 0)
-                                    foreach (var OriginalProject in Original_ProjectList)
-                                    {
-                                        if (OriginalProject.ID == Project.ID && OriginalProject.Project_Check_Status == true)
-                                        {
-                                            Found = true;
-                                            break;
-                                        }
-                                    }
-                                if (Found == false)
-                                    Add_Projects.Add(Project.ID.ToString());
-                            }
-                        }
-
-                    if (Original_ProjectList != null && Original_ProjectList.Count > 0)
-                        foreach (var OriginalProject in Original_ProjectList)
-                        {
-                            if (OriginalProject.Project_Check_Status == true)
-                            {
-                                Found = false;
-                                if (objProjectList != null && objProjectList.Count > 0)
-                                    foreach (var Project in objProjectList)
-                                    {
-                                        if (OriginalProject.ID == Project.ID && Project.Project_Check_Status == true)
-                                        {
-                                            Found = true;
-                                            break;
-                                        }
-                                    }
-                                if (Found == false)
-                                    Delete_Projects.Add(OriginalProject.ID.ToString());
-                            }
-                        }
-
-                    if (ID != -1)//Edit
-                    {
-                        line.Update(ID, Name, Category_ID, Add_Projects, Delete_Projects, "Budget_Window");
-                    }
-                    else//Add new
-                    {
-                        line.Insert(Name, Category_ID, Add_Projects, "Budget_Window");
-                    }
-
-                    Name_txtBox.Text = "";
-                    Category_comboBox.SelectedIndex = -1;
-                    ID = -1;
-
+                if (objProjectList != null && objProjectList.Count > 0)
                     foreach (var Project in objProjectList)
                     {
-                        Project.Project_Check_Status = false;
+                        if (Project.Project_Check_Status == true)
+                        {
+                            Found = false;
+                            if (Original_ProjectList != null && Original_ProjectList.Count > 0)
+                                foreach (var OriginalProject in Original_ProjectList)
+                                {
+                                    if (OriginalProject.ID == Project.ID && OriginalProject.Project_Check_Status == true)
+                                    {
+                                        Found = true;
+                                        break;
+                                    }
+                                }
+                            if (Found == false)
+                                Add_Projects.Add(Project.ID.ToString());
+                        }
                     }
-                    Project_comboBox.ItemsSource = null;
-                    Project_comboBox.Text = "0 Selected";
-                    Project_comboBox.ItemsSource = objProjectList;
-                    LoadGrid();
+
+                if (Original_ProjectList != null && Original_ProjectList.Count > 0)
+                    foreach (var OriginalProject in Original_ProjectList)
+                    {
+                        if (OriginalProject.Project_Check_Status == true)
+                        {
+                            Found = false;
+                            if (objProjectList != null && objProjectList.Count > 0)
+                                foreach (var Project in objProjectList)
+                                {
+                                    if (OriginalProject.ID == Project.ID && Project.Project_Check_Status == true)
+                                    {
+                                        Found = true;
+                                        break;
+                                    }
+                                }
+                            if (Found == false)
+                                Delete_Projects.Add(OriginalProject.ID.ToString());
+                        }
+                    }
+
+                if (ID != -1)//Edit
+                {
+                    line.Update(ID, Name, Category_ID, Add_Projects, Delete_Projects, "Budget_Window");
                 }
+                else//Add new
+                {
+                    line.Insert(Name, Category_ID, Add_Projects, "Budget_Window");
+                }
+
+                Name_txtBox.Text = "";
+                Category_comboBox.SelectedIndex = -1;
+                ID = -1;
+
+                foreach (var Project in objProjectList)
+                {
+                    Project.Project_Check_Status = false;
+                }
+                Project_comboBox.ItemsSource = null;
+                Project_comboBox.Text = "0 Selected";
+                Project_comboBox.ItemsSource = objProjectList;
+                LoadGrid();
+
             }
             catch (Exception ex)
             {

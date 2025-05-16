@@ -337,8 +337,7 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int Employee_ID, string Employee_Name, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+           
                 string query = "";
                 string log_query = "";
 
@@ -372,7 +371,7 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
         public void Insert_Multi_Salaries()
@@ -397,8 +396,7 @@ namespace Financial_WPF_App.Models
 
         public void Delete_Employee_Salary(int Employee_Salary_ID, int Employee_ID, string Line_Name, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+        
                 string query = "";
                 string log_query = "";
 
@@ -433,7 +431,7 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
         public void Delete_Multi_Employee_Salary()

@@ -165,20 +165,19 @@ namespace Financial_WPF_App.Views
                 {
                     if (Login.MultiBudgetLines_List.Count > 0)
                     {
-                        if (Login.BuildConnection())
-                        {
-                            bl.Insert_Multi_Lines();
 
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        bl.Insert_Multi_Lines();
 
-                            Create_Columns();
-                            Fill_Datatables();
-                            InitializeCopyPaste();
-                            //this.myDataGrid.GridCopyPaste = new MultiBudgetLines_CustomCopyPaste(myDataGrid, Budget_ID, Budget_Name, MissingLiens_dt);
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
-                            if (Bl_W != null)
-                                Bl_W.Fill_myDataGrid(false);
-                        }
+                        Create_Columns();
+                        Fill_Datatables();
+                        InitializeCopyPaste();
+                        //this.myDataGrid.GridCopyPaste = new MultiBudgetLines_CustomCopyPaste(myDataGrid, Budget_ID, Budget_Name, MissingLiens_dt);
+
+                        if (Bl_W != null)
+                            Bl_W.Fill_myDataGrid(false);
+
                     }
 
                 }

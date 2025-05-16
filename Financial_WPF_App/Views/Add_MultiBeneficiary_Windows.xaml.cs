@@ -181,24 +181,23 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
-                    if(Login.MultiBeneficiary_List.Count > 0)
+                    if (Login.MultiBeneficiary_List.Count > 0)
                     {
-                        if (Login.BuildConnection())
-                        {
-                            b.Insert_Multi_beneficiares();
 
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        b.Insert_Multi_beneficiares();
 
-                            Create_Columns();
-                            Fill_Datatables();
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
-                            InitializeCopyPaste();
-                            //this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
+                        Create_Columns();
+                        Fill_Datatables();
+
+                        InitializeCopyPaste();
+                        //this.myDataGrid.GridCopyPaste = new MultiBeneficiares_CustomCopyPaste(myDataGrid, Microrojects_dt, Accounts_dt);
 
 
-                            if (AB_W != null)
-                                AB_W.Fill_Grid();
-                        }
+                        if (AB_W != null)
+                            AB_W.Fill_Grid();
+
                     }
 
                 }

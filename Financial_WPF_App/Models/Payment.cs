@@ -641,8 +641,7 @@ namespace Financial_WPF_App.Models
 
         public void Delete_Payment(int ID, int Beneficiary_ID, bool Approved_Action, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+          
                 string query = "";
                 string log_query = "";
 
@@ -720,7 +719,7 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
         public void Delay_Payments(int Monthes, List<int> Beneficiary_IDs)

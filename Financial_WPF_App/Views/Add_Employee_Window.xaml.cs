@@ -68,9 +68,9 @@ namespace Financial_WPF_App.Views
                 Emp = new Employee();
                 s = new SubProject();
                 l = new Financial_WPF_App.Models.Line();
-      
+
                 Load_Form();
-                if(Employee_ID > 0)
+                if (Employee_ID > 0)
                 {
                     Load_Employee();
                 }
@@ -336,73 +336,70 @@ namespace Financial_WPF_App.Views
                     return;
                 }
 
-                if (Login.BuildConnection())
+                string FName = FName_txtBox.Text;
+                string FaName = FaName_txtBox.Text;
+                string LName = LName_txtBox.Text;
+
+
+                DataTable Add_Subprojects_dt = new DataTable();
+                System.Data.DataRow[] rowsToAdd = Employee_Subproject_Table.Select("Emplyee_Subproject_ID = '-1'");
+                if (rowsToAdd.Count() > 0)
+                    Add_Subprojects_dt = rowsToAdd.CopyToDataTable();
+
+                if (Employee_ID != -1)//Edit
                 {
-                    string FName = FName_txtBox.Text;
-                    string FaName = FaName_txtBox.Text;
-                    string LName = LName_txtBox.Text;
+                    DataTable Delete_Subprojects_dt = new DataTable();
 
+                    var kept_Subprojects = Employee_Subproject_Table.AsEnumerable()
+                        .Where(row => row.Field<int>("Emplyee_Subproject_ID") != -1)
+                        .Select(row => row.Field<int>("Emplyee_Subproject_ID"));
 
-                    DataTable Add_Subprojects_dt = new DataTable();
-                    System.Data.DataRow[] rowsToAdd = Employee_Subproject_Table.Select("Emplyee_Subproject_ID = '-1'");
-                    if (rowsToAdd.Count() > 0)
-                        Add_Subprojects_dt = rowsToAdd.CopyToDataTable();
+                    // Select rows from dt1 where id is not in dt2Ids
+                    var result = Original_Employee_Subproject_Table.AsEnumerable()
+                                    .Where(row => !kept_Subprojects.Contains(row.Field<int>("Emplyee_Subproject_ID")));
 
-                    if (Employee_ID != -1)//Edit
+                    if (result.Count() > 0)
                     {
-                        DataTable Delete_Subprojects_dt = new DataTable();
-
-                        var kept_Subprojects = Employee_Subproject_Table.AsEnumerable()
-                            .Where(row => row.Field<int>("Emplyee_Subproject_ID") != -1)
-                            .Select(row => row.Field<int>("Emplyee_Subproject_ID"));
-
-                        // Select rows from dt1 where id is not in dt2Ids
-                        var result = Original_Employee_Subproject_Table.AsEnumerable()
-                                        .Where(row => !kept_Subprojects.Contains(row.Field<int>("Emplyee_Subproject_ID")));
-
-                        if (result.Count() > 0)
-                        {
-                            Delete_Subprojects_dt = result.CopyToDataTable();
-                        }
-
-
-
-                        DataTable Update_Subprojects_dt = new DataTable();
-
-                        var employeeTable = Employee_Subproject_Table.AsEnumerable();
-                        var originalTable = Original_Employee_Subproject_Table.AsEnumerable();
-
-                        var Updated_result = from emp in employeeTable
-                                             join orig in originalTable
-                                             on emp.Field<int>("Emplyee_Subproject_ID") equals orig.Field<int>("Emplyee_Subproject_ID")
-                                             where emp.Field<int>("Emplyee_Subproject_ID") != -1
-                                             && ((emp.IsNull("BeginDate") && !orig.IsNull("BeginDate"))
-                                             || (!emp.IsNull("BeginDate") && orig.IsNull("BeginDate"))
-                                                 || (emp.IsNull("EndDate") && !orig.IsNull("EndDate"))
-                                                 || (!emp.IsNull("EndDate") && orig.IsNull("EndDate"))
-                                                 || (!emp.IsNull("BeginDate") && !orig.IsNull("BeginDate") && emp.Field<DateTime>("BeginDate") != orig.Field<DateTime>("BeginDate"))
-                                                 || (!emp.IsNull("EndDate") && !orig.IsNull("EndDate") && emp.Field<DateTime>("EndDate") != orig.Field<DateTime>("EndDate")))
-                                             select emp;
-
-
-
-                        if (Updated_result.Count() > 0)
-                        {
-                            Update_Subprojects_dt = Updated_result.CopyToDataTable();
-                        }
-
-                        Emp.Update(Employee_ID, FName, FaName, LName, Add_Subprojects_dt, Delete_Subprojects_dt, Update_Subprojects_dt, "Employee_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        this.Close();
-                    }
-                    else//Add new
-                    {
-                        Emp.Insert(FName, FaName, LName, Add_Subprojects_dt, "Employee_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        Clear_Data();
+                        Delete_Subprojects_dt = result.CopyToDataTable();
                     }
 
+
+
+                    DataTable Update_Subprojects_dt = new DataTable();
+
+                    var employeeTable = Employee_Subproject_Table.AsEnumerable();
+                    var originalTable = Original_Employee_Subproject_Table.AsEnumerable();
+
+                    var Updated_result = from emp in employeeTable
+                                         join orig in originalTable
+                                         on emp.Field<int>("Emplyee_Subproject_ID") equals orig.Field<int>("Emplyee_Subproject_ID")
+                                         where emp.Field<int>("Emplyee_Subproject_ID") != -1
+                                         && ((emp.IsNull("BeginDate") && !orig.IsNull("BeginDate"))
+                                         || (!emp.IsNull("BeginDate") && orig.IsNull("BeginDate"))
+                                             || (emp.IsNull("EndDate") && !orig.IsNull("EndDate"))
+                                             || (!emp.IsNull("EndDate") && orig.IsNull("EndDate"))
+                                             || (!emp.IsNull("BeginDate") && !orig.IsNull("BeginDate") && emp.Field<DateTime>("BeginDate") != orig.Field<DateTime>("BeginDate"))
+                                             || (!emp.IsNull("EndDate") && !orig.IsNull("EndDate") && emp.Field<DateTime>("EndDate") != orig.Field<DateTime>("EndDate")))
+                                         select emp;
+
+
+
+                    if (Updated_result.Count() > 0)
+                    {
+                        Update_Subprojects_dt = Updated_result.CopyToDataTable();
+                    }
+
+                    Emp.Update(Employee_ID, FName, FaName, LName, Add_Subprojects_dt, Delete_Subprojects_dt, Update_Subprojects_dt, "Employee_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    this.Close();
                 }
+                else//Add new
+                {
+                    Emp.Insert(FName, FaName, LName, Add_Subprojects_dt, "Employee_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    Clear_Data();
+                }
+
             }
             catch (Exception ex)
             {

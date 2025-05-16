@@ -326,8 +326,7 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int ID, int Account_ID, string Rate_Name, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+            
                 string query = "";
                 string log_query = "";
 
@@ -362,7 +361,7 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
 
         }
 
@@ -370,16 +369,17 @@ namespace Financial_WPF_App.Models
         {
             if (Login.BuildConnection())
             {
+                MySqlCommand sc = new MySqlCommand();
+
                 string query = @"CALL calculate_avgrate(" + Account_ID + ",'" + BeginDate + "','" + EndDate + "','" + FromTill + "','" + ToTill + "')";
 
-                using (var sc = new MySqlCommand(query, Login.MyConn))
-                {
-                    var n = 0.0;
-                    Double.TryParse(sc.ExecuteScalar().ToString(), out n);
-                    Login.MyConn.Close();
-                    return n;
-                }
+                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.Connection = Login.MyConn;
 
+                var n = 0.0;
+                Double.TryParse(sc.ExecuteScalar().ToString(), out n);
+                Login.MyConn.Close();
+                return n;
             }
             return -1;
         }

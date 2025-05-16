@@ -374,85 +374,82 @@ namespace Financial_WPF_App.Views
 
                 }
 
+                string Name = Login.ReplaceQuotation(Name_txtBox.Text);
+                int City_ID = Convert.ToInt32(City_comboBox.SelectedValue);
+                int Project_ID = Convert.ToInt32(Project_comboBox.SelectedValue);
+                //
+                string beginDate = ((DateTime)beginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                string endDate = "";
+                if (EndDate_CheckBox.IsChecked == true && endDate_datepicker.IsEnabled == false)
+                    endDate = "NULL";
+                else endDate = ((DateTime)endDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
 
-                if (Login.BuildConnection())
+                if (Sudproject_ID > 0)//Edit
                 {
-                    string Name = Login.ReplaceQuotation(Name_txtBox.Text);
-                    int City_ID = Convert.ToInt32(City_comboBox.SelectedValue);
-                    int Project_ID = Convert.ToInt32(Project_comboBox.SelectedValue);
-                    //
-                    string beginDate = ((DateTime)beginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    string endDate = "";
-                    if (EndDate_CheckBox.IsChecked == true && endDate_datepicker.IsEnabled == false)
-                        endDate = "NULL";
-                    else endDate = ((DateTime)endDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                    List<string> Add_donors = new List<string>();
+                    List<string> Delete_donors = new List<string>();
 
-                    if (Sudproject_ID > 0)//Edit
+                    bool Found;
+
+                    for (int i = 0; i < donors_listbox.Items.Count; i++)
                     {
-                        List<string> Add_donors = new List<string>();
-                        List<string> Delete_donors = new List<string>();
-
-                        bool Found;
-
-                        for (int i = 0; i < donors_listbox.Items.Count; i++)
-                        {
-                            Found = false;
-                            for (int j = 0; j < Original_li_subProject.Count; j++)
-                            {
-                                if (donors_listbox.Items[i].ToString() == Original_li_subProject[j])
-                                {
-                                    Found = true;
-                                    break;
-                                }
-                            }
-                            if (Found == false)
-                                Add_donors.Add(donors_listbox.Items[i].ToString());
-                        }
-
+                        Found = false;
                         for (int j = 0; j < Original_li_subProject.Count; j++)
                         {
-                            Found = false;
-                            for (int i = 0; i < donors_listbox.Items.Count; i++)
+                            if (donors_listbox.Items[i].ToString() == Original_li_subProject[j])
                             {
-                                if (Original_li_subProject[j] == donors_listbox.Items[i].ToString())
-                                {
-                                    Found = true;
-                                    break;
-                                }
+                                Found = true;
+                                break;
                             }
-                            if (Found == false)
-                                Delete_donors.Add(Original_li_subProject[j]);
                         }
-
-                        bool WithPaymentAccount;
-                        if (Project_comboBox.Text == "Micro Projects")
-                            WithPaymentAccount = true;
-                        else
-                            WithPaymentAccount = false;
-                        sub.Update(Sudproject_ID, Name, beginDate, endDate, Project_ID, City_ID, Add_donors, Delete_donors, WithPaymentAccount, "SubProjectWindow");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        this.Close();
+                        if (Found == false)
+                            Add_donors.Add(donors_listbox.Items[i].ToString());
                     }
-                    else//Add new
+
+                    for (int j = 0; j < Original_li_subProject.Count; j++)
                     {
-                        // Insert new Subproject, Payments Account with till syr, pay till, and donors
-                        List<string> All_donors = new List<string>();
+                        Found = false;
                         for (int i = 0; i < donors_listbox.Items.Count; i++)
                         {
-                            All_donors.Add(donors_listbox.Items[i].ToString());
+                            if (Original_li_subProject[j] == donors_listbox.Items[i].ToString())
+                            {
+                                Found = true;
+                                break;
+                            }
                         }
-                        bool WithPaymentAccount;
-                        if (Project_comboBox.Text == "Micro Projects")
-                            WithPaymentAccount = true;
-                        else
-                            WithPaymentAccount = false;
+                        if (Found == false)
+                            Delete_donors.Add(Original_li_subProject[j]);
+                    }
 
-                        sub.Insert(Name, beginDate, endDate, Project_ID, City_ID, All_donors, WithPaymentAccount, "SubProjectWindow");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        Clear_Boxes();
-                        LoadDonors_ListBox();
-                    }         
+                    bool WithPaymentAccount;
+                    if (Project_comboBox.Text == "Micro Projects")
+                        WithPaymentAccount = true;
+                    else
+                        WithPaymentAccount = false;
+                    sub.Update(Sudproject_ID, Name, beginDate, endDate, Project_ID, City_ID, Add_donors, Delete_donors, WithPaymentAccount, "SubProjectWindow");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    this.Close();
                 }
+                else//Add new
+                {
+                    // Insert new Subproject, Payments Account with till syr, pay till, and donors
+                    List<string> All_donors = new List<string>();
+                    for (int i = 0; i < donors_listbox.Items.Count; i++)
+                    {
+                        All_donors.Add(donors_listbox.Items[i].ToString());
+                    }
+                    bool WithPaymentAccount;
+                    if (Project_comboBox.Text == "Micro Projects")
+                        WithPaymentAccount = true;
+                    else
+                        WithPaymentAccount = false;
+
+                    sub.Insert(Name, beginDate, endDate, Project_ID, City_ID, All_donors, WithPaymentAccount, "SubProjectWindow");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    Clear_Boxes();
+                    LoadDonors_ListBox();
+                }
+
             }
             catch (Exception ex)
             {

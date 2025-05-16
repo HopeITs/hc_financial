@@ -162,7 +162,7 @@ namespace Financial_WPF_App.Views
         {
             UserMode = false;
 
-            DataTable Rate_dt = dt.Select("id = "+ Rate_ID + "").CopyToDataTable();
+            DataTable Rate_dt = dt.Select("id = " + Rate_ID + "").CopyToDataTable();
 
             Name_txtBox.Text = Rate_dt.Rows[0].Field<string>("Rate group name").ToString();
 
@@ -242,7 +242,7 @@ namespace Financial_WPF_App.Views
                     }
 
                     CalcValue();
-                }               
+                }
             }
             catch (Exception ex)
             {
@@ -363,40 +363,37 @@ namespace Financial_WPF_App.Views
                     }
                 }
 
+                string Name = Login.ReplaceQuotation(Name_txtBox.Text);
 
-                if (Login.BuildConnection())
+                string beginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                string endDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+
+                string text = Value_txtBox.Text.Replace(",", "");
+
+                int from = Convert.ToInt32(From_comboBox.SelectedValue);
+                int to = Convert.ToInt32(To_comboBox.SelectedValue);
+
+                int ObserveRate_ID;
+                if (Convert.ToInt32(ObserveRate_comboBox.SelectedIndex) != -1 && Convert.ToInt32(To_comboBox.SelectedIndex) != -1)
+                    ObserveRate_ID = Convert.ToInt32(ObserveRate_comboBox.SelectedValue);
+                else
+                    ObserveRate_ID = -1;
+
+
+                if (Rate_ID != -1)//Edit
                 {
-                    string Name = Login.ReplaceQuotation(Name_txtBox.Text);
-
-                    string beginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    string endDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                    string text = Value_txtBox.Text.Replace(",", "");
-
-                    int from = Convert.ToInt32(From_comboBox.SelectedValue);
-                    int to = Convert.ToInt32(To_comboBox.SelectedValue);
-
-                    int ObserveRate_ID;
-                    if (Convert.ToInt32(ObserveRate_comboBox.SelectedIndex) != -1 && Convert.ToInt32(To_comboBox.SelectedIndex) != -1)
-                        ObserveRate_ID = Convert.ToInt32(ObserveRate_comboBox.SelectedValue);
-                    else
-                        ObserveRate_ID = -1;
-
-
-                    if (Rate_ID != -1)//Edit
-                    {
-                        r.Update(Rate_ID, Account_ID, Name, beginDate, endDate, from, to, ObserveRate_ID, "Rate_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        this.Close();
-                    }
-                    else//Add new
-                    {
-                        r.Insert(Account_ID, Name, beginDate, endDate, from, to, ObserveRate_ID, "Rate_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        ClearBoxes();
-                    }
-
+                    r.Update(Rate_ID, Account_ID, Name, beginDate, endDate, from, to, ObserveRate_ID, "Rate_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    this.Close();
                 }
+                else//Add new
+                {
+                    r.Insert(Account_ID, Name, beginDate, endDate, from, to, ObserveRate_ID, "Rate_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    ClearBoxes();
+                }
+
+
             }
             catch (Exception ex)
             {

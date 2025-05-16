@@ -166,24 +166,23 @@ namespace Financial_WPF_App.Views
 
         private void Load_Data()
         {
-            if (Login.BuildConnection())
-            {
-                attachments_dt = d.GetAttachmentsNames(Action_ID, Beneficiary_ID);
-                if (attachments_dt != null && attachments_dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = attachments_dt.DefaultView;
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
 
-                if (myDataGrid.View != null)
-                {
-                    int count = myDataGrid.View.Records.Count();
-                    All_Label.Content = count.ToString("N0");
-                }
+            attachments_dt = d.GetAttachmentsNames(Action_ID, Beneficiary_ID);
+            if (attachments_dt != null && attachments_dt.Rows.Count > 0)
+            {
+                myDataGrid.ItemsSource = attachments_dt.DefaultView;
             }
+            else
+            {
+                myDataGrid.ItemsSource = null;
+            }
+
+            if (myDataGrid.View != null)
+            {
+                int count = myDataGrid.View.Records.Count();
+                All_Label.Content = count.ToString("N0");
+            }
+
         }
 
         private void View_Button_Click(object sender, RoutedEventArgs e)

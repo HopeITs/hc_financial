@@ -170,78 +170,77 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-            if (Login.BuildConnection())
+
+            dt = new DataTable();
+            sum_dt = new DataTable();
+            DataSet ds = Acc.Select_CashAcc_Tills(Account_ID);
+            if (ds.Tables.Count > 0)
             {
-                dt = new DataTable();
-                sum_dt = new DataTable();
-                DataSet ds = Acc.Select_CashAcc_Tills(Account_ID);
-                if (ds.Tables.Count > 0)
-                {
-                    dt = ds.Tables[0];
+                dt = ds.Tables[0];
 
-                    if (ds.Tables.Count > 1)
-                    {
-                        sum_dt = ds.Tables[1];
-                    }
+                if (ds.Tables.Count > 1)
+                {
+                    sum_dt = ds.Tables[1];
                 }
+            }
 
-                if (dt != null)
+            if (dt != null)
+            {
+                System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
+                dt.Columns.Add(newColumn);
+                dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+            }
+
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                myDataGrid.ItemsSource = dt.DefaultView;
+
+                if (HOffset != 0)
+                    this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+
+
+                int count = dt.Rows.Count;
+                All_textBlock.Text = count.ToString("N0");
+
+                //All_textBlock.Text = dt.Rows.Count.ToString();
+
+                if (HiddenColumns.Count != 0)
                 {
-                    System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
-                    dt.Columns.Add(newColumn);
-                    dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
-                }
-
-
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = dt.DefaultView;
-
-                    if (HOffset != 0)
-                        this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
-
-
-                    int count = dt.Rows.Count;
-                    All_textBlock.Text = count.ToString("N0");
-
-                    //All_textBlock.Text = dt.Rows.Count.ToString();
-
-                    if (HiddenColumns.Count != 0)
+                    foreach (string CName in HiddenColumns)
                     {
-                        foreach (string CName in HiddenColumns)
+                        for (int i = 0; i < myDataGrid.Columns.Count; i++)
                         {
-                            for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                            if (myDataGrid.Columns[i].HeaderText.ToString() == CName)
                             {
-                                if (myDataGrid.Columns[i].HeaderText.ToString() == CName)
-                                {
-                                    myDataGrid.Columns[i].IsHidden = true; break;
-                                }
+                                myDataGrid.Columns[i].IsHidden = true; break;
                             }
                         }
                     }
                 }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-
-                    for (int i = 0; i < myDataGrid.Columns.Count; i++)
-                    {
-                        myDataGrid.Columns[i].IsHidden = true;
-                    }
-                }
-
-                if (sum_dt != null && sum_dt.Rows.Count > 0)
-                {
-                    Income_textBlock.Text = sum_dt.Rows[0].Field<double>("CashAccount_I").ToString("N2");
-                    Exchpand_textBlock.Text = sum_dt.Rows[0].Field<double>("CashAccount_E").ToString("N2");
-                    Net_textBlock.Text = sum_dt.Rows[0].Field<double>("CashAccount_Net").ToString("N2");
-                    CashNet_textBlock.Text = sum_dt.Rows[0].Field<double>("AllAccounts_Net").ToString("N2");
-                    Difference_textBlock.Text = sum_dt.Rows[0].Field<double>("Difference").ToString("N2");
-                }
-
-
-                Bind_Show_Hide_Menu();
             }
+            else
+            {
+                myDataGrid.ItemsSource = null;
+
+                for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                {
+                    myDataGrid.Columns[i].IsHidden = true;
+                }
+            }
+
+            if (sum_dt != null && sum_dt.Rows.Count > 0)
+            {
+                Income_textBlock.Text = sum_dt.Rows[0].Field<double>("CashAccount_I").ToString("N2");
+                Exchpand_textBlock.Text = sum_dt.Rows[0].Field<double>("CashAccount_E").ToString("N2");
+                Net_textBlock.Text = sum_dt.Rows[0].Field<double>("CashAccount_Net").ToString("N2");
+                CashNet_textBlock.Text = sum_dt.Rows[0].Field<double>("AllAccounts_Net").ToString("N2");
+                Difference_textBlock.Text = sum_dt.Rows[0].Field<double>("Difference").ToString("N2");
+            }
+
+
+            Bind_Show_Hide_Menu();
+
         }
 
         private void Bind_Show_Hide_Menu()
@@ -425,7 +424,7 @@ namespace Financial_WPF_App.Views
                 CashAction_Window _Window = new CashAction_Window(Account_ID, Account_Name, main_Window, this);
                 _Window.Tag += "(" + Account_Name + ")";
                 _Window.ShowDialog();
-                
+
             }
             catch (Exception ex)
             {
@@ -513,7 +512,7 @@ namespace Financial_WPF_App.Views
                                 CashAction_Window _Window = new CashAction_Window(Account_ID, Account_Name, Action_ID, main_Window, this);
                                 _Window.Tag += "(" + Account_Name + ")";
                                 _Window.ShowDialog();
-                                
+
 
                             }
                         }

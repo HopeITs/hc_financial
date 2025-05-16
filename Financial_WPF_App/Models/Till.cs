@@ -372,8 +372,7 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int ID, string TillType_Name, int Acc_ID, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+         
                 string query = "";
                 string log_query = "";
 
@@ -407,7 +406,7 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
     }
 }

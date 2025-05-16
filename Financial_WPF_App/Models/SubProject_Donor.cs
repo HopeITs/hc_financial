@@ -56,6 +56,7 @@ namespace Financial_WPF_App.Models
         {
             if (Login.BuildConnection())
             {
+
                 string query = @"select Name 
                          from `donor` join subproject_donor on donor.ID = subproject_donor.Donor_ID 
                          where `SubProject_ID` = " + SubProject_ID;

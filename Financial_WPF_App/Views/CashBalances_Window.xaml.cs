@@ -112,12 +112,11 @@ namespace Financial_WPF_App.Views
 
         private void Load_Data()
         {
-            if (Login.BuildConnection())
-            {
-                CashNet_textBlock.Text = AccountsNet_textBlock.Text = Difference_textBlock.Text = "0.00";
 
-                Fill_Grid();
-            }
+            CashNet_textBlock.Text = AccountsNet_textBlock.Text = Difference_textBlock.Text = "0.00";
+
+            Fill_Grid();
+
         }
 
         private void Fill_Grid()
@@ -126,7 +125,7 @@ namespace Financial_WPF_App.Views
             CashAccount_Net_dt = new DataTable();
             Net_dt = new DataTable();
 
-            if(CashAccount_ID > 0)
+            if (CashAccount_ID > 0)
             {
                 ds = acc.Select_Cash_Report(CashAccount_ID);
                 Report_dt = ds.Tables[0];
@@ -271,7 +270,7 @@ namespace Financial_WPF_App.Views
                     (e.Column as GridNumericColumn).NumberGroupSeparator = ",";
                 }
 
-                if (e.Column.MappingName.Contains("ID") || e.Column.MappingName == "tilltype_Name" 
+                if (e.Column.MappingName.Contains("ID") || e.Column.MappingName == "tilltype_Name"
                     || e.Column.MappingName == "Category" || e.Column.MappingName == "Account_Type")
                     e.Cancel = true;
 
@@ -325,7 +324,7 @@ namespace Financial_WPF_App.Views
                         {
                             Account_Window account_Window = new Account_Window(Acc_ID, main_Window);
 
-                            if(Account_type == "Project")
+                            if (Account_type == "Project")
                             {
                                 if (Acc_Categort == "Micro Projects")
                                 {

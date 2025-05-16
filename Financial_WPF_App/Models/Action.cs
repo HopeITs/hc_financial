@@ -894,14 +894,15 @@ namespace Financial_WPF_App.Models
             query += " COMMIT;";
 
 
-            Login.MultiAction_sc.CommandTimeout = 120; Login.MultiAction_sc.CommandText = query;
-            Login.MultiAction_sc.Connection = Login.MyConn;
+            if (Login.BuildConnection())
+            {
+                Login.MultiAction_sc.CommandTimeout = 120; Login.MultiAction_sc.CommandText = query;
+                Login.MultiAction_sc.Connection = Login.MyConn;
 
-            Login.MultiAction_sc.ExecuteScalar();
+                Login.MultiAction_sc.ExecuteScalar();
 
-            Login.MyConn.Close();
-
-
+                Login.MyConn.Close();
+            }
         }
 
         public int Insert_CashAction(int Acc_ID, string Acc_Name, string ActionDate, string Note, string E_Note, DataTable Add_Actions, string Form_Name)
@@ -1674,8 +1675,7 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int ID, int Till_ID, string AType, bool Approved_Action, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+    
                 string query = "";
                 string log_query = "";
 
@@ -1753,13 +1753,12 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
         public void Delete_CashAction(int Action_ID, string Acc_Name, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+          
                 string query = "";
                 string log_query = "";
 
@@ -1794,7 +1793,7 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
 

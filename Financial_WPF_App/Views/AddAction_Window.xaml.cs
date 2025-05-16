@@ -314,7 +314,7 @@ namespace Financial_WPF_App
                 Type_comboBox.IsEnabled = false;
                 DestinationTill_comboBox.IsEnabled = false;
                 ExchangeAcc_comboBox.IsEnabled = false;
-                ExchangeCash_comboBox.IsEnabled=false;
+                ExchangeCash_comboBox.IsEnabled = false;
                 DestinationTill_clear_btn.IsEnabled = ExchangeAcc_clear_btn.IsEnabled = ExchangeCash_clear_btn.IsEnabled = false;
 
                 if (Type_ComboBox_Exchange_Item.IsSelected)
@@ -1461,22 +1461,21 @@ namespace Financial_WPF_App
 
             if (MircoProject_ID_autoSuggestionUserControl.IsEnabled == true)
             {
-                if (Login.BuildConnection())
+
+                b_dt = b.Select("", Account_ID.ToString(), "");
+                List<string> IDItems = new List<string>();
+                List<string> Nametems = new List<string>();
+                if (b_dt != null && b_dt.Rows.Count > 0)
                 {
-                    b_dt = b.Select("", Account_ID.ToString(), "");
-                    List<string> IDItems = new List<string>();
-                    List<string> Nametems = new List<string>();
-                    if (b_dt != null && b_dt.Rows.Count > 0)
+                    for (int i = 0; i < b_dt.Rows.Count; i++)
                     {
-                        for (int i = 0; i < b_dt.Rows.Count; i++)
-                        {
-                            IDItems.Add(b_dt.Rows[i].Field<Int32>("MicroProject_ID").ToString());
-                            Nametems.Add(b_dt.Rows[i].Field<string>("Name").ToString());
-                        }
-                        MircoProject_ID_autoSuggestionUserControl.AutoSuggestionList = IDItems;
-                        BeneficiaryName_txtBox.AutoSuggestionList = Nametems;
+                        IDItems.Add(b_dt.Rows[i].Field<Int32>("MicroProject_ID").ToString());
+                        Nametems.Add(b_dt.Rows[i].Field<string>("Name").ToString());
                     }
+                    MircoProject_ID_autoSuggestionUserControl.AutoSuggestionList = IDItems;
+                    BeneficiaryName_txtBox.AutoSuggestionList = Nametems;
                 }
+
             }
 
             if (DestinationTill_comboBox.IsEnabled == true)
@@ -3119,92 +3118,91 @@ namespace Financial_WPF_App
                 E_Notes = E_Notes_txtBox.Text;
                 #endregion
 
-                if (Login.BuildConnection())
+
+                if (Action_ID != -1)//Edit
                 {
-                    if (Action_ID != -1)//Edit
+                    if (Approved_Action)
                     {
-                        if (Approved_Action)
-                        {
-                            if (inserted_value == "Ex" || inserted_value == "M")
-                            {
-                                a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
-                                    , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                    , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
-                            }
-                            else
-                            {
-                                a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
-                                , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                    , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
-                            }
-                        }
-                        else
-                        {
-                            if (inserted_value == "Ex" || inserted_value == "M")
-                            {
-                                a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
-                                    , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                    , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
-                            }
-                            else
-                            {
-                                a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
-                                , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                    , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
-                            }
-                        }
-                        int success = 0;
-                        if (FullAttachNames != null && FullAttachNames.Length > 0)
-                        {
-                            foreach (var FullAttachName in FullAttachNames)
-                            {
-                                if (Save_Attachments(FullAttachName, Action_ID)) success++;
-                            }
-                        }
-
-                        if (FullAttachNames != null && FullAttachNames.Length > 0)
-                            MessageBox.Show("Saved successfully." + Environment.NewLine + "Attachments: Succeeded" + FullAttachNames.Length.ToString() + "/" + success.ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        else
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
-                        this.Close();
-                    }
-                    else//Add new
-                    {
-                        int A_id = -1;
                         if (inserted_value == "Ex" || inserted_value == "M")
                         {
-                            A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, inserted_value, amount, rate, ActionDate
-                            , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                           , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
+                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
+                                , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
                         }
                         else
                         {
-                            A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, -1, false, false, false, inserted_value, amount, rate, ActionDate
-                            , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                            , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window");
+                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
+                            , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
                         }
-                        int success = 0;
-                        if (FullAttachNames != null && FullAttachNames.Length > 0)
+                    }
+                    else
+                    {
+                        if (inserted_value == "Ex" || inserted_value == "M")
                         {
-                            foreach (var FullAttachName in FullAttachNames)
-                            {
-                                if (Save_Attachments(FullAttachName, A_id)) success++;
-                            }
+                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
+                                , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
                         }
-
-                        if (FullAttachNames != null && FullAttachNames.Length > 0)
-                            MessageBox.Show("Saved successfully." + Environment.NewLine + "Attachments: Succeeded" + FullAttachNames.Length.ToString() + "/" + success.ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         else
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        UserMode = false;
-                        Clear_Boxes();
-                        UserMode = true;
+                        {
+                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
+                            , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
+                        }
+                    }
+                    int success = 0;
+                    if (FullAttachNames != null && FullAttachNames.Length > 0)
+                    {
+                        foreach (var FullAttachName in FullAttachNames)
+                        {
+                            if (Save_Attachments(FullAttachName, Action_ID)) success++;
+                        }
                     }
 
-                    if (TW != null)
-                        TW.Load_Data();
+                    if (FullAttachNames != null && FullAttachNames.Length > 0)
+                        MessageBox.Show("Saved successfully." + Environment.NewLine + "Attachments: Succeeded" + FullAttachNames.Length.ToString() + "/" + success.ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    else
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+
+                    this.Close();
                 }
+                else//Add new
+                {
+                    int A_id = -1;
+                    if (inserted_value == "Ex" || inserted_value == "M")
+                    {
+                        A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, inserted_value, amount, rate, ActionDate
+                        , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
+                       , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
+                    }
+                    else
+                    {
+                        A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, -1, false, false, false, inserted_value, amount, rate, ActionDate
+                        , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
+                        , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window");
+                    }
+                    int success = 0;
+                    if (FullAttachNames != null && FullAttachNames.Length > 0)
+                    {
+                        foreach (var FullAttachName in FullAttachNames)
+                        {
+                            if (Save_Attachments(FullAttachName, A_id)) success++;
+                        }
+                    }
+
+                    if (FullAttachNames != null && FullAttachNames.Length > 0)
+                        MessageBox.Show("Saved successfully." + Environment.NewLine + "Attachments: Succeeded" + FullAttachNames.Length.ToString() + "/" + success.ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    else
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    UserMode = false;
+                    Clear_Boxes();
+                    UserMode = true;
+                }
+
+                if (TW != null)
+                    TW.Load_Data();
+
             }
             catch (Exception ex)
             {

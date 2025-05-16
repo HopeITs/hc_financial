@@ -73,36 +73,33 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-            if (Login.BuildConnection())
+            dt = new DataTable();
+            dt = a.SelectLines_Report();
+            if (dt != null && dt.Rows.Count > 0)
             {
-                dt = new DataTable();
-                dt = a.SelectLines_Report();
-                if (dt != null && dt.Rows.Count > 0)
+                myDataGrid.ItemsSource = dt.DefaultView;
+                if (HOffset != 0)
+                    this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+                if (HiddenColumns.Count != 0)
                 {
-                    myDataGrid.ItemsSource = dt.DefaultView;
-                    if (HOffset != 0)
-                        this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
-                    if (HiddenColumns.Count != 0)
+                    foreach (string CName in HiddenColumns)
                     {
-                        foreach (string CName in HiddenColumns)
+                        for (int i = 0; i < myDataGrid.Columns.Count; i++)
                         {
-                            for (int i = 0; i < myDataGrid.Columns.Count; i++)
+                            if (myDataGrid.Columns[i].HeaderText.ToString() == CName)
                             {
-                                if (myDataGrid.Columns[i].HeaderText.ToString() == CName)
-                                {
-                                    myDataGrid.Columns[i].IsHidden = true; break;
-                                }
+                                myDataGrid.Columns[i].IsHidden = true; break;
                             }
                         }
                     }
                 }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
-
-                Bind_Show_Hide_Menu();
             }
+            else
+            {
+                myDataGrid.ItemsSource = null;
+            }
+
+            Bind_Show_Hide_Menu();
         }
 
         private void Bind_Show_Hide_Menu()

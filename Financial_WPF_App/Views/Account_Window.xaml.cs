@@ -325,7 +325,7 @@ namespace Financial_WPF_App
             {
                 tabControl1.Visibility = Visibility.Visible; //Update
 
-                
+
                 myExpander_Collapsed(this, new RoutedEventArgs());
                 myExpander.IsExpanded = false;
 
@@ -340,7 +340,7 @@ namespace Financial_WPF_App
                     ToolTipService.SetShowOnDisabled(myExpander, true);
                     ToolTipService.SetInitialShowDelay(myExpander, 100);
                 }
-                   
+
                 if (Category == "Budget")
                 {
                     if (Administrative_Account_privileges && !IsAdminAccount)
@@ -1219,36 +1219,35 @@ namespace Financial_WPF_App
             Save_btn.IsEnabled = false;
             try
             {
-                if (Login.BuildConnection())
+
+                if (Acc_ID != -1)
                 {
-                    if (Acc_ID != -1)
-                    {
-                        List<string> Auto_Tills = t_dt.AsEnumerable()
-                                                       .Select(r => r.Field<string>("Type"))
-                                                       .ToList();
-                        List<string> Add_donors = new List<string>();
+                    List<string> Auto_Tills = t_dt.AsEnumerable()
+                                                   .Select(r => r.Field<string>("Type"))
+                                                   .ToList();
+                    List<string> Add_donors = new List<string>();
 
-                        //bool Found;
+                    //bool Found;
 
-                        if (Original_objDonorList != null && Original_objDonorList.Count > 0)
-                            foreach (var donor in Original_objDonorList)
+                    if (Original_objDonorList != null && Original_objDonorList.Count > 0)
+                        foreach (var donor in Original_objDonorList)
+                        {
+                            if (donor.Check_Status == true)
                             {
-                                if (donor.Check_Status == true)
-                                {
 
-                                    Add_donors.Add(donor.Donor_ID.ToString());
-                                }
+                                Add_donors.Add(donor.Donor_ID.ToString());
                             }
+                        }
 
 
-                        int Admin_Acc_ID = a.Insert_Administrative_Account(Acc_ID, Add_donors, Auto_Tills, "Account_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    int Admin_Acc_ID = a.Insert_Administrative_Account(Acc_ID, Add_donors, Auto_Tills, "Account_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
 
 
-                        main_Window.Fill_TreeView(true);
-                    }
+                    main_Window.Fill_TreeView(true);
                 }
+
             }
             catch (Exception ex)
             {
@@ -1548,320 +1547,319 @@ namespace Financial_WPF_App
                     }
                 }
 
-                if (Login.BuildConnection())
+
+                string Name = Login.ReplaceQuotation(Name_txtBox.Text);
+                string ProjectNumber = "";
+                string beginDate = "NULL";
+                string endDate = "NULL";
+                float totalAmount = 0;
+                int amountType_ID = -1;
+                int City_ID = -1;
+                List<string> Add_donors = new List<string>();
+                List<string> Delete_donors = new List<string>();
+
+
+                List<string> Add_SubProject = new List<string>();
+                List<string> Delete_SubProject = new List<string>();
+
+
+                List<string> Add_Acc = new List<string>();
+                List<string> Delete_Acc = new List<string>();
+
+
+                if (AccType == "Project")
                 {
-                    string Name = Login.ReplaceQuotation(Name_txtBox.Text);
-                    string ProjectNumber = "";
-                    string beginDate = "NULL";
-                    string endDate = "NULL";
-                    float totalAmount = 0;
-                    int amountType_ID = -1;
-                    int City_ID = -1;
-                    List<string> Add_donors = new List<string>();
-                    List<string> Delete_donors = new List<string>();
-
-
-                    List<string> Add_SubProject = new List<string>();
-                    List<string> Delete_SubProject = new List<string>();
-
-
-                    List<string> Add_Acc = new List<string>();
-                    List<string> Delete_Acc = new List<string>();
-
-
-                    if (AccType == "Project")
+                    if (Category == "Micro Projects" || Category == "Budget")
                     {
-                        if (Category == "Micro Projects" || Category == "Budget")
-                        {
-                            Project_ID = Convert.ToInt32(Project_comboBox.SelectedValue);
-                            SubProject_ID = Convert.ToInt32(SubProject_comboBox.SelectedValue);
+                        Project_ID = Convert.ToInt32(Project_comboBox.SelectedValue);
+                        SubProject_ID = Convert.ToInt32(SubProject_comboBox.SelectedValue);
 
-                            if (objSubProjectList != null && objSubProjectList.Count > 0)
-                                foreach (var subProject in objSubProjectList)
+                        if (objSubProjectList != null && objSubProjectList.Count > 0)
+                            foreach (var subProject in objSubProjectList)
+                            {
+                                if (subProject.Sub_Check_Status == true)
                                 {
-                                    if (subProject.Sub_Check_Status == true)
-                                    {
-                                        SubProject_ID = subProject.SubID;
-                                        break;
-                                    }
+                                    SubProject_ID = subProject.SubID;
+                                    break;
                                 }
+                            }
 
-                            bool Found;
+                        bool Found;
 
-                            if (objDonorList != null && objDonorList.Count > 0)
-                                foreach (var donor in objDonorList)
+                        if (objDonorList != null && objDonorList.Count > 0)
+                            foreach (var donor in objDonorList)
+                            {
+                                if (donor.Check_Status == true)
                                 {
-                                    if (donor.Check_Status == true)
-                                    {
-                                        Found = false;
-                                        if (Original_objDonorList != null && Original_objDonorList.Count > 0)
-                                            foreach (var Originaldonor in Original_objDonorList)
+                                    Found = false;
+                                    if (Original_objDonorList != null && Original_objDonorList.Count > 0)
+                                        foreach (var Originaldonor in Original_objDonorList)
+                                        {
+                                            if (Originaldonor.Donor_ID == donor.Donor_ID && Originaldonor.Check_Status == true)
                                             {
-                                                if (Originaldonor.Donor_ID == donor.Donor_ID && Originaldonor.Check_Status == true)
-                                                {
-                                                    Found = true;
-                                                    break;
-                                                }
+                                                Found = true;
+                                                break;
                                             }
-                                        if (Found == false)
-                                            Add_donors.Add(donor.Donor_ID.ToString());
-                                    }
+                                        }
+                                    if (Found == false)
+                                        Add_donors.Add(donor.Donor_ID.ToString());
                                 }
+                            }
 
-                            if (Original_objDonorList != null && Original_objDonorList.Count > 0)
-                                foreach (var Originaldonor in Original_objDonorList)
+                        if (Original_objDonorList != null && Original_objDonorList.Count > 0)
+                            foreach (var Originaldonor in Original_objDonorList)
+                            {
+                                if (Originaldonor.Check_Status == true)
                                 {
-                                    if (Originaldonor.Check_Status == true)
-                                    {
-                                        Found = false;
-                                        if (objDonorList != null && objDonorList.Count > 0)
-                                            foreach (var donor in objDonorList)
+                                    Found = false;
+                                    if (objDonorList != null && objDonorList.Count > 0)
+                                        foreach (var donor in objDonorList)
+                                        {
+                                            if (Originaldonor.Donor_ID == donor.Donor_ID && donor.Check_Status == true)
                                             {
-                                                if (Originaldonor.Donor_ID == donor.Donor_ID && donor.Check_Status == true)
-                                                {
-                                                    Found = true;
-                                                    break;
-                                                }
+                                                Found = true;
+                                                break;
                                             }
-                                        if (Found == false)
-                                            Delete_donors.Add(Originaldonor.Donor_ID.ToString());
-                                    }
+                                        }
+                                    if (Found == false)
+                                        Delete_donors.Add(Originaldonor.Donor_ID.ToString());
                                 }
+                            }
 
 
-                            ProjectNumber = Login.ReplaceQuotation(ProjectNumber_txtBox.Text);
-                            beginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                        ProjectNumber = Login.ReplaceQuotation(ProjectNumber_txtBox.Text);
+                        beginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
 
-                            if (EndDate_CheckBox.IsChecked == true) //&& EndDate_datepicker.IsEnabled == false
-                                endDate = "NULL";
-                            else endDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                        if (EndDate_CheckBox.IsChecked == true) //&& EndDate_datepicker.IsEnabled == false
+                            endDate = "NULL";
+                        else endDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
 
-                            string text = TotalAmount_txtBox.Text.Replace(",", "");
-                            totalAmount = (text == "" ? 0 : float.Parse(text));
+                        string text = TotalAmount_txtBox.Text.Replace(",", "");
+                        totalAmount = (text == "" ? 0 : float.Parse(text));
 
 
-                            if (AmountType_comboBox.SelectedIndex != -1)
-                                amountType_ID = Convert.ToInt32(AmountType_comboBox.SelectedValue);
-                            else
-                                amountType_ID = -1;
-                        }
+                        if (AmountType_comboBox.SelectedIndex != -1)
+                            amountType_ID = Convert.ToInt32(AmountType_comboBox.SelectedValue);
+                        else
+                            amountType_ID = -1;
+                    }
+                }
+                else
+                {
+                    Project_ID = -1;
+                    ProjectNumber = "";
+                    beginDate = "NULL";
+                    endDate = "NULL";
+                    totalAmount = 0;
+                    amountType_ID = -1;
+                    City_ID = Convert.ToInt32(City_comboBox.SelectedValue);
+                    if (AccType == "Cash")
+                    {
+                        bool Found;
+
+                        if (objSubProjectList != null && objSubProjectList.Count > 0)
+                            foreach (var subProject in objSubProjectList)
+                            {
+                                if (subProject.Sub_Check_Status == true)
+                                {
+                                    Found = false;
+                                    if (Original_SubProjectList != null && Original_SubProjectList.Count > 0)
+                                        foreach (var OriginalSubProject in Original_SubProjectList)
+                                        {
+                                            if (OriginalSubProject.SubID == subProject.SubID && OriginalSubProject.Sub_Check_Status == true)
+                                            {
+                                                Found = true;
+                                                break;
+                                            }
+                                        }
+
+
+                                    if (Found == false)
+                                        Add_SubProject.Add(subProject.SubID.ToString());
+                                }
+                            }
+
+                        if (Original_SubProjectList != null && Original_SubProjectList.Count > 0)
+                            foreach (var OriginalSubProject in Original_SubProjectList)
+                            {
+                                if (OriginalSubProject.Sub_Check_Status == true)
+                                {
+                                    Found = false;
+                                    if (objSubProjectList != null && objSubProjectList.Count > 0)
+                                        foreach (var subProject in objSubProjectList)
+                                        {
+                                            if (OriginalSubProject.SubID == subProject.SubID && subProject.Sub_Check_Status == true)
+                                            {
+                                                Found = true;
+                                                break;
+                                            }
+                                        }
+                                    if (Found == false)
+                                        Delete_SubProject.Add(OriginalSubProject.SubID.ToString());
+                                }
+                            }
+
+                        if (objPersonalAccList != null && objPersonalAccList.Count > 0)
+                            foreach (var PersonalAcc in objPersonalAccList)
+                            {
+                                if (PersonalAcc.PersonalAcc_Check_Status == true)
+                                {
+                                    Found = false;
+                                    if (Original_PersonalAccList != null && Original_PersonalAccList.Count > 0)
+                                        foreach (var OriginalPersonalAcc in Original_PersonalAccList)
+                                        {
+                                            if (OriginalPersonalAcc.PersonalAcc_ID == PersonalAcc.PersonalAcc_ID && OriginalPersonalAcc.PersonalAcc_Check_Status == true)
+                                            {
+                                                Found = true;
+                                                break;
+                                            }
+                                        }
+                                    if (Found == false)
+                                        Add_Acc.Add(PersonalAcc.PersonalAcc_ID.ToString());
+                                }
+                            }
+
+                        if (Original_PersonalAccList != null && Original_PersonalAccList.Count > 0)
+                            foreach (var OriginalPersonalAcc in Original_PersonalAccList)
+                            {
+                                if (OriginalPersonalAcc.PersonalAcc_Check_Status == true)
+                                {
+                                    Found = false;
+                                    if (objPersonalAccList != null && objPersonalAccList.Count > 0)
+                                        foreach (var PersonalAcc in objPersonalAccList)
+                                        {
+                                            if (OriginalPersonalAcc.PersonalAcc_ID == PersonalAcc.PersonalAcc_ID && PersonalAcc.PersonalAcc_Check_Status == true)
+                                            {
+                                                Found = true;
+                                                break;
+                                            }
+                                        }
+                                    if (Found == false)
+                                        Delete_Acc.Add(OriginalPersonalAcc.PersonalAcc_ID.ToString());
+                                }
+                            }
+
+                        if (objExchangeAccList != null && objExchangeAccList.Count > 0)
+                            foreach (var ExchangelAcc in objExchangeAccList)
+                            {
+                                if (ExchangelAcc.ExchangeAcc_Check_Status == true)
+                                {
+                                    Found = false;
+                                    if (Original_ExchangeAccList != null && Original_ExchangeAccList.Count > 0)
+                                        foreach (var OriginalExchangeAcc in Original_ExchangeAccList)
+                                        {
+                                            if (OriginalExchangeAcc.ExchangeAcc_ID == ExchangelAcc.ExchangeAcc_ID && OriginalExchangeAcc.ExchangeAcc_Check_Status == true)
+                                            {
+                                                Found = true;
+                                                break;
+                                            }
+                                        }
+                                    if (Found == false)
+                                        Add_Acc.Add(ExchangelAcc.ExchangeAcc_ID.ToString());
+                                }
+                            }
+
+                        if (Original_ExchangeAccList != null && Original_ExchangeAccList.Count > 0)
+                            foreach (var OriginalExchangeAcc in Original_ExchangeAccList)
+                            {
+                                if (OriginalExchangeAcc.ExchangeAcc_Check_Status == true)
+                                {
+                                    Found = false;
+                                    if (objExchangeAccList != null && objExchangeAccList.Count > 0)
+                                        foreach (var ExchangelAcc in objExchangeAccList)
+                                        {
+                                            if (OriginalExchangeAcc.ExchangeAcc_ID == ExchangelAcc.ExchangeAcc_ID && ExchangelAcc.ExchangeAcc_Check_Status == true)
+                                            {
+                                                Found = true;
+                                                break;
+                                            }
+                                        }
+                                    if (Found == false)
+                                        Delete_Acc.Add(OriginalExchangeAcc.ExchangeAcc_ID.ToString());
+                                }
+                            }
+                    }
+                    else if (AccType == "Personal")
+                    {
+                        SubProject_ID = -1;
+                        beginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+
+                        if (EndDate_CheckBox.IsChecked == true) //&& EndDate_datepicker.IsEnabled == false
+                            endDate = "NULL";
+                        else endDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+
                     }
                     else
                     {
-                        Project_ID = -1;
-                        ProjectNumber = "";
-                        beginDate = "NULL";
-                        endDate = "NULL";
-                        totalAmount = 0;
-                        amountType_ID = -1;
-                        City_ID = Convert.ToInt32(City_comboBox.SelectedValue);
-                        if (AccType == "Cash")
+                        SubProject_ID = -1;
+                    }
+
+                }
+                if (Acc_ID != -1)//Edit
+                {
+                    if (AccType != "Cash")
+                    {
+                        a.Update(Acc_ID, Name, ProjectNumber, beginDate, endDate, totalAmount, amountType_ID, City_ID, IsClosed, SubProject_ID, Add_donors, Delete_donors, "Account_Window");
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    }
+                    else
+                    {
+                        a.Update_Cash_Account(Acc_ID, Name, Add_SubProject, Delete_SubProject, Add_Acc, Delete_Acc, City_ID, "Account_Window");
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    }
+
+                }
+                else//Add new
+                {
+                    if (AccType != "Cash")
+                    {
+                        List<string> Auto_Tills = new List<string>();
+
+                        if (AccType == "Project" || AccType == "Exchange")
                         {
-                            bool Found;
-
-                            if (objSubProjectList != null && objSubProjectList.Count > 0)
-                                foreach (var subProject in objSubProjectList)
-                                {
-                                    if (subProject.Sub_Check_Status == true)
-                                    {
-                                        Found = false;
-                                        if (Original_SubProjectList != null && Original_SubProjectList.Count > 0)
-                                            foreach (var OriginalSubProject in Original_SubProjectList)
-                                            {
-                                                if (OriginalSubProject.SubID == subProject.SubID && OriginalSubProject.Sub_Check_Status == true)
-                                                {
-                                                    Found = true;
-                                                    break;
-                                                }
-                                            }
-
-
-                                        if (Found == false)
-                                            Add_SubProject.Add(subProject.SubID.ToString());
-                                    }
-                                }
-
-                            if (Original_SubProjectList != null && Original_SubProjectList.Count > 0)
-                                foreach (var OriginalSubProject in Original_SubProjectList)
-                                {
-                                    if (OriginalSubProject.Sub_Check_Status == true)
-                                    {
-                                        Found = false;
-                                        if (objSubProjectList != null && objSubProjectList.Count > 0)
-                                            foreach (var subProject in objSubProjectList)
-                                            {
-                                                if (OriginalSubProject.SubID == subProject.SubID && subProject.Sub_Check_Status == true)
-                                                {
-                                                    Found = true;
-                                                    break;
-                                                }
-                                            }
-                                        if (Found == false)
-                                            Delete_SubProject.Add(OriginalSubProject.SubID.ToString());
-                                    }
-                                }
-
-                            if (objPersonalAccList != null && objPersonalAccList.Count > 0)
-                                foreach (var PersonalAcc in objPersonalAccList)
-                                {
-                                    if (PersonalAcc.PersonalAcc_Check_Status == true)
-                                    {
-                                        Found = false;
-                                        if (Original_PersonalAccList != null && Original_PersonalAccList.Count > 0)
-                                            foreach (var OriginalPersonalAcc in Original_PersonalAccList)
-                                            {
-                                                if (OriginalPersonalAcc.PersonalAcc_ID == PersonalAcc.PersonalAcc_ID && OriginalPersonalAcc.PersonalAcc_Check_Status == true)
-                                                {
-                                                    Found = true;
-                                                    break;
-                                                }
-                                            }
-                                        if (Found == false)
-                                            Add_Acc.Add(PersonalAcc.PersonalAcc_ID.ToString());
-                                    }
-                                }
-
-                            if (Original_PersonalAccList != null && Original_PersonalAccList.Count > 0)
-                                foreach (var OriginalPersonalAcc in Original_PersonalAccList)
-                                {
-                                    if (OriginalPersonalAcc.PersonalAcc_Check_Status == true)
-                                    {
-                                        Found = false;
-                                        if (objPersonalAccList != null && objPersonalAccList.Count > 0)
-                                            foreach (var PersonalAcc in objPersonalAccList)
-                                            {
-                                                if (OriginalPersonalAcc.PersonalAcc_ID == PersonalAcc.PersonalAcc_ID && PersonalAcc.PersonalAcc_Check_Status == true)
-                                                {
-                                                    Found = true;
-                                                    break;
-                                                }
-                                            }
-                                        if (Found == false)
-                                            Delete_Acc.Add(OriginalPersonalAcc.PersonalAcc_ID.ToString());
-                                    }
-                                }
-
-                            if (objExchangeAccList != null && objExchangeAccList.Count > 0)
-                                foreach (var ExchangelAcc in objExchangeAccList)
-                                {
-                                    if (ExchangelAcc.ExchangeAcc_Check_Status == true)
-                                    {
-                                        Found = false;
-                                        if (Original_ExchangeAccList != null && Original_ExchangeAccList.Count > 0)
-                                            foreach (var OriginalExchangeAcc in Original_ExchangeAccList)
-                                            {
-                                                if (OriginalExchangeAcc.ExchangeAcc_ID == ExchangelAcc.ExchangeAcc_ID && OriginalExchangeAcc.ExchangeAcc_Check_Status == true)
-                                                {
-                                                    Found = true;
-                                                    break;
-                                                }
-                                            }
-                                        if (Found == false)
-                                            Add_Acc.Add(ExchangelAcc.ExchangeAcc_ID.ToString());
-                                    }
-                                }
-
-                            if (Original_ExchangeAccList != null && Original_ExchangeAccList.Count > 0)
-                                foreach (var OriginalExchangeAcc in Original_ExchangeAccList)
-                                {
-                                    if (OriginalExchangeAcc.ExchangeAcc_Check_Status == true)
-                                    {
-                                        Found = false;
-                                        if (objExchangeAccList != null && objExchangeAccList.Count > 0)
-                                            foreach (var ExchangelAcc in objExchangeAccList)
-                                            {
-                                                if (OriginalExchangeAcc.ExchangeAcc_ID == ExchangelAcc.ExchangeAcc_ID && ExchangelAcc.ExchangeAcc_Check_Status == true)
-                                                {
-                                                    Found = true;
-                                                    break;
-                                                }
-                                            }
-                                        if (Found == false)
-                                            Delete_Acc.Add(OriginalExchangeAcc.ExchangeAcc_ID.ToString());
-                                    }
-                                }
+                            Auto_Tills.Add("syr");
+                            Auto_Tills.Add("usd");
                         }
                         else if (AccType == "Personal")
                         {
-                            SubProject_ID = -1;
-                            beginDate = ((DateTime)BeginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                            if (EndDate_CheckBox.IsChecked == true) //&& EndDate_datepicker.IsEnabled == false
-                                endDate = "NULL";
-                            else endDate = ((DateTime)EndDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                        }
-                        else
-                        {
-                            SubProject_ID = -1;
+                            Auto_Tills.Add("syr");
                         }
 
+                        Acc_ID = a.Insert(Name, ProjectNumber, beginDate, endDate, totalAmount, amountType_ID, City_ID, IsClosed, SubProject_ID, Add_donors, Auto_Tills, "Account_Window", AccType);
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+
+                        tabControl1.Visibility = Visibility.Visible; //Update//
                     }
-                    if (Acc_ID != -1)//Edit
+                    else
                     {
-                        if (AccType != "Cash")
-                        {
-                            a.Update(Acc_ID, Name, ProjectNumber, beginDate, endDate, totalAmount, amountType_ID, City_ID, IsClosed, SubProject_ID, Add_donors, Delete_donors, "Account_Window");
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        }
-                        else
-                        {
-                            a.Update_Cash_Account(Acc_ID, Name, Add_SubProject, Delete_SubProject, Add_Acc, Delete_Acc, City_ID, "Account_Window");
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        }
+                        Acc_ID = a.Insert_Cash_Account(Name, Add_SubProject, Add_Acc, City_ID, "Account_Window");
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
+                        tabControl1.Visibility = Visibility.Visible; //Update//
                     }
-                    else//Add new
-                    {
-                        if (AccType != "Cash")
-                        {
-                            List<string> Auto_Tills = new List<string>();
-
-                            if (AccType == "Project" || AccType == "Exchange")
-                            {
-                                Auto_Tills.Add("syr");
-                                Auto_Tills.Add("usd");
-                            }
-                            else if (AccType == "Personal")
-                            {
-                                Auto_Tills.Add("syr");
-                            }
-
-                            Acc_ID = a.Insert(Name, ProjectNumber, beginDate, endDate, totalAmount, amountType_ID, City_ID, IsClosed, SubProject_ID, Add_donors, Auto_Tills, "Account_Window", AccType);
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
-                            tabControl1.Visibility = Visibility.Visible; //Update//
-                        }
-                        else
-                        {
-                            Acc_ID = a.Insert_Cash_Account(Name, Add_SubProject, Add_Acc, City_ID, "Account_Window");
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
-                            tabControl1.Visibility = Visibility.Visible; //Update//
-                        }
-                    }
-
-                    Clear_Boxes();
-                    Load_Data();
-
-                    if (Acc_ID != -1)
-                    {
-                        if (dt != null && dt.Rows.Count > 0)
-                        {
-                            int i = dt.Rows.Count - 1;
-
-                            if (dt.Rows[i]["Name"] != DBNull.Value)
-                            {
-                                TabItem oTab = main_Window.main_tabControl.Items[main_Window.main_tabControl.SelectedIndex] as TabItem;
-                                oTab.Header = dt.Rows[i].Field<string>("Name");
-                            }
-                        }
-
-
-                    }
-
-                    main_Window.Fill_TreeView(true);
                 }
+
+                Clear_Boxes();
+                Load_Data();
+
+                if (Acc_ID != -1)
+                {
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        int i = dt.Rows.Count - 1;
+
+                        if (dt.Rows[i]["Name"] != DBNull.Value)
+                        {
+                            TabItem oTab = main_Window.main_tabControl.Items[main_Window.main_tabControl.SelectedIndex] as TabItem;
+                            oTab.Header = dt.Rows[i].Field<string>("Name");
+                        }
+                    }
+
+
+                }
+
+                main_Window.Fill_TreeView(true);
+
             }
             catch (Exception ex)
             {

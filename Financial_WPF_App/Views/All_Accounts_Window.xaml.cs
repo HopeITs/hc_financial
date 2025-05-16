@@ -123,7 +123,7 @@ namespace Financial_WPF_App
             myDataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
-           
+
         }
 
         private void Load_Data()
@@ -182,39 +182,36 @@ namespace Financial_WPF_App
 
         private void LoadGrid(string SubProject_IDs)
         {
+            DataTable temp_dt = a.Select(SubProject_IDs, "", "Project", false, "");
 
-            if (Login.BuildConnection())
+            if (Administrative_privileges)
+                dt = temp_dt;
+            else
             {
-                DataTable temp_dt = a.Select(SubProject_IDs, "", "Project", false, "");
+                string filterExpression = " is_administrative = 0";
 
-                if (Administrative_privileges)
-                    dt = temp_dt;
-                else
+                System.Data.DataRow[] rows = temp_dt.Select(filterExpression);
+                DataTable selected_dt = new DataTable();
+                if (rows.Length != 0)
                 {
-                    string filterExpression = " is_administrative = 0";
-
-                    System.Data.DataRow[] rows = temp_dt.Select(filterExpression);
-                    DataTable selected_dt = new DataTable();
-                    if (rows.Length != 0)
-                    {
-                        selected_dt = rows.CopyToDataTable();
-                        dt = selected_dt;
-                    }
+                    selected_dt = rows.CopyToDataTable();
+                    dt = selected_dt;
                 }
-
-
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = dt.DefaultView;
-                    if (HOffset != 0)
-                        this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
-                Bind_Show_Hide_Menu();
             }
+
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                myDataGrid.ItemsSource = dt.DefaultView;
+                if (HOffset != 0)
+                    this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+            }
+            else
+            {
+                myDataGrid.ItemsSource = null;
+            }
+            Bind_Show_Hide_Menu();
+
 
         }
 

@@ -111,7 +111,7 @@ namespace Financial_WPF_App.Views
                 foreach (var C in myDataGrid.Columns)
                     if (C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Expenses"
                         || C.HeaderText.ToString() == "Balance" || C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount"
-                        || C.HeaderText.ToString() == "Value" || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchanged") 
+                        || C.HeaderText.ToString() == "Value" || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchanged")
                     {
                         C.IsHidden = true;
                         Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -122,15 +122,13 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-            if (Login.BuildConnection())
-            {
-                dt = a.Select_Revenue_Exchange_Report(TillType_ID, TillType_Name);
+            dt = a.Select_Revenue_Exchange_Report(TillType_ID, TillType_Name);
 
-                Set_myDataGrid_ItemSource();
+            Set_myDataGrid_ItemSource();
 
-                GridLoaded = true;
-                Bind_Show_Hide_Menu();
-            }
+            GridLoaded = true;
+            Bind_Show_Hide_Menu();
+
         }
 
         private void Set_myDataGrid_ItemSource()

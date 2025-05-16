@@ -846,8 +846,7 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int ID, string Acc_Name, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+       
                 string query = "";
                 string log_query = "";
 
@@ -882,13 +881,12 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
         public void Delete_Cash_Account(int ID, string Acc_Name, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+  
                 string query = "";
                 string log_query = "";
 
@@ -922,13 +920,12 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
         public void Delete_ExchangeAccount_Rate(int ID, string Acc_Name, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+        
                 string query = "";
                 string log_query = "";
 
@@ -962,7 +959,7 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
 

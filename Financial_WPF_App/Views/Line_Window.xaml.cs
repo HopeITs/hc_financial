@@ -120,20 +120,15 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid_Category()
         {
-
-            if (Login.BuildConnection())
+            cat_dt = cat.Select("");
+            if (cat_dt != null && cat_dt.Rows.Count > 0)
             {
-                cat_dt = cat.Select("");
-                if (cat_dt != null && cat_dt.Rows.Count > 0)
-                {
-                    categoryDataGrid.ItemsSource = cat_dt.DefaultView;
-                }
-                else
-                {
-                    categoryDataGrid.ItemsSource = null;
-                }
+                categoryDataGrid.ItemsSource = cat_dt.DefaultView;
             }
-
+            else
+            {
+                categoryDataGrid.ItemsSource = null;
+            }
         }
 
         private void ProjectWindow_KeyDown(object sender, KeyEventArgs e)
@@ -181,43 +176,40 @@ namespace Financial_WPF_App.Views
                     MessageBox.Show("Please select the type (Equipping the place / Running cost)", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
+                string CName = Login.ReplaceQuotation(CategoryName_txtBox.Text);
+                int Type = -1, Kind = -1;
 
-                if (Login.BuildConnection())
+
+                if (Type_comboBox.SelectedValue.ToString() == "Equipping_the_place_Item")
                 {
-                    string CName = Login.ReplaceQuotation(CategoryName_txtBox.Text);
-                    int Type = -1, Kind = -1;
-
-
-                    if (Type_comboBox.SelectedValue.ToString() == "Equipping_the_place_Item")
-                    {
-                        Type = 0;
-                    }
-                    else if (Type_comboBox.SelectedValue.ToString() == "Running_cost_Item")
-                    {
-                        Type = 1;
-                    }
-
-
-                    if (Kind_comboBox.SelectedValue.ToString() == "Budget_Item")
-                    {
-                        Kind = 1;
-                    }
-                    else if (Kind_comboBox.SelectedValue.ToString() == "Profit_Item")
-                    {
-                        Kind = 0;
-                    }
-
-                    if (Cat_ID != -1)//Edit
-                    {
-                        cat.Update(Cat_ID, CName, Type, Kind, "Line_Window");
-                    }
-                    else//Add new
-                    {
-                        cat.Insert(CName, Type, Kind, "Line_Window");
-                    }
-                    Clear_Boxses();
-                    LoadGrid_Category();
+                    Type = 0;
                 }
+                else if (Type_comboBox.SelectedValue.ToString() == "Running_cost_Item")
+                {
+                    Type = 1;
+                }
+
+
+                if (Kind_comboBox.SelectedValue.ToString() == "Budget_Item")
+                {
+                    Kind = 1;
+                }
+                else if (Kind_comboBox.SelectedValue.ToString() == "Profit_Item")
+                {
+                    Kind = 0;
+                }
+
+                if (Cat_ID != -1)//Edit
+                {
+                    cat.Update(Cat_ID, CName, Type, Kind, "Line_Window");
+                }
+                else//Add new
+                {
+                    cat.Insert(CName, Type, Kind, "Line_Window");
+                }
+                Clear_Boxses();
+                LoadGrid_Category();
+
             }
             catch (Exception ex)
             {

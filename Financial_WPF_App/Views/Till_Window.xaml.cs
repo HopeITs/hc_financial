@@ -485,241 +485,237 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-            if (Login.BuildConnection())
+            DataTable temp_dt = a.Select("", Till_ID.ToString(), SubProject_ID.ToString(), true);
+
+            DataTable Not_Approved_temp_dt = a.Select_action_not_approved("", Till_ID.ToString(), SubProject_ID.ToString(), true, false);
+
+            int User_ID = Settings.Default.User_ID;
+            List<int> CashAccount_ID = new List<int>();
+
+
+            if (Settings.Default.User_CashAccounts != null && !string.IsNullOrEmpty(Settings.Default.User_CashAccounts) && !string.IsNullOrWhiteSpace(Settings.Default.User_CashAccounts))
+                CashAccount_ID = Settings.Default.User_CashAccounts.ToString().Split(',').Select(int.Parse).ToList();
+
+
+            if (temp_dt != null && temp_dt.Rows.Count > 0)
             {
-                DataTable temp_dt = a.Select("", Till_ID.ToString(), SubProject_ID.ToString(), true);
-
-                DataTable Not_Approved_temp_dt = a.Select_action_not_approved("", Till_ID.ToString(), SubProject_ID.ToString(), true, false);
-
-                int User_ID = Settings.Default.User_ID;
-                List<int> CashAccount_ID = new List<int>();
-
-
-                if (Settings.Default.User_CashAccounts != null && !string.IsNullOrEmpty(Settings.Default.User_CashAccounts) && !string.IsNullOrWhiteSpace(Settings.Default.User_CashAccounts))
-                    CashAccount_ID = Settings.Default.User_CashAccounts.ToString().Split(',').Select(int.Parse).ToList();
-
-
-                if (temp_dt != null && temp_dt.Rows.Count > 0)
+                if (!AsFiscalBond)
                 {
-                    if (!AsFiscalBond)
+                    dt = temp_dt;
+                }
+                else
+                {
+                    if (Settings.Default.Role == "Employee")
+                    {
+                        string filterExpression = " created_byuser_ID = '" + User_ID + "'";
+
+                        if (CashAccount_ID.Count > 0)
+                        {
+                            filterExpression += " OR ";
+                            filterExpression += string.Join(" OR ", CashAccount_ID.Select(id => "CashAccount_ID = " + id));
+                        }
+
+                        System.Data.DataRow[] rows = temp_dt.Select(filterExpression);
+                        DataTable selected_dt = new DataTable();
+                        if (rows.Length != 0)
+                        {
+                            selected_dt = rows.CopyToDataTable();
+                            dt = selected_dt;
+
+                        }
+                    }
+                    else
                     {
                         dt = temp_dt;
                     }
-                    else
-                    {
-                        if (Settings.Default.Role == "Employee")
-                        {
-                            string filterExpression = " created_byuser_ID = '" + User_ID + "'";
-
-                            if (CashAccount_ID.Count > 0)
-                            {
-                                filterExpression += " OR ";
-                                filterExpression += string.Join(" OR ", CashAccount_ID.Select(id => "CashAccount_ID = " + id));
-                            }
-
-                            System.Data.DataRow[] rows = temp_dt.Select(filterExpression);
-                            DataTable selected_dt = new DataTable();
-                            if (rows.Length != 0)
-                            {
-                                selected_dt = rows.CopyToDataTable();
-                                dt = selected_dt;
-
-                            }
-                        }
-                        else
-                        {
-                            dt = temp_dt;
-                        }
-                    }
+                }
+            }
+            else
+            {
+                dt = null;
+            }
+            if (Not_Approved_temp_dt != null && Not_Approved_temp_dt.Rows.Count > 0)
+            {
+                if (!AsFiscalBond)
+                {
+                    not_approved_dt = Not_Approved_temp_dt;
                 }
                 else
                 {
-                    dt = null;
-                }
-                if (Not_Approved_temp_dt != null && Not_Approved_temp_dt.Rows.Count > 0)
-                {
-                    if (!AsFiscalBond)
+                    if (Settings.Default.Role == "Employee")
+                    {
+                        string filterExpression = " created_byuser_ID = '" + User_ID + "'";
+
+                        if (CashAccount_ID.Count > 0)
+                        {
+                            filterExpression += " OR ";
+                            filterExpression += string.Join(" OR ", CashAccount_ID.Select(id => "CashAccount_ID = " + id));
+
+                        }
+
+                        System.Data.DataRow[] rows = Not_Approved_temp_dt.Select(filterExpression);
+                        DataTable selected_dt = new DataTable();
+                        if (rows.Length != 0)
+                        {
+                            selected_dt = rows.CopyToDataTable();
+                            not_approved_dt = selected_dt;
+
+                        }
+                    }
+                    else
                     {
                         not_approved_dt = Not_Approved_temp_dt;
                     }
-                    else
+                }
+            }
+            else
+            {
+                not_approved_dt = null;
+            }
+
+            if (dt != null)
+            {
+                System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
+                dt.Columns.Add(newColumn);
+                dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+            }
+
+
+            if (not_approved_dt != null)
+            {
+                System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
+                not_approved_dt.Columns.Add(newColumn);
+                not_approved_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+            }
+
+            Set_myDataGrid_ItemSource();
+
+            sum_dt = new DataTable();
+            cash_dt = new DataTable();
+            DataSet ds = a.Select_Sums(Till_ID.ToString(), Account_ID, "");
+            if (ds.Tables.Count > 0)
+            {
+                sum_dt = ds.Tables[0];
+
+                if (ds.Tables.Count > 1)
+                {
+                    DataTable temp_cash = ds.Tables[1];
+                    if (temp_cash != null && temp_cash.Rows.Count > 0)
                     {
-                        if (Settings.Default.Role == "Employee")
+                        if (!AsFiscalBond)
                         {
-                            string filterExpression = " created_byuser_ID = '" + User_ID + "'";
-
-                            if (CashAccount_ID.Count > 0)
-                            {
-                                filterExpression += " OR ";
-                                filterExpression += string.Join(" OR ", CashAccount_ID.Select(id => "CashAccount_ID = " + id));
-
-                            }
-
-                            System.Data.DataRow[] rows = Not_Approved_temp_dt.Select(filterExpression);
-                            DataTable selected_dt = new DataTable();
-                            if (rows.Length != 0)
-                            {
-                                selected_dt = rows.CopyToDataTable();
-                                not_approved_dt = selected_dt;
-
-                            }
+                            cash_dt = temp_cash;
                         }
                         else
                         {
-                            not_approved_dt = Not_Approved_temp_dt;
-                        }
-                    }
-                }
-                else
-                {
-                    not_approved_dt = null;
-                }
-
-                if (dt != null)
-                {
-                    System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
-                    dt.Columns.Add(newColumn);
-                    dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
-                }
-
-
-                if (not_approved_dt != null)
-                {
-                    System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
-                    not_approved_dt.Columns.Add(newColumn);
-                    not_approved_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
-                }
-
-                Set_myDataGrid_ItemSource();
-
-                sum_dt = new DataTable();
-                cash_dt = new DataTable();
-                DataSet ds = a.Select_Sums(Till_ID.ToString(), Account_ID, "");
-                if (ds.Tables.Count > 0)
-                {
-                    sum_dt = ds.Tables[0];
-
-                    if (ds.Tables.Count > 1)
-                    {
-                        DataTable temp_cash = ds.Tables[1];
-                        if (temp_cash != null && temp_cash.Rows.Count > 0)
-                        {
-                            if (!AsFiscalBond)
+                            if (Settings.Default.Role == "Employee")
                             {
-                                cash_dt = temp_cash;
-                            }
-                            else
-                            {
-                                if (Settings.Default.Role == "Employee")
+                                string cash_filterExpression = "";
+
+                                if (CashAccount_ID.Count > 0)
                                 {
-                                    string cash_filterExpression = "";
+                                    cash_filterExpression += string.Join(" OR ", CashAccount_ID.Select(id => "CashAccount_id = " + id));
 
-                                    if (CashAccount_ID.Count > 0)
+                                    System.Data.DataRow[] rows = temp_cash.Select(cash_filterExpression);
+                                    DataTable selected_dt = new DataTable();
+                                    if (rows.Length != 0)
                                     {
-                                        cash_filterExpression += string.Join(" OR ", CashAccount_ID.Select(id => "CashAccount_id = " + id));
-
-                                        System.Data.DataRow[] rows = temp_cash.Select(cash_filterExpression);
-                                        DataTable selected_dt = new DataTable();
-                                        if (rows.Length != 0)
-                                        {
-                                            selected_dt = rows.CopyToDataTable();
-                                            cash_dt = selected_dt;
-                                        }
+                                        selected_dt = rows.CopyToDataTable();
+                                        cash_dt = selected_dt;
                                     }
-                                    else
-                                    {
-                                        cash_dt = null;
-                                    }
-
                                 }
                                 else
                                 {
-                                    cash_dt = temp_cash;
+                                    cash_dt = null;
                                 }
+
+                            }
+                            else
+                            {
+                                cash_dt = temp_cash;
                             }
                         }
-
                     }
+
                 }
-                if (!AsFiscalBond)
+            }
+            if (!AsFiscalBond)
+            {
+                if (sum_dt != null && sum_dt.Rows.Count > 0)
                 {
-                    if (sum_dt != null && sum_dt.Rows.Count > 0)
-                    {
-                        Income_textBlock.Text = sum_dt.Rows[0].Field<double>(0).ToString("N2");
-                        Outcome_textBlock.Text = sum_dt.Rows[0].Field<double>(1).ToString("N2");
-                        Returned_textBlock.Text = sum_dt.Rows[0].Field<double>(2).ToString("N2");
-                        Exchange_textBlock.Text = sum_dt.Rows[0].Field<double>(3).ToString("N2");
-                        Exchpand_textBlock.Text = sum_dt.Rows[0].Field<double>(4).ToString("N2");
+                    Income_textBlock.Text = sum_dt.Rows[0].Field<double>(0).ToString("N2");
+                    Outcome_textBlock.Text = sum_dt.Rows[0].Field<double>(1).ToString("N2");
+                    Returned_textBlock.Text = sum_dt.Rows[0].Field<double>(2).ToString("N2");
+                    Exchange_textBlock.Text = sum_dt.Rows[0].Field<double>(3).ToString("N2");
+                    Exchpand_textBlock.Text = sum_dt.Rows[0].Field<double>(4).ToString("N2");
 
-                        CashNet_textBlock.Text = sum_dt.Rows[0].Field<double>(5).ToString("N2");
-                        Net_textBlock.Text = sum_dt.Rows[0].Field<double>(6).ToString("N2");
-                    }
-                    else
-                    {
-                        Income_textBlock.Text = Outcome_textBlock.Text = Returned_textBlock.Text = Exchange_textBlock.Text =
-                            Exchpand_textBlock.Text = CashNet_textBlock.Text = Net_textBlock.Text = "00,00";
-
-                    }
+                    CashNet_textBlock.Text = sum_dt.Rows[0].Field<double>(5).ToString("N2");
+                    Net_textBlock.Text = sum_dt.Rows[0].Field<double>(6).ToString("N2");
                 }
                 else
                 {
-                    if (dt != null && dt.Rows.Count > 0)
-                    {
-                        double incomes = 0;
-                        double outcomes = 0;
-                        double returned = 0;
-                        double exchange = 0;
-                        double expaned = 0;
-                        for (var i = 0; i < dt.Rows.Count; i++)
-                        {
-                            System.Data.DataRow R = dt.Rows[i];
-                            if (double.Parse(R["Income"].ToString()) != 0)
-                            {
-                                incomes += double.Parse(R["Income"].ToString());
-                            }
-                            else if (double.Parse(R["Outcome"].ToString()) != 0)
-                            {
-                                outcomes += double.Parse(R["Outcome"].ToString());
-                            }
-                            else if (double.Parse(R["Returned"].ToString()) != 0)
-                            {
-                                returned += double.Parse(R["Returned"].ToString());
-                            }
-                            else if (double.Parse(R["Exchange"].ToString()) != 0)
-                            {
-                                exchange += double.Parse(R["Exchange"].ToString());
-                            }
-                            else if (double.Parse(R["Expand"].ToString()) != 0)
-                            {
-                                expaned += double.Parse(R["Expand"].ToString());
-                            }
-                        }
-                        Income_textBlock.Text = incomes.ToString("N2");
-                        Outcome_textBlock.Text = outcomes.ToString("N2");
-                        Returned_textBlock.Text = returned.ToString("N2");
-                        Exchange_textBlock.Text = exchange.ToString("N2");
-                        Exchpand_textBlock.Text = expaned.ToString("N2");
-                    }
-                }
+                    Income_textBlock.Text = Outcome_textBlock.Text = Returned_textBlock.Text = Exchange_textBlock.Text =
+                        Exchpand_textBlock.Text = CashNet_textBlock.Text = Net_textBlock.Text = "00,00";
 
-                if (Account_Type == "Project" || Account_Type == "Exchange" || Account_Type == "Personal")
+                }
+            }
+            else
+            {
+                if (dt != null && dt.Rows.Count > 0)
                 {
-                    if (TillType_Name.ToLower() == "syr")
+                    double incomes = 0;
+                    double outcomes = 0;
+                    double returned = 0;
+                    double exchange = 0;
+                    double expaned = 0;
+                    for (var i = 0; i < dt.Rows.Count; i++)
                     {
-                        if (cash_dt != null && cash_dt.Rows.Count > 0)
+                        System.Data.DataRow R = dt.Rows[i];
+                        if (double.Parse(R["Income"].ToString()) != 0)
                         {
-                            Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
+                            incomes += double.Parse(R["Income"].ToString());
                         }
-                        else
+                        else if (double.Parse(R["Outcome"].ToString()) != 0)
                         {
-                            Cash_DataGrid.ItemsSource = null;
+                            outcomes += double.Parse(R["Outcome"].ToString());
+                        }
+                        else if (double.Parse(R["Returned"].ToString()) != 0)
+                        {
+                            returned += double.Parse(R["Returned"].ToString());
+                        }
+                        else if (double.Parse(R["Exchange"].ToString()) != 0)
+                        {
+                            exchange += double.Parse(R["Exchange"].ToString());
+                        }
+                        else if (double.Parse(R["Expand"].ToString()) != 0)
+                        {
+                            expaned += double.Parse(R["Expand"].ToString());
                         }
                     }
+                    Income_textBlock.Text = incomes.ToString("N2");
+                    Outcome_textBlock.Text = outcomes.ToString("N2");
+                    Returned_textBlock.Text = returned.ToString("N2");
+                    Exchange_textBlock.Text = exchange.ToString("N2");
+                    Exchpand_textBlock.Text = expaned.ToString("N2");
                 }
-                GridLoaded = true;
-                Bind_Show_Hide_Menu();
             }
 
+            if (Account_Type == "Project" || Account_Type == "Exchange" || Account_Type == "Personal")
+            {
+                if (TillType_Name.ToLower() == "syr")
+                {
+                    if (cash_dt != null && cash_dt.Rows.Count > 0)
+                    {
+                        Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
+                    }
+                    else
+                    {
+                        Cash_DataGrid.ItemsSource = null;
+                    }
+                }
+            }
+            GridLoaded = true;
+            Bind_Show_Hide_Menu();
         }
 
         private void Set_myDataGrid_ItemSource()
@@ -1755,7 +1751,7 @@ namespace Financial_WPF_App.Views
 
         }
 
- 
+
 
     }
 }

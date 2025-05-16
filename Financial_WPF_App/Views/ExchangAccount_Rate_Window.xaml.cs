@@ -463,20 +463,18 @@ namespace Financial_WPF_App.Views
 
                 }
 
-                if (Login.BuildConnection())
-                {
-                    string Date = ((DateTime)Date_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    double Value = Convert.ToDouble(Value_txtBox.Text);
+                string Date = ((DateTime)Date_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                double Value = Convert.ToDouble(Value_txtBox.Text);
 
 
-                    int from = Convert.ToInt32(From_comboBox.SelectedValue);
-                    int to = Convert.ToInt32(To_comboBox.SelectedValue);
+                int from = Convert.ToInt32(From_comboBox.SelectedValue);
+                int to = Convert.ToInt32(To_comboBox.SelectedValue);
 
-                    acc.Insert_ExchangeAccount_Rate(Account_ID, Account_Name, Date, Value, from, to, "ExchangAccount_Rate_Window");
+                acc.Insert_ExchangeAccount_Rate(Account_ID, Account_Name, Date, Value, from, to, "ExchangAccount_Rate_Window");
 
-                    ClearBoxes();
-                    LoadGrid();
-                }
+                ClearBoxes();
+                LoadGrid();
+
             }
             catch (Exception ex)
             {

@@ -262,23 +262,22 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-            if (Login.BuildConnection())
-            {
-                Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true);
-                Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true);
 
-                System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
-                System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
+            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true);
+            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true);
+
+            System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
+            System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
 
 
-                Actions_dt.Columns.Add(newColumn);
-                Deleted_Actions_dt.Columns.Add(newColumn1);
+            Actions_dt.Columns.Add(newColumn);
+            Deleted_Actions_dt.Columns.Add(newColumn1);
 
-                Actions_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
-                Deleted_Actions_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+            Actions_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+            Deleted_Actions_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
 
-                Set_myDataGrid_ItemSource();
-            }
+            Set_myDataGrid_ItemSource();
+
 
             GridLoaded = true;
             Bind_Show_Hide_Menu();
@@ -429,7 +428,7 @@ namespace Financial_WPF_App.Views
             }
         }
 
- 
+
 
         private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -866,7 +865,7 @@ namespace Financial_WPF_App.Views
                     {
                         if (C.HeaderText.ToString() == "Deleted By" || C.HeaderText.ToString() == "Date Deleted")
                             C.IsHidden = false;
-                        else if(C.HeaderText.ToString() == "Attachment")
+                        else if (C.HeaderText.ToString() == "Attachment")
                             C.IsHidden = true;
                     }
 

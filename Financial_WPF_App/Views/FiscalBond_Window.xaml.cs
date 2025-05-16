@@ -186,22 +186,18 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-
-            if (Login.BuildConnection())
+            dt = fb.Select("", "", "", Subproject_ID, true);
+            if (dt != null && dt.Rows.Count > 0)
             {
-                dt = fb.Select("", "", "", Subproject_ID, true);
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = dt.DefaultView;
-                    if (HOffset != 0)
-                        this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
-                Bind_Show_Hide_Menu();
+                myDataGrid.ItemsSource = dt.DefaultView;
+                if (HOffset != 0)
+                    this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
             }
+            else
+            {
+                myDataGrid.ItemsSource = null;
+            }
+            Bind_Show_Hide_Menu();
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -589,7 +585,7 @@ namespace Financial_WPF_App.Views
                         else if (Category == "Budget")
                         {
                             main_Window.Create_tabItem(till_Window, fiscalbond_Name, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
-                        } 
+                        }
                     }
                 }
             }

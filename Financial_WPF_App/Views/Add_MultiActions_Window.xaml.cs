@@ -582,7 +582,7 @@ namespace Financial_WPF_App.Views
                 if (TillType.ToLower() == "syr")
                 {
                     valuesToRemove.Add("Type_ComboBox_Income_Item");
- 
+
                     if (!Outcome_privileges)
                         valuesToRemove.Add("Type_ComboBox_Outcome_Item");
 
@@ -986,7 +986,7 @@ namespace Financial_WPF_App.Views
                         {
                             if (TillType.ToLower() == "syr")
                             {
-                               if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
+                                if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
                                     //Not allowed.
                                 }
@@ -1025,7 +1025,7 @@ namespace Financial_WPF_App.Views
                             }
                             else
                             {
-                               if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
+                                if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
                                     dt.Columns.Add("Donor");
                                 }
@@ -1063,7 +1063,7 @@ namespace Financial_WPF_App.Views
                         {
                             if (TillType.ToLower() == "syr")
                             {
-                               if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
+                                if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
                                     //Not allowed.
                                 }
@@ -1110,7 +1110,7 @@ namespace Financial_WPF_App.Views
                             }
                             else
                             {
-                               if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
+                                if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
                                     dt.Columns.Add("Donor");
                                 }
@@ -1149,7 +1149,7 @@ namespace Financial_WPF_App.Views
                     {
                         if (TillType.ToLower() == "syr")
                         {
-                           if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
+                            if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
                                 //Not allowed.
                             }
@@ -1178,7 +1178,7 @@ namespace Financial_WPF_App.Views
                         }
                         else
                         {
-                           if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
+                            if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
                                 //Not allowed.
                             }
@@ -1210,7 +1210,7 @@ namespace Financial_WPF_App.Views
                     {
                         if (TillType.ToLower() == "syr")
                         {
-                           if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
+                            if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
                                 dt.Columns.Add("Cash till");
                             }
@@ -1240,7 +1240,7 @@ namespace Financial_WPF_App.Views
                         }
                         else
                         {
-                           if(Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
+                            if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
 
                             }
@@ -1347,20 +1347,18 @@ namespace Financial_WPF_App.Views
                                 return;
                             }
 
-                            if (Login.BuildConnection())
-                            {
 
-                                a.Insert_Multi_Actions();
+                            a.Insert_Multi_Actions();
 
-                                MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
-                                Create_Columns();
+                            Create_Columns();
 
-                                InitializeCopyPaste();
+                            InitializeCopyPaste();
 
-                                if (TW != null)
-                                    TW.Load_Data();
-                            }
+                            if (TW != null)
+                                TW.Load_Data();
+
                         }
                     }
                 }
@@ -1379,27 +1377,25 @@ namespace Financial_WPF_App.Views
                             return;
                         }
 
-                        if (Login.BuildConnection())
+                        if (Login.MultiAttachment_Dictionary.Count > 0)
                         {
-                            if (Login.MultiAttachment_Dictionary.Count > 0)
-                            {
 
-                                await Save_Attachments();
+                            await Save_Attachments();
 
 
-                                if (failurText != "")
-                                    MessageBox.Show(failurText, "", MessageBoxButton.OK, MessageBoxImage.Stop);
+                            if (failurText != "")
+                                MessageBox.Show(failurText, "", MessageBoxButton.OK, MessageBoxImage.Stop);
 
-                                MessageBox.Show("Attachments:" + Environment.NewLine + "Succeeded - " + success.ToString() + Environment.NewLine + "Failed - " + (totalFiles - success).ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            }
-
-                            Create_Columns();
-
-                            InitializeCopyPaste();
-
-                            if (TW != null)
-                                TW.Load_Data();
+                            MessageBox.Show("Attachments:" + Environment.NewLine + "Succeeded - " + success.ToString() + Environment.NewLine + "Failed - " + (totalFiles - success).ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         }
+
+                        Create_Columns();
+
+                        InitializeCopyPaste();
+
+                        if (TW != null)
+                            TW.Load_Data();
+
                     }
                 }
             }

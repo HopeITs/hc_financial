@@ -57,7 +57,7 @@ namespace Financial_WPF_App.Views
         Main_Window_2 main_Window;
         private Beneficiary b; private Account Acc; private Payment p;
 
-        int MicroProject_ID = -1, Action_ID =-1, Till_ID = -1;
+        int MicroProject_ID = -1, Action_ID = -1, Till_ID = -1;
         bool Approved_Action;
 
         private DataTable b_dt, p_dt, a_dt;
@@ -132,61 +132,57 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Beneficiaries()
         {
-            if (Login.BuildConnection())
+
+            DataTable temp_dt = b.Select("", "", SubProject_ID.ToString());
+            if (Settings.Default.Role == "Accountant")
             {
-                DataTable temp_dt = b.Select("", "", SubProject_ID.ToString());
-                if (Settings.Default.Role == "Accountant")
+                List<int> UserAccounts_ID = new List<int>();
+                if (Settings.Default.User_Accounts != null && !string.IsNullOrEmpty(Settings.Default.User_Accounts.ToString()) && !string.IsNullOrWhiteSpace(Settings.Default.User_Accounts.ToString()))
                 {
-                    List<int> UserAccounts_ID = new List<int>();
-                    if (Settings.Default.User_Accounts != null && !string.IsNullOrEmpty(Settings.Default.User_Accounts.ToString()) && !string.IsNullOrWhiteSpace(Settings.Default.User_Accounts.ToString()))
+                    UserAccounts_ID = Settings.Default.User_Accounts.ToString().Split(',').Select(int.Parse).ToList();
+
+                    string filterExpression = string.Join(" OR ", UserAccounts_ID.Select(id => "Account_ID = " + id));
+                    System.Data.DataRow[] rows = temp_dt.Select(filterExpression);
+                    DataTable selected_dt = new DataTable();
+                    if (rows.Length != 0)
                     {
-                        UserAccounts_ID = Settings.Default.User_Accounts.ToString().Split(',').Select(int.Parse).ToList();
+                        selected_dt = rows.CopyToDataTable();
+                        b_dt = selected_dt;
 
-                        string filterExpression = string.Join(" OR ", UserAccounts_ID.Select(id => "Account_ID = " + id));
-                        System.Data.DataRow[] rows = temp_dt.Select(filterExpression);
-                        DataTable selected_dt = new DataTable();
-                        if (rows.Length != 0)
-                        {
-                            selected_dt = rows.CopyToDataTable();
-                            b_dt = selected_dt;
-
-                        }
                     }
-                    else
-                    {
-                        b_dt = null;
-                    }
-
                 }
                 else
                 {
-                    b_dt = temp_dt;
+                    b_dt = null;
                 }
-                List<string> IDItems = new List<string>();
-                List<string> Nametems = new List<string>();
-                if (b_dt != null && b_dt.Rows.Count > 0)
-                {
-                    for (int i = 0; i < b_dt.Rows.Count; i++)
-                    {
-                        IDItems.Add(b_dt.Rows[i].Field<Int32>("MicroProject_ID").ToString());
-                        Nametems.Add(b_dt.Rows[i].Field<string>("Name").ToString());
-                    }
-                    MircoProject_ID_autoSuggestionUserControl.AutoSuggestionList = IDItems;
-                    BeneficiaryName_autoSuggestionUserControl.AutoSuggestionList = Nametems;
-                }
+
             }
+            else
+            {
+                b_dt = temp_dt;
+            }
+            List<string> IDItems = new List<string>();
+            List<string> Nametems = new List<string>();
+            if (b_dt != null && b_dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < b_dt.Rows.Count; i++)
+                {
+                    IDItems.Add(b_dt.Rows[i].Field<Int32>("MicroProject_ID").ToString());
+                    Nametems.Add(b_dt.Rows[i].Field<string>("Name").ToString());
+                }
+                MircoProject_ID_autoSuggestionUserControl.AutoSuggestionList = IDItems;
+                BeneficiaryName_autoSuggestionUserControl.AutoSuggestionList = Nametems;
+            }
+
         }
 
         private void Fill_ComboBoxses()
         {
-            if (Login.BuildConnection())
-            {
-                DataTable cashAccounts_dt = Acc.Select_Cash_Account("", SubProject_ID.ToString());
+            DataTable cashAccounts_dt = Acc.Select_Cash_Account("", SubProject_ID.ToString());
 
-                if (cashAccounts_dt != null && cashAccounts_dt.Rows.Count > 0)
-                {
-                    CashAccount_comboBox.ItemsSource = cashAccounts_dt.DefaultView;
-                }
+            if (cashAccounts_dt != null && cashAccounts_dt.Rows.Count > 0)
+            {
+                CashAccount_comboBox.ItemsSource = cashAccounts_dt.DefaultView;
             }
         }
 
@@ -194,11 +190,11 @@ namespace Financial_WPF_App.Views
         {
             if (Approved_Action)
             {
-                a_dt = p.Select_All_Payments(SubProject_ID.ToString(), Action_ID,"","",-1);
+                a_dt = p.Select_All_Payments(SubProject_ID.ToString(), Action_ID, "", "", -1);
             }
             else
             {
-                a_dt = p.Select_All_Not_Approved_Payments(SubProject_ID.ToString(), false, Action_ID,"","",-1);
+                a_dt = p.Select_All_Not_Approved_Payments(SubProject_ID.ToString(), false, Action_ID, "", "", -1);
             }
 
             if (a_dt.Rows[0]["MicroProject_ID"] != DBNull.Value)
@@ -379,60 +375,54 @@ namespace Financial_WPF_App.Views
                     MessageBox.Show("Please select the cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
+                string amount_str, Date;
+                double amount = 0;
+                int CashAccount_ID;
 
-                if (Login.BuildConnection())
+                amount_str = Amount_txtBox.Text.Replace(",", "");
+                Double.TryParse(amount_str, out amount);
+
+                Date = ((DateTime)(Date_datepicker.SelectedDate)).ToString("yyyy/MM/dd");
+                CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);
+
+                if (Action_ID != -1)//Edit
                 {
-                    string amount_str, Date;
-                    double amount = 0;
-                    int CashAccount_ID;
-
-                    amount_str = Amount_txtBox.Text.Replace(",", "");
-                    Double.TryParse(amount_str, out amount);
-
-                    Date = ((DateTime)(Date_datepicker.SelectedDate)).ToString("yyyy/MM/dd");
-                    CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);
-
-                    if (Action_ID != -1)//Edit
+                    if (Approved_Action)
                     {
-                        if (Approved_Action)
-                        {
-                            p.Update_Payment(Action_ID, Till_ID, amount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
-                            MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            this.Close();
-                        }
-                        else
-                        {
-                            p.Update_Not_Approved_Payment(Action_ID, Till_ID, amount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
-                            MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            this.Close();
-                        }
+                        p.Update_Payment(Action_ID, Till_ID, amount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
+                        MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        this.Close();
                     }
-                    else//Add new
+                    else
                     {
-                        if (p_dt.Rows.Count != 0)
-                        {
-                            DataTable selected_rows_dt = new DataTable();
-
-                            System.Data.DataRow[] My_rows = p_dt.Select("payment_state is null OR payment_state <> 'Done'");
-                            selected_rows_dt = p_dt.Copy();
-                            selected_rows_dt.Rows.Clear();
-                            foreach (System.Data.DataRow row in My_rows)
-                                selected_rows_dt.ImportRow(row);
-
-                            p.Insert_Payment(amount, Date, Notes_txtBox.Text, MicroProject_ID, SubProject_ID, Beneficiary_ID, selected_rows_dt, CashAccount_ID, "Payment_Window");
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
-                            Clear_Details(false);
-                            Load_Data();
-                            Fill_Details();
-                        }
-                        else
-                        {
-                            MessageBox.Show("No payments have been generated for this beneficiary.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        }
-
+                        p.Update_Not_Approved_Payment(Action_ID, Till_ID, amount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
+                        MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        this.Close();
                     }
+                }
+                else//Add new
+                {
+                    if (p_dt.Rows.Count != 0)
+                    {
+                        DataTable selected_rows_dt = new DataTable();
 
+                        System.Data.DataRow[] My_rows = p_dt.Select("payment_state is null OR payment_state <> 'Done'");
+                        selected_rows_dt = p_dt.Copy();
+                        selected_rows_dt.Rows.Clear();
+                        foreach (System.Data.DataRow row in My_rows)
+                            selected_rows_dt.ImportRow(row);
+
+                        p.Insert_Payment(amount, Date, Notes_txtBox.Text, MicroProject_ID, SubProject_ID, Beneficiary_ID, selected_rows_dt, CashAccount_ID, "Payment_Window");
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+
+                        Clear_Details(false);
+                        Load_Data();
+                        Fill_Details();
+                    }
+                    else
+                    {
+                        MessageBox.Show("No payments have been generated for this beneficiary.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    }
 
                 }
             }
@@ -499,22 +489,19 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Payments()
         {
-            if (Login.BuildConnection())
+            p_dt = p.Select_Beneficiary_Payments(Beneficiary_ID.ToString(), "");
+            if (p_dt != null && p_dt.Rows.Count > 0)
             {
-                p_dt = p.Select_Beneficiary_Payments(Beneficiary_ID.ToString(), "");
-                if (p_dt != null && p_dt.Rows.Count > 0)
-                {
-                    payDataGrid.ItemsSource = p_dt.DefaultView;
+                payDataGrid.ItemsSource = p_dt.DefaultView;
 
-                    payDataGrid.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
+                payDataGrid.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
 
 
-                    Fill_Calculations();
-                }
-                else
-                {
-                    payDataGrid.ItemsSource = null;
-                }
+                Fill_Calculations();
+            }
+            else
+            {
+                payDataGrid.ItemsSource = null;
             }
         }
 

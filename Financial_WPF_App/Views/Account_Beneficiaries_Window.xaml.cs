@@ -176,8 +176,7 @@ namespace Financial_WPF_App.Views
         {
             Set_privileges();
             Show_Hide();
-            if (Login.BuildConnection())
-            {
+        
                 sum_imports_lbl.Content = sum_BAmounts_lbl.Content = sum_BAmounts_lbl.Content = sum_RAmounts_lbl.Content =
                          sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = sum_RemainedAfterPay_lbl.Content =
                             avg_amounts_lbl.Content = avg_amounts_usd_lbl.Content = num_Done_lbl.Content = num_Ongoing_lbl.Content = num_Allprojects_lbl.Content = "0.0";
@@ -205,7 +204,7 @@ namespace Financial_WPF_App.Views
                     //Expander_col.Width = new GridLength(30, GridUnitType.Star);
                 }
 
-            }
+            
         }
 
         private void Attachment_Button_Click(object sender, RoutedEventArgs e)

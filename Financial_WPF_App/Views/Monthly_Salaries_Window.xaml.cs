@@ -81,7 +81,7 @@ namespace Financial_WPF_App.Views
         private void Apply_Color_Theme()
         {
 
-  
+
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
@@ -158,7 +158,7 @@ namespace Financial_WPF_App.Views
         {
             if (!Add_privileges)
             {
-                AddMultiSalaries_btn.Visibility =  Visibility.Collapsed;
+                AddMultiSalaries_btn.Visibility = Visibility.Collapsed;
             }
             if (!Delete_privileges)
             {
@@ -174,54 +174,49 @@ namespace Financial_WPF_App.Views
 
         public void LoadGrid()
         {
+            DataTable temp_dt = Emp.Select_Employee_Salary(-1);
 
-            if (Login.BuildConnection())
+
+            if (Settings.Default.Role == "Accountant" || Settings.Default.Role == "Financial Manager" || Settings.Default.Role == "Project Manager")
             {
-                DataTable temp_dt = Emp.Select_Employee_Salary(-1);
-
-
-                if (Settings.Default.Role == "Accountant" || Settings.Default.Role == "Financial Manager" || Settings.Default.Role == "Project Manager")
+                List<int> User_Subprojects_ID = new List<int>();
+                if (Settings.Default.User_Subprojects != null && !string.IsNullOrEmpty(Settings.Default.User_Subprojects.ToString()) && !string.IsNullOrWhiteSpace(Settings.Default.User_Subprojects.ToString()))
                 {
-                    List<int> User_Subprojects_ID = new List<int>();
-                    if (Settings.Default.User_Subprojects != null && !string.IsNullOrEmpty(Settings.Default.User_Subprojects.ToString()) && !string.IsNullOrWhiteSpace(Settings.Default.User_Subprojects.ToString()))
+                    User_Subprojects_ID = Settings.Default.User_Subprojects.ToString().Split(',').Select(int.Parse).ToList();
+
+                    string filterExpression = string.Join(" OR ", User_Subprojects_ID.Select(id => "Subproject_ID = " + id));
+                    System.Data.DataRow[] rows = temp_dt.Select(filterExpression);
+                    DataTable selected_dt = new DataTable();
+                    if (rows.Length != 0)
                     {
-                        User_Subprojects_ID = Settings.Default.User_Subprojects.ToString().Split(',').Select(int.Parse).ToList();
+                        selected_dt = rows.CopyToDataTable();
+                        dt = selected_dt;
 
-                        string filterExpression = string.Join(" OR ", User_Subprojects_ID.Select(id => "Subproject_ID = " + id));
-                        System.Data.DataRow[] rows = temp_dt.Select(filterExpression);
-                        DataTable selected_dt = new DataTable();
-                        if (rows.Length != 0)
-                        {
-                            selected_dt = rows.CopyToDataTable();
-                            dt = selected_dt;
-
-                        }
                     }
-                    else
-                    {
-                        dt = null;
-                    }
-
                 }
                 else
                 {
-                    dt = temp_dt;
+                    dt = null;
                 }
 
-                if (dt != null)
-                {
-                    System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
-                    dt.Columns.Add(newColumn);
-                    dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
-                }
+            }
+            else
+            {
+                dt = temp_dt;
+            }
 
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = dt.DefaultView;
-                    if (HOffset != 0)
-                        this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
-                }
+            if (dt != null)
+            {
+                System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
+                dt.Columns.Add(newColumn);
+                dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+            }
 
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                myDataGrid.ItemsSource = dt.DefaultView;
+                if (HOffset != 0)
+                    this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
             }
         }
 
@@ -241,7 +236,7 @@ namespace Financial_WPF_App.Views
                 int count = myDataGrid.View.Records.Count();
                 All_textBlock.Text = count.ToString("N0");
 
-               // All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
+                // All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
 
             }
         }
@@ -503,7 +498,7 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        
+
 
         private void Bind_Show_Hide_Menu()
         {

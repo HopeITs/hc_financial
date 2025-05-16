@@ -148,18 +148,15 @@ namespace Financial_WPF_App.Views
 
         private void Load_Budget_AvgRate_Datagridview()
         {
-            if (Login.BuildConnection())
+            AvgRate_comboBox.SelectedIndex = -1;
+            Budgetrate_dt = b.Select_Budgt_AvgetRate(Budget_ID.ToString());
+            if (Budgetrate_dt != null && Budgetrate_dt.Rows.Count > 0)
             {
-                AvgRate_comboBox.SelectedIndex = -1;
-                Budgetrate_dt = b.Select_Budgt_AvgetRate(Budget_ID.ToString());
-                if (Budgetrate_dt != null && Budgetrate_dt.Rows.Count > 0)
-                {
-                    Budget_AvgRate_Datagridview.ItemsSource = Budgetrate_dt.DefaultView;
-                }
-                else
-                {
-                    Budget_AvgRate_Datagridview.ItemsSource = null;
-                }
+                Budget_AvgRate_Datagridview.ItemsSource = Budgetrate_dt.DefaultView;
+            }
+            else
+            {
+                Budget_AvgRate_Datagridview.ItemsSource = null;
             }
         }
 
@@ -195,7 +192,7 @@ namespace Financial_WPF_App.Views
                     }
                 }
             }
-            if(Budgets_comboBox.SelectedIndex != -1 && View_comboBox.SelectedIndex != -1)
+            if (Budgets_comboBox.SelectedIndex != -1 && View_comboBox.SelectedIndex != -1)
             {
                 if (Report_dt != null && Report_dt.Rows.Count > 0)
                 {
@@ -329,7 +326,7 @@ namespace Financial_WPF_App.Views
                     if (row.Length > 0)
                         Budet_Type_ID = Convert.ToInt32(row[0]["BudgetType_ID"].ToString());
 
-                    if(Budet_Type_ID > 0)
+                    if (Budet_Type_ID > 0)
                     {
                         System.Data.DataRow[] rows = AvgRate_dt.Select("totp_id = " + Budet_Type_ID + "");
 
@@ -341,7 +338,7 @@ namespace Financial_WPF_App.Views
                                 AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
                         }
                     }
-             
+
                 }
             }
             catch (Exception ex)
@@ -499,19 +496,16 @@ namespace Financial_WPF_App.Views
                     return;
                 }
 
-
-                if (Login.BuildConnection())
-                {
-                    int AvgRate_ID = Convert.ToInt32(AvgRate_comboBox.SelectedValue);
-                    string BudgetName = Budgets_comboBox.Text;
+                int AvgRate_ID = Convert.ToInt32(AvgRate_comboBox.SelectedValue);
+                string BudgetName = Budgets_comboBox.Text;
 
 
-                    b.Insert_Budgt_AvgetRate(Budget_ID, AvgRate_ID, Account_ID, BudgetName, "ExpensesReport_Window");
+                b.Insert_Budgt_AvgetRate(Budget_ID, AvgRate_ID, Account_ID, BudgetName, "ExpensesReport_Window");
 
-                    Budget_AvgRate_ID = -1;
-                    Load_Budget_AvgRate_Datagridview();
-                    Load_Expenses_DataGridView(true);
-                }
+                Budget_AvgRate_ID = -1;
+                Load_Budget_AvgRate_Datagridview();
+                Load_Expenses_DataGridView(true);
+
             }
             catch (Exception ex)
             {

@@ -81,15 +81,14 @@ namespace Financial_WPF_App.Views
 
         public void Fill_tilltypes_ComboBox()
         {
-            if (Login.BuildConnection())
-            {
+         
                 tilltypes_ComboBox.ItemsSource = null;
                 dt = t.Select_Account_Missing_TillTypes(Account_ID);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     tilltypes_ComboBox.ItemsSource = dt.DefaultView;
                 }
-            }
+            
         }
 
         private void Save_btn_Click(object sender, RoutedEventArgs e)

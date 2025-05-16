@@ -67,7 +67,7 @@ namespace Financial_WPF_App.Views
                 t = new Till();
                 Load_Data();
                 Apply_Color_Theme();
-                if(FiscalBond_ID > 0)
+                if (FiscalBond_ID > 0)
                 {
                     Fill_FiscalBond();
                 }
@@ -101,7 +101,7 @@ namespace Financial_WPF_App.Views
             Date_datepicker.SelectedDate = DateTime.Today;
             Load_Comboboxes_Data();
 
-            if(FiscalBond_ID > 0)
+            if (FiscalBond_ID > 0)
             {
                 Fill_FiscalBond();
             }
@@ -141,31 +141,30 @@ namespace Financial_WPF_App.Views
 
                 }
 
-                if (Login.BuildConnection())
+
+                string Name = Name_txtBox.Text;
+                string Date = ((DateTime)Date_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+
+                string Notes = Notes_txtBox.Text;
+                int SubProject_ID = Convert.ToInt32(SubProject_comboBox.SelectedValue);
+                int Account_ID = Convert.ToInt32(Account_comboBox.SelectedValue);
+                string Account = Account_comboBox.Text.ToString();
+                int Till_ID = Convert.ToInt32(Till_ComboBox.SelectedValue);
+
+                if (FiscalBond_ID != -1)//Edit
                 {
-                    string Name = Name_txtBox.Text;
-                    string Date = ((DateTime)Date_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                    string Notes = Notes_txtBox.Text;
-                    int SubProject_ID = Convert.ToInt32(SubProject_comboBox.SelectedValue);
-                    int Account_ID = Convert.ToInt32(Account_comboBox.SelectedValue);
-                    string Account = Account_comboBox.Text.ToString();
-                    int Till_ID = Convert.ToInt32(Till_ComboBox.SelectedValue);
-
-                    if (FiscalBond_ID != -1)//Edit
-                    {
-                        fb.Update(FiscalBond_ID, Name, Date, Notes, Account_ID, Till_ID, "FiscalBond_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        this.Close();
-                    }
-                    else//Add new
-                    {
-                        fb.Insert(Name, Date, Notes, Account_ID, Till_ID, "FiscalBond_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        Clear_Boxes();
-                    }
-
+                    fb.Update(FiscalBond_ID, Name, Date, Notes, Account_ID, Till_ID, "FiscalBond_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    this.Close();
                 }
+                else//Add new
+                {
+                    fb.Insert(Name, Date, Notes, Account_ID, Till_ID, "FiscalBond_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    Clear_Boxes();
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -211,7 +210,7 @@ namespace Financial_WPF_App.Views
             Notes_txtBox.Text = Bond_dt.Rows[0].Field<string>("Notes").ToString();
 
 
-   
+
             if (Bond_dt.Rows[0]["SubProject_ID"] != DBNull.Value)
             {
                 SubProject_comboBox.SelectedValue = Convert.ToInt32(Bond_dt.Rows[0].Field<int>("SubProject_ID").ToString());

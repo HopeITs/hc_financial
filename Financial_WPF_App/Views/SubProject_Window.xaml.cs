@@ -29,7 +29,7 @@ namespace Financial_WPF_App
             }
         }
 
-        private SubProject sub; 
+        private SubProject sub;
         private Account a; private Till t;
         private DataTable SUB_dt;
 
@@ -98,26 +98,22 @@ namespace Financial_WPF_App
 
         private void LoadGrid()
         {
-
             myDataGrid.ItemsSource = null;
-            if (Login.BuildConnection())
+
+            SUB_dt = sub.Select("", "", "", "");
+            if (SUB_dt != null && SUB_dt.Rows.Count > 0)
             {
-                SUB_dt = sub.Select("", "", "", "");
-                if (SUB_dt != null && SUB_dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = SUB_dt.DefaultView;
-                    if (HOffset != 0)
-                        this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+                myDataGrid.ItemsSource = SUB_dt.DefaultView;
+                if (HOffset != 0)
+                    this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
 
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
-
-                Bind_Show_Hide_Menu();
+            }
+            else
+            {
+                myDataGrid.ItemsSource = null;
             }
 
+            Bind_Show_Hide_Menu();
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -519,6 +515,6 @@ namespace Financial_WPF_App
             else
                 Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
         }
-    
+
     }
 }

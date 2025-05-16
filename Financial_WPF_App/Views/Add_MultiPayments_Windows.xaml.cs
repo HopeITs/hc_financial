@@ -93,7 +93,7 @@ namespace Financial_WPF_App.Views
         private void Apply_Color_Theme()
         {
 
-  
+
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
@@ -204,23 +204,17 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
-                    if(Login.MultiPayments_List.Count > 0)
+                    if (Login.MultiPayments_List.Count > 0)
                     {
-                        if (Login.BuildConnection())
-                        {
-                            p.Insert_Multi_payments();
 
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        p.Insert_Multi_payments();
 
-                            Create_Columns();
-                            Fill_Datatables();
-                            InitializeCopyPaste();
-                            //this.myDataGrid.GridCopyPaste = new MultiPayments_CustomCopyPaste(myDataGrid, SubProject_ID, CashAccounts_dt, Beneficiaries_dt, Payments_dt);
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
+                        Create_Columns();
+                        Fill_Datatables();
+                        InitializeCopyPaste();
 
-                            //if (P_W != null)
-                            //    P_W.LoadGrid();
-                        }
                     }
 
                 }

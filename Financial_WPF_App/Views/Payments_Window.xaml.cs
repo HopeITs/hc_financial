@@ -123,63 +123,59 @@ namespace Financial_WPF_App.Views
 
         private void Fill_ComboBoxes()
         {
-            if (Login.BuildConnection())
+
+            DataTable temp_beneficiary_dt = b.Select("", "", SubProject_ID.ToString());
+            if (Settings.Default.Role == "Accountant")
             {
-                DataTable temp_beneficiary_dt = b.Select("", "", SubProject_ID.ToString());
-                if (Settings.Default.Role == "Accountant")
+                List<int> UserAccounts_ID = new List<int>();
+                if (Settings.Default.User_Accounts != null && !string.IsNullOrEmpty(Settings.Default.User_Accounts.ToString()) && !string.IsNullOrWhiteSpace(Settings.Default.User_Accounts.ToString()))
                 {
-                    List<int> UserAccounts_ID = new List<int>();
-                    if (Settings.Default.User_Accounts != null && !string.IsNullOrEmpty(Settings.Default.User_Accounts.ToString()) && !string.IsNullOrWhiteSpace(Settings.Default.User_Accounts.ToString()))
+                    UserAccounts_ID = Settings.Default.User_Accounts.ToString().Split(',').Select(int.Parse).ToList();
+
+                    string filterExpression = string.Join(" OR ", UserAccounts_ID.Select(id => "Account_ID = " + id));
+                    System.Data.DataRow[] rows = temp_beneficiary_dt.Select(filterExpression);
+                    DataTable selected_dt = new DataTable();
+                    if (rows.Length != 0)
                     {
-                        UserAccounts_ID = Settings.Default.User_Accounts.ToString().Split(',').Select(int.Parse).ToList();
+                        selected_dt = rows.CopyToDataTable();
+                        b_dt = selected_dt;
 
-                        string filterExpression = string.Join(" OR ", UserAccounts_ID.Select(id => "Account_ID = " + id));
-                        System.Data.DataRow[] rows = temp_beneficiary_dt.Select(filterExpression);
-                        DataTable selected_dt = new DataTable();
-                        if (rows.Length != 0)
-                        {
-                            selected_dt = rows.CopyToDataTable();
-                            b_dt = selected_dt;
-
-                        }
                     }
-                    else
-                    {
-                        b_dt = null;
-                    }
-
                 }
                 else
                 {
-                    b_dt = temp_beneficiary_dt;
+                    b_dt = null;
                 }
 
+            }
+            else
+            {
+                b_dt = temp_beneficiary_dt;
+            }
+
+            if (b_dt != null && b_dt.Rows.Count > 0)
+            {
+                List<string> IDItems = new List<string>();
+                List<string> Nametems = new List<string>();
                 if (b_dt != null && b_dt.Rows.Count > 0)
                 {
-                    List<string> IDItems = new List<string>();
-                    List<string> Nametems = new List<string>();
-                    if (b_dt != null && b_dt.Rows.Count > 0)
+                    for (int i = 0; i < b_dt.Rows.Count; i++)
                     {
-                        for (int i = 0; i < b_dt.Rows.Count; i++)
-                        {
-                            IDItems.Add(b_dt.Rows[i].Field<Int32>("MicroProject_ID").ToString());
-                            Nametems.Add(b_dt.Rows[i].Field<string>("Name").ToString());
-                        }
-                        MircoProject_ID_autoSuggestionUserControl.AutoSuggestionList = IDItems;
+                        IDItems.Add(b_dt.Rows[i].Field<Int32>("MicroProject_ID").ToString());
+                        Nametems.Add(b_dt.Rows[i].Field<string>("Name").ToString());
                     }
-
-
-                    Amount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amount)", string.Empty).ToString());
-                    ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amount)", string.Empty).ToString());
-                    PaidAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamount)", string.Empty).ToString());
-                    if (PaidAmount_textBlock.Text == "")
-                    {
-                        PaidAmount_textBlock.Text = "0.00";
-                    }
-                    RemainingAmount_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmount_textBlock.Text) - double.Parse(PaidAmount_textBlock.Text)).ToString());
+                    MircoProject_ID_autoSuggestionUserControl.AutoSuggestionList = IDItems;
                 }
 
 
+                Amount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amount)", string.Empty).ToString());
+                ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amount)", string.Empty).ToString());
+                PaidAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamount)", string.Empty).ToString());
+                if (PaidAmount_textBlock.Text == "")
+                {
+                    PaidAmount_textBlock.Text = "0.00";
+                }
+                RemainingAmount_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmount_textBlock.Text) - double.Parse(PaidAmount_textBlock.Text)).ToString());
             }
         }
         private void Set_privileges()

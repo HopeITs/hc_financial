@@ -130,7 +130,7 @@ namespace Financial_WPF_App.Views
             {
                 Create_Columns();
                 InitializeCopyPaste();
-               // this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
+                // this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
             }
             catch (Exception ex)
             {
@@ -156,23 +156,20 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
-                    if(Login.MultiSalaries_List.Count > 0)
+                    if (Login.MultiSalaries_List.Count > 0)
                     {
-                        if (Login.BuildConnection())
-                        {
-                            Emp.Insert_Multi_Salaries();
+                        Emp.Insert_Multi_Salaries();
 
-                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
-                            Create_Columns();
-                            Fill_Datatables();
-                            InitializeCopyPaste();
-                            //this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
+                        Create_Columns();
+                        Fill_Datatables();
+                        InitializeCopyPaste();
+                        //this.myDataGrid.GridCopyPaste = new MultiSalaries_CustomCopyPaste(myDataGrid, Employee_Subprojects_dt);
 
 
-                            if (MS_W != null)
-                                MS_W.LoadGrid();
-                        }
+                        if (MS_W != null)
+                            MS_W.LoadGrid();
                     }
                 }
             }

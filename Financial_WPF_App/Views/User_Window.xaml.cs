@@ -166,19 +166,15 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-            if (Login.BuildConnection())
+            users_dt = u.Get_AlUsers();
+            if (users_dt != null && users_dt.Rows.Count > 0)
             {
-                users_dt = u.Get_AlUsers();
-                if (users_dt != null && users_dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = users_dt.DefaultView;
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
+                myDataGrid.ItemsSource = users_dt.DefaultView;
             }
-
+            else
+            {
+                myDataGrid.ItemsSource = null;
+            }
         }
 
         private void Subproject_CheckListBox_ItemChecked(object sender, Syncfusion.Windows.Tools.Controls.ItemCheckedEventArgs e)
@@ -197,7 +193,7 @@ namespace Financial_WPF_App.Views
                 }
 
 
-                if(Account_CheckListBox.IsEnabled == true)
+                if (Account_CheckListBox.IsEnabled == true)
                 {
                     List<int> tempAccounts = new List<int>();
 
@@ -342,7 +338,7 @@ namespace Financial_WPF_App.Views
                         var grid = sender as SfDataGrid;
                         if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
                         {
-      
+
 
                             User_ID = -1;
                             Username_txtBox.Text = string.Empty;
@@ -573,9 +569,9 @@ namespace Financial_WPF_App.Views
                 PersonalAccount_Label.BorderThickness = PersonalAccount_CheckListBox.BorderThickness =
                 ExchangeAccountAccount_Label.BorderThickness = ExchangeAccount_CheckListBox.BorderThickness = new Thickness(.5);
 
-            Subproject_Label.Background = 
-                Account_Label.Background = 
-                CashAccount_Label.Background = 
+            Subproject_Label.Background =
+                Account_Label.Background =
+                CashAccount_Label.Background =
                 PersonalAccount_Label.Background =
                 ExchangeAccountAccount_Label.Background = (SolidColorBrush)Application.Current.Resources["White"];
 
@@ -605,9 +601,9 @@ namespace Financial_WPF_App.Views
                     CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled =
                     PersonalAccount_Label.IsEnabled = PersonalAccount_CheckListBox.IsEnabled =
                     ExchangeAccountAccount_Label.IsEnabled = ExchangeAccount_CheckListBox.IsEnabled = true;
-                Subproject_Label.Background = 
-                    CashAccount_Label.Background =  
-                    PersonalAccount_Label.Background = 
+                Subproject_Label.Background =
+                    CashAccount_Label.Background =
+                    PersonalAccount_Label.Background =
                     ExchangeAccountAccount_Label.Background = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
                 Subproject_Label.Foreground =
@@ -628,10 +624,10 @@ namespace Financial_WPF_App.Views
                     CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled =
                     PersonalAccount_Label.IsEnabled = PersonalAccount_CheckListBox.IsEnabled = true;
 
-                Subproject_Label.Background = 
-                    Account_Label.Background = 
+                Subproject_Label.Background =
+                    Account_Label.Background =
                     CashAccount_Label.Background =
-                    PersonalAccount_Label.Background =  (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+                    PersonalAccount_Label.Background = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
                 Subproject_Label.Foreground =
                    Account_Label.Foreground =
@@ -658,9 +654,9 @@ namespace Financial_WPF_App.Views
                     Account_Label.IsEnabled = Account_CheckListBox.IsEnabled =
                     CashAccount_Label.IsEnabled = CashAccount_CheckListBox.IsEnabled = IsCashier_CashAccount_CheckListBox.IsEnabled = true;
 
-                Subproject_Label.Background = 
+                Subproject_Label.Background =
                     Account_Label.Background =
-                    CashAccount_Label.Background  = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
+                    CashAccount_Label.Background = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
 
                 Subproject_Label.Foreground =
                     Account_Label.Foreground =
@@ -876,7 +872,7 @@ namespace Financial_WPF_App.Views
                         MessageBox.Show("Username is already used.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         return;
                     }
-        
+
                 }
 
                 if (String.IsNullOrWhiteSpace(Password_txtBox.Text) || String.IsNullOrEmpty(Password_txtBox.Text))
@@ -992,7 +988,7 @@ namespace Financial_WPF_App.Views
             else
                 return true;
         }
-        
+
 
     }
 }

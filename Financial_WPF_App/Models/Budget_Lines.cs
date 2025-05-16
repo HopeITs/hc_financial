@@ -180,9 +180,6 @@ namespace Financial_WPF_App.Models
 
                 Login.MyConn.Close();
             }
-
-
-
         }
 
         public void Insert_Missing_Lines()

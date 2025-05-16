@@ -109,7 +109,7 @@ namespace Financial_WPF_App
         private void Apply_Color_Theme()
         {
 
-   
+
             Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
             {
                 WindowUtils.UIElementColoring(this.Content, Theme_Color);
@@ -436,92 +436,90 @@ namespace Financial_WPF_App
                 return;
             }
 
-            if (Login.BuildConnection())
+            string Date, FirstPaymentDate;
+
+            int Account_ID = Convert.ToInt32(Account_comboBox.SelectedValue);
+
+            if (Date_datepicker.SelectedDate == null && FirstPaymentDate_datepicker.SelectedDate == null)
             {
-                string Date, FirstPaymentDate;
+                Date = null;
+                FirstPaymentDate = null;
+                RegeneratePayments = false;
+                DeleteSchedualedPayments = true;
+            }
+            else
+            {
+                Date = ((DateTime)Date_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                FirstPaymentDate = ((DateTime)FirstPaymentDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
 
-                int Account_ID = Convert.ToInt32(Account_comboBox.SelectedValue);
-
-                if (Date_datepicker.SelectedDate == null && FirstPaymentDate_datepicker.SelectedDate == null)
+                DeleteSchedualedPayments = false;
+                if (Beneficiary_ID != -1)
                 {
-                    Date = null;
-                    FirstPaymentDate = null;
-                    RegeneratePayments = false;
-                    DeleteSchedualedPayments = true;
+                    if (Amount_txtBox.Text != Original_Amount ||
+                        ToReturn_Amount_txtBox.Text != Original_ToReturn_Amount ||
+                        Payment_txtBox.Text != Original_Payment ||
+                        Payment_interval_TextBox.Text != Original_Payment_interval ||
+                        FirstPaymentDate_datepicker.SelectedDate != Original_FirstPaymentDate)
+                        RegeneratePayments = true;
+                    else
+                        RegeneratePayments = false;
                 }
                 else
                 {
-                    Date = ((DateTime)Date_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    FirstPaymentDate = ((DateTime)FirstPaymentDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-                    DeleteSchedualedPayments = false;
-                    if (Beneficiary_ID != -1)
+                    RegeneratePayments = true;
+                }
+            }
+            if (Beneficiary_ID != -1)//Edit
+            {
+                bool ToSave = true;
+                if (RegeneratePayments)
+                {
+                    var dialogResult1 = MessageBox.Show("A rescheduling will be carried out for the unpaid amount due to a change in one of the following:" +
+                        Environment.NewLine + "Loan amount" +
+                        Environment.NewLine + "Payment" +
+                        Environment.NewLine + "Amount owed" +
+                        Environment.NewLine + "Payments interval" +
+                        Environment.NewLine + "Payments start date", "Confirm before save", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None);
+                    if (dialogResult1 == MessageBoxResult.No)
                     {
-                        if (Amount_txtBox.Text != Original_Amount ||
-                            ToReturn_Amount_txtBox.Text != Original_ToReturn_Amount ||
-                            Payment_txtBox.Text != Original_Payment ||
-                            Payment_interval_TextBox.Text != Original_Payment_interval ||
-                            FirstPaymentDate_datepicker.SelectedDate != Original_FirstPaymentDate)
-                            RegeneratePayments = true;
-                        else
-                            RegeneratePayments = false;
-                    }
-                    else
-                    {
-                        RegeneratePayments = true;
+                        ToSave = false;
                     }
                 }
-                if (Beneficiary_ID != -1)//Edit
+
+                if (DeleteSchedualedPayments)
                 {
-                    bool ToSave = true;
-                    if (RegeneratePayments)
+                    var dialogResult1 = MessageBox.Show("All unpaid payments will be erased due to the deletion of the financing date and the payments start date.", "Confirm before save", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None);
+                    if (dialogResult1 == MessageBoxResult.No)
                     {
-                        var dialogResult1 = MessageBox.Show("A rescheduling will be carried out for the unpaid amount due to a change in one of the following:" +
-                            Environment.NewLine + "Loan amount" +
-                            Environment.NewLine + "Payment" +
-                            Environment.NewLine + "Amount owed" +
-                            Environment.NewLine + "Payments interval" +
-                            Environment.NewLine + "Payments start date", "Confirm before save", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None);
-                        if (dialogResult1 == MessageBoxResult.No)
-                        {
-                            ToSave = false;
-                        }
-                    }
-
-                    if (DeleteSchedualedPayments)
-                    {
-                        var dialogResult1 = MessageBox.Show("All unpaid payments will be erased due to the deletion of the financing date and the payments start date.", "Confirm before save", MessageBoxButton.YesNo, MessageBoxImage.None, MessageBoxResult.None);
-                        if (dialogResult1 == MessageBoxResult.No)
-                        {
-                            ToSave = false;
-                        }
-
-                    }
-
-                    if (ToSave)
-                    {
-                        b.Update(Beneficiary_ID, FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
-                            , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text
-                            , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
-                            , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, Original_MicroProject_ID, SubProject_ID, RegeneratePayments, DeleteSchedualedPayments, "Beneficiary_Window");
-
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
+                        ToSave = false;
                     }
 
                 }
-                else//Add new
+
+                if (ToSave)
                 {
-                    Beneficiary_ID = b.Insert(FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
+                    b.Update(Beneficiary_ID, FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
                         , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text
                         , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
-                        , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, RegeneratePayments, "Beneficiary_Window");
+                        , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, Original_MicroProject_ID, SubProject_ID, RegeneratePayments, DeleteSchedualedPayments, "Beneficiary_Window");
 
                     MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
                 }
 
             }
+            else//Add new
+            {
+                Beneficiary_ID = b.Insert(FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
+                    , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text
+                    , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
+                    , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, RegeneratePayments, "Beneficiary_Window");
+
+                MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+
+            }
+
+
         }
 
         private void Account_clear_btn_Click(object sender, RoutedEventArgs e)
@@ -653,39 +651,34 @@ namespace Financial_WPF_App
 
         private void Fill_Payments()
         {
-
-            if (Login.BuildConnection())
+            p_dt = p.Select_Beneficiary_Payments(Beneficiary_ID.ToString(), "");
+            if (p_dt != null && p_dt.Rows.Count > 0)
             {
-                p_dt = p.Select_Beneficiary_Payments(Beneficiary_ID.ToString(), "");
-                if (p_dt != null && p_dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = p_dt.DefaultView;
+                myDataGrid.ItemsSource = p_dt.DefaultView;
 
 
-                    int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont;
+                int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont;
 
-                    TotalPaymentCount = p_dt.Rows.Count;
-                    PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
-                    UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
-                    InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
-                    DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
-                    NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
+                TotalPaymentCount = p_dt.Rows.Count;
+                PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
+                UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
+                InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
+                DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
+                NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
 
-                    PaymentCount_txtBox.Content = TotalPaymentCount.ToString();
-                    PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
-                    RemainedPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
-                    NotCompleted_txtBox.Content = InCompletePaymentCont.ToString();
-                    DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
-                    NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                    Returned_txtBox.Content = RemainedِAmount_txtBox.Content = PaymentCount_txtBox.Content
-                        = NotCompleted_txtBox.Content = RemainedPaymentCount_txtBox.Content = "0.00";
-                }
+                PaymentCount_txtBox.Content = TotalPaymentCount.ToString();
+                PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
+                RemainedPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
+                NotCompleted_txtBox.Content = InCompletePaymentCont.ToString();
+                DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
+                NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
             }
-
+            else
+            {
+                myDataGrid.ItemsSource = null;
+                Returned_txtBox.Content = RemainedِAmount_txtBox.Content = PaymentCount_txtBox.Content
+                    = NotCompleted_txtBox.Content = RemainedPaymentCount_txtBox.Content = "0.00";
+            }
         }
 
         private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
@@ -788,7 +781,7 @@ namespace Financial_WPF_App
         {
             try
             {
-               
+
                 var placeholder_last = (TextBlock)LName_txtBox.Template.FindName("PlaceholderText", LName_txtBox);
                 if (placeholder_last != null)
                 {

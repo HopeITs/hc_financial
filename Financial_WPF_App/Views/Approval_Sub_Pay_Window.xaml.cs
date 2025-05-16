@@ -102,25 +102,24 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-            if (Login.BuildConnection())
-            {
-                Payments_dt = p.Select_All_Not_Approved_Payments(SubProject_ID, true, -1, "", "", -1);
-                Deleted_Payments_dt = p.Select_All_Deleted_Payments(SubProject_ID, true);
 
-                System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
-                System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
+            Payments_dt = p.Select_All_Not_Approved_Payments(SubProject_ID, true, -1, "", "", -1);
+            Deleted_Payments_dt = p.Select_All_Deleted_Payments(SubProject_ID, true);
 
-
-                Payments_dt.Columns.Add(newColumn);
-                Deleted_Payments_dt.Columns.Add(newColumn1);
-
-                Payments_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
-                Deleted_Payments_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+            System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
+            System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
 
 
-                Set_myDataGrid_ItemSource();
+            Payments_dt.Columns.Add(newColumn);
+            Deleted_Payments_dt.Columns.Add(newColumn1);
 
-            }
+            Payments_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+            Deleted_Payments_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", 0));
+
+
+            Set_myDataGrid_ItemSource();
+
+
 
             GridLoaded = true;
             Bind_Show_Hide_Menu();

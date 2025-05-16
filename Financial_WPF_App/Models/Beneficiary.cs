@@ -303,8 +303,7 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int Beneficiary_ID, string SubProject_ID, string Name, int Account_ID, string Form_Name)
         {
-            if (Login.BuildConnection())
-            {
+         
                 string query = "";
                 string log_query = "";
 
@@ -346,7 +345,7 @@ namespace Financial_WPF_App.Models
 
                     Login.MyConn.Close();
                 }
-            }
+            
         }
 
         public void Delete_Multi_Beneficiaries()

@@ -157,26 +157,21 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
+            dt = a.Select("", "", "Personal", false, City_ID);
 
-            if (Login.BuildConnection())
+
+            if (dt != null && dt.Rows.Count > 0)
             {
-                dt = a.Select("", "", "Personal", false, City_ID);
-    
-
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = dt.DefaultView;
-                    if (HOffset != 0)
-                        this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
-
-                Bind_Show_Hide_Menu();
+                myDataGrid.ItemsSource = dt.DefaultView;
+                if (HOffset != 0)
+                    this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+            }
+            else
+            {
+                myDataGrid.ItemsSource = null;
             }
 
+            Bind_Show_Hide_Menu();
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)

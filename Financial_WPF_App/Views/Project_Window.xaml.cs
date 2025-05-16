@@ -88,36 +88,28 @@ namespace Financial_WPF_App.Views
 
         private void Load_Comboboxes_Data()
         {
-            if (Login.BuildConnection())
+            cat_dt = Project.Select_Project_Catgory();
+            if (cat_dt != null && cat_dt.Rows.Count > 0)
             {
-                cat_dt = Project.Select_Project_Catgory();
-                if (cat_dt != null && cat_dt.Rows.Count > 0)
-                {
-                    Category_comboBox.ItemsSource = cat_dt.DefaultView;
-                }
-                else
-                {
-                    Category_comboBox.ItemsSource = null;
-                }
+                Category_comboBox.ItemsSource = cat_dt.DefaultView;
+            }
+            else
+            {
+                Category_comboBox.ItemsSource = null;
             }
         }
 
         private void LoadGrid()
         {
-
-            if (Login.BuildConnection())
+            dt = Project.Select("", "", "");
+            if (dt != null && dt.Rows.Count > 0)
             {
-                dt = Project.Select("", "", "");
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    myDataGrid.ItemsSource = dt.DefaultView;
-                }
-                else
-                {
-                    myDataGrid.ItemsSource = null;
-                }
+                myDataGrid.ItemsSource = dt.DefaultView;
             }
-
+            else
+            {
+                myDataGrid.ItemsSource = null;
+            }
         }
 
         private void Category_clear_btn_Click(object sender, RoutedEventArgs e)
@@ -155,29 +147,25 @@ namespace Financial_WPF_App.Views
                     return;
 
                 }
+                string Name = Login.ReplaceQuotation(Name_txtBox.Text);
+                int Category_ID = Convert.ToInt32(Category_comboBox.SelectedValue);
 
-                if (Login.BuildConnection())
+                if (ID != -1)//Edit
                 {
-                    string Name = Login.ReplaceQuotation(Name_txtBox.Text);
-                    int Category_ID = Convert.ToInt32(Category_comboBox.SelectedValue);
-
-                    if (ID != -1)//Edit
-                    {
-                        Project.Update(ID, Name, Category_ID, "Project_Window");
-                    }
-                    else//Add new
-                    {
-                        Project.Insert(Name, Category_ID, "Project_Window");
-                    }
-
-                    Name_txtBox.Text = "";
-                    Category_comboBox.SelectedIndex = -1;
-                    ID = -1;
-
-                    LoadGrid();
-                    Category_comboBox.IsEnabled = true;
-                    Category_clear_btn.IsEnabled = true;
+                    Project.Update(ID, Name, Category_ID, "Project_Window");
                 }
+                else//Add new
+                {
+                    Project.Insert(Name, Category_ID, "Project_Window");
+                }
+
+                Name_txtBox.Text = "";
+                Category_comboBox.SelectedIndex = -1;
+                ID = -1;
+
+                LoadGrid();
+                Category_comboBox.IsEnabled = true;
+                Category_clear_btn.IsEnabled = true;
             }
             catch (Exception ex)
             {

@@ -15,7 +15,7 @@ namespace Financial_WPF_App.Views
     /// </summary>
     public partial class Add_Account_Budget_Window : Window
     {
-        public Add_Account_Budget_Window(int Account_ID, DataTable Budgets_dt, DataTable all_budget_donor_dt, AddBudgetLines_Windows BL,Main_Window_2 main_Window)
+        public Add_Account_Budget_Window(int Account_ID, DataTable Budgets_dt, DataTable all_budget_donor_dt, AddBudgetLines_Windows BL, Main_Window_2 main_Window)
         {
             InitializeComponent();
             this.Account_ID = Account_ID;
@@ -60,7 +60,7 @@ namespace Financial_WPF_App.Views
         Main_Window_2 main_Window;
         private Account acc;
         private Till t;
-        private Budget b; 
+        private Budget b;
         private DataTable TillType_dt, Donor_dt, all_budget_donor_dt, Budgets_dt,
                         budget_donor_dt = new DataTable(), original_budget_donor_dt = new DataTable();
         bool UserMode = false;
@@ -197,7 +197,7 @@ namespace Financial_WPF_App.Views
                     Name_txtBox.Text = this_Budget_dt.Rows[0].Field<string>("Name").ToString();
 
                 beginDate_datepicker.SelectedDate = Convert.ToDateTime(this_Budget_dt.Rows[0].Field<DateTime>("BeginDate").ToString());
-        
+
                 endDate_datepicker.SelectedDate = Convert.ToDateTime(this_Budget_dt.Rows[0].Field<DateTime>("EndDate").ToString());
 
                 TillType_comboBox.SelectedValue = Convert.ToInt32(this_Budget_dt.Rows[0].Field<int>("Budget_Type_ID").ToString());
@@ -434,53 +434,52 @@ namespace Financial_WPF_App.Views
                         return;
                     }
                 }
-                if (Login.BuildConnection())
+
+                string Name = Name_txtBox.Text;
+                string BeginDate = ((DateTime)beginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                string EndDate = ((DateTime)endDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+                int Budget_Type_ID = Convert.ToInt32(TillType_comboBox.SelectedValue);
+
+                DataTable Add_Donors_dt = new DataTable();
+                System.Data.DataRow[] rowsToAdd = budget_donor_dt.Select("Budget_Donor_ID = '-1'");
+                if (rowsToAdd.Count() > 0)
+                    Add_Donors_dt = rowsToAdd.CopyToDataTable();
+
+                if (Budget_ID != -1)//Edit
                 {
-                    string Name = Name_txtBox.Text;
-                    string BeginDate = ((DateTime)beginDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    string EndDate = ((DateTime)endDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    int Budget_Type_ID = Convert.ToInt32(TillType_comboBox.SelectedValue);
+                    DataTable Delete_Donors_dt = new DataTable();
+                    var kept_Donors = budget_donor_dt.AsEnumerable()
+                        .Where(row => row.Field<int>("Budget_Donor_ID") != -1)
+                        .Select(row => row.Field<int>("Donor_ID"));
 
-                    DataTable Add_Donors_dt = new DataTable();
-                    System.Data.DataRow[] rowsToAdd = budget_donor_dt.Select("Budget_Donor_ID = '-1'");
-                    if (rowsToAdd.Count() > 0)
-                        Add_Donors_dt = rowsToAdd.CopyToDataTable();
+                    // Select rows from dt1 where id is not in dt2Ids
+                    var result = original_budget_donor_dt.AsEnumerable()
+                                    .Where(row => !kept_Donors.Contains(row.Field<int>("Donor_ID")));
 
-                    if (Budget_ID != -1)//Edit
+                    if (result.Count() > 0)
                     {
-                        DataTable Delete_Donors_dt = new DataTable();
-                        var kept_Donors = budget_donor_dt.AsEnumerable()
-                            .Where(row => row.Field<int>("Budget_Donor_ID") != -1)
-                            .Select(row => row.Field<int>("Donor_ID"));
-
-                        // Select rows from dt1 where id is not in dt2Ids
-                        var result = original_budget_donor_dt.AsEnumerable()
-                                        .Where(row => !kept_Donors.Contains(row.Field<int>("Donor_ID")));
-
-                        if (result.Count() > 0)
-                        {
-                            Delete_Donors_dt = result.CopyToDataTable();
-                        }
-
-
-                        if (Delete_Donors_dt.Rows.Count > 0 || Add_Donors_dt.Rows.Count > 0)
-                        {
-                            if (MessageBox.Show("Alert!!!" + Environment.NewLine + "Making any changes to the donors will be accompanied by a change in the calculations of all previous reports for this budget." + Environment.NewLine + "Are you sure you want to continue؟؟", "Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-                            {
-                                return;
-                            }
-                        }
-                        b.Update(Budget_ID, Name, Account_ID, BeginDate, EndDate, Budget_Type_ID, Add_Donors_dt, Delete_Donors_dt, "Account_Budgets_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        this.Close();
+                        Delete_Donors_dt = result.CopyToDataTable();
                     }
-                    else//Add new
+
+
+                    if (Delete_Donors_dt.Rows.Count > 0 || Add_Donors_dt.Rows.Count > 0)
                     {
-                        b.Insert(Name, BeginDate, EndDate, Account_ID, Budget_Type_ID, Add_Donors_dt, "Account_Budgets_Window");
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        ClearBoxes();
+                        if (MessageBox.Show("Alert!!!" + Environment.NewLine + "Making any changes to the donors will be accompanied by a change in the calculations of all previous reports for this budget." + Environment.NewLine + "Are you sure you want to continue؟؟", "Alert", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                        {
+                            return;
+                        }
                     }
+                    b.Update(Budget_ID, Name, Account_ID, BeginDate, EndDate, Budget_Type_ID, Add_Donors_dt, Delete_Donors_dt, "Account_Budgets_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    this.Close();
                 }
+                else//Add new
+                {
+                    b.Insert(Name, BeginDate, EndDate, Account_ID, Budget_Type_ID, Add_Donors_dt, "Account_Budgets_Window");
+                    MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    ClearBoxes();
+                }
+
             }
             catch (Exception ex)
             {
