@@ -70,7 +70,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -148,7 +148,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -235,7 +235,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -304,7 +304,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -325,7 +325,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -473,7 +473,7 @@ namespace Financial_WPF_App.Models
                 sc.CommandTimeout = 120;sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
         }
 
@@ -557,7 +557,7 @@ namespace Financial_WPF_App.Models
                 sc.CommandTimeout = 120;sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
         }
 
@@ -635,7 +635,7 @@ namespace Financial_WPF_App.Models
                 sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
         }
 
@@ -717,7 +717,7 @@ namespace Financial_WPF_App.Models
                     sc.Connection = Login.MyConn;
                     sc.ExecuteScalar();
 
-                    Login.MyConn.Close();
+                    Login.CloseAndClearConnection();
                 }
             
         }
@@ -754,7 +754,7 @@ namespace Financial_WPF_App.Models
                 sc.CommandTimeout = 120;sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
         }
 
@@ -774,7 +774,7 @@ namespace Financial_WPF_App.Models
 
                 Login.MultiPayments_sc.ExecuteScalar();
 
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
         }
     }

@@ -1636,7 +1636,7 @@ namespace Financial_WPF_App
             {
                 if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
                 {
-                    Login.MyConn.Close();
+                    Login.CloseAndClearConnection();
                 }
                 if (ex.Message.Contains("Cannot delete or update a parent row"))
                     MessageBox.Show("This item cannot be deleted due to its association with other data.", "Error");

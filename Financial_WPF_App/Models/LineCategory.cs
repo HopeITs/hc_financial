@@ -30,7 +30,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
 
             }
             return dt;
@@ -76,7 +76,7 @@ namespace Financial_WPF_App.Models
                 sc.Connection = Login.MyConn;
                 LineCat_ID = Convert.ToInt32(sc.ExecuteScalar());
 
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return LineCat_ID;
         }
@@ -115,7 +115,7 @@ namespace Financial_WPF_App.Models
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
         }
 
@@ -157,7 +157,7 @@ namespace Financial_WPF_App.Models
                     sc.Connection = Login.MyConn;
                     sc.ExecuteScalar();
 
-                    Login.MyConn.Close();
+                    Login.CloseAndClearConnection();
                 }
             
         }

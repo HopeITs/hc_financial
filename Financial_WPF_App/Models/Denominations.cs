@@ -22,7 +22,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }

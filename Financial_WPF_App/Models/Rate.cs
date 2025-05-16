@@ -60,7 +60,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -85,7 +85,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -105,7 +105,7 @@ namespace Financial_WPF_App.Models
             {
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -125,7 +125,7 @@ namespace Financial_WPF_App.Models
             {
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -168,7 +168,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -216,7 +216,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }
@@ -270,7 +270,7 @@ namespace Financial_WPF_App.Models
                 sc.CommandTimeout = 120;sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 Rate_ID = Convert.ToInt32(sc.ExecuteScalar());
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return Rate_ID;
         }
@@ -320,7 +320,7 @@ namespace Financial_WPF_App.Models
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
         }
 
@@ -359,7 +359,7 @@ namespace Financial_WPF_App.Models
                     sc.Connection = Login.MyConn;
                     sc.ExecuteScalar();
 
-                    Login.MyConn.Close();
+                    Login.CloseAndClearConnection();
                 }
             
 
@@ -378,7 +378,7 @@ namespace Financial_WPF_App.Models
 
                 var n = 0.0;
                 Double.TryParse(sc.ExecuteScalar().ToString(), out n);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
                 return n;
             }
             return -1;
@@ -404,7 +404,7 @@ namespace Financial_WPF_App.Models
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }

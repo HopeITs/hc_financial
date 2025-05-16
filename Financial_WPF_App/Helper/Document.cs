@@ -57,7 +57,7 @@ namespace Financial_WPF_App.Helper
 
                 query = "START TRANSACTION;";
 
-                if(action_id != -1)
+                if (action_id != -1)
                 {
                     query += @"INSERT INTO `action_attachments` (`action_id`, `attach_name`) VALUES (@action_id, @Name);";
                     query += " SET @Attachment_ID = Last_Insert_ID();";
@@ -74,7 +74,7 @@ namespace Financial_WPF_App.Helper
                         query += "DELETE FROM action WHERE action.id  = @action_id;";
                     }
                 }
-                else if(beneficiary_id != -1)
+                else if (beneficiary_id != -1)
                 {
                     query += @"INSERT INTO `beneficiary_attachments` (`beneficiary_id`, `attach_name`) VALUES (@beneficiary_id, @Name);";
                     query += " SET @Attachment_ID = Last_Insert_ID();";
@@ -101,84 +101,81 @@ namespace Financial_WPF_App.Helper
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
                 Attachment_ID = Convert.ToInt32(sc.ExecuteScalar());
 
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return Attachment_ID;
         }
 
         public void DeleteAttachmentTfromDatabase(int ID, string Name, int Action_Id, int Beneficiary_id, bool Approved_Action, string Form_Name)
         {
+            string query = "";
+            string log_query = "";
+
             if (Login.BuildConnection())
             {
-                string query = "";
-                string log_query = "";
+                MySqlCommand sc = new MySqlCommand();
 
-                if (Login.BuildConnection())
+                sc.Parameters.AddWithValue("@ID", ID);
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+                sc.Parameters.AddWithValue("@Name", Name);
+                sc.Parameters.AddWithValue("@Action_Id", Action_Id);
+                sc.Parameters.AddWithValue("@Beneficiary_id", Beneficiary_id);
+
+                query += "START TRANSACTION;";
+
+                if (Action_Id != -1)
                 {
-                    MySqlCommand sc = new MySqlCommand();
+                    query += "DELETE FROM `action_attachments` WHERE ID = @ID;";
 
-                    sc.Parameters.AddWithValue("@ID", ID);
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-                    sc.Parameters.AddWithValue("@Name", Name);
-                    sc.Parameters.AddWithValue("@Action_Id", Action_Id);
-                    sc.Parameters.AddWithValue("@Beneficiary_id", Beneficiary_id);
-
-                    query += "START TRANSACTION;";
-
-                    if(Action_Id != -1)
+                    if (Approved_Action)
                     {
-                        query += "DELETE FROM `action_attachments` WHERE ID = @ID;";
+                        query += "INSERT INTO action_not_approved SELECT * FROM action WHERE action.id = @action_id OR action.ObserveAcion_ID = @action_id;";
 
-                        if (Approved_Action)
-                        {
-                            query += "INSERT INTO action_not_approved SELECT * FROM action WHERE action.id = @action_id OR action.ObserveAcion_ID = @action_id;";
+                        query += "Update action_not_approved set `IsApproved`= 0,`Approved_at`= null,`Approved_by`= null, `updated_at` = @Todaydate, `edited_by` = @Uesr_ID WHERE action_not_approved.id = @action_id OR action_not_approved.ObserveAcion_ID = @action_id;";
 
-                            query += "Update action_not_approved set `IsApproved`= 0,`Approved_at`= null,`Approved_by`= null, `updated_at` = @Todaydate, `edited_by` = @Uesr_ID WHERE action_not_approved.id = @action_id OR action_not_approved.ObserveAcion_ID = @action_id;";
+                        query += "DELETE FROM action WHERE action.ObserveAcion_ID = @action_id;";
 
-                            query += "DELETE FROM action WHERE action.ObserveAcion_ID = @action_id;";
-
-                            query += "DELETE FROM action WHERE action.id  = @action_id;";
-                        }
+                        query += "DELETE FROM action WHERE action.id  = @action_id;";
                     }
-                    else if(Beneficiary_id != -1)
-                    {
-                        query += "DELETE FROM `beneficiary_attachments` WHERE ID = @ID;";
-                    }
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-                    if (Action_Id != -1)
-                    {
-                        query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'action_attachments', @ID, CONCAT('Attachment Name = ', @Name), CONCAT('action ID = ', @Action_Id) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-                    }
-                    else if (Beneficiary_id != -1)
-                    {
-                        query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'beneficiary_attachments', @ID, CONCAT('Attachment Name = ', @Name), CONCAT('beneficiary ID = ', @Beneficiary_id) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-                    }
-
-
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120;sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.MyConn.Close();
                 }
+                else if (Beneficiary_id != -1)
+                {
+                    query += "DELETE FROM `beneficiary_attachments` WHERE ID = @ID;";
+                }
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
+                {
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
+                }
+                if (Action_Id != -1)
+                {
+                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'action_attachments', @ID, CONCAT('Attachment Name = ', @Name), CONCAT('action ID = ', @Action_Id) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+                }
+                else if (Beneficiary_id != -1)
+                {
+                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'beneficiary_attachments', @ID, CONCAT('Attachment Name = ', @Name), CONCAT('beneficiary ID = ', @Beneficiary_id) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+                }
+
+
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
             }
         }
 
         public DataTable GetAttachmentsNames(int action_id, int beneficiary_id)
         {
             string query = "";
-            if(action_id != -1)
+            if (action_id != -1)
             {
                 query = @"SELECT * 
                             FROM action_attachments
@@ -198,12 +195,12 @@ namespace Financial_WPF_App.Helper
                 sc.Parameters.AddWithValue("@action_id", action_id);
                 sc.Parameters.AddWithValue("@beneficiary_id", beneficiary_id);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120; sc.CommandText = query;
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
                 da.Fill(dt);
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
             return dt;
         }

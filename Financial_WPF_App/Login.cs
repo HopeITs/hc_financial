@@ -9,12 +9,6 @@ namespace Financial_WPF_App.Models
 {
     internal static class Login
     {
-        // Test By Nay
-
-        // EDIT BY SARY
-
-
-        //New Branch edit
         public static MySqlConnection MyConn;
 
         //CHARSET=utf8 for recognizing Arabic in c#
@@ -100,10 +94,10 @@ namespace Financial_WPF_App.Models
 
             if (!test_online)
                 ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + database +
-                            ";Uid=sary;Password=HopeIT_sary2020;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
+                            ";Uid=hcfinancial;Password=Center2018Hope;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
             else
                 ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + test_database +
-                            ";Uid=sary;Password=HopeIT_sary2020;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
+                            ";Uid=hcfinancial;Password=Center2018Hope;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
             if (!test_offline)
                 ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + database +
@@ -159,6 +153,12 @@ namespace Financial_WPF_App.Models
             else return false;
         }
 
+        public static void CloseAndClearConnection()
+        {
+            MyConn.Close();
+            MySqlConnection.ClearAllPools();
+        }
+
         public static string ReplaceQuotation(string value)
         {
             value = value.Replace("'", "''");
@@ -187,7 +187,7 @@ namespace Financial_WPF_App.Models
                 sc.Connection = Login.MyConn;
 
                 sc.ExecuteNonQuery();
-                Login.MyConn.Close();
+                Login.CloseAndClearConnection();
             }
         }
         

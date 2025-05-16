@@ -944,7 +944,7 @@ namespace Financial_WPF_App.Views
             {
                 if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
                 {
-                    Login.MyConn.Close();
+                    Login.CloseAndClearConnection();
                 }
                 if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
                 { MessageBox.Show("please check your network and try again", "Error"); }
