@@ -37,7 +37,7 @@ namespace Financial_WPF_App.Models
             {
                 condition += " and fiscalbond.Name in (" + names + ") ";
             }
-   
+
             if (Subproject_ID != "")
             {
                 condition += " and SubProject_ID = @Subproject_ID";
@@ -55,7 +55,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@user_id", user_id);
                 sc.Parameters.AddWithValue("@Subproject_ID", Subproject_ID);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -119,7 +121,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 fiscalbond = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -177,7 +181,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -187,45 +193,47 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int ID, string Name, string Form_Name)
         {
-          
-                string query = "";
-                string log_query = "";
 
-                if (Login.BuildConnection())
+            string query = "";
+            string log_query = "";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@ID", ID);
+                sc.Parameters.AddWithValue("@Name", Name);
+
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+
+
+                query += "START TRANSACTION;";
+
+                query += "set @Account_ID = (select fiscalbond.Account_ID from fiscalbond where fiscalbond.id = @ID);";
+
+                query += "DELETE FROM `fiscalbond` WHERE ID = @ID;";
+
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
                 {
-                    MySqlCommand sc = new MySqlCommand();
-
-                    sc.Parameters.AddWithValue("@ID", ID);
-                    sc.Parameters.AddWithValue("@Name", Name);
-
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-
-
-                    query += "START TRANSACTION;";
-
-                    query += "set @Account_ID = (select fiscalbond.Account_ID from fiscalbond where fiscalbond.id = @ID);";
-
-                    query += "DELETE FROM `fiscalbond` WHERE ID = @ID;";
-
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-
-                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'fiscalbond', @ID, CONCAT('fiscalbond Name = ', @Name), CONCAT('account ID = ', @Account_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
-
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120;sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.CloseAndClearConnection();
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
                 }
-            
+
+                query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'fiscalbond', @ID, CONCAT('fiscalbond Name = ', @Name), CONCAT('account ID = ', @Account_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
+            }
+
         }
     }
 }

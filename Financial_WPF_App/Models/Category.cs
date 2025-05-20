@@ -37,7 +37,9 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);

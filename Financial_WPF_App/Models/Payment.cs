@@ -65,7 +65,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
                 sc.Parameters.AddWithValue("@Subproject_ID", Subproject_ID);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -112,17 +114,17 @@ namespace Financial_WPF_App.Models
                  LEFT JOIN `user` created_byuser on created_byuser.id = action.User_ID
                  LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by";
 
-            string condition = " where tilltypes.Name = 'Pay' and account.SubProject_ID in ("+ SubProject_ID + ") ";
+            string condition = " where tilltypes.Name = 'Pay' and account.SubProject_ID in (" + SubProject_ID + ") ";
 
-            if( Action_ID != -1 )
+            if (Action_ID != -1)
             {
                 condition += " AND action.id = @Action_ID";
             }
-            if(FromDate != "")
+            if (FromDate != "")
             {
                 condition += " AND action.`ActionDate` >= @FromDate";
             }
-            if(ToDate != "")
+            if (ToDate != "")
             {
                 condition += " AND action.`ActionDate` <= @ToDate";
             }
@@ -143,7 +145,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@ToDate", ToDate);
 
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -230,7 +234,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@FromDate", FromDate);
                 sc.Parameters.AddWithValue("@ToDate", ToDate);
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -297,9 +303,11 @@ namespace Financial_WPF_App.Models
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
-      
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -308,6 +316,7 @@ namespace Financial_WPF_App.Models
             }
             return dt;
         }
+
         public DataTable Select_Cash_Payments(int SubProject_ID)
         {
             string query = "SELECT cash_balances.CashAccount_id as 'CashAccount_id',cash_balances.Account_Name as 'Account', cash_balances.CashAccount_Name AS 'Cash till', cash_balances.Account_I AS 'Income'," +
@@ -320,7 +329,9 @@ namespace Financial_WPF_App.Models
                 MySqlCommand sc = new MySqlCommand();
 
                 sc.Parameters.AddWithValue("@SubProject_ID", SubProject_ID);
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -470,7 +481,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
                 Login.CloseAndClearConnection();
@@ -554,7 +567,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
                 Login.CloseAndClearConnection();
@@ -632,7 +647,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
                 Login.CloseAndClearConnection();
@@ -641,85 +658,87 @@ namespace Financial_WPF_App.Models
 
         public void Delete_Payment(int ID, int Beneficiary_ID, bool Approved_Action, string Form_Name)
         {
-          
-                string query = "";
-                string log_query = "";
 
-                if (Login.BuildConnection())
+            string query = "";
+            string log_query = "";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@ID", ID);
+                sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+
+                string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
+                sc.Parameters.AddWithValue("@Todaydate", Todaydate);
+                sc.Parameters.AddWithValue("@Uesr_ID", Settings.Default.User_ID);
+
+                query += "START TRANSACTION;";
+
+                if (Approved_Action)
                 {
-                    MySqlCommand sc = new MySqlCommand();
+                    query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID OR action.ObserveAcion_ID = @ID;";
 
-                    sc.Parameters.AddWithValue("@ID", ID);
-                    sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+                    query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
 
-                    string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-                    sc.Parameters.AddWithValue("@Todaydate", Todaydate);
-                    sc.Parameters.AddWithValue("@Uesr_ID", Settings.Default.User_ID);
+                    query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID;";
 
-                    query += "START TRANSACTION;";
-
-                    if (Approved_Action)
-                    {
-                        query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID OR action.ObserveAcion_ID = @ID;";
-
-                        query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
-
-                        query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID;";
-
-                        query += "DELETE FROM action WHERE action.id  = @ID;";
+                    query += "DELETE FROM action WHERE action.id  = @ID;";
 
 
-                        //query += "DELETE FROM `action` WHERE action.ObserveAcion_ID = @ID;";
+                    //query += "DELETE FROM `action` WHERE action.ObserveAcion_ID = @ID;";
 
-                        //query += "DELETE FROM `action` WHERE action.ID = @ID;";
+                    //query += "DELETE FROM `action` WHERE action.ID = @ID;";
 
-                        //query += "DELETE FROM action_payment WHERE action_id = @ID;";
+                    //query += "DELETE FROM action_payment WHERE action_id = @ID;";
 
-                    }
-                    else
-                    {
-                        query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID OR action_not_approved.ObserveAcion_ID = @ID;";
-
-                        query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
-
-                        query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID;";
-
-                        query += "DELETE FROM action_not_approved WHERE action_not_approved.id  = @ID;";
-
-                        //query += "DELETE FROM `action_not_approved` WHERE action_not_approved.ObserveAcion_ID = @ID;";
-
-                        //query += "DELETE FROM `action_not_approved` WHERE action_not_approved.ID = @ID;";
-
-                        //query += "DELETE FROM action_payment WHERE action_id = @ID;";
-
-                    }
-
-
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-
-                    //if(Approved_Action)
-                    //{
-                    //    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'action', @ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-                    //}
-                    //else
-                    //{
-                    //    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'action_not_approved', @ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-                    //}
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120;sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.CloseAndClearConnection();
                 }
-            
+                else
+                {
+                    query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID OR action_not_approved.ObserveAcion_ID = @ID;";
+
+                    query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
+
+                    query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID;";
+
+                    query += "DELETE FROM action_not_approved WHERE action_not_approved.id  = @ID;";
+
+                    //query += "DELETE FROM `action_not_approved` WHERE action_not_approved.ObserveAcion_ID = @ID;";
+
+                    //query += "DELETE FROM `action_not_approved` WHERE action_not_approved.ID = @ID;";
+
+                    //query += "DELETE FROM action_payment WHERE action_id = @ID;";
+
+                }
+
+
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
+                {
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
+                }
+
+                //if(Approved_Action)
+                //{
+                //    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'action', @ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+                //}
+                //else
+                //{
+                //    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'action_not_approved', @ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+                //}
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
+            }
+
         }
 
         public void Delay_Payments(int Monthes, List<int> Beneficiary_IDs)
@@ -751,7 +770,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
                 Login.CloseAndClearConnection();
@@ -769,7 +790,9 @@ namespace Financial_WPF_App.Models
 
             if (Login.BuildConnection())
             {
-                Login.MultiPayments_sc.CommandTimeout = 120; Login.MultiPayments_sc.CommandText = query;
+                Login.MultiPayments_sc.CommandTimeout = 120;
+                Login.MultiPayments_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                Login.MultiPayments_sc.Parameters.AddWithValue("@t", 600);
                 Login.MultiPayments_sc.Connection = Login.MyConn;
 
                 Login.MultiPayments_sc.ExecuteScalar();

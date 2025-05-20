@@ -14,7 +14,9 @@ namespace Financial_WPF_App.Models
 
             string query = @" CALL Select_Budget_Details(@Account_ID);";
 
-            sc.CommandTimeout = 120;sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -47,7 +49,9 @@ namespace Financial_WPF_App.Models
             if(Account_ID != -1)
                 query += " and account.ID = @Account_ID";
 
-            sc.CommandTimeout = 120;sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -134,7 +138,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 Budget_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -226,7 +232,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -265,7 +273,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -309,7 +319,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -348,7 +360,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -376,7 +390,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Budget_ID", Budget_ID);
 
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -394,7 +410,9 @@ namespace Financial_WPF_App.Models
 
             string query = "CALL `Lines_ExpensesReport`(@Account_ID,@Budget_ID);";
 
-            sc.CommandTimeout = 120;sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -415,7 +433,9 @@ namespace Financial_WPF_App.Models
 
             string query = "CALL `LineTypes_ExpensesReport`(@Account_ID,@Budget_ID);";
 
-            sc.CommandTimeout = 120;sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();

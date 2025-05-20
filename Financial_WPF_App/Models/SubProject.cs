@@ -50,7 +50,9 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -153,7 +155,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 SUB_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -204,7 +208,7 @@ namespace Financial_WPF_App.Models
                     for (int i = 0; i < Delete_donors.Count; i++)
                     {
                         sc.Parameters.AddWithValue("@Deletedonor" + i, Delete_donors[i]);
-                        
+
                         if (WithPaymentAccount)
                         {
                             query += " set @deletedAccID" + i + " = ( select GROUP_CONCAT(`account`.`id`) FROM `account` left join account_donor on account.id = account_donor.account_id left join till on till.account_id = account.id left join tilltypes on tilltypes.id = till.type_id where SubProject_ID = @ID AND account_donor.Donor_ID = (select ID from donor where Name like @Deletedonor" + i + ") and tilltypes.name like 'pay');";
@@ -254,7 +258,7 @@ namespace Financial_WPF_App.Models
 
                 query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'subproject', @ID, CONCAT('subproject Name = ', @name), '' , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
-                
+
                 if (Delete_donors.Count != 0)
                 {
                     for (int i = 0; i < Delete_donors.Count; i++)
@@ -264,7 +268,7 @@ namespace Financial_WPF_App.Models
                             query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'account', @deletedAccID" + i + ",  CONCAT('account Name = ', @deletedAccName" + i + "), CONCAT('Auto deleted with subproject ID = ', @ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     }
                 }
-                
+
                 if (Add_donors.Count > 0)
                     for (int i = 0; i < Add_donors.Count; i++)
                     {
@@ -279,7 +283,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -289,41 +295,43 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int ID, string Sub_Name, string Form_Name)
         {
-           
-                string query = "";
-                string log_query = "";
 
-                if (Login.BuildConnection())
+            string query = "";
+            string log_query = "";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@ID", ID);
+                sc.Parameters.AddWithValue("@Sub_Name", Sub_Name);
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+
+                query += "START TRANSACTION;";
+                query += " DELETE `account_donor` FROM `account_donor` left join account on account_donor.account_id = account.id WHERE account.SubProject_ID = @ID;";
+                query += " DELETE FROM `subproject` WHERE ID = @ID;";
+
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
                 {
-                    MySqlCommand sc = new MySqlCommand();
-
-                    sc.Parameters.AddWithValue("@ID", ID);
-                    sc.Parameters.AddWithValue("@Sub_Name", Sub_Name);
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-
-                    query += "START TRANSACTION;";
-                    query += " DELETE `account_donor` FROM `account_donor` left join account on account_donor.account_id = account.id WHERE account.SubProject_ID = @ID;";
-                    query += " DELETE FROM `subproject` WHERE ID = @ID;";
-
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-
-                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'subproject', @ID, CONCAT('subproject Name = ', @Sub_Name), '' , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
-
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120;sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.CloseAndClearConnection();
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
                 }
-            
+
+                query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'subproject', @ID, CONCAT('subproject Name = ', @Sub_Name), '' , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
+            }
+
         }
 
     }

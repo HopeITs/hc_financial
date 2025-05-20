@@ -55,7 +55,9 @@ namespace Financial_WPF_App.Models
 
                 sc.Parameters.AddWithValue("@Rate_ID", Rate_ID);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -80,7 +82,9 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -97,7 +101,9 @@ namespace Financial_WPF_App.Models
 
             string query = @" CALL Select_Syr_Balances(@TillType_ID);";
 
-            sc.CommandTimeout = 120; sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -117,7 +123,9 @@ namespace Financial_WPF_App.Models
 
             string query = @" CALL Select_PerDonor_AvgRate(@Account_ID);";
 
-            sc.CommandTimeout = 120;sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -163,7 +171,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@FromTill", FromTill);
                 sc.Parameters.AddWithValue("@ToTill", ToTill);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -197,7 +207,7 @@ namespace Financial_WPF_App.Models
 
             string condition = " where 1 and totp.`name` =@ToTill";
 
-            if(Account_ID != "")
+            if (Account_ID != "")
             {
                 condition += " and Account_ID = @Account_ID";
             }
@@ -211,7 +221,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Account_ID", Account_ID);
                 sc.Parameters.AddWithValue("@ToTill", ToTill);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -267,7 +279,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 Rate_ID = Convert.ToInt32(sc.ExecuteScalar());
                 Login.CloseAndClearConnection();
@@ -316,7 +330,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -326,42 +342,44 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int ID, int Account_ID, string Rate_Name, string Form_Name)
         {
-            
-                string query = "";
-                string log_query = "";
 
-                if (Login.BuildConnection())
+            string query = "";
+            string log_query = "";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@ID", ID);
+                sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+                sc.Parameters.AddWithValue("@Rate_Name", Rate_Name);
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+
+                query += "START TRANSACTION;";
+
+                query += "DELETE FROM `rate` WHERE ID = @ID;";
+
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
                 {
-                    MySqlCommand sc = new MySqlCommand();
-
-                    sc.Parameters.AddWithValue("@ID", ID);
-                    sc.Parameters.AddWithValue("@Account_ID", Account_ID);
-                    sc.Parameters.AddWithValue("@Rate_Name", Rate_Name);
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-
-                    query += "START TRANSACTION;";
-
-                    query += "DELETE FROM `rate` WHERE ID = @ID;";
-
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-
-                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'rate', @ID, CONCAT('rate Name = ', @Rate_Name), CONCAT('account ID = ', @Account_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
-
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120;sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.CloseAndClearConnection();
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
                 }
-            
+
+                query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'rate', @ID, CONCAT('rate Name = ', @Rate_Name), CONCAT('account ID = ', @Account_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
+            }
+
 
         }
 
@@ -373,7 +391,9 @@ namespace Financial_WPF_App.Models
 
                 string query = @"CALL calculate_avgrate(" + Account_ID + ",'" + BeginDate + "','" + EndDate + "','" + FromTill + "','" + ToTill + "')";
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 var n = 0.0;
@@ -399,7 +419,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@beginDate", beginDate);
                 sc.Parameters.AddWithValue("@endDate", endDate);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);

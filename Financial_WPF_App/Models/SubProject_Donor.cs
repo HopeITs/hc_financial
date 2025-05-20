@@ -42,7 +42,9 @@ namespace Financial_WPF_App.Models
             {
 
                 MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -56,13 +58,14 @@ namespace Financial_WPF_App.Models
         {
             if (Login.BuildConnection())
             {
-
-                string query = @"select Name 
+                string query = @"SET SESSION wait_timeout = @t;
+                            select Name 
                          from `donor` join subproject_donor on donor.ID = subproject_donor.Donor_ID 
                          where `SubProject_ID` = " + SubProject_ID;
 
 
                 MySqlCommand sc = new MySqlCommand(query, Login.MyConn);
+                sc.Parameters.AddWithValue("@t", 600);
                 using (var reader = sc.ExecuteReader())
                 {
                     var list = new List<string>();

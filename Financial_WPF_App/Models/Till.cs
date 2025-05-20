@@ -38,7 +38,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Without_type", Without_type.ToLower());
                 sc.Parameters.AddWithValue("@Till_ID", Till_ID);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -74,7 +76,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Without_type", Without_type.ToLower());
                 sc.Parameters.AddWithValue("@Till_ID", Till_ID);
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -98,7 +102,9 @@ namespace Financial_WPF_App.Models
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -131,7 +137,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Account_ID", Account_ID);
                 sc.Parameters.AddWithValue("@Without_type", Without_type.ToLower());
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -149,7 +157,7 @@ namespace Financial_WPF_App.Models
 
 
             condition += " and LOWER(tilltypes.Name) NOT IN ('syr','pay');";
-            
+
 
             query += condition;
 
@@ -158,7 +166,9 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -182,7 +192,9 @@ namespace Financial_WPF_App.Models
 
                 sc.Parameters.AddWithValue("@Account_ID", Account_ID);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -207,7 +219,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Account_ID", Account_ID);
                 sc.Parameters.AddWithValue("@Till_ID", Till_ID);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -246,7 +260,9 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -285,7 +301,9 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -310,7 +328,9 @@ namespace Financial_WPF_App.Models
 
                 sc.Parameters.AddWithValue("@SubProject_ID", SubProject_ID);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -361,7 +381,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 Till_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -372,41 +394,43 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int ID, string TillType_Name, int Acc_ID, string Form_Name)
         {
-         
-                string query = "";
-                string log_query = "";
 
-                if (Login.BuildConnection())
+            string query = "";
+            string log_query = "";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@ID", ID);
+                sc.Parameters.AddWithValue("@TillType_Name", TillType_Name);
+                sc.Parameters.AddWithValue("@Acc_ID", Acc_ID);
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+
+                query += "START TRANSACTION;";
+
+                query += "DELETE FROM `till` WHERE ID = @ID;";
+
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
                 {
-                    MySqlCommand sc = new MySqlCommand();
-
-                    sc.Parameters.AddWithValue("@ID", ID);
-                    sc.Parameters.AddWithValue("@TillType_Name", TillType_Name);
-                    sc.Parameters.AddWithValue("@Acc_ID", Acc_ID);
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-
-                    query += "START TRANSACTION;";
-
-                    query += "DELETE FROM `till` WHERE ID = @ID;";
-
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-
-                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'till', @ID, CONCAT('till Type = ', @TillType_Name), CONCAT('account ID = ', @Acc_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120;sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.CloseAndClearConnection();
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
                 }
-            
+
+                query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'till', @ID, CONCAT('till Type = ', @TillType_Name), CONCAT('account ID = ', @Acc_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
+            }
+
         }
     }
 }

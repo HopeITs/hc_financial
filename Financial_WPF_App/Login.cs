@@ -156,7 +156,7 @@ namespace Financial_WPF_App.Models
         public static void CloseAndClearConnection()
         {
             MyConn.Close();
-            MySqlConnection.ClearAllPools();
+            MyConn.ClearAllPoolsAsync();
         }
 
         public static string ReplaceQuotation(string value)
@@ -183,7 +183,9 @@ namespace Financial_WPF_App.Models
                 query += " COMMIT;";
 
                 MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 sc.ExecuteNonQuery();

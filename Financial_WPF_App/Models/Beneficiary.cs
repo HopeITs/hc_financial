@@ -35,7 +35,7 @@ namespace Financial_WPF_App.Models
                                 + ", `ReceiptNumber`, `OrderNumber`, beneficiary.`Account_ID` "
                                 + ", account.SubProject_ID "
                                 + ", (select account.Name from account left join account_donor on account.id = account_donor.account_id where account_donor.account_id = beneficiary.Account_ID) as 'account' "
-                                + ", account_donor.Donor_ID as 'Donor_ID'" 
+                                + ", account_donor.Donor_ID as 'Donor_ID'"
 
                                 + " FROM `beneficiary` left join `account` on account.ID = beneficiary.Account_ID"
                                 + " LEFT JOIN account_donor ON account_donor.account_ID = account.ID";
@@ -59,7 +59,9 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -142,14 +144,14 @@ namespace Financial_WPF_App.Models
                             `MicroProject_ID`, `Project_Name`, `Amount`, `Date`,`FirstPaymentDate`, `ToReturn_Amount`, `payment`, `Payment_Interval`, `Notes`, `ReceiptNumber`, `OrderNumber`, `Account_ID`)
                             VALUES(@FirstName, @LastName, @FatherName, @NationalNumber , @Mobile , @Partners , @MicroProject_ID , @Project_Name ,
                             @Amount , @Date , @FirstPaymentDate , @ToReturn_Amount , @payment , @Payment_Interval,
-                            @Notes , @ReceiptNumber , @OrderNumber , @Account_ID);"; 
+                            @Notes , @ReceiptNumber , @OrderNumber , @Account_ID);";
 
                 query += " SET @Beneficiary_ID = Last_Insert_ID();";
 
 
                 query += " SELECT @Beneficiary_ID;";
 
-                if(RegeneratePayments)
+                if (RegeneratePayments)
                     query += "Call ReGenerate_allPayments(@Beneficiary_ID);";
 
 
@@ -165,7 +167,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 Beneficiary_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -293,7 +297,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -303,49 +309,51 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int Beneficiary_ID, string SubProject_ID, string Name, int Account_ID, string Form_Name)
         {
-         
-                string query = "";
-                string log_query = "";
 
-                if (Login.BuildConnection())
+            string query = "";
+            string log_query = "";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
+                sc.Parameters.AddWithValue("@SubProject_ID", SubProject_ID);
+                sc.Parameters.AddWithValue("@Name", Name);
+                sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+
+                query += "START TRANSACTION;";
+
+                query += "SET @MicroProject_ID = (SELECT MicroProject_ID FROM beneficiary WHERE ID = @Beneficiary_ID);";
+
+                query += "DELETE action FROM action LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN account on till.Account_ID = account.ID WHERE action.MicroProject_ID =  @MicroProject_ID AND account.SubProject_ID = @SubProject_ID;";
+
+                query += "DELETE action_not_approved FROM action_not_approved LEFT JOIN till ON action_not_approved.Till_ID = till.ID LEFT JOIN account on till.Account_ID = account.ID WHERE action_not_approved.MicroProject_ID =  @MicroProject_ID AND account.SubProject_ID = @SubProject_ID;";
+
+
+                query += "DELETE FROM `beneficiary` WHERE ID = @Beneficiary_ID;";
+
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
                 {
-                    MySqlCommand sc = new MySqlCommand();
-
-                    sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
-                    sc.Parameters.AddWithValue("@SubProject_ID", SubProject_ID);
-                    sc.Parameters.AddWithValue("@Name", Name);
-                    sc.Parameters.AddWithValue("@Account_ID", Account_ID);
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-
-                    query += "START TRANSACTION;";
-
-                    query += "SET @MicroProject_ID = (SELECT MicroProject_ID FROM beneficiary WHERE ID = @Beneficiary_ID);";
-
-                    query += "DELETE action FROM action LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN account on till.Account_ID = account.ID WHERE action.MicroProject_ID =  @MicroProject_ID AND account.SubProject_ID = @SubProject_ID;";
-
-                    query += "DELETE action_not_approved FROM action_not_approved LEFT JOIN till ON action_not_approved.Till_ID = till.ID LEFT JOIN account on till.Account_ID = account.ID WHERE action_not_approved.MicroProject_ID =  @MicroProject_ID AND account.SubProject_ID = @SubProject_ID;";
-
-
-                    query += "DELETE FROM `beneficiary` WHERE ID = @Beneficiary_ID;";
-
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-
-                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'beneficiary', @Beneficiary_ID, CONCAT('beneficiary Name = ', @Name), CONCAT('account ID = ',@Account_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120;sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.CloseAndClearConnection();
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
                 }
-            
+
+                query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'beneficiary', @Beneficiary_ID, CONCAT('beneficiary Name = ', @Name), CONCAT('account ID = ',@Account_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
+            }
+
         }
 
         public void Delete_Multi_Beneficiaries()
@@ -359,7 +367,9 @@ namespace Financial_WPF_App.Models
             query += " COMMIT;";
             if (Login.BuildConnection())
             {
-                Login.DeleteMultiBeneficiary_sc.CommandTimeout = 120; Login.DeleteMultiBeneficiary_sc.CommandText = query;
+                Login.DeleteMultiBeneficiary_sc.CommandTimeout = 120;
+                Login.DeleteMultiBeneficiary_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                Login.DeleteMultiBeneficiary_sc.Parameters.AddWithValue("@t", 600);
                 Login.DeleteMultiBeneficiary_sc.Connection = Login.MyConn;
 
                 Login.DeleteMultiBeneficiary_sc.ExecuteScalar();
@@ -377,7 +387,9 @@ namespace Financial_WPF_App.Models
 
             string query = "CALL `get_account_beneficiaries` (@Account_ID, @SubProject_ID);";
 
-            sc.CommandTimeout = 120;sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -405,7 +417,9 @@ namespace Financial_WPF_App.Models
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -437,7 +451,9 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@MicroPorject_ID", MicroPorject_ID);
                 sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
 
-                sc.CommandTimeout = 120;sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -458,7 +474,9 @@ namespace Financial_WPF_App.Models
                                 FROM `beneficiary` left join `account` on account.ID = beneficiary.Account_ID 
                                 WHERE account.SubProject_ID = @Subproject_ID";
 
-            sc.CommandTimeout = 120;sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -482,7 +500,9 @@ namespace Financial_WPF_App.Models
 
             if (Login.BuildConnection())
             {
-                Login.MultiBeneficiary_sc.CommandTimeout = 120; Login.MultiBeneficiary_sc.CommandText = query;
+                Login.MultiBeneficiary_sc.CommandTimeout = 120;
+                Login.MultiBeneficiary_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                Login.MultiBeneficiary_sc.Parameters.AddWithValue("@t", 600);
                 Login.MultiBeneficiary_sc.Connection = Login.MyConn;
 
                 Login.MultiBeneficiary_sc.ExecuteScalar();

@@ -29,7 +29,9 @@ namespace Financial_WPF_App.Models
 
             query += " GROUP BY employee.id;";
 
-            sc.CommandTimeout = 120; sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -56,7 +58,7 @@ namespace Financial_WPF_App.Models
                     left join subproject on subproject.id = employee_subproject.subproject_id
                     left join line on line.id = employee_subproject.line_id WHERE 1";
 
-            if(Employee_ID != -1)
+            if (Employee_ID != -1)
             {
                 sc.Parameters.AddWithValue("@Employee_ID", Employee_ID);
 
@@ -66,7 +68,9 @@ namespace Financial_WPF_App.Models
             {
                 query += ";";
             }
-            sc.CommandTimeout = 120; sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -105,7 +109,9 @@ namespace Financial_WPF_App.Models
             }
 
             query += " ORDER BY subproject.Name ASC;";
-            sc.CommandTimeout = 120; sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -136,7 +142,9 @@ namespace Financial_WPF_App.Models
             }
 
 
-            sc.CommandTimeout = 120; sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -224,7 +232,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 Employee_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -327,7 +337,9 @@ namespace Financial_WPF_App.Models
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -337,41 +349,43 @@ namespace Financial_WPF_App.Models
 
         public void Delete(int Employee_ID, string Employee_Name, string Form_Name)
         {
-           
-                string query = "";
-                string log_query = "";
 
-                if (Login.BuildConnection())
+            string query = "";
+            string log_query = "";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@Employee_ID", Employee_ID);
+                sc.Parameters.AddWithValue("@Employee_Name", Employee_Name);
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+
+
+                query += "START TRANSACTION;";
+
+                query += "DELETE FROM `employee` WHERE ID = @Employee_ID;";
+
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
                 {
-                    MySqlCommand sc = new MySqlCommand();
-
-                    sc.Parameters.AddWithValue("@Employee_ID", Employee_ID);
-                    sc.Parameters.AddWithValue("@Employee_Name", Employee_Name);
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-
-
-                    query += "START TRANSACTION;";
-
-                    query += "DELETE FROM `employee` WHERE ID = @Employee_ID;";
-
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-
-                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'employee', @Employee_ID, CONCAT('Employee Name = ', @Employee_Name), '' , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120; sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.CloseAndClearConnection();
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
                 }
-            
+
+                query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'employee', @Employee_ID, CONCAT('Employee Name = ', @Employee_Name), '' , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
+            }
+
         }
 
         public void Insert_Multi_Salaries()
@@ -385,7 +399,9 @@ namespace Financial_WPF_App.Models
 
             if (Login.BuildConnection())
             {
-                Login.MultiSalaries_sc.CommandTimeout = 120; Login.MultiSalaries_sc.CommandText = query;
+                Login.MultiSalaries_sc.CommandTimeout = 120;
+                Login.MultiSalaries_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                Login.MultiSalaries_sc.Parameters.AddWithValue("@t", 600);
                 Login.MultiSalaries_sc.Connection = Login.MyConn;
 
                 Login.MultiSalaries_sc.ExecuteScalar();
@@ -396,42 +412,44 @@ namespace Financial_WPF_App.Models
 
         public void Delete_Employee_Salary(int Employee_Salary_ID, int Employee_ID, string Line_Name, string Form_Name)
         {
-        
-                string query = "";
-                string log_query = "";
 
-                if (Login.BuildConnection())
+            string query = "";
+            string log_query = "";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@Employee_Salary_ID", Employee_Salary_ID);
+                sc.Parameters.AddWithValue("@Employee_ID", Employee_ID);
+                sc.Parameters.AddWithValue("@Line_Name", Line_Name);
+                sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+
+
+                query += "START TRANSACTION;";
+
+                query += "DELETE FROM `employee_salary` WHERE ID = @Employee_Salary_ID;";
+
+                log_query = Regex.Replace(query, "'", "''");
+
+                foreach (MySqlParameter p in sc.Parameters)
                 {
-                    MySqlCommand sc = new MySqlCommand();
-
-                    sc.Parameters.AddWithValue("@Employee_Salary_ID", Employee_Salary_ID);
-                    sc.Parameters.AddWithValue("@Employee_ID", Employee_ID);
-                    sc.Parameters.AddWithValue("@Line_Name", Line_Name);
-                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-
-
-                    query += "START TRANSACTION;";
-
-                    query += "DELETE FROM `employee_salary` WHERE ID = @Employee_Salary_ID;";
-
-                    log_query = Regex.Replace(query, "'", "''");
-
-                    foreach (MySqlParameter p in sc.Parameters)
-                    {
-                        log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
-                    }
-
-                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'employee_salary', @Employee_Salary_ID, CONCAT('Employee ID = ', @Employee_ID), CONCAT('Line Name = ',  @Line_Name), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
-                    query += " COMMIT;";
-
-                    sc.CommandTimeout = 120; sc.CommandText = query;
-                    sc.Connection = Login.MyConn;
-                    sc.ExecuteScalar();
-
-                    Login.CloseAndClearConnection();
+                    log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
                 }
-            
+
+                query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'employee_salary', @Employee_Salary_ID, CONCAT('Employee ID = ', @Employee_ID), CONCAT('Line Name = ',  @Line_Name), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+                query += " COMMIT;";
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.ExecuteScalar();
+
+                Login.CloseAndClearConnection();
+            }
+
         }
 
         public void Delete_Multi_Employee_Salary()
@@ -445,7 +463,9 @@ namespace Financial_WPF_App.Models
             query += " COMMIT;";
             if (Login.BuildConnection())
             {
-                Login.DeleteMultiMonthlySalaries_sc.CommandTimeout = 120; Login.DeleteMultiMonthlySalaries_sc.CommandText = query;
+                Login.DeleteMultiMonthlySalaries_sc.CommandTimeout = 120;
+                Login.DeleteMultiMonthlySalaries_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                Login.DeleteMultiMonthlySalaries_sc.Parameters.AddWithValue("@t", 600);
                 Login.DeleteMultiMonthlySalaries_sc.Connection = Login.MyConn;
 
                 Login.DeleteMultiMonthlySalaries_sc.ExecuteScalar();

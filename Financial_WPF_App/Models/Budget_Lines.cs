@@ -13,7 +13,9 @@ namespace Financial_WPF_App.Models
 
             string query = @"CALL Select_Budget_Lines_Details(@Budget_ID)";
 
-            sc.CommandTimeout = 120; sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -33,7 +35,9 @@ namespace Financial_WPF_App.Models
 
             string query = @"CALL Select_All_Budget_Lines_Details(@Budget_Type_ID)";
 
-            sc.CommandTimeout = 120; sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -52,7 +56,9 @@ namespace Financial_WPF_App.Models
 
             string query = @"SELECT DISTINCT (all_budgetlines.BudgetType_ID), all_budgetlines.BudgetType FROM all_budgetlines;";
 
-            sc.CommandTimeout = 120; sc.CommandText = query;
+            sc.CommandTimeout = 120;
+            sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+            sc.Parameters.AddWithValue("@t", 600);
             sc.Connection = Login.MyConn;
 
             DataTable dt = new DataTable();
@@ -88,7 +94,9 @@ namespace Financial_WPF_App.Models
 
                 sc.Parameters.AddWithValue("@Account_ID", Account_ID);
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -119,7 +127,9 @@ namespace Financial_WPF_App.Models
 
                 sc.Parameters.AddWithValue("@Account_ID", Account_ID);
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -149,7 +159,9 @@ namespace Financial_WPF_App.Models
 
                 sc.Parameters.AddWithValue("@Budget_ID", Budget_ID);
                 sc.Parameters.AddWithValue("@Project_ID", Project_ID);
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -173,7 +185,9 @@ namespace Financial_WPF_App.Models
 
             if (Login.BuildConnection())
             {
-                Login.MultiBudgetLines_sc.CommandTimeout = 120; Login.MultiBudgetLines_sc.CommandText = query;
+                Login.MultiBudgetLines_sc.CommandTimeout = 120;
+                Login.MultiBudgetLines_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                Login.MultiBudgetLines_sc.Parameters.AddWithValue("@t", 600);
                 Login.MultiBudgetLines_sc.Connection = Login.MyConn;
 
                 Login.MultiBudgetLines_sc.ExecuteScalar();
@@ -195,7 +209,9 @@ namespace Financial_WPF_App.Models
             query += " COMMIT;";
             if (Login.BuildConnection())
             {
-                Login.MissingBudgetLines_sc.CommandTimeout = 120; Login.MissingBudgetLines_sc.CommandText = query;
+                Login.MissingBudgetLines_sc.CommandTimeout = 120;
+                Login.MissingBudgetLines_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                Login.MissingBudgetLines_sc.Parameters.AddWithValue("@t", 600);
                 Login.MissingBudgetLines_sc.Connection = Login.MyConn;
 
                 Login.MissingBudgetLines_sc.ExecuteScalar();
