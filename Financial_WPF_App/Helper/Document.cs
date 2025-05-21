@@ -101,7 +101,9 @@ namespace Financial_WPF_App.Helper
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 Attachment_ID = Convert.ToInt32(sc.ExecuteScalar());
 
@@ -164,7 +166,9 @@ namespace Financial_WPF_App.Helper
 
                 query += " COMMIT;";
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
                 sc.ExecuteScalar();
 
@@ -195,7 +199,9 @@ namespace Financial_WPF_App.Helper
                 sc.Parameters.AddWithValue("@action_id", action_id);
                 sc.Parameters.AddWithValue("@beneficiary_id", beneficiary_id);
 
-                sc.CommandTimeout = 120; sc.CommandText = query;
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
