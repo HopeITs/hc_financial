@@ -38,6 +38,7 @@ namespace Financial_WPF_App
         public Main_Window_2()
         {
             InitializeComponent();
+            CultureManager.Instance.ChangeCulture("en");
             this.StateChanged += Window_StateChanged;
             // Apply custom chrome behavior here
             var chrome = new WindowChrome
@@ -67,6 +68,30 @@ namespace Financial_WPF_App
             On_Load();
 
         }
+        private void SwitchToEnglish_Click(object sender, RoutedEventArgs e)
+        {
+            CultureManager.Instance.ChangeCulture("en");
+            CultureManager.UpdateAllWindowsFlowDirection();
+        }
+
+        private void SwitchToArabic_Click(object sender, RoutedEventArgs e)
+        {
+            CultureManager.Instance.ChangeCulture("ar");
+            CultureManager.UpdateAllWindowsFlowDirection();
+        }
+
+        private void SetLanguage(string cultureCode)
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(cultureCode);
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureCode);
+
+            // Change FlowDirection (RTL or LTR)
+            this.FlowDirection = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft
+                ? FlowDirection.RightToLeft
+                : FlowDirection.LeftToRight;
+
+        }
+
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Maximized)
@@ -333,21 +358,21 @@ namespace Financial_WPF_App
             // Update the button's background image
             if (Settings.Default.Online)
             {
-                Online_Button.Background = new ImageBrush
-                {
-                    ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/online.png", UriKind.Absolute)),
-                    Stretch = Stretch.Uniform
-                };
-                Online_Button.ToolTip = "Online Database";
+                //Online_Button.Background = new ImageBrush
+                //{
+                //    ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/online.png", UriKind.Absolute)),
+                //    Stretch = Stretch.Uniform
+                //};
+                //Online_Button.ToolTip = "Online Database";
             }
             else
             {
-                Online_Button.Background = new ImageBrush
-                {
-                    ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/online_hover.png", UriKind.Absolute)),
-                    Stretch = Stretch.Uniform
-                };
-                Online_Button.ToolTip = "Offline Database";
+                //Online_Button.Background = new ImageBrush
+                //{
+                //    ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/online_hover.png", UriKind.Absolute)),
+                //    Stretch = Stretch.Uniform
+                //};
+                //Online_Button.ToolTip = "Offline Database";
             }
         }
 

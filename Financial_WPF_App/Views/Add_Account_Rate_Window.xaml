@@ -24,7 +24,7 @@
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="7">
+            <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="7" FlowDirection="LeftToRight">
                 <local:WindowControlBar_Popup x:Name="ControlBar"/>
             </DockPanel>
             <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Rate group name:"  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />

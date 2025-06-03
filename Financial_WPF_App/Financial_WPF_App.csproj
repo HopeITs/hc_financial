@@ -316,6 +316,7 @@
     <Compile Include="Helper\Approval_CustomRowStyleSelector.cs" />
     <Compile Include="Helper\CellStyleSelector.cs" />
     <Compile Include="Helper\ComboBoxBehaviorManager.cs" />
+    <Compile Include="Helper\CultureManager.cs" />
     <Compile Include="Helper\CustomAlternatingRowStyleSelector.cs" />
     <Compile Include="Helper\CustomCopyPaste.cs" />
     <Compile Include="Controls\AutoCompleteTextBoxUserControl.xaml.cs">
@@ -328,6 +329,7 @@
     <Compile Include="Helper\ExtractTextFromHeader.cs" />
     <Compile Include="Helper\GridCustomStackedRenderer.cs" />
     <Compile Include="Helper\InputValidationHelper.cs" />
+    <Compile Include="Helper\LocExtension.cs" />
     <Compile Include="Helper\MouseClickComboBoxBehavior .cs" />
     <Compile Include="Helper\MultiAttachments_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiBeneficiares_CustomCopyPaste.cs" />
@@ -350,6 +352,11 @@
     <Compile Include="Helper\TreeViewItemViewModel.cs" />
     <Compile Include="Models\Version.cs" />
     <Compile Include="Design\TreeViewItemHeaderContainsWordConverter.cs" />
+    <Compile Include="Properties\Resources.ar.Designer.cs">
+      <DependentUpon>Resources.ar.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Views\Account_Budget_Lines_Windows.xaml.cs">
       <DependentUpon>Account_Budget_Lines_Windows.xaml</DependentUpon>
     </Compile>
@@ -816,6 +823,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Resources.ar.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.ar.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>

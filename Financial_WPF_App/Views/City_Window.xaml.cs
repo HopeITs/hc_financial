@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,6 +16,7 @@ namespace Financial_WPF_App
         public CityWindow(Main_Window_2 main_Window)
         {
             InitializeComponent();
+            this.FlowDirection = CultureManager.GetCurrentFlowDirection();
             this.main_Window = main_Window;
             if (OnLoad())
             {

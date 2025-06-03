@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Financial_WPF_App" 
+    xmlns:helper="clr-namespace:Financial_WPF_App.Helper"
     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
     xmlns:Themes="clr-namespace:Dragablz.Themes;assembly=Dragablz" 
     xmlns:Converters="clr-namespace:Dragablz.Converters;assembly=Dragablz"
@@ -477,7 +478,7 @@
                             </MenuItem>
 
                             <!-- Regular MenuItem -->
-                            <MenuItem x:Name="Log_MenuItem" Header="Log" Click="Log_MenuItemAdv_Click" Style="{StaticResource MenuItemStyle1}" DataContext="{Binding Source={StaticResource MenuIcon6}}" VerticalAlignment="Bottom"/>
+                            <MenuItem x:Name="Log_MenuItem" Header="{helper:Loc Key=Log}" Click="Log_MenuItemAdv_Click" Style="{StaticResource MenuItemStyle1}" DataContext="{Binding Source={StaticResource MenuIcon6}}" VerticalAlignment="Bottom"/>
                         </Menu>
                         <!-- Add a Grid for user-related controls -->
                         <Grid Grid.Column="2" FlowDirection="RightToLeft" Margin="0,0,70,0" VerticalAlignment="Top" Height="28">
@@ -528,13 +529,17 @@
                             </Button>
 
                             <!-- Online/Offline Button -->
-
-                            <Button x:Name="Online_Button" ToolTip="Online/Offline Database" Grid.Column="2"
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2"
+                                Cursor="Arrow">
+                                <Button Width="25" Height="25" Content="EN" Click="SwitchToEnglish_Click" Margin="5"/>
+                                <Button Width="25" Height="25" Content="AR" Click="SwitchToArabic_Click" Margin="5"/>
+                            </StackPanel>
+                            <!--<Button x:Name="Online_Button" ToolTip="Online/Offline Database" Grid.Column="2"
                                 Cursor="Arrow" Width="25" Height="28" BorderBrush="{x:Null}" Margin="0,0,7,0">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/online.png" Stretch="Uniform" />
                                 </Button.Background>
-                            </Button>
+                            </Button>-->
                             <Label x:Name="UserRole_label" Content="Role" FontFamily="Rubik"  Height="28" Padding="5,0,5,1.5" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right" FontSize="10" Margin="-45,0,0,0">
                                 <Label.Style>
                                     <Style TargetType="{x:Type Label}">
