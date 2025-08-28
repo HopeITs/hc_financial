@@ -659,7 +659,8 @@ namespace Financial_WPF_App
 
 
             // Group data by city, project, and subproject
-            var Projects_cityGroups = Projects.AsEnumerable().GroupBy(row => row.Field<string>("CityName"));
+            //var Projects_cityGroups = Projects.AsEnumerable().GroupBy(row => row.Field<string>("CityName"));
+            var Projects_cityGroups = Projects.AsEnumerable().GroupBy(row => row["CityName"].ToString());
             foreach (var city in Projects_cityGroups)
             {
                 var city_itemInfo = new tagItemInfo { ID = city.First().Field<int>("CityID"), Category = "Default" };
@@ -667,26 +668,34 @@ namespace Financial_WPF_App
                 var city_Item = CreateTreeViewItem(city.Key, null, city_itemInfo);
 
                 // Group projects by project_ID
-                var project_Groups = city.GroupBy(row => row.Field<string>("ProjectName"));
+                //var project_Groups = city.GroupBy(row => row.Field<string>("ProjectName"));
+                var project_Groups = city.GroupBy(row => row["ProjectName"].ToString());
                 foreach (var project in project_Groups)
                 {
                     // Create a treeview item for the project
                     var project_Item = new System.Windows.Controls.TreeViewItem();
-                    project_Item.Header = project.First().Field<string>("ProjectName");
-                    string projectCategory = project.First().Field<string>("CategoryName");
+                    //project_Item.Header = project.First().Field<string>("ProjectName");
+                    //string projectCategory = project.First().Field<string>("CategoryName");
+                    project_Item.Header = project.First()["ProjectName"].ToString(); 
+                    string projectCategory = project.First()["CategoryName"].ToString();
+                    
                     var project_itemInfo = new tagItemInfo { ID = project.First().Field<int?>("ProjectID"), Category = projectCategory };
                     project_Item.Tag = project_itemInfo;
 
 
                     // Group subprojects by subproject_ID
-                    var subproject_Groups = project.GroupBy(row => row.Field<string>("SubprojectName"));
+                    //var subproject_Groups = project.GroupBy(row => row.Field<string>("SubprojectName"));
+                    var subproject_Groups = project.GroupBy(row => row["SubprojectName"].ToString());
 
                     foreach (var subproject in subproject_Groups)
                     {
                         // Create a treeview item for the subproject
                         var subproject_Item = new System.Windows.Controls.TreeViewItem();
-                        subproject_Item.Header = subproject.First().Field<string>("SubprojectName");
-                        string subprojectCategory = subproject.First().Field<string>("CategoryName");
+                        //subproject_Item.Header = subproject.First().Field<string>("SubprojectName");
+                        //string subprojectCategory = subproject.First().Field<string>("CategoryName"); 
+                        subproject_Item.Header = subproject.First()["SubprojectName"].ToString();
+                        string subprojectCategory = subproject.First()["CategoryName"].ToString();
+
                         var subproject_itemInfo = new tagItemInfo { ID = subproject.First().Field<int?>("SubprojectID"), Category = subprojectCategory };
                         subproject_Item.Tag = subproject_itemInfo;
 
@@ -702,7 +711,8 @@ namespace Financial_WPF_App
                             subproject_Item.AddHandler(System.Windows.Controls.TreeViewItem.ContextMenuOpeningEvent, new ContextMenuEventHandler(Right_ContextMenuOpening));
                         }
 
-                        if (subproject.First().Field<string>("CategoryName") == "Micro Projects")
+                        //if (subproject.First().Field<string>("CategoryName") == "Micro Projects")
+                        if (subproject.First()["CategoryName"].ToString() == "Micro Projects")
                         {
                             if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                             {
@@ -727,7 +737,8 @@ namespace Financial_WPF_App
                             subproject_Item.Items.Add(Beneficiary);
                         }
 
-                        else if (subproject.First().Field<string>("CategoryName") == "Budget")
+                        //else if (subproject.First().Field<string>("CategoryName") == "Budget")
+                        else if (subproject.First()["CategoryName"].ToString() == "Budget")
                         {
                             if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                             {
@@ -744,17 +755,23 @@ namespace Financial_WPF_App
                         // Add accounts as child items
                         foreach (var Row in subproject)
                         {
-                            string AccountName = Row.Field<string>("AccountName");
-                            string AccountCategory = Row.Field<string>("CategoryName");
+                            //string AccountName = Row.Field<string>("AccountName");
+                            //string AccountCategory = Row.Field<string>("CategoryName");
+                            string AccountName = Row["AccountName"].ToString();
+                            string AccountCategory = Row["CategoryName"].ToString();
 
-                            var AdminAccounts_Groups = subproject.Where(row => row.Field<Int32?>("ObserveAccount_ID") != null && row.Field<Int32?>("ObserveAccount_ID") == Row.Field<int?>("AccountID") && row.Field<Int32>("IsClosed") != 1)
-                                     .GroupBy(row => row.Field<Int32>("AccountID"));
+                            var AdminAccounts_Groups = subproject.Where(row => row.Field<Int32?>("ObserveAccount_ID") != null 
+                            && row.Field<Int32?>("ObserveAccount_ID") == Row.Field<int?>("AccountID") 
+                            && row.Field<Int32>("IsClosed") != 1).GroupBy(row => row.Field<Int32>("AccountID"));
 
                             var account_itemInfo = new tagItemInfo { ID = Row.Field<int?>("AccountID"), Category = AccountCategory };
 
                             var account_Item = CreateTreeViewItem(AccountName, null, account_itemInfo);
 
-                            if (AccountName != null && Row.Field<Int64>("IsPayments") == 0 && Row.Field<Int32>("is_administrative") != 1 && Row.Field<Int32>("IsClosed") != 1)
+                            if (AccountName != null 
+                                || (Row.Field<Int64>("IsPayments") == 0 
+                                &&  Row.Field<Int32>("is_administrative") != 1 
+                                &&  Row.Field<Int32>("IsClosed") != 1))
                             {
                                 account_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
 
@@ -775,11 +792,14 @@ namespace Financial_WPF_App
                                 {
                                     foreach (var AdminAccount in AdminAccounts_Groups)
                                     {
-                                        string AdminAccountCategory = Row.Field<string>("CategoryName");
+                                        //string AdminAccountCategory = Row.Field<string>("CategoryName");
+                                        string AdminAccountCategory = Row["CategoryName"].ToString();
                                         var AdminAccount_Item = new TreeViewItem();
                                         var account_itemInf = new tagItemInfo { ID = AdminAccount.First().Field<int?>("AccountID"), Category = AdminAccountCategory };
 
-                                        AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"), null, account_itemInf);
+                                        //AdminAccount_Item = CreateTreeViewItem(AdminAccount.First().Field<string>("AccountName"), null, account_itemInf);
+                                        AdminAccount_Item = CreateTreeViewItem(AdminAccount.First()["AccountName"].ToString(), null, account_itemInf);
+
 
                                         AdminAccount_Item.PreviewMouseLeftButtonDown += AccountItem_PreviewMouseLeftButtonDown;
 
@@ -981,7 +1001,8 @@ namespace Financial_WPF_App
             }
 
             // Group data by city, project, and subproject
-            var cityGroups1 = Fiscalbonds.AsEnumerable().GroupBy(row => row.Field<string>("CityName"));
+            //var cityGroups1 = Fiscalbonds.AsEnumerable().GroupBy(row => row.Field<string>("CityName"));
+            var cityGroups1 = Fiscalbonds.AsEnumerable().GroupBy(row => row["CityName"].ToString());
             foreach (var cityGroup in cityGroups1)
             {
                 // Create a treeview item for the city
@@ -989,25 +1010,32 @@ namespace Financial_WPF_App
 
                 var cityItem = CreateTreeViewItem(cityGroup.Key, null, cityItem_itemInfo);
                 // Group projects by project_ID
-                var projectGroups = cityGroup.GroupBy(row => row.Field<string>("ProjectName"));
+                //var projectGroups = cityGroup.GroupBy(row => row.Field<string>("ProjectName"));
+                var projectGroups = cityGroup.GroupBy(row => row["ProjectName"].ToString());
 
                 foreach (var projectGroup in projectGroups)
                 {
-                    string prjectCategory = projectGroup.First().Field<string>("CategoryName");
+                    //string prjectCategory = projectGroup.First().Field<string>("CategoryName");
+                    string prjectCategory = projectGroup.First()["CategoryName"].ToString();
                     var projectItem_itemInfo = new tagItemInfo { ID = projectGroup.First().Field<int?>("ProjectID"), Category = prjectCategory };
-                    var projectItem = CreateTreeViewItem(projectGroup.First().Field<string>("ProjectName"), null, projectItem_itemInfo);
+                    //var projectItem = CreateTreeViewItem(projectGroup.First().Field<string>("ProjectName"), null, projectItem_itemInfo);
+                    var projectItem = CreateTreeViewItem(projectGroup.First()["ProjectName"].ToString(), null, projectItem_itemInfo);
 
                     // Group subprojects by subproject_ID
-                    var subprojectGroups = projectGroup.GroupBy(row => row.Field<string>("SubprojectName"));
+                    //var subprojectGroups = projectGroup.GroupBy(row => row.Field<string>("SubprojectName"));
+                    var subprojectGroups = projectGroup.GroupBy(row => row["SubprojectName"].ToString());
                     foreach (var subprojectGroup in subprojectGroups)
                     {
-                        string subprojectCategory = subprojectGroup.First().Field<string>("categoryName");
+                        //string subprojectCategory = subprojectGroup.First().Field<string>("categoryName");
+                        string subprojectCategory = subprojectGroup.First()["categoryName"].ToString();
                         var subprojectItem_itemInfo = new tagItemInfo { ID = subprojectGroup.First().Field<int?>("SubprojectID"), Category = subprojectCategory };
-                        var subprojectItem = CreateTreeViewItem(subprojectGroup.First().Field<string>("SubprojectName"), null, subprojectItem_itemInfo);
+                        //var subprojectItem = CreateTreeViewItem(subprojectGroup.First().Field<string>("SubprojectName"), null, subprojectItem_itemInfo);
+                        var subprojectItem = CreateTreeViewItem(subprojectGroup.First()["SubprojectName"].ToString(), null, subprojectItem_itemInfo);
 
                         if (role == "Head Office" || role == "Project Manager" || role == "Financial Manager" || role == "Donor")
                         {
-                            if (projectGroup.First().Field<string>("CategoryName") == "Micro Projects")
+                            //if (projectGroup.First().Field<string>("CategoryName") == "Micro Projects")                            
+                            if (projectGroup.First()["CategoryName"].ToString() == "Micro Projects")
                             {
                                 var AllBonds_itemInfo = new tagItemInfo { ID = -1, Category = "Micro Projects" };
 
@@ -1016,7 +1044,8 @@ namespace Financial_WPF_App
 
                                 subprojectItem.Items.Add(AllPBonds);
                             }
-                            else if (projectGroup.First().Field<string>("CategoryName") == "Budget")
+                            //else if (projectGroup.First().Field<string>("CategoryName") == "Budget")
+                            else if (projectGroup.First()["CategoryName"].ToString() == "Budget")
                             {
                                 var AllBonds_itemInfo = new tagItemInfo { ID = -1, Category = "Budget" };
 
@@ -1031,15 +1060,17 @@ namespace Financial_WPF_App
                         // Add accounts as child items
                         foreach (var FiscalbondRow in subprojectGroup)
                         {
-                            string FiscalbondName = FiscalbondRow.Field<string>("FiscalbondName");
-                            string FiscalbondCategory = FiscalbondRow.Field<string>("CategoryName");
+                            //string FiscalbondName = FiscalbondRow.Field<string>("FiscalbondName");
+                            //string FiscalbondCategory = FiscalbondRow.Field<string>("CategoryName");
+                            string FiscalbondName = FiscalbondRow["FiscalbondName"].ToString();
+                            string FiscalbondCategory = FiscalbondRow["CategoryName"].ToString();
                             System.Windows.Controls.TreeViewItem FiscalbondItem = new TreeViewItem();
 
                             var FiscalbondItem_itemInfo = new tagItemInfo { ID = FiscalbondRow.Field<int?>("FiscalbondID"), Category = FiscalbondCategory };
                             FiscalbondItem = CreateTreeViewItem(FiscalbondName, null, FiscalbondItem_itemInfo);
 
 
-                            if (FiscalbondName != null && FiscalbondRow.Field<Int32>("IsClosed") != 1)
+                            if (FiscalbondName != null && FiscalbondRow.Field<int?>("IsClosed") != 1)
                             {
                                 FiscalbondItem.PreviewMouseLeftButtonDown += fiscalbondItem_PreviewMouseLeftButtonDown;
 

@@ -15,6 +15,7 @@ namespace Financial_WPF_App.Models
         public static string ConStr_Online = "";
         public static string ConStr_Offline = "";
         public static string database = "";
+        public static string onlineserver = "";
         public static string test_database = "";
         public static string ConnectionString = "";
         public static string OnlineRoot = "";
@@ -79,24 +80,28 @@ namespace Financial_WPF_App.Models
 
             database = "hcsyria_financial";
             test_database = "hcsyria_financial_test";
-
-            bool test_online = false;
-            bool test_offline = false;
-            bool test_Attachments = false;
-            bool PC_Admin = true;
+            onlineserver = "45.9.62.87";
 
             string localserver;
+
+            bool test_online = true;
+            bool test_offline = false;
+            bool test_Attachments = true;
+            bool PC_Admin = false;
+
+            //onlineserver = "mysql.s807.sureserver.com";
+
 
             if (!PC_Admin)
                 localserver = "localhost";
             else
-                localserver = "HC-IT1";
+                localserver = "PC-ADMIN";
 
             if (!test_online)
-                ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + database +
+                ConStr_Online = @"Server="+ onlineserver + ";Port=3306;Database=" + database +
                             ";Uid=hcfinancial;Password=Center2018Hope;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
             else
-                ConStr_Online = @"Server=mysql.s807.sureserver.com;Port=3306;Database=" + test_database +
+                ConStr_Online = @"Server="+ onlineserver + ";Port=3306;Database=" + test_database +
                             ";Uid=hcfinancial;Password=Center2018Hope;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
             if (!test_offline)
@@ -106,13 +111,12 @@ namespace Financial_WPF_App.Models
                ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
                          ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
+            ////OnlineRoot = "ftp://hcsyria.org/financial_attachments/";
+            ////OnlineRoot = "ftp://hcsyria.org/financial_test_attachments/";
             if (!test_Attachments)
-                OnlineRoot = "ftp://hcsyria.org/financial_attachments/";
+                OnlineRoot = "sftp://45.9.62.87/files";
             else
-                OnlineRoot = "ftp://hcsyria.org/financial_test_attachments/";
-
-
-            //HC-JUDY1 // PC-ADMIN //port=3306;
+                OnlineRoot = "sftp://45.9.62.87/files/test";
 
             if (status) //online
                 ConnectionString = ConStr_Online;
