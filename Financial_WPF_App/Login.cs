@@ -84,10 +84,10 @@ namespace Financial_WPF_App.Models
 
             string localserver;
 
-            bool test_online = false;
+            bool test_online = true;
             bool test_offline = false;
-            bool test_Attachments = false;
-            bool PC_Admin = true;
+            bool test_Attachments = true;
+            bool PC_Admin = false;
 
             //onlineserver = "mysql.s807.sureserver.com";
 
