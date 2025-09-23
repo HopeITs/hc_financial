@@ -111,9 +111,9 @@ namespace Financial_WPF_App
             try
             {
                 if (Settings.Default.Online)
-                    Login.Set_ConnectionString(true, 'h'); // online
+                    Login.Set_ConnectionString(true); // online
                 else
-                    Login.Set_ConnectionString(false, 'h'); // offline
+                    Login.Set_ConnectionString(false); // offline
 
                 bool isConnected = await Task.Run(() => Login.Login_BuildConnection());
                 Login.MyConn.Close();

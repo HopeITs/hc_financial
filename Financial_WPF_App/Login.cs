@@ -75,48 +75,21 @@ namespace Financial_WPF_App.Models
         public static Dictionary<int, AttachmentData> MultiAttachment_Dictionary = new Dictionary<int, AttachmentData>();
 
 
-        public static void Set_ConnectionString(bool status, char selected_hope)
+        public static void Set_ConnectionString(bool status)
         {
-
-            database = "hcsyria_financial";
+            //Should Change Before Publishing
+            database      = "hcsyria_financial_test";
             test_database = "hcsyria_financial_test";
-            onlineserver = "45.9.62.87";
+            onlineserver  = "45.9.62.87";
+            string localserver = "localhost";
 
-            string localserver;
+            ConStr_Online = @"Server=" + onlineserver + ";Port=3306;Database=" + test_database +
+                            ";Uid=hcfi;Password=password@11;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
-            bool test_online = true;
-            bool test_offline = false;
-            bool test_Attachments = true;
-            bool PC_Admin = false;
-
-            //onlineserver = "mysql.s807.sureserver.com";
-
-
-            if (!PC_Admin)
-                localserver = "localhost";
-            else
-                localserver = "PC-ADMIN";
-
-            if (!test_online)
-                ConStr_Online = @"Server="+ onlineserver + ";Port=3306;Database=" + database +
-                            ";Uid=hcfinancial;Password=Center2018Hope;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
-            else
-                ConStr_Online = @"Server="+ onlineserver + ";Port=3306;Database=" + test_database +
-                            ";Uid=hcfinancial;Password=Center2018Hope;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
-
-            if (!test_offline)
-                ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + database +
-                                     ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
-            else
-               ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
+            ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
                          ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
-            ////OnlineRoot = "ftp://hcsyria.org/financial_attachments/";
-            ////OnlineRoot = "ftp://hcsyria.org/financial_test_attachments/";
-            if (!test_Attachments)
-                OnlineRoot = "sftp://45.9.62.87/files";
-            else
-                OnlineRoot = "sftp://45.9.62.87/files/test";
+            OnlineRoot = "sftp://45.9.62.87/files/test";
 
             if (status) //online
                 ConnectionString = ConStr_Online;
