@@ -212,7 +212,8 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@userID", userID);
 
                 sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.CommandText =  "SET SESSION sql_mode = (SELECT REPLACE(@@SESSION.sql_mode,'ONLY_FULL_GROUP_BY',''));";
+                sc.CommandText += "SET SESSION wait_timeout = @t;" + query;
                 sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
