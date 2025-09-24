@@ -50,6 +50,8 @@
                                 <ImageBrush ImageSource="/Images/Buttons/NewEntry.png"/>
                             </Button.Background>
                         </Button>
+                        <Label Style="{DynamicResource Version_Label}" Content=" * Leave the password empty if you don't want to change it" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
                     </WrapPanel>
                 </DockPanel>
             </Grid>

@@ -8,23 +8,26 @@ namespace Financial_WPF_App.Models
 {
     public class Users
     {
-        public DataTable Get_User(string username, string password)
+        public DataTable Get_User(string username)
         {
+            //, string password
             string query = @"select user.id, user.username, user.password, role.name,
                             (SELECT GROUP_CONCAT(cashaccount.ID) FROM cashaccount JOIN user_cashaccounts ON cashaccount.ID = user_cashaccounts.cashaccount_id WHERE user_cashaccounts.user_id = user.ID AND user_cashaccounts.Iscashier = 1) AS 'user_IsCashier',
                             (SELECT GROUP_CONCAT(account.ID) FROM account JOIN user_accounts ON account.ID = user_accounts.account_id JOIN accounttype ON account.Accounttype_id = accounttype.id WHERE accounttype.name = 'project' AND user_accounts.user_id = user.id) AS 'user_accounts',
                             (SELECT GROUP_CONCAT(cashaccount.ID) FROM cashaccount JOIN user_cashaccounts ON cashaccount.ID = user_cashaccounts.cashaccount_id WHERE user_cashaccounts.user_id = user.ID) AS 'user_cashaccounts',
                             (SELECT GROUP_CONCAT(DISTINCT subproject_id) FROM user_accounts WHERE user_accounts.user_id = user.id) AS 'user_subproject_id'
 
-                            from `user` left join role on user.role = role.id where BINARY Username like @username and Password like @password;";
-
+                            from `user` 
+                            left join role on user.role = role.id 
+                            where BINARY Username like @username;";
+            //and Password like @password
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@username", username);
-                sc.Parameters.AddWithValue("@password", password);
+                //sc.Parameters.AddWithValue("@password", password);
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
                 sc.Parameters.AddWithValue("@t", 600);
@@ -53,7 +56,7 @@ namespace Financial_WPF_App.Models
 
                             (SELECT GROUP_CONCAT(cashaccount.ID) FROM cashaccount JOIN user_cashaccounts ON cashaccount.ID = user_cashaccounts.cashaccount_id WHERE user_cashaccounts.user_id = user.ID AND user_cashaccounts.Iscashier = 1) AS 'user_IsCashier'
 
-                            from `user` left join role on user.role = role.id;";
+                            from `user` left join role on user.role = role.id order by user.username asc;";
 
 
             DataTable dt = new DataTable();

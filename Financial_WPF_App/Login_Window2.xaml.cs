@@ -1,4 +1,5 @@
 ﻿
+using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using System;
@@ -128,10 +129,19 @@ namespace Financial_WPF_App
                             var password = password_txt1.Password;
 
                             u = new Users();
-                            var user_dt = await Task.Run(() => u.Get_User(username, password));
+                            var user_dt = await Task.Run(() => u.Get_User(username));//, password
 
                             if (user_dt.Rows.Count == 1) // User exists
                             {
+                                var Stored_Password = user_dt.Rows[0].Field<string>(2);
+                                //check password if its correct
+                                if (!PasswordHelper.VerifyPassword(password, Stored_Password))
+                                {
+                                    Storyboard sb = this.FindResource("User_False") as Storyboard;
+                                    sb.Begin();
+                                    return;
+                                }
+
                                 var User_ID = user_dt.Rows[0].Field<int>(0);
                                 var role = user_dt.Rows[0].Field<string>(3);
                                 var CashAccount_Cahier = user_dt.Rows[0].Field<string>(4);

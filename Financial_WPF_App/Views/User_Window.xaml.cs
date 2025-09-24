@@ -1,4 +1,5 @@
-﻿using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.Windows.Tools.Controls;
 using System;
@@ -45,6 +46,7 @@ namespace Financial_WPF_App.Views
         List<int> Original_PersonalAccounts;
         List<int> Original_ExchangeAccounts;
 
+        string Original_Password_Hashed;
 
         List<int> Subprojects;
         List<int> Accounts;
@@ -322,6 +324,7 @@ namespace Financial_WPF_App.Views
             User_ID = -1;
             Username_txtBox.Text = string.Empty;
             Password_txtBox.Text = string.Empty;
+            Original_Password_Hashed = "";
             Role_comboBox.SelectedIndex = -1;
             Load_Data();
         }
@@ -350,7 +353,9 @@ namespace Financial_WPF_App.Views
                             DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                             User_ID = Convert.ToInt32(dataRow["user_id"].ToString());
                             Username_txtBox.Text = dataRow["username"].ToString();
-                            Password_txtBox.Text = dataRow["Password"].ToString();
+                            //Password_txtBox.Text = dataRow["Password"].ToString();
+                            Original_Password_Hashed = "";
+                            Original_Password_Hashed = dataRow["Password"].ToString();
                             Role_comboBox.SelectedValue = Convert.ToInt32(dataRow["role_id"].ToString());
 
 
@@ -682,7 +687,9 @@ namespace Financial_WPF_App.Views
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                 User_ID = Convert.ToInt32(dataRow["user_id"].ToString());
                 Username_txtBox.Text = dataRow["username"].ToString();
-                Password_txtBox.Text = dataRow["Password"].ToString();
+                //Password_txtBox.Text = dataRow["Password"].ToString();
+                Original_Password_Hashed = "";
+                Original_Password_Hashed = dataRow["Password"].ToString();
                 Role_comboBox.SelectedValue = Convert.ToInt32(dataRow["role_id"].ToString());
 
 
@@ -805,6 +812,7 @@ namespace Financial_WPF_App.Views
                     User_ID = -1;
                     Username_txtBox.Text = string.Empty;
                     Password_txtBox.Text = string.Empty;
+                    Original_Password_Hashed = "";
                     Role_comboBox.SelectedIndex = -1;
                     LoadGrid();
                 }
@@ -875,16 +883,6 @@ namespace Financial_WPF_App.Views
 
                 }
 
-                if (String.IsNullOrWhiteSpace(Password_txtBox.Text) || String.IsNullOrEmpty(Password_txtBox.Text))
-                {
-                    MessageBox.Show("Please enter the password.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-                }
-                else
-                {
-                    Password = Password_txtBox.Text;
-                }
-
                 if (Role_comboBox.SelectedIndex == -1)
                 {
                     MessageBox.Show("Please select the role", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
@@ -910,23 +908,42 @@ namespace Financial_WPF_App.Views
 
                 if (User_ID == -1)
                 {
+                    if (String.IsNullOrWhiteSpace(Password_txtBox.Text) || String.IsNullOrEmpty(Password_txtBox.Text))
+                    {
+                        MessageBox.Show("Please enter the password.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+                    else
+                    {
+                        Password = PasswordHelper.HashPassword(Password_txtBox.Text);//hash the password
+                    }
+
                     u.Insert_User(Username, Password, role, role_id, Subprojects, Accounts, CashAccounts, Cashier, PersonalAccounts, ExchangeAccounts, "User_Window");
                 }
                 else
                 {
+                    //when updating user .. we can leave the password empty to it won't be updated
+                    if (String.IsNullOrWhiteSpace(Password_txtBox.Text) || String.IsNullOrEmpty(Password_txtBox.Text))
+                    {
+                        Password = Original_Password_Hashed;
+                    }
+                    else
+                    {
+                        Password = PasswordHelper.HashPassword(Password_txtBox.Text);//hash the password
+                    }
+
                     List<int> add_Subprojects = Subprojects.Except(Original_Subprojects).ToList();
-                    List<int> add_Accounts = Accounts.Except(Original_Accounts).ToList();
-                    List<int> add_CashAccounts = CashAccounts.Except(Original_CashAccounts).ToList();
-                    List<int> add_PersonalAccounts = PersonalAccounts.Except(Original_PersonalAccounts).ToList();
-                    List<int> add_ExchangeAccounts = ExchangeAccounts.Except(Original_ExchangeAccounts).ToList();
+                    List<int> add_Accounts          = Accounts.Except(Original_Accounts).ToList();
+                    List<int> add_CashAccounts      = CashAccounts.Except(Original_CashAccounts).ToList();
+                    List<int> add_PersonalAccounts  = PersonalAccounts.Except(Original_PersonalAccounts).ToList();
+                    List<int> add_ExchangeAccounts  = ExchangeAccounts.Except(Original_ExchangeAccounts).ToList();
 
+                    List<int> add_Cashier           = Cashier.Except(Original_Cashier).Intersect(Original_CashAccounts).ToList();
+                    List<int> remove_Cashier        = Original_Cashier.Except(Cashier).ToList();
 
-                    List<int> add_Cashier = Cashier.Except(Original_Cashier).Intersect(Original_CashAccounts).ToList();
-                    List<int> remove_Cashier = Original_Cashier.Except(Cashier).ToList();
-
-                    List<int> delete_Subprojects = Original_Subprojects.Except(Subprojects).ToList();
-                    List<int> delete_Accounts = Original_Accounts.Except(Accounts).ToList();
-                    List<int> delete_CashAccounts = Original_CashAccounts.Except(CashAccounts).ToList();
+                    List<int> delete_Subprojects    = Original_Subprojects.Except(Subprojects).ToList();
+                    List<int> delete_Accounts       = Original_Accounts.Except(Accounts).ToList();
+                    List<int> delete_CashAccounts   = Original_CashAccounts.Except(CashAccounts).ToList();
                     List<int> delete_PersonalAccounts = Original_PersonalAccounts.Except(PersonalAccounts).ToList();
                     List<int> delete_ExchangeAccounts = Original_ExchangeAccounts.Except(ExchangeAccounts).ToList();
 
@@ -937,6 +954,7 @@ namespace Financial_WPF_App.Views
                 User_ID = -1;
                 Username_txtBox.Text = string.Empty;
                 Password_txtBox.Text = string.Empty;
+                Original_Password_Hashed = "";
                 Role_comboBox.SelectedIndex = -1;
                 LoadGrid();
             }
