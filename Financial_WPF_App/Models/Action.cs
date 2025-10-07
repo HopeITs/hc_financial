@@ -541,7 +541,7 @@ namespace Financial_WPF_App.Models
         public DataTable SelectLines_Report()
         {
 
-            string query = @"SELECT city.Name AS `City_Name`, project.Name AS `Project_Name`, subproject.Name AS `Subproject_Name`, account.Name as `Account_Name`,
+            string query = @"SELECT  action.id AS `ID`, city.Name AS `City_Name`, project.Name AS `Project_Name`, subproject.Name AS `Subproject_Name`, account.Name as `Account_Name`,
                         budget.Name as `Budget`, Group_Concat(donor.Name) as `Donor`,linecategory.Name as `Line Type`, line.Name as `Line`,
                         action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',

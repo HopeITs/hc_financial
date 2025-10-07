@@ -39,6 +39,29 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        public Attachments(int actionId)
+        {
+            InitializeComponent();
+            this.Action_ID = actionId;
+            this.Beneficiary_ID = -1;
+            this.Account_Type = string.Empty;
+            this.Category = string.Empty;
+            this.Approved_Action = true;
+
+
+            AddAttachments_btn.Visibility = Visibility.Collapsed;
+            Delete_DataGridColumn.IsHidden = true;
+
+            if (OnLoad())
+            {
+        
+            }
+            else
+            {
+                throw new ArgumentException("This page will not open due to data fetching error.");
+            }
+        }
+
         Document d;
         DataTable attachments_dt = new DataTable();
         int Action_ID; int Beneficiary_ID;
