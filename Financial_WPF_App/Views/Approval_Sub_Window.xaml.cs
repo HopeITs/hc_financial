@@ -752,7 +752,7 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
-                    Window _Window = new Attachments(Action_ID, -1, false, Account_Type, Category, null, null, this);
+                    Window _Window = new Attachments(Action_ID, -1, false, Account_Type, Category, null, null, this, null);
                     _Window.ShowDialog();
                 }
             }

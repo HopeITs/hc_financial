@@ -211,31 +211,6 @@ namespace Financial_WPF_App.Helper
             return dt;
         }
 
-        public DataTable GetAllAttachmentsCounts()
-        {
-            DataTable dt = new DataTable();
-
-            string query = @"SELECT action_id, COUNT(*) AS Attachments_count 
-                     FROM action_attachments 
-                     GROUP BY action_id;";
-
-            if (Login.BuildConnection())
-            {
-                MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                sc.Parameters.AddWithValue("@t", 600);
-                sc.Connection = Login.MyConn;
-
-                MySqlDataAdapter da = new MySqlDataAdapter(sc);
-                da.Fill(dt);
-
-                Login.CloseAndClearConnection();
-            }
-
-            return dt;
-        }
-
 
         public bool file_Exist(string Name)
         {

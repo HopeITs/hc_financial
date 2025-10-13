@@ -76,23 +76,6 @@ namespace Financial_WPF_App.Views
             dt = new DataTable();
             dt = a.SelectLines_Report();
 
-            Helper.Document d = new Helper.Document();
-            DataTable countsTable = d.GetAllAttachmentsCounts();
-
-           
-            if (!dt.Columns.Contains("Attachments_count"))
-                dt.Columns.Add("Attachments_count", typeof(int));
-
-            
-            var countsDict = countsTable.AsEnumerable()
-                .ToDictionary(r => r.Field<int>("action_id"), r => r.Field<long>("Attachments_count"));
-
-            foreach (DataRow row in dt.Rows)
-            {
-                int actionId = Convert.ToInt32(row["ID"]);
-                row["Attachments_count"] = countsDict.ContainsKey(actionId) ? countsDict[actionId] : 0;
-            }
-
             if (dt != null && dt.Rows.Count > 0)
             {
                 myDataGrid.ItemsSource = dt.DefaultView;
@@ -128,7 +111,7 @@ namespace Financial_WPF_App.Views
                 
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                 int Action_ID = Convert.ToInt32(dataRow["ID"]);
-                Window win = new Attachments(Action_ID);
+                Window win = new Attachments(Action_ID, -1, true, null, null, null, null, null, this);
                 win.ShowDialog();
 
             }

@@ -860,7 +860,7 @@ namespace Financial_WPF_App.Views
                         Approved_Action = true;
 
 
-                    Window _Window = new Attachments(Action_ID, -1, Approved_Action, Account_Type, Category, this, null, null);
+                    Window _Window = new Attachments(Action_ID, -1, Approved_Action, Account_Type, Category, this, null, null, null);
                     _Window.ShowDialog();
                 }
             }

@@ -18,12 +18,13 @@ namespace Financial_WPF_App.Views
     /// </summary>
     public partial class Attachments : Window
     {
-        public Attachments(int Action_ID, int Beneficiary_ID, bool Approved_Action, string Account_Type, string Category, Till_Window TW, Account_Beneficiaries_Window AB, Approval_Sub_Window App)
+        public Attachments(int Action_ID, int Beneficiary_ID, bool Approved_Action, string Account_Type, string Category, Till_Window TW, Account_Beneficiaries_Window AB, Approval_Sub_Window App , Lines_Report_Window LR)
         {
             InitializeComponent();
             this.TW = TW;
             this.AB = AB;
             this.App = App;
+            this.LR = LR;
             this.Action_ID = Action_ID;
             this.Beneficiary_ID = Beneficiary_ID;
             this.Account_Type = Account_Type;
@@ -39,28 +40,6 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        public Attachments(int actionId)
-        {
-            InitializeComponent();
-            this.Action_ID = actionId;
-            this.Beneficiary_ID = -1;
-            this.Account_Type = string.Empty;
-            this.Category = string.Empty;
-            this.Approved_Action = true;
-
-
-            AddAttachments_btn.Visibility = Visibility.Collapsed;
-            Delete_DataGridColumn.IsHidden = true;
-
-            if (OnLoad())
-            {
-        
-            }
-            else
-            {
-                throw new ArgumentException("This page will not open due to data fetching error.");
-            }
-        }
 
         Document d;
         DataTable attachments_dt = new DataTable();
@@ -80,6 +59,7 @@ namespace Financial_WPF_App.Views
         Till_Window TW;
         Account_Beneficiaries_Window AB;
         Approval_Sub_Window App;
+        Lines_Report_Window LR;
 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
         string HeaderStyle_Name = "SfDataGrid_header";
