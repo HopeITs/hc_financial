@@ -89,7 +89,7 @@ namespace Financial_WPF_App.Models
             ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
                          ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
-            OnlineRoot = "sftp://45.9.62.87/files"; // sftp://45.9.62.87/files/test
+            OnlineRoot = "sftp://45.9.62.87/files/test"; //"sftp://45.9.62.87/files"; 
 
             if (status) //online
                 ConnectionString = ConStr_Online;
