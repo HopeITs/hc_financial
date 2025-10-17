@@ -25,7 +25,7 @@
         <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="4">
             <local:WindowControlBar_Popup x:Name="ControlBar"/>
         </DockPanel>
-        <Label Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="Project:"  VerticalContentAlignment="Center" Grid.Row="2"  VerticalAlignment="Center" />
+        <Label Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="Program:"  VerticalContentAlignment="Center" Grid.Row="2"  VerticalAlignment="Center" />
         <ComboBox x:Name="Project_comboBox" Style="{StaticResource FloatingComboboxStyle}"
             Grid.Column="1"  TabIndex="1" 
             DisplayMemberPath="Name" SelectedValuePath="ID" Grid.Row="2" />
@@ -108,7 +108,7 @@
 
 
             <Label Grid.Column="1" Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" 
-                Content="Center Donors" 
+                Content="Project Donors" 
                 Margin="1,10,1,0" Width="auto" HorizontalAlignment="Stretch" 
                 VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Height="30"/>
 

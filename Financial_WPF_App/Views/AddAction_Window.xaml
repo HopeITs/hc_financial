@@ -467,10 +467,10 @@ VerticalScrollBarVisibility="Auto" Height="70" Margin="1,0,1,0"/>
                         <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
                     </Button.Background>
                     <Button.ToolTip>
-                        <TextBlock><Run Text="Only the volunteer from this center appears, provided that his salary has been added for the month corresponding to the operation date."/></TextBlock>
+                        <TextBlock><Run Text="Only the volunteer from this project appears, provided that his salary has been added for the month corresponding to the operation date."/></TextBlock>
                     </Button.ToolTip>
                 </Button>
-                <Label Grid.Row="0" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" Content="Subproject:" HorizontalContentAlignment="Left"  />
+                <Label Grid.Row="0" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" Content="Subprogram:" HorizontalContentAlignment="Left"  />
                 <ComboBox Grid.Row="0" x:Name="Subproject_comboBox" TabIndex="1" Grid.Column="2" DisplayMemberPath="Subproject_Name" SelectedValuePath="Subproject_ID" 
                 Style="{DynamicResource FloatingComboboxStyle}"
                     SelectionChanged="Subproject_comboBox_SelectionChanged" >

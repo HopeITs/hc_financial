@@ -36,9 +36,9 @@
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
-                    <syncfusion:GridTextColumn MappingName="Project" HeaderText="Project" />
+                    <syncfusion:GridTextColumn MappingName="Project" HeaderText="Program" />
                     <syncfusion:GridTextColumn MappingName="City" HeaderText="City" />
-                    <syncfusion:GridTextColumn MappingName="Name" HeaderText="Center" />
+                    <syncfusion:GridTextColumn MappingName="Name" HeaderText="Project" />
 
 
                     <syncfusion:GridDateTimeColumn HeaderText="Start date" MappingName="BeginDate"

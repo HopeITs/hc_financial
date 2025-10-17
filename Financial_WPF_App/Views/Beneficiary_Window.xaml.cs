@@ -432,7 +432,7 @@ namespace Financial_WPF_App
 
             if (dt != null && dt.Rows.Count > 0)
             {
-                MessageBox.Show("There is another micro project with the same number within the same center.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                MessageBox.Show("There is another micro project with the same number within the same project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                 return;
             }
 

@@ -43,10 +43,10 @@
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" >
-                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Project Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Program Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <TextBox x:Name="Name_txtBox"  Style="{DynamicResource CustomTextBoxActionStyle}" Width="175" TabIndex="2" HorizontalContentAlignment="Stretch"  />
                 </StackPanel>
-                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="Save_btn" Click="Save_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Project" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,0,0,0" Width="22" Height="23">
+                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="Save_btn" Click="Save_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Program" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,0,0,0" Width="22" Height="23">
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
                     </Button.Background>
@@ -65,7 +65,7 @@
 
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID" IsHidden="True"/>
-                <syncfusion:GridTextColumn x:Name="ProjectName" HeaderText="Project Name"  MappingName="Name" />
+                <syncfusion:GridTextColumn x:Name="ProjectName" HeaderText="Program Name"  MappingName="Name" />
                 <syncfusion:GridTextColumn x:Name="Category_DataGridColumn" HeaderText="Category"  MappingName="Category" />
                 <syncfusion:GridTextColumn x:Name="CategoryID_DataGridColumn" HeaderText="Category_ID"  MappingName="Category_ID" IsHidden="True"/>
 

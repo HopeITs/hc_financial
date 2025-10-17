@@ -109,7 +109,7 @@ namespace Financial_WPF_App.Views
             dt = new DataTable();
 
             dt.Columns.Add("Name");
-            dt.Columns.Add("Center");
+            dt.Columns.Add("Project");
             dt.Columns.Add("Position");
             dt.Columns.Add("Month");
             dt.Columns.Add("Basic");

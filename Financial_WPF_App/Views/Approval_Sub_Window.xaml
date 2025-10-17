@@ -211,7 +211,7 @@
                     </syncfusion:GridCheckBoxColumn.CellStyle>
                 </syncfusion:GridCheckBoxColumn>
 
-                <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Subproject"/>
+                <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Subprogram"/>
                 <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="Account_Name" HeaderText="Account"/>
 
                 <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" MappingName="ID" HeaderText="Operation ID"/>

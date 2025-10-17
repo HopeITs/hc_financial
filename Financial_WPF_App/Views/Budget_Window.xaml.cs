@@ -183,7 +183,7 @@ namespace Financial_WPF_App
 
                 if (ProjectFound == 0)
                 {
-                    MessageBox.Show("Please select the project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("Please select the program.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
 

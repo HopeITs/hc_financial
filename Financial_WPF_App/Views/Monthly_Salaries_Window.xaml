@@ -204,7 +204,7 @@
                 <syncfusion:GridTextColumn x:Name="Employee_ID_DataGridColumn" HeaderText="Employee_ID" MappingName="Employee_ID" IsHidden="True"/>
 
                 <syncfusion:GridTextColumn x:Name="Employee_DataGridColumn" HeaderText="Name" MappingName="Name" />
-                <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" HeaderText="Center" MappingName="Subproject" />
+                <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" HeaderText="Project" MappingName="Subproject" />
                 <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Position" MappingName="Line" />
 
                 <syncfusion:GridDateTimeColumn x:Name="EDate_DataGridColumn" HeaderText="Month" MappingName="Date"

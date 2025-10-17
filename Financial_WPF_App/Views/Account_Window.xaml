@@ -202,7 +202,7 @@
                          Grid.Row="1" Click="City_clear_btn_Click"/>
                 </Grid>
 
-                <Label Grid.Row="2" x:Name="Project_lable" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Project:" Grid.Column="0" />
+                <Label Grid.Row="2" x:Name="Project_lable" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Program:" Grid.Column="0" />
                 <Grid Grid.Column="1" Grid.Row="2" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -216,7 +216,7 @@
                     </Button>
                 </Grid>
 
-                <Label x:Name="SubProject_label" Grid.Row="3" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Center:" Grid.Column="0" />
+                <Label x:Name="SubProject_label" Grid.Row="3" Style="{DynamicResource FloatingExpanderlableStyle}" Content="Project:" Grid.Column="0" />
                 <Grid Grid.Column="1" Grid.Row="3" Height="30" Width="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>

@@ -198,7 +198,7 @@ PopupAnimation="Fade">
                 <syncfusion:GridDateTimeColumn HeaderText="Bond date" MappingName="Date"
                                                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
                 <syncfusion:GridTextColumn MappingName="Notes" HeaderText="Discerption" />
-                <syncfusion:GridTextColumn MappingName="SubProject" HeaderText="Center" />
+                <syncfusion:GridTextColumn MappingName="SubProject" HeaderText="Project" />
                 <syncfusion:GridTextColumn MappingName="Account" HeaderText="Account" />
                 <syncfusion:GridTextColumn MappingName="Till" HeaderText="Till" />
                 <syncfusion:GridTextColumn MappingName="IsClosed" HeaderText="Status" />

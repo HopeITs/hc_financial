@@ -108,7 +108,7 @@
                 </Border>
                 <Border Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="{StaticResource DarkGray}"  Margin="10">
                     <StackPanel Orientation="Vertical">
-                        <Label x:Name="Subproject_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0"/>
+                        <Label x:Name="Subproject_Label" Style="{DynamicResource statistic_lableStyle}" HorizontalContentAlignment="Center" Foreground="White" Background="{StaticResource GreenBlue}" Content="Project" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0"/>
                         <syncfusion:CheckListBox x:Name="Subproject_CheckListBox" Margin="0,0,1,0" Height="250" DisplayMemberPath="Name" SelectedValuePath="ID" IsSelectAllEnabled="False" ItemChecked="Subproject_CheckListBox_ItemChecked" ItemContainerStyle="{StaticResource CustomCheckListBoxItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
 
                     </StackPanel>

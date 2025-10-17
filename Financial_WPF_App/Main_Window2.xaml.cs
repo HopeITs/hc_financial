@@ -703,7 +703,7 @@ namespace Financial_WPF_App
                         {
                             var subproject_contextMenu = new ContextMenu();
                             var subproject_OptionsMenuItem = new System.Windows.Controls.MenuItem();
-                            subproject_OptionsMenuItem.Header = "Delete center";
+                            subproject_OptionsMenuItem.Header = "Delete project";
                             subproject_OptionsMenuItem.Click += subproject_DeleteMenuItem_Click;
                             subproject_contextMenu.Items.Add(subproject_OptionsMenuItem);
 
@@ -1648,7 +1648,7 @@ namespace Financial_WPF_App
                                         {
                                             if (tab.Header.ToString() == accounts_dt.Rows[i]["AccountName"].ToString())
                                             {
-                                                MessageBox.Show("Please close all this center accounts before deleting it.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                                                MessageBox.Show("Please close all this projects accounts before deleting it.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                                                 return;
                                             }
                                         }
@@ -1806,7 +1806,7 @@ namespace Financial_WPF_App
             try
             {
                 Window _SubPWindow = new SubProjectWindow(this);
-                Create_tabItem(_SubPWindow, "Subprojects", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                Create_tabItem(_SubPWindow, "Subprograms", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
