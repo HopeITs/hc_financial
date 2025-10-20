@@ -1806,7 +1806,7 @@ namespace Financial_WPF_App
             try
             {
                 Window _SubPWindow = new SubProjectWindow(this);
-                Create_tabItem(_SubPWindow, "Subprograms", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+                Create_tabItem(_SubPWindow, "Project", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
             }
             catch (Exception ex)
             {
