@@ -79,8 +79,8 @@ namespace Financial_WPF_App.Models
             //check user from database
             string query = @"SELECT 
                                 city.Name AS 'City',
-                                project.Name AS 'Project',
-                                subproject.Name AS 'Subproject',
+                                project.Name AS 'Program',
+                                subproject.Name AS 'Project',
                                 line.Name AS 'Item',
                                 action.ActionDate AS 'Entry Date',
                                 DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'Entry Month',

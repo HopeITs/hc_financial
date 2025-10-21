@@ -209,7 +209,7 @@ PopupAnimation="Fade">
                     </syncfusion:GridCheckBoxColumn.CellStyle>
                 </syncfusion:GridCheckBoxColumn>
 
-                <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="SubProjectName" HeaderText="Subprogram"/>
+                <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="SubProjectName" HeaderText="Project"/>
                 <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="AccountName" HeaderText="Account"/>
                 <syncfusion:GridNumericColumn  HeaderText="Payment amount"  MappingName="Income"
                         NumberDecimalDigits="2"
