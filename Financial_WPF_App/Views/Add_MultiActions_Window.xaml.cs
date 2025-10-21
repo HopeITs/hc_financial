@@ -967,7 +967,7 @@ namespace Financial_WPF_App.Views
 
             if (Account_Type == "Project")
             {
-                dt.Columns.Add("Subproject");
+                dt.Columns.Add("Project");
             }
             dt.Columns.Add("Account");
 

@@ -391,7 +391,7 @@ namespace Financial_WPF_App
         {
             if (MP_ID_txtBox.Text == "" || MP_Name_txtBox.Text == "")
             {
-                MessageBox.Show("Please enter the project number and project title", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                MessageBox.Show("Please enter the micro project number and project title", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                 return;
             }
 
