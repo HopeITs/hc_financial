@@ -216,7 +216,7 @@ PopupAnimation="Fade">
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
                         NumberGroupSeparator=","/>
-                <syncfusion:GridTextColumn MappingName="MicroProject_ID" HeaderText="Project number"/>
+                <syncfusion:GridTextColumn MappingName="MicroProject_ID" HeaderText="Micro Project number"/>
                 <syncfusion:GridTextColumn MappingName="Name" HeaderText="Beneficiary Name"/>
                 <syncfusion:GridTextColumn MappingName="beneficiary_ID" HeaderText="beneficiary_ID" IsHidden="True"/>
                 <syncfusion:GridTextColumn MappingName="Payment_Num" HeaderText="Number of payment"/>

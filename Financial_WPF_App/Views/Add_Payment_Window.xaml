@@ -120,7 +120,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Label x:Name="MircoProject_ID_lable" Grid.Column="0" Grid.Row="0" Style="{DynamicResource statistic_lableStyle}" Content="Project number:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   />
+                    <Label x:Name="MircoProject_ID_lable" Grid.Column="0" Grid.Row="0" Style="{DynamicResource statistic_lableStyle}" Content="Micro Project number:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   />
                     <Controls:AutoCompleteTextBoxUserControl TextBoxStyle="{StaticResource FloatingTextBoxStyle}"
                 x:Name="MircoProject_ID_autoSuggestionUserControl" Grid.Row="0"
                 Grid.Column="1" TabIndex="4" LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
