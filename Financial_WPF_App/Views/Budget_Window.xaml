@@ -47,7 +47,7 @@
                     <TextBox x:Name="Name_txtBox"  Style="{DynamicResource CustomTextBoxActionStyle}" Width="175" TabIndex="2" HorizontalContentAlignment="Stretch"  />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" SnapsToDevicePixels="True">
-                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Project:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Program:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <ComboBox x:Name="Project_comboBox" Style="{StaticResource ActionComboboxStyle}" PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown"  Width="175"
                         TabIndex="2">
                         <ComboBox.ItemTemplate>
@@ -65,7 +65,7 @@
                     Click="Project_clear_btn_Click"  VerticalAlignment="Top" Height="30" >
                     </Button>
                 </StackPanel>
-                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="Save_btn" Click="Save_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Project" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,0,0,0" Width="22" Height="23">
+                <Button  Style="{DynamicResource AddButtonStyle}" x:Name="Save_btn" Click="Save_btn_Click" FlowDirection="LeftToRight" ToolTip="Save Program" ToolTipService.InitialShowDelay="100" HorizontalAlignment="Left" Margin="10,0,0,0" Width="22" Height="23">
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/Buttons/newEntry.png" Stretch="Uniform"/>
                     </Button.Background>
@@ -86,7 +86,7 @@
                 <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID" IsHidden="True"/>
                 <syncfusion:GridTextColumn x:Name="Category_DataGridColumn" HeaderText="Category"  MappingName="Category" />
                 <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Name"  MappingName="Name" />
-                <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" HeaderText="Projects"  MappingName="Projects" />
+                <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" HeaderText="Programs"  MappingName="Projects" />
                 <syncfusion:GridTextColumn x:Name="Category_ID_DataGridColumn" HeaderText="Category_ID"  MappingName="Category_ID" IsHidden="True"/>
 
 

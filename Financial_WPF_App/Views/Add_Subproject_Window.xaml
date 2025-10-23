@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
-        mc:Ignorable="d" Tag="Add Sub Project Window"
+        mc:Ignorable="d" Tag="Add Project Window"
         Title="Add_Subproject_Window" Style="{StaticResource WindowPopupStyle}" Width="700"  WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid Margin="5">
         <Grid.RowDefinitions>
@@ -25,13 +25,13 @@
         <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0" Grid.ColumnSpan="4">
             <local:WindowControlBar_Popup x:Name="ControlBar"/>
         </DockPanel>
-        <Label Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="Project:"  VerticalContentAlignment="Center" Grid.Row="2"  VerticalAlignment="Center" />
+        <Label Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="Program:"  VerticalContentAlignment="Center" Grid.Row="2"  VerticalAlignment="Center" />
         <ComboBox x:Name="Project_comboBox" Style="{StaticResource FloatingComboboxStyle}"
             Grid.Column="1"  TabIndex="1" 
             DisplayMemberPath="Name" SelectedValuePath="ID" Grid.Row="2" />
         <Label Grid.Column="2" Style="{DynamicResource statistic_lableStyle}" Content="City:"  VerticalContentAlignment="Center"  Grid.Row="2" />
         <ComboBox x:Name="City_comboBox" Grid.Column="3" DisplayMemberPath="Name" SelectedValuePath="ID"   TabIndex="2"  VerticalContentAlignment="Center"   Style="{StaticResource FloatingComboboxStyle}" Grid.Row="2"/>
-        <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Center name:"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+        <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Project name:"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
         <TextBox x:Name="Name_txtBox" Grid.Column="1" Grid.Row="1"  TabIndex="3"
             Style="{DynamicResource FloatingTextBoxStyle}"/>
         <Label Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Start date:" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
@@ -108,7 +108,7 @@
 
 
             <Label Grid.Column="1" Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" 
-                Content="Center Donors" 
+                Content="Project Donors" 
                 Margin="1,10,1,0" Width="auto" HorizontalAlignment="Stretch" 
                 VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Height="30"/>
 

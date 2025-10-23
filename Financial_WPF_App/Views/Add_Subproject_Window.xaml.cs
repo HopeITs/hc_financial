@@ -346,7 +346,7 @@ namespace Financial_WPF_App.Views
             {
                 if (Project_comboBox.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Please select the project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("Please select the program.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
 
                 }

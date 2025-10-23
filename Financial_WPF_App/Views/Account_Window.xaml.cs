@@ -1431,7 +1431,7 @@ namespace Financial_WPF_App
 
                     if (SubFound == 0)
                     {
-                        MessageBox.Show("Please select the center.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        MessageBox.Show("Please select the project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         return;
                         //throw new Exception("Please select the center.");
 
@@ -1439,7 +1439,7 @@ namespace Financial_WPF_App
 
                     else if (SubFound > 1)
                     {
-                        MessageBox.Show("You can not select more than one center for this type of projects.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        MessageBox.Show("You can not select more than one project for this type of programs.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         return;
                         //throw new Exception("You cannot select more than one center for this type of projects.");
                     }
@@ -1466,7 +1466,7 @@ namespace Financial_WPF_App
 
                     else if (DononrFound > 1 && Category == "Micro Projects")
                     {
-                        MessageBox.Show("You can not select more than one donor for this type of projects.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        MessageBox.Show("You can not select more than one donor for this type of programs.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         return;
                         //throw new Exception("You cannot select more than one donor for this type of projects.");
 
@@ -1518,7 +1518,7 @@ namespace Financial_WPF_App
                         }
                     if (SubFound == 0 && PersonalFound == 0 && ExchangeFound == 0)
                     {
-                        MessageBox.Show("Please select a center, personal account, or exchange account at least", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        MessageBox.Show("Please select a project, personal account, or exchange account at least", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         return;
                         //throw new Exception("Please select a center, personal account, or cash till at least");
                     }

@@ -50,7 +50,13 @@ namespace Financial_WPF_App.Views
             InitializeComponent();
             this.main_Window = main_Window;
             this.MultiAttachments = MultiAttachments;
-            this.Tag = "Add Multi-Attachments Window";
+
+            if (MultiAttachments)
+                this.Tag = "Add Multi-Attachments Window";
+            else
+                this.Tag = "Add Multi-Action Window";
+
+
             if (OnLoad())
             {
 
@@ -967,7 +973,7 @@ namespace Financial_WPF_App.Views
 
             if (Account_Type == "Project")
             {
-                dt.Columns.Add("Subproject");
+                dt.Columns.Add("Project");
             }
             dt.Columns.Add("Account");
 

@@ -391,7 +391,7 @@ namespace Financial_WPF_App
         {
             if (MP_ID_txtBox.Text == "" || MP_Name_txtBox.Text == "")
             {
-                MessageBox.Show("Please enter the project number and project title", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                MessageBox.Show("Please enter the micro project number and project title", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                 return;
             }
 
@@ -432,7 +432,7 @@ namespace Financial_WPF_App
 
             if (dt != null && dt.Rows.Count > 0)
             {
-                MessageBox.Show("There is another micro project with the same number within the same center.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                MessageBox.Show("There is another micro project with the same number within the same project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                 return;
             }
 

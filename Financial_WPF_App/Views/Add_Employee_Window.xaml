@@ -38,7 +38,7 @@
 
 
 
-            <Label x:Name="Subproject_label" Style="{DynamicResource statistic_lableStyle}" Content="Center:" Grid.Row="2" Grid.Column="0" />
+            <Label x:Name="Subproject_label" Style="{DynamicResource statistic_lableStyle}" Content="Project:" Grid.Row="2" Grid.Column="0" />
             <Grid  Grid.Row="2" Grid.Column="1" Height="30">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -90,7 +90,7 @@ VerticalContentAlignment="Center"  />
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  AllowFiltering="False" ShowGroupDropArea="False"
              Grid.Row="4" NavigationMode="Cell" CurrentCellBorderBrush="{StaticResource LightGray2}" CurrentCellBorderThickness="2" Grid.ColumnSpan="9" Margin="2,5,5,5">
                 <syncfusion:SfDataGrid.Columns>
-                    <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" HeaderText="Center"  MappingName="SubprojectName" />
+                    <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" HeaderText="Project"  MappingName="SubprojectName" />
                     <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Position"  MappingName="LineName" />
                     <syncfusion:GridDateTimeColumn x:Name="BeginDate_DataGridColumn" HeaderText="Start date" MappingName="BeginDate"
                     CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   AllowEditing="True"/>

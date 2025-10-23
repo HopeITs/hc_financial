@@ -186,8 +186,8 @@ PopupAnimation="Fade">
 
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTextColumn x:Name="City_DataGridColumn" MappingName="City_Name" HeaderText="City"/>
-                        <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" MappingName="Project_Name" HeaderText="Project"/>
-                        <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Center"/>
+                        <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" MappingName="Project_Name" HeaderText="Program"/>
+                        <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Project"/>
                         <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="Account_Name" HeaderText="Account"/>
                         <syncfusion:GridTextColumn x:Name="Budget_DataGridColumn" HeaderText="Budget"  MappingName="Budget" />
                         <syncfusion:GridTextColumn x:Name="Donor_DataGridColumn" HeaderText="Donor"  MappingName="Donor" />
@@ -245,7 +245,18 @@ PopupAnimation="Fade">
                 CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"  />
                         <syncfusion:GridDateTimeColumn x:Name="updated_at_DataGridColumn" HeaderText="Modification date" MappingName="updated_at"
                 CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
+
+                        <syncfusion:GridTextColumn x:Name="Attachments_Count_DataGridColumn" MappingName="Attachments_count" HeaderText="Attachments Count"/>
+
+                        <syncfusion:GridTemplateColumn x:Name="Attachment_DataGridColumn" MappingName =" "  HeaderText="Attachment" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                            <syncfusion:GridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource Attachment_Style}" Click="Attachment_Button_Click"/>
+                                </DataTemplate>
+                            </syncfusion:GridTemplateColumn.CellTemplate>
+                        </syncfusion:GridTemplateColumn>
                     </syncfusion:SfDataGrid.Columns>
+                    
                     <syncfusion:SfDataGrid.GroupSummaryRows>
                         <syncfusion:GridSummaryRow ShowSummaryInRow="False" TitleColumnCount="1"  Title="Total:">
                             <syncfusion:GridSummaryRow.SummaryColumns>
@@ -292,6 +303,7 @@ PopupAnimation="Fade">
                             </syncfusion:GridSummaryRow.SummaryColumns>
                         </syncfusion:GridTableSummaryRow>
                     </syncfusion:SfDataGrid.TableSummaryRows>
+
                 </syncfusion:SfDataGrid>
             </Grid>
         </Grid>

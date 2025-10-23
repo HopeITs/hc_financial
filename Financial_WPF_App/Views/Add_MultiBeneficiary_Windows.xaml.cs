@@ -114,7 +114,7 @@ namespace Financial_WPF_App.Views
 
             dt = new DataTable();
 
-            dt.Columns.Add("Project Number");
+            dt.Columns.Add("Micro Project Number");
             dt.Columns.Add("Project Title");
             dt.Columns.Add("First name");
             dt.Columns.Add("Father name");

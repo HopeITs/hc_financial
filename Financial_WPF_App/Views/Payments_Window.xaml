@@ -106,7 +106,7 @@
                     <DockPanel LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
                         <WrapPanel Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
 
-                            <Controls:AutoCompleteTextBoxUserControl TextBoxTag="Project Number" TextBoxStyle="{StaticResource CustomTextBoxActionStyle}"
+                            <Controls:AutoCompleteTextBoxUserControl TextBoxTag="Micro Project Number" TextBoxStyle="{StaticResource CustomTextBoxActionStyle}"
                         x:Name="MircoProject_ID_autoSuggestionUserControl" 
                         LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus"
                          VerticalAlignment="Center" Width="175" Margin="14,0,6,0" />
@@ -311,7 +311,7 @@
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
                     NumberGroupSeparator=","/>
-                            <syncfusion:GridTextColumn MappingName="MicroProject_ID" HeaderText="Project number"/>
+                            <syncfusion:GridTextColumn MappingName="MicroProject_ID" HeaderText="Micro Project number"/>
                             <syncfusion:GridTextColumn MappingName="Name" HeaderText="Beneficiary Name"/>
                             <syncfusion:GridTextColumn MappingName="beneficiary_ID" HeaderText="beneficiary_ID" IsHidden="True"/>
                             <syncfusion:GridTextColumn MappingName="Payment_Num" HeaderText="Number of payment"/>

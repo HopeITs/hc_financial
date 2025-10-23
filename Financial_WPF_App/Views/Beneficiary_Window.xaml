@@ -112,7 +112,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Project Number:"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Micro Project Number:"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"  />
                         <TextBox x:Name="MP_ID_txtBox" Grid.Column="3"  Grid.Row="0" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="1" Width="175" />
                         <Label Grid.Row="0" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Project Title:" Margin="0,0,1,0" HorizontalAlignment="Right"  />
                         <TextBox x:Name="MP_Name_txtBox" Grid.Column="1"  Grid.Row="0" Style="{DynamicResource FloatingTextBoxStyle}" TabIndex="2" Width="175"/>

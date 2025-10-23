@@ -258,7 +258,7 @@ namespace Financial_WPF_App.Views
             {
                 if (Subproject_comboBox.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Please select the center.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("Please select the project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
 
@@ -332,7 +332,7 @@ namespace Financial_WPF_App.Views
 
                 if (Employee_Subproject_Table == null || Employee_Subproject_Table.Rows.Count == 0)
                 {
-                    MessageBox.Show("Please select one center at least.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("Please select one project at least.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
 

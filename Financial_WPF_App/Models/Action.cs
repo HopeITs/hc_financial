@@ -541,7 +541,7 @@ namespace Financial_WPF_App.Models
         public DataTable SelectLines_Report()
         {
 
-            string query = @"SELECT city.Name AS `City_Name`, project.Name AS `Project_Name`, subproject.Name AS `Subproject_Name`, account.Name as `Account_Name`,
+            string query = @"SELECT  action.id AS `ID`, city.Name AS `City_Name`, project.Name AS `Project_Name`, subproject.Name AS `Subproject_Name`, account.Name as `Account_Name`,
                         budget.Name as `Budget`, Group_Concat(donor.Name) as `Donor`,linecategory.Name as `Line Type`, line.Name as `Line`,
                         action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
@@ -555,7 +555,8 @@ namespace Financial_WPF_App.Models
                         cashaccount.Name as `CashAccount`, (select tilltypes.Name from till left join tilltypes on tilltypes.ID = till.Type_ID where till.id = action.ObserveTill_ID) as `ObserveTill`,
                         (select account.name from account left join till on till.account_id = account.id where till.id = action.ObserveTill_ID) as `ObserveAccount`,
                         obs_cashaccount.Name as `ObserveCashAccount`,
-                        action.created_at, action.updated_at
+                        action.created_at, action.updated_at, COUNT(DISTINCT att.id) AS Attachments_count
+
 
                         FROM action LEFT JOIN actiontype on actiontype.id = action.atype_id
                         LEFT JOIN budget_line on action.BudgetLine_ID = budget_line.id
@@ -574,6 +575,8 @@ namespace Financial_WPF_App.Models
                         LEFT JOIN project ON subproject.Project_ID = project.ID
                         LEFT JOIN category ON project.Category_ID = category.ID
                         LEFT JOIN city ON subproject.City_ID = city.ID
+                        LEFT JOIN action_attachments att ON att.action_id = action.id
+
 
                         where actiontype.shortname IN ('E','Ex') AND LOWER(tilltypes.Name) = LOWER('Syr') AND category.Name = 'Budget'
 

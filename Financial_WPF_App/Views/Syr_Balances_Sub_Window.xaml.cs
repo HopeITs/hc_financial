@@ -449,8 +449,8 @@ namespace Financial_WPF_App.Views
                             MappingName = StacHeader.Replace(" ", "")
                         };
                         if (MyDatagrid.Columns[i].MappingName.ToLower() != "city"
+                            && MyDatagrid.Columns[i].MappingName.ToLower() != "program"
                             && MyDatagrid.Columns[i].MappingName.ToLower() != "project"
-                            && MyDatagrid.Columns[i].MappingName.ToLower() != "subproject"
                             && MyDatagrid.Columns[i].MappingName.ToLower() != "account")
                         {
                             moved = stack_and_goup_columns(i, StacHeader, NewStackedColumn, MyDatagrid);

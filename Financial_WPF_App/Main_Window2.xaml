@@ -443,8 +443,8 @@
 
                                 <MenuItem Header="Donor" Click="Donor_MenuItemAdv_Click"/>
                                 <MenuItem Header="City" Click="City_MenuItemAdv_Click"/>
-                                <MenuItem Header="Project" Click="Project_MenuItemAdv_Click"/>
-                                <MenuItem Header="Center" Click="Subproject_MenuItemAdv_Click"/>
+                                <MenuItem Header="Program" Click="Project_MenuItemAdv_Click"/>
+                                <MenuItem Header="Project" Click="Subproject_MenuItemAdv_Click"/>
                                 <MenuItem Header="Budget" Click="Budget_MenuItemAdv_Click"/>
                                 <MenuItem Header="Currency denominations" Click="Denominations_MenuItemAdv_Click"/>
                                 <MenuItem Header="Users" Click="User_MenuItemAdv_Click"/>

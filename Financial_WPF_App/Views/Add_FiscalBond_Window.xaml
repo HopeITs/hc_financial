@@ -31,9 +31,9 @@
             <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Bond name:" VerticalContentAlignment="Center"  />
             <TextBox x:Name="Name_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" 
             Grid.Column="1" Grid.Row="1" TabIndex="1" />
-            <Label Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="Discerption:"  Grid.Column="0" VerticalContentAlignment="Center"/>
+            <Label Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="Description:"  Grid.Column="0" VerticalContentAlignment="Center"/>
             <TextBox x:Name="Notes_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" Grid.Row="2" Grid.Column="1" TabIndex="2" />
-            <Label Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Center:"  Grid.Row="4" VerticalContentAlignment="Center"   />
+            <Label Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Project:"  Grid.Row="4" VerticalContentAlignment="Center"   />
             <StackPanel Grid.Column="1" Orientation="Horizontal"  Grid.Row="4">
                 <ComboBox x:Name="SubProject_comboBox" Style="{StaticResource FloatingComboboxStyle}"
                 DisplayMemberPath="Name" SelectedValuePath="ID"  

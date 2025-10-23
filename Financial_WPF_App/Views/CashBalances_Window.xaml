@@ -124,7 +124,7 @@
                 <syncfusion:SfDataGrid.RecordContextMenu>
                     <ContextMenu>
                         <MenuItem x:Name="Refresh_Balances" Header="Refresh Balances" Click="Refresh_Click" />
-                        <MenuItem x:Name="View_Acount" Header="View Acount" Click="View_Acount_Click"/>
+                        <MenuItem x:Name="View_Acount" Header="View Account" Click="View_Acount_Click"/>
                     </ContextMenu>
                 </syncfusion:SfDataGrid.RecordContextMenu>
 

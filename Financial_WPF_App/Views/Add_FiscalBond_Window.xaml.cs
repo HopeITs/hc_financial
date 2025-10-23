@@ -136,7 +136,7 @@ namespace Financial_WPF_App.Views
 
                 if (SubProject_comboBox.SelectedIndex == -1 || Account_comboBox.SelectedIndex == -1 || Till_ComboBox.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Please select the center, account and till", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    MessageBox.Show("Please select the project, account and till", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
 
                 }

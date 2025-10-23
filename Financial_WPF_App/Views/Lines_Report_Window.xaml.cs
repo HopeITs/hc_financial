@@ -75,6 +75,7 @@ namespace Financial_WPF_App.Views
         {
             dt = new DataTable();
             dt = a.SelectLines_Report();
+
             if (dt != null && dt.Rows.Count > 0)
             {
                 myDataGrid.ItemsSource = dt.DefaultView;
@@ -101,6 +102,31 @@ namespace Financial_WPF_App.Views
 
             Bind_Show_Hide_Menu();
         }
+
+
+        private void Attachment_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                
+                DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
+                int Action_ID = Convert.ToInt32(dataRow["ID"]);
+                Window win = new Attachments(Action_ID, -1, true, null, null, null, null, null, this);
+                win.ShowDialog();
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+        
 
         private void Bind_Show_Hide_Menu()
         {

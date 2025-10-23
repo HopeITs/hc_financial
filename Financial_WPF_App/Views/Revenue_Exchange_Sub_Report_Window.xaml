@@ -222,8 +222,8 @@ PopupAnimation="Fade">
 
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn x:Name="City_DataGridColumn" MappingName="City_Name" HeaderText="City"/>
-                    <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" MappingName="Project_Name" HeaderText="Project"/>
-                    <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Subproject"/>
+                    <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" MappingName="Project_Name" HeaderText="Program"/>
+                    <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Project"/>
                     <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="Account_Name" HeaderText="Account"/>
 
 

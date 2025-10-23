@@ -117,7 +117,7 @@ namespace Financial_WPF_App.Views
 
             dt = new DataTable();
 
-            dt.Columns.Add("Project number");
+            dt.Columns.Add("Micro Project number");
             dt.Columns.Add("Payment amount");
             dt.Columns.Add("Description");
             dt.Columns.Add("Cash till");
