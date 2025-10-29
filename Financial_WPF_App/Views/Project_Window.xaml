@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
-        mc:Ignorable="d" Tag="Project Window" Width="760"
+        mc:Ignorable="d" Tag="Program Window" Width="760"
         Title="Project_Window"  Style="{StaticResource WindowPopupStyle}" WindowStartupLocation="CenterScreen">
 
     <Window.ContextMenu>

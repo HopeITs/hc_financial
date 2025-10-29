@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
-        mc:Ignorable="d" Tag="Till Type Window"
+        mc:Ignorable="d" Tag="Currency Window"
         Title="TillTypeWindow" Style="{StaticResource smallWindowPopupStyle}"
         WindowStartupLocation="CenterScreen" KeyDown="AddTillType_Window_KeyDown" Closing="AddTillType_Window_Closing" >
     <Window.ContextMenu>
