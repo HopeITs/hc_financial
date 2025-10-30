@@ -1115,6 +1115,76 @@ namespace Financial_WPF_App
                     }
                 }
             }
+
+            if (TillType != null && TillType.ToLower() == "syr")
+            {
+                currency_comboBox.IsEnabled = true;
+                Currency_Label.IsEnabled = true;
+            }
+            else
+            {
+                currency_comboBox.IsEnabled = false;
+                Currency_Label.IsEnabled = false;
+            }
+
+            // --- Currency condition control ---
+            // أولاً فعّل أو عطّل اختيار العملة حسب نوع الصندوق
+            if (!string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr")
+            {
+                currency_comboBox.IsEnabled = true;
+                Currency_Label.IsEnabled = true;
+            }
+            else
+            {
+                currency_comboBox.IsEnabled = false;
+                Currency_Label.IsEnabled = false;
+            }
+
+            // ثانياً، فعّل أو عطّل Original_AvgRate بناءً على العملة المختارة
+            try
+            {
+                // تحقق إنو في عنصر مختار
+                if (currency_comboBox.SelectedItem != null)
+                {
+                    string selectedCurrency = string.Empty;
+
+                    // إذا الـ ComboBox مربوط بقاعدة بيانات (DataRowView)
+                    if (currency_comboBox.SelectedItem is DataRowView row && row.Row.Table.Columns.Contains("Name"))
+                    {
+                        selectedCurrency = row["Name"].ToString().Trim().ToLower();
+                    }
+                    // أو إذا عم تستخدم Binding عادي بالنص
+                    else
+                    {
+                        selectedCurrency = (currency_comboBox.Text ?? "").Trim().ToLower();
+                    }
+
+                    // فعّل فقط إذا العملة SYR
+                    bool isSYR = selectedCurrency == "syr";
+
+                    Original_AvgRate_lable.IsEnabled =
+                    Original_AvgRate_comboBox.IsEnabled =
+                    Original_AvgRate_clear_btn.IsEnabled = isSYR;
+                }
+                else
+                {
+                    // إذا ما في عملة مختارة عطّل الكل
+                    Original_AvgRate_lable.IsEnabled =
+                    Original_AvgRate_comboBox.IsEnabled =
+                    Original_AvgRate_clear_btn.IsEnabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                // احتياطًا في حال صار أي خطأ بالتحويل أو الـ binding
+                Original_AvgRate_lable.IsEnabled =
+                Original_AvgRate_comboBox.IsEnabled =
+                Original_AvgRate_clear_btn.IsEnabled = false;
+
+                // اختياري: ممكن تطبّع الخطأ إذا عم تجرّب
+                // MessageBox.Show(ex.Message);
+            }
+
         }
 
         private void Clear_Boxes()
@@ -1349,6 +1419,12 @@ namespace Financial_WPF_App
 
         private void Fill_ComboBoxes()
         {
+            DataTable dtCurrency = t.Select_All_TillTypes_Currency();
+            if (dtCurrency != null && dtCurrency.Rows.Count > 0)
+            {
+                currency_comboBox.ItemsSource = dtCurrency.DefaultView;
+            }
+
             if (Original_AvgRate_comboBox.IsEnabled == true)
             {
                 Original_AvgRate_comboBox.ItemsSource = null;
@@ -2400,6 +2476,31 @@ namespace Financial_WPF_App
                     throw;
             }
         }
+
+        private void currency_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+            
+     
+                Show_Hide_Components();
+
+           
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+                if (PassException)
+                    throw;
+            }
+        }
+        
 
         private void IsReceipt_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

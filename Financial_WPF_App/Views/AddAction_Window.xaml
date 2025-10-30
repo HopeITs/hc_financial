@@ -490,6 +490,10 @@ VerticalScrollBarVisibility="Auto" Height="70" Margin="1,0,1,0"/>
               Style="{DynamicResource FloatingComboboxStyle}"
                 HorizontalContentAlignment="Left"  SelectionChanged="Till_comboBox_SelectionChanged" >
                 </ComboBox>
+                <Label x:Name="Currency_Label" Grid.Column="4" Grid.Row="2" Style="{DynamicResource statistic_lableStyle}" Content="Currency:"  HorizontalContentAlignment="Left" Margin="10,0,1,0"  />
+                <ComboBox x:Name="currency_comboBox" TabIndex="4" Grid.Column="5" Grid.Row="2"  Style="{StaticResource FloatingComboboxStyle}" 
+                HorizontalContentAlignment="Left"  Margin="1,3,1,7"  DisplayMemberPath="Name"  SelectedValuePath="ID"  IsEnabled="False" SelectionChanged="currency_comboBox_SelectionChanged" />
+
             </Grid>
         </ScrollViewer>
     </Grid>
