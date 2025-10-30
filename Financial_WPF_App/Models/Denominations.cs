@@ -2,6 +2,9 @@
 using System;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
+using Wpf.Ui.Controls;
 
 namespace Financial_WPF_App.Models
 {
@@ -20,10 +23,11 @@ namespace Financial_WPF_App.Models
 
 
             if(Account_ID != null){
-                 query += " SELECT denominations.id,denominations.name FROM cashaction  LEFT JOIN cashaccount on cashaccount.id = cashaction.cashaccount_id"+
-                          "  LEFT JOIN denominations on cashaccount.currency_tilltype_id = denominations.currency_tilltype_id"+
-                          "  LEFT JOIN tilltypes on tilltypes.ID = denominations.currency_tilltype_id"+
-                          "  where cashaccount.id = " + Account_ID.ToString() + "  ;";
+                 query += " SELECT denominations.id,denominations.name FROM denominations " +
+                         " LEFT JOIN cashaccount on cashaccount.currency_tilltype_id = denominations.currency_tilltype_id" +
+                         " LEFT JOIN tilltypes on tilltypes.ID = denominations.currency_tilltype_id" +
+                         " LEFT JOIN cashaction on cashaction.cashaccount_id = cashaccount.id" +
+                         " where cashaccount.id = " + Account_ID.ToString() + "  ;";
 
             }
             else
