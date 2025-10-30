@@ -14,13 +14,27 @@ namespace Financial_WPF_App.Models
         public string Denomination { get; set; }
 
 
-        public DataTable Select(bool WithNoDenomination)
+        public DataTable Select(bool WithNoDenomination, int? Account_ID)
         {
-            //check user from database
-            string query = "select d.id as 'ID',d.`currency_tilltype_id` as 'Currency_ID', t.name as 'Currency',case when d.name = 0 then 'Uncounted' else d.name end as 'Denomination' from `denominations` d LEFT JOIN tilltypes t on t.ID = d.currency_tilltype_id ";
+            string query = "";
+
+
+            if(Account_ID != null){
+                 query += " SELECT denominations.id,denominations.name FROM cashaction  LEFT JOIN cashaccount on cashaccount.id = cashaction.cashaccount_id"+
+                          "  LEFT JOIN denominations on cashaccount.currency_tilltype_id = denominations.currency_tilltype_id"+
+                          "  LEFT JOIN tilltypes on tilltypes.ID = denominations.currency_tilltype_id"+
+                          "  where cashaccount.id = " + Account_ID.ToString() + "  ;";
+
+            }
+            else
+            {
+                query += "select d.id as 'ID',d.`currency_tilltype_id` as 'Currency_ID', t.name as 'Currency',case when d.name = 0 then 'Uncounted' else d.name end as 'Denomination' from `denominations` d LEFT JOIN tilltypes t on t.ID = d.currency_tilltype_id ";
+
+            }
 
             if (!WithNoDenomination)
                 query += " where d.name <> 0 ";
+           
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -37,24 +51,7 @@ namespace Financial_WPF_App.Models
             }
             return dt;
         }
-        public DataTable SelectTillTypes()
-        {
-            string query = "SELECT id as 'ID', name as 'Name' FROM tilltypes where id <> 1 ORDER BY name;";
-
-            DataTable dt = new DataTable();
-            if (Login.BuildConnection())
-            {
-                using (MySqlCommand sc = new MySqlCommand(query, Login.MyConn))
-                {
-                    using (MySqlDataAdapter da = new MySqlDataAdapter(sc))
-                    {
-                        da.Fill(dt);
-                    }
-                }
-                Login.CloseAndClearConnection();
-            }
-            return dt;
-        }
+        
 
         public int Insert(string denomination, int currency_ID, string Form_Name)
         {

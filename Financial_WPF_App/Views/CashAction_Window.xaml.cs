@@ -140,7 +140,7 @@ namespace Financial_WPF_App.Views
         private void Fill_ComboBoxes()
         {
             Denominations_comboBox.ItemsSource = null;
-            denominations_dt = d.Select(true);
+            denominations_dt = d.Select(true, Account_ID);
             if (denominations_dt != null && denominations_dt.Rows.Count > 0)
             {
                 Denominations_comboBox.ItemsSource = denominations_dt.DefaultView;

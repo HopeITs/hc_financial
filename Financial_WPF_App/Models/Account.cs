@@ -83,7 +83,7 @@ namespace Financial_WPF_App.Models
         public DataTable Select_Cash_Account(string CashAccount_IDs, string SubProject_IDs)
         {
             //check user from database
-            string query = @"SELECT cashaccount.ID, cashaccount.Name, city.name as 'city_name', city.id as 'city_id',
+            string query = @"SELECT cashaccount.ID, cashaccount.Name, city.name as 'city_name', city.id as 'city_id', currency_tilltype_id,
                             (SELECT GROUP_CONCAT(cashaccount_subproject.subproject_id) FROM cashaccount_subproject WHERE cashaccount_subproject.cashaccount_id = cashaccount.ID) AS 'SubProject_ID',
 
                             (SELECT GROUP_CONCAT(cashaccount_account.account_id) FROM cashaccount_account left join account on cashaccount_account.account_id = account.id left join accounttype on account.Accounttype_id = accounttype.id WHERE cashaccount_account.cashaccount_id = cashaccount.ID AND accounttype.name = 'Personal') AS 'PersonalAccount_ID',
@@ -390,7 +390,7 @@ namespace Financial_WPF_App.Models
             return Account_ID;
         }
 
-        public int Insert_Cash_Account(string name, List<string> Add_SubProject, List<string> Add_Acc, int City_ID, string Form_Name)
+        public int Insert_Cash_Account(string name, List<string> Add_SubProject, List<string> Add_Acc, int City_ID, int Currency_ID, string Form_Name)
         {
             string query = "";
             string log_query = "";
@@ -403,13 +403,14 @@ namespace Financial_WPF_App.Models
 
                 sc.Parameters.AddWithValue("@name", name);
                 sc.Parameters.AddWithValue("@City_ID", City_ID);
+                sc.Parameters.AddWithValue("@Currency_ID", Currency_ID);
 
                 sc.Parameters.AddWithValue("@Form_Name", Form_Name);
 
                 query = "START TRANSACTION;";
 
-                query += "INSERT INTO cashaccount(Name, city_id)" +
-                    " VALUES (@name, @City_ID);";
+                query += "INSERT INTO cashaccount(Name, city_id,currency_tilltype_id)" +
+                    " VALUES (@name, @City_ID,@Currency_ID);";
 
 
                 query += " SET @Acc_ID = Last_Insert_ID();";
