@@ -163,7 +163,7 @@
     Style="{DynamicResource SfDataGrid_body}"
     HeaderStyle="{DynamicResource SfDataGrid_header}"
     RowStyle="{DynamicResource SfDataGrid_RowStyle}"
-    AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Loaded="payDataGrid_Loaded"  Grid.Column="0" Grid.RowSpan="2" Grid.Row="0" Margin="2,35,20,5" Height="560">
+    AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="top" Loaded="payDataGrid_Loaded"  Grid.Column="0" Grid.RowSpan="2" Grid.Row="0" Margin="2,35,20,5" Height="470">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
             IsHidden="True" />

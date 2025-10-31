@@ -212,7 +212,7 @@
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
                                     ShowGroupDropArea ="False"
                                     Loaded="myDataGrid_Loaded"
-                        SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="660" >
+                        SelectionChanged="myDataGrid_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="top" Height="450" >
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
                                                IsHidden="True" />
