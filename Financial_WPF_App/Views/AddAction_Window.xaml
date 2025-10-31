@@ -116,7 +116,7 @@
                 <ComboBox x:Name="Type_comboBox" TabIndex="4" Grid.Column="5" Grid.Row="1" 
                        Style="{StaticResource FloatingComboboxStyle}"
                       HorizontalContentAlignment="Left" 
-                      SelectionChanged="Type_comboBox_SelectionChanged">
+                      SelectionChanged="Type_comboBox_SelectionChanged" HorizontalAlignment="Right" Margin="0,5,1,5" Width="248">
                     <ComboBoxItem x:Name="Type_ComboBox_Income_Item" Content="Income" />
                     <ComboBoxItem x:Name="Type_ComboBox_Outcome_Item" Content="Adv. Payment"/>
                     <ComboBoxItem x:Name="Type_ComboBox_Returned_Item" Content="Returned"/>

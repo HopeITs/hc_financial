@@ -898,15 +898,33 @@ namespace Financial_WPF_App
 
                                     CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
 
-                                    Document_Label.IsEnabled = IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled =
+                                    Document_Label.IsEnabled = IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled = true;
 
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
+                                //Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 Budget_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                                // Original_AvgRate_help.Visibility = Visibility.Visible;
                                 payslip_ComboBoxItem.Visibility = Visibility.Visible;
+                               
+
+
+                                if (currency_comboBox.SelectedValue != null &&
+                                    (int)currency_comboBox.SelectedValue == 4)
+                                {
+                                    Original_AvgRate_lable.IsEnabled = true;
+                                    Original_AvgRate_comboBox.IsEnabled = true;
+                                    Original_AvgRate_clear_btn.IsEnabled = true;
+                                    Original_AvgRate_help.Visibility = Visibility.Visible;
+                                }
+                                else
+                                {
+                                    Original_AvgRate_lable.IsEnabled = false;
+                                    Original_AvgRate_comboBox.IsEnabled = false;
+                                    Original_AvgRate_clear_btn.IsEnabled = false;
+                                    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                                }
                             }
                             else if (Type_ComboBox_Move_Item.IsSelected)
                             {
@@ -1123,66 +1141,12 @@ namespace Financial_WPF_App
             }
             else
             {
+                currency_comboBox.SelectedIndex = -1;
+                currency_comboBox.SelectedValue = null;
+                currency_comboBox.Text = string.Empty;
+
                 currency_comboBox.IsEnabled = false;
                 Currency_Label.IsEnabled = false;
-            }
-
-            // --- Currency condition control ---
-            // أولاً فعّل أو عطّل اختيار العملة حسب نوع الصندوق
-            if (!string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr")
-            {
-                currency_comboBox.IsEnabled = true;
-                Currency_Label.IsEnabled = true;
-            }
-            else
-            {
-                currency_comboBox.IsEnabled = false;
-                Currency_Label.IsEnabled = false;
-            }
-
-            // ثانياً، فعّل أو عطّل Original_AvgRate بناءً على العملة المختارة
-            try
-            {
-                // تحقق إنو في عنصر مختار
-                if (currency_comboBox.SelectedItem != null)
-                {
-                    string selectedCurrency = string.Empty;
-
-                    // إذا الـ ComboBox مربوط بقاعدة بيانات (DataRowView)
-                    if (currency_comboBox.SelectedItem is DataRowView row && row.Row.Table.Columns.Contains("Name"))
-                    {
-                        selectedCurrency = row["Name"].ToString().Trim().ToLower();
-                    }
-                    // أو إذا عم تستخدم Binding عادي بالنص
-                    else
-                    {
-                        selectedCurrency = (currency_comboBox.Text ?? "").Trim().ToLower();
-                    }
-
-                    // فعّل فقط إذا العملة SYR
-                    bool isSYR = selectedCurrency == "syr";
-
-                    Original_AvgRate_lable.IsEnabled =
-                    Original_AvgRate_comboBox.IsEnabled =
-                    Original_AvgRate_clear_btn.IsEnabled = isSYR;
-                }
-                else
-                {
-                    // إذا ما في عملة مختارة عطّل الكل
-                    Original_AvgRate_lable.IsEnabled =
-                    Original_AvgRate_comboBox.IsEnabled =
-                    Original_AvgRate_clear_btn.IsEnabled = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                // احتياطًا في حال صار أي خطأ بالتحويل أو الـ binding
-                Original_AvgRate_lable.IsEnabled =
-                Original_AvgRate_comboBox.IsEnabled =
-                Original_AvgRate_clear_btn.IsEnabled = false;
-
-                // اختياري: ممكن تطبّع الخطأ إذا عم تجرّب
-                // MessageBox.Show(ex.Message);
             }
 
         }
@@ -1197,7 +1161,7 @@ namespace Financial_WPF_App
             USD_Value_TxtBox.Content = Exchanged_txtBox.Content = "";
             DestinationTill_comboBox.SelectedIndex = ExchangeAcc_comboBox.SelectedIndex = Donor_comboBox.SelectedIndex = Budget_comboBox.SelectedIndex =
                 Category_comboBox.SelectedIndex = Line_comboBox.SelectedIndex = CashAccount_comboBox.SelectedIndex = ObserveCashAccount_comboBox.SelectedIndex =
-                Original_AvgRate_comboBox.SelectedIndex = IsReceipt_comboBox.SelectedIndex = Employee_comboBox.SelectedIndex = -1;
+                Original_AvgRate_comboBox.SelectedIndex = IsReceipt_comboBox.SelectedIndex = Employee_comboBox.SelectedIndex  = -1;
 
 
             ActionDate_datepicker.SelectedDate = DateTime.Today;
@@ -1421,8 +1385,8 @@ namespace Financial_WPF_App
         {
             DataTable dtCurrency = t.Select_All_TillTypes_Currency();
             if (dtCurrency != null && dtCurrency.Rows.Count > 0)
-            {
-                currency_comboBox.ItemsSource = dtCurrency.DefaultView;
+            { 
+                currency_comboBox.ItemsSource = dtCurrency.DefaultView; 
             }
 
             if (Original_AvgRate_comboBox.IsEnabled == true)
@@ -2390,6 +2354,14 @@ namespace Financial_WPF_App
 
                     Clear_Boxes();
                     Show_Hide_Components();
+                    if (Till_ID == 2 && Till_ID == 3)
+                    {
+                        currency_comboBox.SelectedIndex = -1;
+                    }
+                    else
+                    {
+
+                    }
                 }
             }
             catch (Exception ex)
