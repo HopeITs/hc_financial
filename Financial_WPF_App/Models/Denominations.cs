@@ -22,13 +22,13 @@ namespace Financial_WPF_App.Models
             string query = "";
 
 
-            if(Account_ID != null){
-                 query += " SELECT denominations.id,denominations.name FROM denominations " +
+            if(Account_ID != null && Account_ID != -1)
+            {
+                 query += " SELECT DISTINCT denominations.id,denominations.name FROM denominations " +
                          " LEFT JOIN cashaccount on cashaccount.currency_tilltype_id = denominations.currency_tilltype_id" +
                          " LEFT JOIN tilltypes on tilltypes.ID = denominations.currency_tilltype_id" +
                          " LEFT JOIN cashaction on cashaction.cashaccount_id = cashaccount.id" +
-                         " where cashaccount.id = " + Account_ID.ToString() + "  ;";
-
+                         " where cashaccount.id = " + Account_ID.ToString() + " ";
             }
             else
             {
