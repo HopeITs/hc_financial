@@ -109,7 +109,7 @@ namespace Financial_WPF_App.Helper
         {
             string Last_Column_Name = e.Row.Table.Columns[e.Row.Table.Columns.Count - 1].ColumnName;
 
-            if (e.Column.ColumnName == "Project number")
+            if (e.Column.ColumnName == "Micro Project number")
             {
                 bool exists = false;
                 if(_Beneficiaries_dt.Rows.Count > 0)
