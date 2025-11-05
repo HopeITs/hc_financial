@@ -119,7 +119,7 @@ namespace Financial_WPF_App.Helper
         {
             string Last_Column_Name = e.Row.Table.Columns[e.Row.Table.Columns.Count - 1].ColumnName;
 
-            if (_Account_Type == "Project" && e.Column.ColumnName == "Subproject")
+            if (_Account_Type == "Project" && e.Column.ColumnName == "Project")
             {
                 bool exists = false;
 
@@ -140,7 +140,7 @@ namespace Financial_WPF_App.Helper
                 else
                 {
                     Login.MultiAction_AnyError = true;
-                    e.Row.SetColumnError(e.Column.ColumnName, "This Subproject does not exist.");
+                    e.Row.SetColumnError(e.Column.ColumnName, "This Project does not exist.");
                     e.Row.RowError = "There are errors in this row.";
                 }
             }
@@ -151,7 +151,7 @@ namespace Financial_WPF_App.Helper
                 if (_Account_Type == "Project")
                 {
                     _Account_ID = _all_Tills_dt.AsEnumerable()
-                            .Where(row => row.Field<string>("Subproject_Name")?.ToLower().Trim().Equals(e.Row["Subproject"].ToString().ToLower().Trim()) == true
+                            .Where(row => row.Field<string>("Subproject_Name")?.ToLower().Trim().Equals(e.Row["Project"].ToString().ToLower().Trim()) == true
                             && row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                             .Select(row => row.Field<int>("Account_ID"))
                             .DefaultIfEmpty(-1)
