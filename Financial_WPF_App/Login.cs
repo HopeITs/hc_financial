@@ -78,7 +78,6 @@ namespace Financial_WPF_App.Models
         public static void Set_ConnectionString(bool status)
         {
             //Should Change Before Publishing
-            database = "hcsyria_financial_test";      
             test_database = "hcsyria_financial_test"; 
             onlineserver  = "45.9.62.87";             
             string localserver = "localhost";         

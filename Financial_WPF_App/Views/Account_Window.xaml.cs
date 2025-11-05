@@ -98,7 +98,8 @@ namespace Financial_WPF_App
         private Models.Account a;
         private Till t; SubProject_Donor sd;
         private City c;
-        private DataTable dt, t_dt, sub_dt, donor_dt, p_dt, Amount_dt, PersonalAcc_dt, ExchangeAcc_dt, Cities_dt;
+        private TillType tt;
+        private DataTable dt, t_dt, sub_dt, donor_dt, p_dt, Amount_dt, PersonalAcc_dt, ExchangeAcc_dt, Cities_dt,TillType_dt;
         int IsClosed = 0;
         bool UserMode;
         bool IsAdminAccount = false;
@@ -167,6 +168,7 @@ namespace Financial_WPF_App
                 t = new Till();
                 sd = new SubProject_Donor();
                 c = new City();
+                tt = new TillType();
                 Original_objDonorList = new List<SubProject_Donor>();
                 Original_SubProjectList = new List<Local_SubProject>();
                 Original_PersonalAccList = new List<Local_PersonalAcc>();
@@ -179,7 +181,7 @@ namespace Financial_WPF_App
                         SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled =
                         PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
                         ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled =
-                        Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
+                        Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled = Currency_comboBox.IsEnabled = 
                         ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
                         BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
                         EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled = EndDate_Border.IsEnabled =
@@ -403,13 +405,13 @@ namespace Financial_WPF_App
         {
             if (AccType == "Project")
             {
-                City_lable.IsEnabled = City_comboBox.IsEnabled = City_clear_btn.IsEnabled =
+                City_lable.IsEnabled = City_comboBox.IsEnabled = City_clear_btn.IsEnabled = Currency_comboBox.IsEnabled = Currency_label.IsEnabled = Currency_clear_btn.IsEnabled = 
                     PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
                     ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled = false;
             }
             if (AccType == "Exchange")
             {
-                Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled =
+                Project_lable.IsEnabled = Project_comboBox.IsEnabled = Project_clear_btn.IsEnabled = Currency_comboBox.IsEnabled = Currency_label.IsEnabled = Currency_clear_btn.IsEnabled =
                     SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled =
                     PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
                     ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled =
@@ -428,13 +430,13 @@ namespace Financial_WPF_App
                 ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
                 BeginDate_label.IsEnabled = BeginDate_datepicker.IsEnabled =
                 EndDate_label.IsEnabled = EndDate_datepicker.IsEnabled = EndDate_CheckBox.IsEnabled = EndDate_Border.IsEnabled =
-                TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
+                TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled = 
                 IsClosed_label.IsEnabled = IsClosed_btn.IsEnabled = AmountType_comboBox.IsEnabled = false;
 
-                PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled =
+                PersonalAccount_label.IsEnabled = PersonalAccount_comboBox.IsEnabled = PersonalAccount_clear_btn.IsEnabled = Currency_comboBox.IsEnabled;
                 ExchangeAccount_label.IsEnabled = ExchangeAccount_comboBox.IsEnabled = ExchangeAccount_clear_btn.IsEnabled = true;
 
-                SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled = true;
+                SubProject_label.IsEnabled = SubProject_comboBox.IsEnabled = SubProject_clear_btn.IsEnabled= Currency_label.IsEnabled = Currency_clear_btn.IsEnabled = true;
             }
             else if (AccType == "Personal")
             {
@@ -445,7 +447,7 @@ namespace Financial_WPF_App
                     Donor_label.IsEnabled = Donor_comboBox.IsEnabled = Donor_clear_btn.IsEnabled =
                     ProjectNumber_label.IsEnabled = ProjectNumber_txtBox.IsEnabled =
                     TotalAmount_label.IsEnabled = TotalAmount_txtBox.IsEnabled = AmountType_comboBox.IsEnabled =
-                    AmountType_comboBox.IsEnabled = false;
+                    AmountType_comboBox.IsEnabled  = Currency_comboBox.IsEnabled = Currency_label.IsEnabled = false;
             }
         }
 
@@ -467,6 +469,17 @@ namespace Financial_WPF_App
                     {
                         City_comboBox.SelectedValue = dt.Rows[i].Field<int>("city_id");
                     }
+                    Currency_comboBox.Dispatcher.BeginInvoke(new System.Action(() =>
+                    {
+                        if (dt.Rows[i]["currency_tilltype_id"] != DBNull.Value && dt.Rows[i]["currency_tilltype_id"] != null)
+                        {
+                            Currency_comboBox.SelectedValue = dt.Rows[i].Field<int>("currency_tilltype_id");
+                            Currency_comboBox.IsEnabled = false;
+                            Currency_clear_btn.IsEnabled = false;
+                            Currency_label.IsEnabled = false;
+                        }
+                    }), System.Windows.Threading.DispatcherPriority.Background);
+
 
                     List<string> AllSubProject_ID = new List<string>();
                     List<string> AllPersonalAcc_ID = new List<string>();
@@ -726,6 +739,7 @@ namespace Financial_WPF_App
             }
 
             UserMode = true;
+
         }
 
         public void Fill_Account_Tabs(string till_ID, string type)
@@ -1128,6 +1142,23 @@ namespace Financial_WPF_App
                     int count = objExchangeAccList.Count(item => item.ExchangeAcc_Check_Status == true);
                     ExchangeAccount_comboBox.Text = count.ToString() + " Selected";
                 }
+
+
+                DataRow[] rows = p_dt.Select("Category='" + Category + "'");
+                DataTable selected_dt = new DataTable();
+                if (rows.Length != 0)
+                {
+                    selected_dt = rows.CopyToDataTable();
+                    if (selected_dt != null && selected_dt.Rows.Count > 0)
+                        Project_comboBox.ItemsSource = selected_dt.DefaultView;
+                }
+
+                Currency_comboBox.ItemsSource = null;
+                TillType_dt = tt.SelectTillTypes();
+                if(TillType_dt != null && TillType_dt.Rows.Count > 0)
+                    {
+                    Currency_comboBox.ItemsSource = TillType_dt.DefaultView;
+                }
             }
 
 
@@ -1372,6 +1403,25 @@ namespace Financial_WPF_App
 
         }
 
+        private void Currency_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Currency_comboBox.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+
+        }
+
         private void TotalAmount_txtBox_LostFocus(object sender, RoutedEventArgs e)
         {
             try
@@ -1489,6 +1539,12 @@ namespace Financial_WPF_App
                         return;
                     }
 
+                    if (Currency_comboBox.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Please select the currency", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        return;
+                    }
+
                     int SubFound = 0;
                     if (objSubProjectList != null)
                         foreach (var subProject in objSubProjectList)
@@ -1555,6 +1611,7 @@ namespace Financial_WPF_App
                 float totalAmount = 0;
                 int amountType_ID = -1;
                 int City_ID = -1;
+                int Currency_ID = -1;
                 List<string> Add_donors = new List<string>();
                 List<string> Delete_donors = new List<string>();
 
@@ -1653,6 +1710,7 @@ namespace Financial_WPF_App
                     totalAmount = 0;
                     amountType_ID = -1;
                     City_ID = Convert.ToInt32(City_comboBox.SelectedValue);
+                    Currency_ID = Convert.ToInt32(Currency_comboBox.SelectedValue);
                     if (AccType == "Cash")
                     {
                         bool Found;
@@ -1804,7 +1862,7 @@ namespace Financial_WPF_App
                     }
                     else
                     {
-                        a.Update_Cash_Account(Acc_ID, Name, Add_SubProject, Delete_SubProject, Add_Acc, Delete_Acc, City_ID, "Account_Window");
+                        a.Update_Cash_Account(Acc_ID, Name, Add_SubProject, Delete_SubProject, Add_Acc, Delete_Acc, City_ID ,"Account_Window");
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     }
 
@@ -1832,7 +1890,7 @@ namespace Financial_WPF_App
                     }
                     else
                     {
-                        Acc_ID = a.Insert_Cash_Account(Name, Add_SubProject, Add_Acc, City_ID, "Account_Window");
+                        Acc_ID = a.Insert_Cash_Account(Name, Add_SubProject, Add_Acc, City_ID, Currency_ID ,"Account_Window");
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
                         tabControl1.Visibility = Visibility.Visible; //Update//
@@ -1883,6 +1941,62 @@ namespace Financial_WPF_App
         }
 
         private void Donor_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (AccType == "Project" && Category == "Micro Projects")
+                {
+                    FilteredobjDonorList = new List<SubProject_Donor>();
+                    if (objDonorList != null && objDonorList.Count > 0)
+                    {
+                        foreach (var donor in objDonorList)
+                        {
+                            if (donor.Check_Status == true)
+                                FilteredobjDonorList.Add(donor);
+                        }
+
+                        if (FilteredobjDonorList.Count > 0)
+                        {
+                            Donor_comboBox.ItemsSource = null;
+                            Donor_comboBox.Text = "0 Selected";
+                            Donor_comboBox.ItemsSource = FilteredobjDonorList;
+                            int count = objDonorList.Count(item => item.Check_Status == true);
+                            Donor_comboBox.Text = count.ToString() + " Selected";
+                        }
+                        else
+                        {
+                            Donor_comboBox.ItemsSource = null;
+                            Donor_comboBox.Text = "0 Selected";
+                            Donor_comboBox.ItemsSource = objDonorList;
+                            int count = objDonorList.Count(item => item.Check_Status == true);
+                            Donor_comboBox.Text = count.ToString() + " Selected";
+                        }
+                    }
+                    else
+                    {
+                        Donor_comboBox.ItemsSource = null;
+                        Donor_comboBox.Text = "0 Selected";
+                        Donor_comboBox.ItemsSource = objDonorList;
+                        int count = objDonorList.Count(item => item.Check_Status == true);
+                        Donor_comboBox.Text = count.ToString() + " Selected";
+                    }
+                }
+
+                int DonorCount = objDonorList.Count(item => item.Check_Status == true);
+                Donor_comboBox.Text = DonorCount.ToString() + " Selected";
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+        private void Currency_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
         {
             try
             {

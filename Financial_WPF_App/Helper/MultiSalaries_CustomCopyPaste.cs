@@ -135,7 +135,7 @@ namespace Financial_WPF_App.Helper
                     e.Row.RowError = "There are errors in this row.";
                 }
             }
-            else if (e.Column.ColumnName == "Center")
+            else if (e.Column.ColumnName == "Project")
             {
                 bool exists = false;
 
@@ -161,7 +161,7 @@ namespace Financial_WPF_App.Helper
                 if (_Employee_Subprojects_dt.Rows.Count > 0)
                     _Employee_Subproject_ID = _Employee_Subprojects_dt.AsEnumerable()
                             .Where(row => row.Field<string>("Employee_Name")?.ToLower().Trim().Equals(e.Row["Name"].ToString().ToLower().Trim()) == true
-                             && row.Field<string>("SubprojectName")?.ToLower().Trim().Equals(e.Row["Center"].ToString().ToLower().Trim()) == true
+                             && row.Field<string>("SubprojectName")?.ToLower().Trim().Equals(e.Row["Project"].ToString().ToLower().Trim()) == true
                              && row.Field<string>("LineName")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
                             .Select(row => row.Field<int>("Emplyee_Subproject_ID"))
                             .DefaultIfEmpty(-1)
