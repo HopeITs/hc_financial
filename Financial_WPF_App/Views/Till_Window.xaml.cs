@@ -1017,7 +1017,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                Till_Balances _Window = new Till_Balances(Till_ID , Account_ID, Account_Type, Category);
+                Till_Balances _Window = new Till_Balances(Account_ID, Account_Type, Category);
                 _Window.ShowDialog();
             }
             catch (Exception ex)

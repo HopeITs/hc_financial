@@ -18,10 +18,9 @@ namespace Financial_WPF_App.Views
     /// </summary>
     public partial class Till_Balances : Window
     {
-        public Till_Balances(int Till_ID , int Account_ID, string Account_Type, string Category)
+        public Till_Balances(int Account_ID, string Account_Type, string Category)
         {
             InitializeComponent();
-            this.Till_ID = Till_ID;
             this.Account_ID = Account_ID;
             this.Account_Type = Account_Type;
             this.Category = Category;
@@ -36,7 +35,7 @@ namespace Financial_WPF_App.Views
         }
         private DataTable cash_dt;
         Models.Action a;
-        int  Account_ID, Till_ID;
+        int Account_ID;
         string Account_Type ,Category;
         string HeaderStyle_Name = "SfDataGrid_header";
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
@@ -136,16 +135,14 @@ namespace Financial_WPF_App.Views
         {
             cash_dt = new DataTable();
             List<int> CashAccount_ID = new List<int>();
-            DataSet ds = a.Select_Sums(Till_ID.ToString(), Account_ID, "");
+            DataSet ds = a.Select_Account_Balances(Account_ID);
 
             if (Settings.Default.User_CashAccounts != null && !string.IsNullOrEmpty(Settings.Default.User_CashAccounts) && !string.IsNullOrWhiteSpace(Settings.Default.User_CashAccounts))
                 CashAccount_ID = Settings.Default.User_CashAccounts.ToString().Split(',').Select(int.Parse).ToList();
 
             if (ds.Tables.Count > 0)
             {
-                if (ds.Tables.Count > 1)
-                {
-                    DataTable temp_cash = ds.Tables[1];
+                    DataTable temp_cash = ds.Tables[0];
                     if (temp_cash != null && temp_cash.Rows.Count > 0)
                     {
                             if (Settings.Default.Role == "Employee")
@@ -175,8 +172,6 @@ namespace Financial_WPF_App.Views
                                 cash_dt = temp_cash;
                             }
                     }
-
-                }
                 if (cash_dt != null && cash_dt.Rows.Count > 0)
                 {
                     Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
