@@ -521,6 +521,9 @@
     <Compile Include="Views\Syr_Balances_Window.xaml.cs">
       <DependentUpon>Syr_Balances_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Till_Balances.xaml.cs">
+      <DependentUpon>Till_Balances.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Till_Window.xaml.cs">
       <DependentUpon>Till_Window.xaml</DependentUpon>
     </Compile>
@@ -756,6 +759,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Syr_Balances_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Till_Balances.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1220,6 +1227,9 @@
   <ItemGroup>
     <Resource Include="Images\Login\hide_password.png" />
     <Resource Include="Images\Login\show_password.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\show_balances.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets')" />
