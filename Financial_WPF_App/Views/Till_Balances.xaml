@@ -4,17 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
-        xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.Till_Balances"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Views.Till_Balances"
         mc:Ignorable="d" Tag="Till Balances Window" 
         Title="Till_Balances" Style="{StaticResource WindowPopupStyle}" Width="800">
-    <Window.Resources>
-        <!-- Left-aligned cell style -->
-        <Style x:Key="LeftAlignedCellStyle" TargetType="syncfusion:GridCell">
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-    </Window.Resources>
     <Grid Margin="5">
         <Grid>
             <Grid.RowDefinitions>
@@ -25,7 +17,7 @@
             <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
                 <local:WindowControlBar_Popup x:Name="ControlBar"/>
             </DockPanel>
-            <syncfusion:SfDataGrid x:Name="Cash_DataGrid" CellStyle="{StaticResource LeftAlignedCellStyle}"
+            <syncfusion:SfDataGrid x:Name="Cash_DataGrid"
 Style="{DynamicResource SfDataGrid_body}"
 HeaderStyle="{DynamicResource SfDataGrid_header}"
 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
@@ -33,40 +25,7 @@ AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
 AutoGenerateColumns="True"
 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-Margin="1,1,0,0" Grid.Row="2" Loaded="Cash_DataGrid_Loaded">
-                <syncfusion:SfDataGrid.Columns>
-                    <syncfusion:GridTextColumn  x:Name="Account_DataGridColumn" HeaderText="Account"  MappingName="Account"/>
-                    <syncfusion:GridNumericColumn  x:Name="IncomeSYR_DataGridColumn" HeaderText="Income(SYR)"  MappingName="Income_SYR" TextAlignment="Left"
-                               NumberDecimalDigits="2"
-                               NumberDecimalSeparator="."
-                               NumberGroupSizes="3"
-                               NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="ExpenseSYR_DataGridColumn" HeaderText="Expenses(SYR)"  MappingName="Expenses_SYR" TextAlignment="Left"
-                               NumberDecimalDigits="2"
-                               NumberDecimalSeparator="."
-                               NumberGroupSizes="3"
-                               NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="DifferenceSYR_DataGridColumn" HeaderText="Difference(SYR)"  MappingName="Difference_SYR"  TextAlignment="Left"
-                               NumberDecimalDigits="2"
-                               NumberDecimalSeparator="."
-                               NumberGroupSizes="3"
-                               NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="IncomeUSD_DataGridColumn" HeaderText="Income(USD)"  MappingName="Income_USD" TextAlignment="Left"
-                               NumberDecimalDigits="2"
-                               NumberDecimalSeparator="."
-                               NumberGroupSizes="3"
-                               NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="ExpenseUSD_DataGridColumn" HeaderText="Expenses(USD)"  MappingName="Expenses_USD" TextAlignment="Left"
-                               NumberDecimalDigits="2"
-                               NumberDecimalSeparator="."
-                               NumberGroupSizes="3"
-                               NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="DifferenceUSD_DataGridColumn" HeaderText="Difference(USD)"  MappingName="Difference_USD" TextAlignment="Left"
-                               NumberDecimalDigits="2"
-                               NumberDecimalSeparator="."
-                               NumberGroupSizes="3"
-                               NumberGroupSeparator=","/>
-                </syncfusion:SfDataGrid.Columns>
+Margin="1,1,0,0" Grid.Row="2">
                 <syncfusion:SfDataGrid.TableSummaryRows>
                     <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
                        Title="Total:">
@@ -81,7 +40,7 @@ Margin="1,1,0,0" Grid.Row="2" Loaded="Cash_DataGrid_Loaded">
                                 SummaryType="DoubleAggregate" />
                             <syncfusion:GridSummaryColumn Name="Total_Dif"                                                      
                                 Format="'{Sum:N2}'"
-                                MappingName="Difference_SYR"
+                                MappingName="Deference_SYR"
                                 SummaryType="DoubleAggregate" />
                             <syncfusion:GridSummaryColumn Name="Total_I_USD"                                                      
                                 Format="'{Sum:N2}'"
@@ -95,7 +54,7 @@ Margin="1,1,0,0" Grid.Row="2" Loaded="Cash_DataGrid_Loaded">
                             
                             <syncfusion:GridSummaryColumn Name="Total_Dif_USD"                                                      
                                 Format="'{Sum:N2}'"
-                                MappingName="Difference_USD"
+                                MappingName="Deference_USD"
                                 SummaryType="DoubleAggregate" />
                         </syncfusion:GridSummaryRow.SummaryColumns>
                     </syncfusion:GridTableSummaryRow>
@@ -106,7 +65,7 @@ Margin="1,1,0,0" Grid.Row="2" Loaded="Cash_DataGrid_Loaded">
                     <!-- For the button -->
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="Helper:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
+                <Button Style="{DynamicResource AddButtonStyle}" x:Name="Cash_Export_btn" Command="Helper:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
                     </Button.Background>
