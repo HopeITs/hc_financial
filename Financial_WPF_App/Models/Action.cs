@@ -514,8 +514,8 @@ namespace Financial_WPF_App.Models
             query += condition;
             query += ";";
 
-            query += "SELECT cash_balances.CashAccount_id as 'CashAccount_id', cash_balances.CashAccount_Name AS 'Account', cash_balances.Account_I AS 'Income_SYR' , cash_balances.Account_E AS 'Expenses_SYR' , cash_balances.Account_Net AS 'Deference_SYR'" +
-                ", cash_balances.Account_I_USD AS 'Income_USD',cash_balances.Account_E_USD AS 'Expenses_USD',cash_balances.Account_Net_USD AS 'Deference_USD' " +
+            query += "SELECT cash_balances.CashAccount_Name AS 'Account', cash_balances.Account_I AS 'Income_SYR' , cash_balances.Account_E AS 'Expenses_SYR' , cash_balances.Account_Net AS 'Difference_SYR'" +
+                ", cash_balances.Account_I_USD AS 'Income_USD',cash_balances.Account_E_USD AS 'Expenses_USD',cash_balances.Account_Net_USD AS 'Difference_USD' " +
                 " FROM cash_balances WHERE cash_balances.Account_id = @Account_ID;";
 
             DataSet ds = new DataSet();

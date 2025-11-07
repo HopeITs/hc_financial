@@ -5,16 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace Financial_WPF_App.Views
@@ -48,41 +42,12 @@ namespace Financial_WPF_App.Views
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
 
-        private void Cash_DataGrid_AutoGeneratingColumn(object sender, AutoGeneratingColumnArgs e)
-        {
-            try
-            {
-                if (e.Column is GridNumericColumn)
-                {
-                    (e.Column as GridNumericColumn).NumberDecimalDigits = 2;
-                    (e.Column as GridNumericColumn).NumberDecimalSeparator = ".";
-                    (e.Column as GridNumericColumn).NumberGroupSizes = new Int32Collection { 3 };
-                    (e.Column as GridNumericColumn).NumberGroupSeparator = ",";
-                }
-
-                if (e.Column.MappingName == "CashAccount_id")
-                    e.Cancel = true;
-
-                e.Column.TextAlignment = TextAlignment.Left;
-                e.Column.VerticalAlignment = VerticalAlignment.Center;
-
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
+        
         private void Cash_DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             if (Cash_DataGrid.View != null)
             {
-                Cash_Export_btn.CommandTarget = Cash_DataGrid;
+                Export_btn.CommandTarget = Cash_DataGrid;
             }
         }
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -125,6 +90,7 @@ namespace Financial_WPF_App.Views
             LoadGrid();
         }
 
+    
 
         private void Apply_DataGrid_Color_Theme()
         {
