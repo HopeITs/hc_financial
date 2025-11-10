@@ -55,8 +55,9 @@ namespace Financial_WPF_App
         private int Beneficiary_ID, SubProject_ID, Acc_ID;
         private Account a;
         private Beneficiary b;
+        private TillType t;
         Payment p;
-        private DataTable dt, a_dt, p_dt;
+        private DataTable dt, a_dt, p_dt, curruncy_dt;
         string Original_ToReturn_Amount, Original_Payment, Original_Amount, Original_Payment_interval;
         DateTime? Original_FirstPaymentDate;
         int Original_MicroProject_ID;
@@ -76,12 +77,17 @@ namespace Financial_WPF_App
                 a = new Account();
                 b = new Beneficiary(); p = new Payment();
                 a_dt = new DataTable();
+                t = new TillType();
 
                 Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 ToReturn_Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 Payment_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 Payment_interval_TextBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
                 MP_ID_txtBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
+
+                Currency_label.IsEnabled = true;
+                SubProject_clear_btn.IsEnabled = true;
+                Currency_comboBox.IsEnabled = true;
 
                 for (int i = 0; i < myDataGrid.Columns.Count; i++)
                 {
@@ -125,6 +131,7 @@ namespace Financial_WPF_App
 
         private void Load_Data()
         {
+            LoadCurrencyComboBox();
             if (SubProject_ID != -1)
             {
                 LoadAccountComboBox(SubProject_ID.ToString());
@@ -137,7 +144,23 @@ namespace Financial_WPF_App
             }
 
             if (Beneficiary_ID != -1)
+            {
                 Fill_Beneficiary_ByID();
+                
+            }
+                
+        }
+
+        public void LoadCurrencyComboBox() {
+        curruncy_dt = t.SelectTillTypes();
+            if (curruncy_dt != null && curruncy_dt.Rows.Count > 0)
+            {
+                Currency_comboBox.ItemsSource = curruncy_dt.DefaultView;
+            }
+            else
+            {
+                Currency_comboBox.ItemsSource = null;
+            }
         }
 
         private void Fill_Beneficiary_ByID()
@@ -175,6 +198,10 @@ namespace Financial_WPF_App
                 if (dt.Rows[0]["Account_ID"] != DBNull.Value)
                     Account_comboBox.SelectedValue = Convert.ToInt32(dt.Rows[0]["Account_ID"]);
 
+                Currency_comboBox.SelectedValue = Convert.ToInt32(dt.Rows[0]["Currency"]);
+                Currency_comboBox.IsEnabled = false;
+                SubProject_clear_btn.IsEnabled = false;
+                Currency_label.IsEnabled = false;
 
                 double Rate, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount;
 
@@ -239,6 +266,23 @@ namespace Financial_WPF_App
             }
         }
 
+        private void Currency_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Currency_comboBox.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else
+                { MessageBox.Show(ex.Message, "Error"); }
+            }
+
+        }
         private void LoadAccountComboBox(string SubProject_ID)
         {
             Account_comboBox.ItemsSource = null;
@@ -499,7 +543,7 @@ namespace Financial_WPF_App
                 if (ToSave)
                 {
                     b.Update(Beneficiary_ID, FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
-                        , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text
+                        , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text, Convert.ToInt32(Currency_comboBox.SelectedValue)
                         , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
                         , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, Original_MicroProject_ID, SubProject_ID, RegeneratePayments, DeleteSchedualedPayments, "Beneficiary_Window");
 
@@ -511,7 +555,7 @@ namespace Financial_WPF_App
             else//Add new
             {
                 Beneficiary_ID = b.Insert(FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
-                    , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text
+                    , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text, Convert.ToInt32(Currency_comboBox.SelectedValue)
                     , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
                     , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, RegeneratePayments, "Beneficiary_Window");
 

@@ -27,7 +27,7 @@ namespace Financial_WPF_App.Models
             string query = "SELECT beneficiary.`ID`"
                                 + ", `FirstName`, `LastName`, CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) as 'Name' "
                                 + ", `FatherName`, `NationalNumber`, `Mobile`, `Partners`"
-                                + ", `MicroProject_ID`, `Project_Name`, `Amount`"
+                                + ", `MicroProject_ID`, `Project_Name`,`currency_tilltype_id` as 'Currency', `Amount`"
                                 + ", `Date`,`FirstPaymentDate`, (`ToReturn_Amount`/`Amount`)*100 as 'rate', `ToReturn_Amount`"
                                 + ", (select sum(action.amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID`) as 'paidamount'"
                                 + ", (select sum(action_not_approved.amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action_not_approved on action_not_approved.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID`) as 'NotApproved_paidamount'"
@@ -72,7 +72,7 @@ namespace Financial_WPF_App.Models
         }
 
         public int Insert(string FirstName, string LastName, string FatherName, string NationalNumber, string Mobile, string Partners
-            , int MicroProject_ID, string Project_Name, Double Amount, string Date, string FirstPaymentDate, Double ToReturn_Amount, float payment, int Payment_Interval
+            , int MicroProject_ID, string Project_Name, int Currency, Double Amount, string Date, string FirstPaymentDate, Double ToReturn_Amount, float payment, int Payment_Interval
             , string Notes, string ReceiptNumber, string OrderNumber, int Account_ID, bool RegeneratePayments, string Form_Name)
         {
             string query = "";
@@ -100,6 +100,7 @@ namespace Financial_WPF_App.Models
                 }
 
                 sc.Parameters.AddWithValue("@Project_Name", Project_Name);
+                sc.Parameters.AddWithValue("@Currency", Currency);
                 sc.Parameters.AddWithValue("@Amount", Amount);
                 if (Date == "")
                 {
@@ -141,8 +142,8 @@ namespace Financial_WPF_App.Models
                 query = "START TRANSACTION;";
 
                 query += @"INSERT INTO `beneficiary`(`FirstName`, `LastName`, `FatherName`, `NationalNumber`, `Mobile`, `Partners`,
-                            `MicroProject_ID`, `Project_Name`, `Amount`, `Date`,`FirstPaymentDate`, `ToReturn_Amount`, `payment`, `Payment_Interval`, `Notes`, `ReceiptNumber`, `OrderNumber`, `Account_ID`)
-                            VALUES(@FirstName, @LastName, @FatherName, @NationalNumber , @Mobile , @Partners , @MicroProject_ID , @Project_Name ,
+                            `MicroProject_ID`, `Project_Name`,`currency_tilltype_id`, `Amount`, `Date`,`FirstPaymentDate`, `ToReturn_Amount`, `payment`, `Payment_Interval`, `Notes`, `ReceiptNumber`, `OrderNumber`, `Account_ID`)
+                            VALUES(@FirstName, @LastName, @FatherName, @NationalNumber , @Mobile , @Partners , @MicroProject_ID , @Project_Name , @Currency,
                             @Amount , @Date , @FirstPaymentDate , @ToReturn_Amount , @payment , @Payment_Interval,
                             @Notes , @ReceiptNumber , @OrderNumber , @Account_ID);";
 
@@ -179,7 +180,7 @@ namespace Financial_WPF_App.Models
         }
 
         public void Update(int Beneficiary_ID, string FirstName, string LastName, string FatherName, string NationalNumber, string Mobile, string Partners
-            , int MicroProject_ID, string Project_Name, Double Amount, string Date, string FirstPaymentDate, Double ToReturn_Amount, float payment, int Payment_Interval
+            , int MicroProject_ID, string Project_Name, int Currency , Double Amount, string Date, string FirstPaymentDate, Double ToReturn_Amount, float payment, int Payment_Interval
             , string Notes, string ReceiptNumber, string OrderNumber, int Account_ID, int Original_MicroProject_ID, int SubProject_ID, bool RegeneratePayments, bool DeleteSchedualedPayments, string Form_Name)
         {
 
@@ -215,6 +216,7 @@ namespace Financial_WPF_App.Models
                 }
 
                 sc.Parameters.AddWithValue("@Project_Name", Project_Name);
+                sc.Parameters.AddWithValue("@Currency", Currency);
                 sc.Parameters.AddWithValue("@Amount", Amount);
                 if (Date == "")
                 {
@@ -262,7 +264,7 @@ namespace Financial_WPF_App.Models
                 query = "START TRANSACTION;";
 
                 query += @"UPDATE `beneficiary` SET  `FirstName`= @FirstName ,`LastName`= @LastName ,`FatherName`=@FatherName ,`NationalNumber`= @NationalNumber 
-                       ,`Mobile`= @Mobile ,`Partners`= @Partners,`MicroProject_ID`=@MicroProject_ID ,`Project_Name`= @Project_Name ,`Amount`= @Amount 
+                       ,`Mobile`= @Mobile ,`Partners`= @Partners,`MicroProject_ID`=@MicroProject_ID ,`Project_Name`= @Project_Name ,`currency_tilltype_id`= @Currency ,`Amount`= @Amount 
                        ,`Date`=  @Date  ,`FirstPaymentDate`=   @FirstPaymentDate ,`ToReturn_Amount`=  @ToReturn_Amount ,`payment`=  @payment, `Payment_Interval` = @Payment_Interval
                        ,`Notes`=  @Notes ,`ReceiptNumber`=  @ReceiptNumber ,`OrderNumber`=  @OrderNumber ,`Account_ID` = @Account_ID 
                        WHERE ID = @Beneficiary_ID;";
