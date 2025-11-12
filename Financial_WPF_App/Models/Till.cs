@@ -182,7 +182,7 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT tilltypes.ID, tilltypes.Name 
                      FROM tilltypes 
-                     WHERE tilltypes.ID IN (2, 4);";
+                     WHERE LOWER(tilltypes.Name)  IN ('syr','usd');";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
