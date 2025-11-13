@@ -178,6 +178,28 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        public DataTable Select_All_TillTypes_Currency()
+        {
+            string query = @"SELECT tilltypes.ID, tilltypes.Name 
+              FROM tilltypes 
+              WHERE LOWER(tilltypes.Name)  IN ('syr','usd');";
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
         public DataTable Select_Account_Missing_TillTypes(int Account_ID)
         {
             string query = @"SELECT tilltypes.ID, tilltypes.Name FROM tilltypes LEFT JOIN 

@@ -114,6 +114,7 @@
                         <RowDefinition Height="35"/>
                         <RowDefinition Height="35"/>
                         <RowDefinition Height="35"/>
+                        <RowDefinition Height="35"/>
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -123,25 +124,29 @@
                     <Label x:Name="MircoProject_ID_lable" Grid.Column="0" Grid.Row="0" Style="{DynamicResource statistic_lableStyle}" Content="Micro Project number:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   />
                     <Controls:AutoCompleteTextBoxUserControl TextBoxStyle="{StaticResource FloatingTextBoxStyle}"
                 x:Name="MircoProject_ID_autoSuggestionUserControl" Grid.Row="0"
-                Grid.Column="1" TabIndex="4" LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
+                Grid.Column="1" TabIndex="0" LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
                     <Label x:Name="BeneficiaryName_lable" Grid.Column="0" Grid.Row="1" Style="{DynamicResource statistic_lableStyle}" Content="Beneficiary Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  />
                     <Controls:AutoCompleteTextBoxUserControl  TextBoxStyle="{StaticResource FloatingTextBoxStyle}"
                 x:Name="BeneficiaryName_autoSuggestionUserControl" 
-                TabIndex="4" Grid.Column="1" Grid.Row="1"
+                TabIndex="1" Grid.Column="1" Grid.Row="1"
                 LostFocus="BeneficiaryName_autoSuggestionUserControl_LostFocus" />
-                    <Label x:Name="Amount_Label" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Payment amount:"  HorizontalAlignment="Stretch" Grid.Row="2"  />
+                        <Label x:Name="Currency_Label" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Loan currency:"  HorizontalAlignment="Stretch" Grid.Row="2" IsEnabled="False"  />
+                        <TextBox x:Name="Currency_txtBox" Grid.Column="1" IsEnabled="False"
+                            Style="{DynamicResource FloatingTextBoxStyle}" 
+                            TabIndex="3"  LostFocus="Amount_txtBox_LostFocus"  Grid.Row="2"  />
+                        <Label x:Name="Amount_Label" Grid.Column="0" Style="{DynamicResource statistic_lableStyle}" Content="Payment amount:"  HorizontalAlignment="Stretch" Grid.Row="3"  />
                     <TextBox x:Name="Amount_txtBox" Grid.Column="1" 
                 Style="{DynamicResource FloatingTextBoxStyle}" 
-                TabIndex="3"  LostFocus="Amount_txtBox_LostFocus"  Grid.Row="2"  />
-                    <Label x:Name="Notes_Label" Grid.Column="0" Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Description:"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   />
-                    <TextBox x:Name="Notes_txtBox" Grid.Row="3" TabIndex="7" Grid.Column="1"
+                TabIndex="2"  LostFocus="Amount_txtBox_LostFocus"  Grid.Row="3"  />
+                    <Label x:Name="Notes_Label" Grid.Column="0" Grid.Row="4" Style="{DynamicResource statistic_lableStyle}" Content="Description:"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   />
+                    <TextBox x:Name="Notes_txtBox" Grid.Row="4" TabIndex="3" Grid.Column="1"
                 Style="{DynamicResource FloatingTextBoxStyle}" />
-                    <Grid Grid.Row="4" x:Name="CashAccount_panel" Grid.Column="1">
+                    <Grid Grid.Row="5" x:Name="CashAccount_panel" Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                        <ComboBox x:Name="CashAccount_comboBox" TabIndex="6"
+                        <ComboBox x:Name="CashAccount_comboBox" TabIndex="4"
                     DisplayMemberPath="Name" SelectedValuePath="ID" Grid.Column="0"
                     Style="{StaticResource FloatingComboboxStyle}"
                     VerticalContentAlignment="Center"/>
@@ -151,11 +156,11 @@
                             </Button.Background>
                         </Button>
                     </Grid>
-                    <Label Grid.Column="0" Grid.Row="4" x:Name="CashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Cash till:"   VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
-                    <Label x:Name="Date_Label" Grid.Column="0" Grid.Row="5" Style="{DynamicResource statistic_lableStyle}" Content="Date:"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                    <DatePicker x:Name="Date_datepicker" Grid.Row="5" Grid.Column="1"  TabIndex="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="30" />
-                    <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource ButtonColoredStyle}" Content="Save" x:Name="Save2_btn" 
-                TabIndex="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Click="Save2_btn_Click"/>
+                    <Label Grid.Column="0" Grid.Row="5" x:Name="CashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Cash till:"   VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
+                    <Label x:Name="Date_Label" Grid.Column="0" Grid.Row="6" Style="{DynamicResource statistic_lableStyle}" Content="Date:"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    <DatePicker x:Name="Date_datepicker" Grid.Row="6" Grid.Column="1"  TabIndex="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="30" />
+                    <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{DynamicResource ButtonColoredStyle}" Content="Save" x:Name="Save2_btn" 
+                TabIndex="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Click="Save2_btn_Click"/>
 
                 </Grid>
             </Border>

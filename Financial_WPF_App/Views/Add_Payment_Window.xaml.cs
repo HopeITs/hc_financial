@@ -459,6 +459,7 @@ namespace Financial_WPF_App.Views
 
             Amount_txtBox.Clear();
             Notes_txtBox.Clear();
+            Currency_txtBox.Clear();
             CashAccount_comboBox.SelectedIndex = -1;
             Date_datepicker.SelectedDate = DateTime.Now;
 
@@ -480,6 +481,7 @@ namespace Financial_WPF_App.Views
         {
             System.Data.DataRow[] rows = b_dt.Select("MicroProject_ID=" + MicroProject_ID);
             Beneficiary_ID = rows[0].Field<Int32>("ID");
+            Currency_txtBox.Text = rows[0]["Currency_Name"].ToString();
 
             BeneficiaryName_autoSuggestionUserControl.autoTextBox.Text = rows[0].Field<string>("Name");
             BeneficiaryName_autoSuggestionUserControl.CloseAutoSuggestionBox();

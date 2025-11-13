@@ -345,7 +345,6 @@
     <Compile Include="Helper\FtpConnector.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Helper\TreeViewItemViewModel.cs" />
-    <Compile Include="Models\TillType.cs" />
     <Compile Include="Models\Version.cs" />
     <Compile Include="Design\TreeViewItemHeaderContainsWordConverter.cs" />
     <Compile Include="Views\Account_Budget_Lines_Windows.xaml.cs">

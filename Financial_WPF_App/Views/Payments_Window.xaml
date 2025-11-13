@@ -284,6 +284,14 @@
                                     </Button.Background>
                                 </Button>
                             </StackPanel>
+                            <StackPanel x:Name="Balances" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
+                                <Button ToolTip="Show Balances" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
+                                    x:Name="Balances_Selected_btn" TabIndex="15" Height="22" Width="30" Margin="0,2,1,0"  >
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/show_balances.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
                         </WrapPanel>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,10,0">
                             <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Tag="False" Click="NotApproved_RadioButton_Click"/>
