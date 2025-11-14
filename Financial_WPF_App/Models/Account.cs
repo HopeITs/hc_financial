@@ -485,6 +485,71 @@ namespace Financial_WPF_App.Models
             return Account_ID;
         }
 
+
+
+     
+        public DataTable Select_Accounts_By_Subproject_And_TillType(
+            string tillName,
+            int subprojectId,
+            bool destinationIsPersonal,
+            int? excludeAccountId = null
+        )
+        {
+            string excludeClause = excludeAccountId.HasValue ? " AND a.ID <> @ExcludeAccountID " : "";
+
+            
+            string wherePersonal = @"
+              TRIM(LOWER(tt.Name)) = @TillName
+          AND atp.id = 2
+          AND (a.IsClosed = 0 OR a.IsClosed IS NULL)";
+
+           
+            string whereProject = @"
+              TRIM(LOWER(tt.Name)) = @TillName
+          AND atp.id = 1
+          AND a.SubProject_ID = @Subproject_ID
+          AND (a.IsClosed = 0 OR a.IsClosed IS NULL)";
+
+            string sql = @"
+            SELECT DISTINCT 
+                   a.ID   AS Account_ID,
+                   a.Name AS Account_Name
+            FROM account a
+            INNER JOIN accounttype atp ON a.Accounttype_id = atp.id
+            INNER JOIN till t          ON t.Account_ID     = a.ID
+            INNER JOIN tilltypes tt    ON tt.ID            = t.Type_ID
+            WHERE " + (destinationIsPersonal ? wherePersonal : whereProject) + excludeClause + @"
+            ORDER BY a.Name;";
+
+            var dt = new DataTable();
+
+            if (Login.BuildConnection())
+            {
+                using (var cmd = new MySqlCommand(sql, Login.MyConn))
+                {
+                    cmd.Parameters.AddWithValue("@TillName", (tillName ?? "").Trim().ToLower());
+                    cmd.Parameters.AddWithValue("@Subproject_ID", subprojectId);
+                    if (excludeAccountId.HasValue)
+                        cmd.Parameters.AddWithValue("@ExcludeAccountID", excludeAccountId.Value);
+
+                    cmd.CommandTimeout = 120;
+                    using (var da = new MySqlDataAdapter(cmd))
+                        da.Fill(dt);
+                }
+                Login.CloseAndClearConnection();
+            }
+
+            return dt;
+        }
+
+
+
+
+
+
+
+
+
         public int Insert_Administrative_Account(int Account_ID, List<string> Add_donors, List<string> Auto_Tills, string Form_Name)
         {
             string query = "";
