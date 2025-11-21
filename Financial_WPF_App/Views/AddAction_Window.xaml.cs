@@ -383,7 +383,7 @@ namespace Financial_WPF_App
                     Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
 
                     // تم إيقاف هذه العملية لحين دراستها
-                    if (Move_privileges)
+                    if (Move_privileges &&  TillType.ToLower() == "usd")
                         Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
                     else
                         Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
@@ -418,7 +418,7 @@ namespace Financial_WPF_App
                 if (!Expand_privileges)
                     Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
 
-                if (!Move_privileges)
+                if (!Move_privileges || TillType.ToLower() == "eur")
                     Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
             }
             else
@@ -809,7 +809,7 @@ namespace Financial_WPF_App
                                  ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
                                 Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
                                  Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
 
@@ -819,7 +819,7 @@ namespace Financial_WPF_App
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //Original_AvgRate_help.Visibility = Visibility.Visible;
                                 DestinationProject_help.Visibility = Visibility.Visible;
                                 DestinationAccount_help.Visibility = Visibility.Visible;
 
@@ -872,7 +872,7 @@ namespace Financial_WPF_App
                                  ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
                                 Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled  =
                                  Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
 
@@ -882,7 +882,7 @@ namespace Financial_WPF_App
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                               // Original_AvgRate_help.Visibility = Visibility.Visible;
                                 DestinationProject_help.Visibility = Visibility.Visible;
                                 DestinationAccount_help.Visibility = Visibility.Visible;
 
@@ -994,7 +994,7 @@ namespace Financial_WPF_App
                                  ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
                                 Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
                                  Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
 
@@ -1004,7 +1004,7 @@ namespace Financial_WPF_App
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                               // Original_AvgRate_help.Visibility = Visibility.Visible;
                                 DestinationProject_help.Visibility = Visibility.Visible;
                                 DestinationAccount_help.Visibility = Visibility.Visible;
 
@@ -1058,7 +1058,7 @@ namespace Financial_WPF_App
                                  ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
                                 Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
                                  Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
 
@@ -1068,7 +1068,7 @@ namespace Financial_WPF_App
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //Original_AvgRate_help.Visibility = Visibility.Visible;
                                 DestinationProject_help.Visibility = Visibility.Visible;
                                 DestinationAccount_help.Visibility = Visibility.Visible;
 
@@ -1115,7 +1115,7 @@ namespace Financial_WPF_App
                                   ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
                             Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled =
+                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
                              Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
 
@@ -1125,7 +1125,7 @@ namespace Financial_WPF_App
                             USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                             DestinationTill_help.Visibility = Visibility.Visible;
-                            Original_AvgRate_help.Visibility = Visibility.Visible;
+                           // Original_AvgRate_help.Visibility = Visibility.Visible;
                             DestinationProject_help.Visibility = Visibility.Visible;
                             DestinationAccount_help.Visibility = Visibility.Visible;
 
@@ -1163,7 +1163,7 @@ namespace Financial_WPF_App
                                   ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
                             Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled =
+                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
                              Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
 
@@ -1173,7 +1173,7 @@ namespace Financial_WPF_App
                             USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                             DestinationTill_help.Visibility = Visibility.Visible;
-                            Original_AvgRate_help.Visibility = Visibility.Visible;
+                            //Original_AvgRate_help.Visibility = Visibility.Visible;
                             DestinationProject_help.Visibility = Visibility.Visible;
                             DestinationAccount_help.Visibility = Visibility.Visible;
 
@@ -1213,7 +1213,7 @@ namespace Financial_WPF_App
                                   ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
                             Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled =
+                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
                              Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
 
@@ -1223,7 +1223,7 @@ namespace Financial_WPF_App
                             USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                             DestinationTill_help.Visibility = Visibility.Visible;
-                            Original_AvgRate_help.Visibility = Visibility.Visible;
+                            //Original_AvgRate_help.Visibility = Visibility.Visible;
                             DestinationProject_help.Visibility = Visibility.Visible;
                             DestinationAccount_help.Visibility = Visibility.Visible;
 
@@ -1254,25 +1254,27 @@ namespace Financial_WPF_App
                         }
                         else if (Type_ComboBox_Move_Item.IsSelected)
                         {
-                            DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
-                                  ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
+                            
+                                DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                      ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
-                            Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled =
-                             Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
+                                Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
+                                 Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
 
-                            DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
-                            CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
+                                DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                                CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
 
-                            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
-                            DestinationTill_help.Visibility = Visibility.Visible;
-                            Original_AvgRate_help.Visibility = Visibility.Visible;
-                            DestinationProject_help.Visibility = Visibility.Visible;
-                            DestinationAccount_help.Visibility = Visibility.Visible;
+                                DestinationTill_help.Visibility = Visibility.Visible;
+                                //Original_AvgRate_help.Visibility = Visibility.Visible;
+                                DestinationProject_help.Visibility = Visibility.Visible;
+                                DestinationAccount_help.Visibility = Visibility.Visible;
 
-                            SyncDestinationTillWithMainTill();
+                                SyncDestinationTillWithMainTill();
+                            
                         }
                     }
                 }
@@ -1308,6 +1310,7 @@ namespace Financial_WPF_App
             DestinationTill_comboBox.SelectedIndex = ExchangeAcc_comboBox.SelectedIndex = Donor_comboBox.SelectedIndex = Budget_comboBox.SelectedIndex =
                 Category_comboBox.SelectedIndex = Line_comboBox.SelectedIndex = CashAccount_comboBox.SelectedIndex = ObserveCashAccount_comboBox.SelectedIndex =
                 Original_AvgRate_comboBox.SelectedIndex = IsReceipt_comboBox.SelectedIndex = Employee_comboBox.SelectedIndex  = -1;
+                DestinationProject_comboBox.SelectedIndex = DestinationAccount_comboBox.SelectedIndex = -1;
 
 
             ActionDate_datepicker.SelectedDate = DateTime.Today;
