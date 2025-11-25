@@ -438,6 +438,34 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        public DataTable Select_subproject_view(string Subproject_IDs)
+        {
+            string query = @"SELECT * from subproject_view ";
+            string condition = " where 1 ";
+
+            if (Subproject_IDs != "")
+            {
+                condition += " and subproject_view.ID in (" + Subproject_IDs + ")";
+            }
+            query += condition;
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+
+            }
+            return dt;
+        }
+
         public DataTable CHeck_MicroProjectNum(int Beneficiary_ID, int Subproject_ID, int MicroPorject_ID)
         {
             string query = @"SELECT beneficiary.`ID`          

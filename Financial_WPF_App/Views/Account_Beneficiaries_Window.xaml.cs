@@ -40,7 +40,7 @@ namespace Financial_WPF_App.Views
         private int Account_ID, SubProject_ID;
         private Beneficiary b;
         private Till t;
-        private DataTable dt, account_dt, till_dt;
+        private DataTable dt, account_dt, till_dt, subproject_dt;
         private Payment p;
         Main_Window_2 main_Window;
 
@@ -178,33 +178,35 @@ namespace Financial_WPF_App.Views
             Show_Hide();
         
                 sum_imports_lbl.Content = sum_BAmounts_lbl.Content = sum_BAmounts_lbl.Content = sum_RAmounts_lbl.Content =
-                         sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = sum_RemainedAfterPay_lbl.Content =
-                            avg_amounts_lbl.Content = avg_amounts_usd_lbl.Content = num_Done_lbl.Content = num_Ongoing_lbl.Content = num_Allprojects_lbl.Content = "0.0";
+                sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = sum_RemainedAfterPay_lbl.Content =
+                avg_amounts_lbl.Content =  usd_sum_imports_lbl.Content = usd_sum_BAmounts_lbl.Content = usd_sum_BAmounts_lbl.Content =
+                usd_sum_RAmounts_lbl.Content = usd_sum_RemainedAmounts_lbl.Content = usd_sum_NetAmounts_lbl.Content = 
+                usd_sum_RemainedAfterPay_lbl.Content = usd_avg_amounts_lbl.Content =
+                ongoing_textBlock.Text = financed_textBlock.Text = "0.0";
 
                 myExpander.Visibility = Visibility.Hidden;
                 myExpander.Width = 0;
 
                 myDataGrid.Margin = new Thickness(2, 5, 5, 5);
                 Search_StackPanel.Margin = new Thickness(0, 0, 5, 0);
-                Fill_Till_comboBox();
                 Fill_Grid();
                 if (Account_ID != -1)
                 {
                     Fill_AccountView();
-                    myExpander.Visibility = Visibility.Visible;
-
-                    myExpander_Collapsed(this, new RoutedEventArgs());
-                    myExpander.IsExpanded = false;
-
-
                     OnMainWindowStateChanged(_currentWindowState);
                     Search_StackPanel.Margin = new Thickness(0, 0, 35, 0);
                     myDataGrid.Margin = new Thickness(5, 5, 35, 5);
                     //Grid_col.Width = new GridLength(50, GridUnitType.Star);
                     //Expander_col.Width = new GridLength(30, GridUnitType.Star);
                 }
+            else
+            {
+                Fill_SubProjectView();
+            }
 
-            
+                myExpander.Visibility = Visibility.Visible;
+            myExpander_Collapsed(this, new RoutedEventArgs());
+            myExpander.IsExpanded = false;
         }
 
         private void Attachment_Button_Click(object sender, RoutedEventArgs e)
@@ -304,7 +306,6 @@ namespace Financial_WPF_App.Views
             account_dt = b.Select_account_view(Account_ID.ToString());
             if (account_dt != null && account_dt.Rows.Count > 0)
             {
-
                 if (account_dt.Rows[0]["Total income"] != DBNull.Value)
                     sum_imports_lbl.Content = account_dt.Rows[0].Field<double>("Total income").ToString("N", new CultureInfo("en-US"));
 
@@ -325,6 +326,76 @@ namespace Financial_WPF_App.Views
 
                 if (account_dt.Rows[0]["Average micro project cost"] != DBNull.Value)
                     avg_amounts_lbl.Content = account_dt.Rows[0].Field<double>("Average micro project cost").ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Total income usd"] != DBNull.Value)
+                    usd_sum_imports_lbl.Content = account_dt.Rows[0].Field<double>("Total income usd").ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
+                    usd_sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
+                    usd_sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
+                    usd_sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Net account usd"] != DBNull.Value)
+                    usd_sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Remaining after paying usd"] != DBNull.Value)
+                    usd_sum_RemainedAfterPay_lbl.Content = account_dt.Rows[0].Field<double>("Remaining after paying usd").ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Average micro project cost usd"] != DBNull.Value)
+                    usd_avg_amounts_lbl.Content = account_dt.Rows[0].Field<double>("Average micro project cost usd").ToString("N", new CultureInfo("en-US"));
+            }
+        }
+
+        private void Fill_SubProjectView()
+        {
+            subproject_dt = b.Select_subproject_view(SubProject_ID.ToString());
+            if (subproject_dt != null && subproject_dt.Rows.Count > 0)
+            {
+                if (subproject_dt.Rows[0]["Total income"] != DBNull.Value)
+                    sum_imports_lbl.Content = subproject_dt.Rows[0].Field<double>("Total income").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total loans amount"] != DBNull.Value)
+                    sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
+                    sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
+                    sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Net account"] != DBNull.Value)
+                    sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Remaining after paying"] != DBNull.Value)
+                    sum_RemainedAfterPay_lbl.Content = subproject_dt.Rows[0].Field<double>("Remaining after paying").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Average micro project cost"] != DBNull.Value)
+                    avg_amounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Average micro project cost").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total income usd"] != DBNull.Value)
+                    usd_sum_imports_lbl.Content = subproject_dt.Rows[0].Field<double>("Total income usd").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
+                    usd_sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
+                    usd_sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
+                    usd_sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Net account usd"] != DBNull.Value)
+                    usd_sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Remaining after paying usd"] != DBNull.Value)
+                    usd_sum_RemainedAfterPay_lbl.Content = subproject_dt.Rows[0].Field<double>("Remaining after paying usd").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Average micro project cost usd"] != DBNull.Value)
+                    usd_avg_amounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Average micro project cost usd").ToString("N", new CultureInfo("en-US"));
             }
         }
 
@@ -370,9 +441,8 @@ namespace Financial_WPF_App.Views
             {
                 myDataGrid.ItemsSource = dt.DefaultView;
 
-                num_Done_lbl.Content = dt.Compute("count([Financed])", "[Financed]='Done'");
-                num_Ongoing_lbl.Content = dt.Compute("count([Financed])", "[Financed]='Ongoing'");
-                num_Allprojects_lbl.Content = dt.Rows.Count.ToString();
+                financed_textBlock.Text = dt.Compute("count([Financed])", "[Financed]='Done'").ToString();
+                ongoing_textBlock.Text = dt.Compute("count([Financed])", "[Financed]='Ongoing'").ToString();
 
                 if (HOffset != 0)
                     this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
@@ -389,21 +459,10 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Columns[i].IsHidden = true;
                 }
 
-                num_Done_lbl.Content = "0";
-                num_Ongoing_lbl.Content = "0";
-                num_Allprojects_lbl.Content = "0";
+                financed_textBlock.Text = "0";
+                ongoing_textBlock.Text = "0";
             }
             Bind_Show_Hide_Menu();
-        }
-
-        private void Fill_Till_comboBox()
-        {
-            Till_comboBox.ItemsSource = null;
-            till_dt = t.Select_ForComboBox(Account_ID.ToString(), -1, "syr");
-            if (till_dt != null && till_dt.Rows.Count > 0)
-            {
-                Till_comboBox.ItemsSource = till_dt.DefaultView;
-            }
         }
 
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
@@ -495,39 +554,6 @@ namespace Financial_WPF_App.Views
             try
             {
                 Load_Data();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Till_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            try
-            {
-                if (Till_comboBox.SelectedValue != null)
-                {
-                    if (Till_comboBox.SelectedItem is DataRowView selectedRow)
-                    {
-                        string selectedName = selectedRow["Name"].ToString();
-
-                        var Amount = dt.Compute($"Sum([Total invoices amount {selectedName}])", string.Empty);
-                        var Num = dt.Compute($"count([Total invoices amount {selectedName}])", $"[Total invoices amount {selectedName}]<>'0.00'");
-
-                        float Amount1 = float.Parse(Amount.ToString());
-                        int Num1 = int.Parse(Num.ToString());
-
-                        avg_amounts_usd_lbl.Content = Login.ConvertToDouble((Amount1 / Num1).ToString());
-                    }
-                }
-
             }
             catch (Exception ex)
             {
