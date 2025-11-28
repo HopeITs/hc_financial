@@ -60,6 +60,14 @@
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
                     </Border>
+                    <Label Content="Ongoing:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="selected_ongoing_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
+                    </Border>
+                    <Label Content="Financed:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="selected_financed_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged" />
+                    </Border>
                 </StackPanel>
             </Border>
             <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
@@ -372,11 +380,11 @@
 HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
  Content="SYR"
  Margin="1,0,1,0" VerticalAlignment="Stretch" />
-                            <Label Grid.Column="2" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total income:" HorizontalAlignment="Left" />
-                            <Label Grid.Column="0" Grid.Row="1" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_imports_lbl" Style="{DynamicResource statistic_lableStyle}"  Content="###,###" HorizontalAlignment="Right" />
+                            <Label Grid.Column="2" Grid.Row="2" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total income:" HorizontalAlignment="Left" />
+                            <Label Grid.Column="0" Grid.Row="2" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_imports_lbl" Style="{DynamicResource statistic_lableStyle}"  Content="###,###" HorizontalAlignment="Right" />
 
-                            <Label Grid.Column="2" Grid.Row="2" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total loans amount:" HorizontalAlignment="Left"/>
-                            <Label Grid.Column="0" Grid.Row="2" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_BAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
+                            <Label Grid.Column="2" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total loans amount:" HorizontalAlignment="Left"/>
+                            <Label Grid.Column="0" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_BAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
 
                             <Label Grid.Column="2" Grid.Row="3" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total invoices amount:" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="3" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_RAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right"/>
@@ -387,20 +395,17 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
                             <Label Grid.Column="2" Grid.Row="5"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Net account:" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="5" FontSize="12"   Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_NetAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
 
-                            <Label Grid.Row="6"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="The remaining after paying all loan amounts:" HorizontalAlignment="Left" Grid.Column="2" VerticalAlignment="Bottom" />
-                            <Label Grid.Column="0" Grid.Row="6" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_RemainedAfterPay_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
-
                             <Label Grid.Column="2" Grid.Row="7"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Average micro program cost:" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="7" FontSize="12"  Margin="0,0,0,10"  Foreground="{StaticResource HopeRed}" x:Name="avg_amounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right"  />
                             <Label Grid.Row="8" Grid.ColumnSpan="3" Style="{DynamicResource NoteStyle}" FontSize="14" FontFamily="Rubik" FontWeight="Medium" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
 HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
  Content="USD"
  Margin="1,0,1,0" VerticalAlignment="Stretch" />
-                            <Label Grid.Column="2" Grid.Row="9" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total income:" HorizontalAlignment="Left" />
-                            <Label Grid.Column="0" Grid.Row="9" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_imports_lbl" Style="{DynamicResource statistic_lableStyle}"  Content="###,###" HorizontalAlignment="Right" />
+                            <Label Grid.Column="2" Grid.Row="10" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total income:" HorizontalAlignment="Left" />
+                            <Label Grid.Column="0" Grid.Row="10" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_imports_lbl" Style="{DynamicResource statistic_lableStyle}"  Content="###,###" HorizontalAlignment="Right" />
 
-                            <Label Grid.Column="2" Grid.Row="10" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total loans amount:" HorizontalAlignment="Left"/>
-                            <Label Grid.Column="0" Grid.Row="10" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_BAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
+                            <Label Grid.Column="2" Grid.Row="9" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total loans amount:" HorizontalAlignment="Left"/>
+                            <Label Grid.Column="0" Grid.Row="9" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_BAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
 
                             <Label Grid.Column="2" Grid.Row="11" FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total invoices amount:" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="11" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_RAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right"/>
@@ -410,9 +415,6 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
 
                             <Label Grid.Column="2" Grid.Row="13"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Net account:" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="13" FontSize="12"   Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_NetAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
-
-                            <Label Grid.Row="14"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="The remaining after paying all loan amounts:" HorizontalAlignment="Left" Grid.Column="2" VerticalAlignment="Bottom" />
-                            <Label Grid.Column="0" Grid.Row="14" FontSize="12"  Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_RemainedAfterPay_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
 
                             <Label Grid.Column="2" Grid.Row="15"  FontSize="12"  Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Average micro program cost:" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="15" FontSize="12"  Margin="0,0,0,10"  Foreground="{StaticResource HopeRed}" x:Name="usd_avg_amounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right"  />

@@ -379,6 +379,7 @@ namespace Financial_WPF_App.Views
                                 Originally_HiddenColumns.Add(C.HeaderText.ToString());
                             }
                     }
+                    Balances.Visibility = Visibility.Visible;
                 }
                 else
                 {

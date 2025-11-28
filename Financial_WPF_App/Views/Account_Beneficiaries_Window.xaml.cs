@@ -144,6 +144,7 @@ namespace Financial_WPF_App.Views
 
         private void Show_Hide()
         {
+
             if (!Add_privileges)
             {
                 Add_btn.Visibility = Visibility.Collapsed;
@@ -178,11 +179,9 @@ namespace Financial_WPF_App.Views
             Show_Hide();
         
                 sum_imports_lbl.Content = sum_BAmounts_lbl.Content = sum_BAmounts_lbl.Content = sum_RAmounts_lbl.Content =
-                sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = sum_RemainedAfterPay_lbl.Content =
-                avg_amounts_lbl.Content =  usd_sum_imports_lbl.Content = usd_sum_BAmounts_lbl.Content = usd_sum_BAmounts_lbl.Content =
-                usd_sum_RAmounts_lbl.Content = usd_sum_RemainedAmounts_lbl.Content = usd_sum_NetAmounts_lbl.Content = 
-                usd_sum_RemainedAfterPay_lbl.Content = usd_avg_amounts_lbl.Content =
-                ongoing_textBlock.Text = financed_textBlock.Text = "0.0";
+                sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = avg_amounts_lbl.Content =  usd_sum_imports_lbl.Content =
+                usd_sum_BAmounts_lbl.Content = usd_sum_BAmounts_lbl.Content = usd_sum_RAmounts_lbl.Content = usd_sum_RemainedAmounts_lbl.Content =
+                usd_sum_NetAmounts_lbl.Content = usd_avg_amounts_lbl.Content = ongoing_textBlock.Text = financed_textBlock.Text = "0.0";
 
                 myExpander.Visibility = Visibility.Hidden;
                 myExpander.Width = 0;
@@ -321,9 +320,6 @@ namespace Financial_WPF_App.Views
                 if (account_dt.Rows[0]["Net account"] != DBNull.Value)
                     sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
 
-                if (account_dt.Rows[0]["Remaining after paying"] != DBNull.Value)
-                    sum_RemainedAfterPay_lbl.Content = account_dt.Rows[0].Field<double>("Remaining after paying").ToString("N", new CultureInfo("en-US"));
-
                 if (account_dt.Rows[0]["Average micro project cost"] != DBNull.Value)
                     avg_amounts_lbl.Content = account_dt.Rows[0].Field<double>("Average micro project cost").ToString("N", new CultureInfo("en-US"));
 
@@ -341,9 +337,6 @@ namespace Financial_WPF_App.Views
 
                 if (account_dt.Rows[0]["Net account usd"] != DBNull.Value)
                     usd_sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
-
-                if (account_dt.Rows[0]["Remaining after paying usd"] != DBNull.Value)
-                    usd_sum_RemainedAfterPay_lbl.Content = account_dt.Rows[0].Field<double>("Remaining after paying usd").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Average micro project cost usd"] != DBNull.Value)
                     usd_avg_amounts_lbl.Content = account_dt.Rows[0].Field<double>("Average micro project cost usd").ToString("N", new CultureInfo("en-US"));
@@ -370,9 +363,6 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Net account"] != DBNull.Value)
                     sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
 
-                if (subproject_dt.Rows[0]["Remaining after paying"] != DBNull.Value)
-                    sum_RemainedAfterPay_lbl.Content = subproject_dt.Rows[0].Field<double>("Remaining after paying").ToString("N", new CultureInfo("en-US"));
-
                 if (subproject_dt.Rows[0]["Average micro project cost"] != DBNull.Value)
                     avg_amounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Average micro project cost").ToString("N", new CultureInfo("en-US"));
 
@@ -390,9 +380,6 @@ namespace Financial_WPF_App.Views
 
                 if (subproject_dt.Rows[0]["Net account usd"] != DBNull.Value)
                     usd_sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
-
-                if (subproject_dt.Rows[0]["Remaining after paying usd"] != DBNull.Value)
-                    usd_sum_RemainedAfterPay_lbl.Content = subproject_dt.Rows[0].Field<double>("Remaining after paying usd").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Average micro project cost usd"] != DBNull.Value)
                     usd_avg_amounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Average micro project cost usd").ToString("N", new CultureInfo("en-US"));
@@ -535,7 +522,38 @@ namespace Financial_WPF_App.Views
             try
             {
                 int count = myDataGrid.SelectedItems.Count;
+                int ongoingCount = 0;
+                int financedCount = 0;
                 Selected_textBlock.Text = count.ToString("N0");
+                // 1. Find the column that shows the financed status
+                var financedColumn = myDataGrid.Columns
+                    .FirstOrDefault(c => c.HeaderText.Equals("Financed", StringComparison.OrdinalIgnoreCase));
+
+                if (financedColumn == null)
+                    return;
+
+                string financedProperty = financedColumn.MappingName;
+
+                // 2. Use Syncfusion’s faster value reader (NO REFLECTION)
+                var provider = myDataGrid.View.GetPropertyAccessProvider();
+
+                foreach (var row in myDataGrid.SelectedItems)
+                {
+                    var value = provider.GetValue(row, financedProperty)?.ToString();
+
+                    if (value == null)
+                        continue;
+
+                    if (value.Equals("Ongoing", StringComparison.OrdinalIgnoreCase))
+                        ongoingCount++;
+
+                    if (value.Equals("Done", StringComparison.OrdinalIgnoreCase))
+                        financedCount++;
+                }
+
+                selected_ongoing_textBlock.Text = ongoingCount.ToString("N0");
+                selected_financed_textBlock.Text = financedCount.ToString("N0");
+
             }
             catch (Exception ex)
             {
@@ -637,21 +655,26 @@ namespace Financial_WPF_App.Views
 
         private void Bind_Show_Hide_Menu()
         {
-
+            
             SolidColorBrush MyWhite = (SolidColorBrush)new BrushConverter().ConvertFromString("#FFFFFF");
             this.ShowMenu.Items.Clear();
             this.HideMenu.Items.Clear();
+
             for (int i = 0; i < myDataGrid.Columns.Count; i++)
             {
                 string CHeader = myDataGrid.Columns[i].HeaderText.ToString();
-                MenuItem NewItem = new MenuItem();
-                NewItem.Header = CHeader;
-                NewItem.Background = MyWhite;
-                NewItem.StaysOpenOnClick = true;
+                MenuItem NewItem = new MenuItem
+                {
+                    Header = CHeader,
+                    Background = MyWhite,
+                    StaysOpenOnClick = true
+                };
+
                 if (!CHeader.Contains("ID") && !CHeader.Contains("Delete") &&
-                        !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") &&
-                        !CHeader.Contains("Select") && !CHeader.Contains("#") &&
-                        !Originally_HiddenColumns.Contains(CHeader))
+                    !CHeader.Contains("Edit") && !CHeader.Contains("Attachment") &&
+                    !CHeader.Contains("Select") && !CHeader.Contains("#") &&
+                    !Originally_HiddenColumns.Contains(CHeader))
+                {
                     if (myDataGrid.Columns[i].IsHidden == false)
                     {
                         NewItem.Click += new RoutedEventHandler(HideColumn);
@@ -662,7 +685,9 @@ namespace Financial_WPF_App.Views
                         NewItem.Click += new RoutedEventHandler(ShowColumn);
                         this.ShowMenu.Items.Add(NewItem);
                     }
+                }
             }
+
         }
 
         private void ShowColumn(object sender, RoutedEventArgs e)
@@ -676,7 +701,11 @@ namespace Financial_WPF_App.Views
                     {
                         myDataGrid.Columns[i].IsHidden = false;
 
-                        HiddenColumns.RemoveAt(HiddenColumns.IndexOf(CHeader));
+                        // Fix: only remove if entry exists
+                        int idx = HiddenColumns.IndexOf(CHeader);
+                        if (idx >= 0)
+                            HiddenColumns.RemoveAt(idx);
+
 
                         break;
                     }
@@ -763,6 +792,17 @@ namespace Financial_WPF_App.Views
 
                 Export_btn.CommandTarget = myDataGrid;
                 move_Columns();
+                foreach (var col in myDataGrid.Columns)
+                {
+                    string h = col.HeaderText;
+                    if (h.Contains("Advance Payment amount") ||
+                        h.Contains("Returned amount") ||
+                        h.Contains("Paid in advance for purchases") ||
+                        h.Contains("Remaining from the loan for purchases"))
+                    {
+                        col.IsHidden = true;
+                    }
+                }
                 Bind_Show_Hide_Menu();
             }
         }
