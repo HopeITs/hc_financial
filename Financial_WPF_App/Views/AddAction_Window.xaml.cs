@@ -333,8 +333,8 @@ namespace Financial_WPF_App
         private void Set_Available_Operations()
         {
             Type_ComboBox_Income_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Outcome_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Returned_Item.Visibility = Visibility.Visible;
+            Type_ComboBox_Outcome_Item.Visibility = Visibility.Collapsed;
+            Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
             Type_ComboBox_Exchange_Item.Visibility = Visibility.Visible;
             Type_ComboBox_Expand_Item.Visibility = Visibility.Visible;
             Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
