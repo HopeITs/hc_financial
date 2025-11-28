@@ -381,6 +381,11 @@ namespace Financial_WPF_App.Views
                             }
                     }
                     Balances.Visibility = Visibility.Visible;
+                    Outcome_Label.Visibility = Outcome_textBlock.Visibility = Outcome_Border.Visibility =
+                        Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility = Visibility.Collapsed;
+
+                    Outcome_Label1.Visibility = Outcome_textBlock1.Visibility =
+                    Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
