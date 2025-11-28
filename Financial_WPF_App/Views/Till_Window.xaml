@@ -318,7 +318,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
                                                    NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="Outcome_DataGridColumn" HeaderText="Adv. Payment"  MappingName="Outcome"
+                    <!--<syncfusion:GridNumericColumn  x:Name="Outcome_DataGridColumn" HeaderText="Adv. Payment"  MappingName="Outcome"
                                                    NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
@@ -327,7 +327,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                                       NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
-                                                   NumberGroupSeparator=","/>
+                                                   NumberGroupSeparator=","/>-->
                     <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
                                                       NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
