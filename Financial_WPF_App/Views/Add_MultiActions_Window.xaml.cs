@@ -308,8 +308,8 @@ namespace Financial_WPF_App.Views
                         new System.Data.DataColumn("Name", typeof(string))});
 
             OperationType_dt.Rows.Add("Type_ComboBox_Income_Item", "Income");
-            OperationType_dt.Rows.Add("Type_ComboBox_Outcome_Item", "Adv. Payment");
-            OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
+            //OperationType_dt.Rows.Add("Type_ComboBox_Outcome_Item", "Adv. Payment");
+            //OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
             OperationType_dt.Rows.Add("Type_ComboBox_Exchange_Item", "Exchange");
             OperationType_dt.Rows.Add("Type_ComboBox_Expand_Item", "Expenses");
             OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Move");
@@ -575,8 +575,8 @@ namespace Financial_WPF_App.Views
         {
             OperationType_dt.Clear();
             OperationType_dt.Rows.Add("Type_ComboBox_Income_Item", "Income");
-            OperationType_dt.Rows.Add("Type_ComboBox_Outcome_Item", "Adv. Payment");
-            OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
+            //OperationType_dt.Rows.Add("Type_ComboBox_Outcome_Item", "Adv. Payment");
+            //OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
             OperationType_dt.Rows.Add("Type_ComboBox_Exchange_Item", "Exchange");
             OperationType_dt.Rows.Add("Type_ComboBox_Expand_Item", "Expenses");
             OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Move");
