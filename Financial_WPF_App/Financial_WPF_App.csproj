@@ -520,6 +520,9 @@
     <Compile Include="Views\Syr_Balances_Window.xaml.cs">
       <DependentUpon>Syr_Balances_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Till_Balances.xaml.cs">
+      <DependentUpon>Till_Balances.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Till_Window.xaml.cs">
       <DependentUpon>Till_Window.xaml</DependentUpon>
     </Compile>
@@ -755,6 +758,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Syr_Balances_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Till_Balances.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

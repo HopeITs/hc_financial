@@ -87,12 +87,12 @@ Margin="1,1,0,0" Grid.Row="2" Loaded="Cash_DataGrid_Loaded">
                                 Format="'{Sum:N2}'"
                                 MappingName="Income_USD"
                                 SummaryType="DoubleAggregate" />
-                            
+
                             <syncfusion:GridSummaryColumn Name="Total_E_USD"                                                      
                                 Format="'{Sum:N2}'"
                                 MappingName="Expenses_USD"
                                 SummaryType="DoubleAggregate" />
-                            
+
                             <syncfusion:GridSummaryColumn Name="Total_Dif_USD"                                                      
                                 Format="'{Sum:N2}'"
                                 MappingName="Difference_USD"
