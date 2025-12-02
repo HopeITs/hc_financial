@@ -106,7 +106,7 @@ Margin="1,1,0,0" Grid.Row="2" Loaded="Cash_DataGrid_Loaded">
                     <!-- For the button -->
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="Helper:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
+                <Button Style="{DynamicResource AddButtonStyle}" x:Name="Export_btn" Command="Helper:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export To Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
                     <Button.Background>
                         <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png" Stretch="Uniform"/>
                     </Button.Background>
