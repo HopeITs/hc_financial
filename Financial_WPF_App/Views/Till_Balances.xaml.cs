@@ -26,7 +26,6 @@ namespace Financial_WPF_App.Views
             this.Category = Category;
             if (Onload())
             {
-
             }
             else
             {
