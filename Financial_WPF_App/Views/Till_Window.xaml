@@ -45,17 +45,17 @@
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Outcome_Label" Content="Outcome" Style="{DynamicResource statistic_lableStyle}" />
+                    <Label x:Name="Outcome_Label" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Outcome_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
                     </Border>
                 </StackPanel>
-                <!--<StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <Label x:Name="Returned_Label" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="Returned_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
-                    </Border>-->
-                <!--</StackPanel>-->
+                    </Border>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
                     <Border x:Name="Exchange_Border" Style="{StaticResource BorderStackPanelStyle}" >
@@ -97,17 +97,17 @@
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Outcome_Label1" Content="Outcome:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Label x:Name="Outcome_Label1" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Outcome_Border2" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Outcome_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
                     </Border>
                 </StackPanel>
-                <!--<StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <Label x:Name="Returned_Label1" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Returned_Border1" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Returned_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
                     </Border>
-                </StackPanel>-->
+                </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
                     <Border x:Name="Exchange_Border1" Style="{StaticResource BorderStackPanelStyle}" >
@@ -278,13 +278,14 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                 <ImageBrush ImageSource="/Images/Buttons/delete_selected.png" Stretch="Uniform"/>
                             </Button.Background>
                         </Button>
-                        <!--<TextBlock Style="{StaticResource HyperlinkWithImageStyle}" ToolTip="Delete Selected" ToolTipService.InitialShowDelay="100" Height="23" Width="24.5" VerticalAlignment="Bottom">
-                                <Hyperlink x:Name="Delete_Selected_TextBlock" Click="Delete_Selected_TextBlock_Click">
-                                    <Run Text=" " /> -->
-                        <!-- Empty text since we are using an image -->
-                        <!--
-                            </Hyperlink>
-                            </TextBlock>-->
+                    </StackPanel>
+                    <StackPanel x:Name="Balances" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
+                        <Button ToolTip="Show Balances" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
+                            x:Name="Balances_Selected_btn" TabIndex="15" Height="22" Width="30" Margin="0,2,1,0" Click="Balances_btn_Click"  >
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/Buttons/show_balances.png" Stretch="Uniform"/>
+                            </Button.Background>
+                        </Button>
                     </StackPanel>
                 </WrapPanel>
                 <StackPanel x:Name="Search_StackPanel" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right"  Margin="0,0,35,0">
@@ -317,7 +318,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
                                                    NumberGroupSeparator=","/>
-                    <!--<syncfusion:GridNumericColumn  x:Name="Outcome_DataGridColumn" HeaderText="Adv. Payment"  MappingName="Outcome"
+                    <syncfusion:GridNumericColumn  x:Name="Outcome_DataGridColumn" HeaderText="Adv. Payment"  MappingName="Outcome"
                                                    NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
@@ -326,7 +327,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                                       NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
-                                                   NumberGroupSeparator=","/>-->
+                                                   NumberGroupSeparator=","/>
                     <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
                                                       NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
@@ -461,7 +462,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
 
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-            <Expander x:Name="myExpander" Grid.Column="0" IsExpanded="False" Width="Auto" Margin="5" FlowDirection="RightToLeft"
+            <!--<Expander x:Name="myExpander" Grid.Column="0" IsExpanded="False" Width="Auto" Margin="5" FlowDirection="RightToLeft"
             ExpandDirection="Right" Style="{StaticResource AccountExpander}"
             Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E">
 
@@ -472,30 +473,30 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                     </Grid.RowDefinitions>
 
                     <syncfusion:SfDataGrid x:Name="Cash_DataGrid"
-                Style="{DynamicResource SfDataGrid_body}"
-                HeaderStyle="{DynamicResource SfDataGrid_header}"
-                RowStyle="{DynamicResource SfDataGrid_RowStyle}"
-                AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
-                TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
-                AutoGenerateColumns="True"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-                Margin="1,1,0,0" Grid.Row="1" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded" Width="370">
+Style="{DynamicResource SfDataGrid_body}"
+HeaderStyle="{DynamicResource SfDataGrid_header}"
+RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
+TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
+AutoGenerateColumns="True"
+HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
+Margin="1,1,0,0" Grid.Row="1">
                         <syncfusion:SfDataGrid.TableSummaryRows>
                             <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
-                                       Title="Total:">
+                       Title="Total:">
                                 <syncfusion:GridSummaryRow.SummaryColumns>
                                     <syncfusion:GridSummaryColumn Name="Total_I"                                                      
-                                                Format="'{Sum:N2}'"
-                                                MappingName="Income"
-                                                SummaryType="DoubleAggregate" />
+                                Format="'{Sum:N2}'"
+                                MappingName="Income"
+                                SummaryType="DoubleAggregate" />
                                     <syncfusion:GridSummaryColumn Name="Total_E"                                                      
-                                                Format="'{Sum:N2}'"
-                                                MappingName="Expenses"
-                                                SummaryType="DoubleAggregate" />
+                                Format="'{Sum:N2}'"
+                                MappingName="Expenses"
+                                SummaryType="DoubleAggregate" />
                                     <syncfusion:GridSummaryColumn Name="Total_Dif"                                                      
-                                                Format="'{Sum:N2}'"
-                                                MappingName="Deference"
-                                                SummaryType="DoubleAggregate" />
+                                Format="'{Sum:N2}'"
+                                MappingName="Deference"
+                                SummaryType="DoubleAggregate" />
                                 </syncfusion:GridSummaryRow.SummaryColumns>
                             </syncfusion:GridTableSummaryRow>
                         </syncfusion:SfDataGrid.TableSummaryRows>
@@ -503,7 +504,9 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                     <Grid Grid.Row="0" Margin="0,5,0,5" Height="25">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <!-- For the button -->
+                            -->
+            <!-- For the button -->
+            <!--
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Button Style="{DynamicResource AddButtonStyle}" x:Name="Cash_Export_btn" Command="local:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
@@ -521,7 +524,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
 
                 </Grid>
 
-            </Expander>
+            </Expander>-->
 
 
             <!--<Grid Grid.Column="1" Background="{StaticResource LightGray1}">

@@ -26,6 +26,7 @@ namespace Financial_WPF_App.Views
             this.Category = Category;
             if (Onload())
             {
+
             }
             else
             {
@@ -35,12 +36,12 @@ namespace Financial_WPF_App.Views
         private DataTable cash_dt;
         Models.Action a;
         int Account_ID;
-        string Account_Type ,Category;
+        string Account_Type, Category;
         string HeaderStyle_Name = "SfDataGrid_header";
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
 
-        
+
         private void Cash_DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             if (Cash_DataGrid.View != null)
@@ -88,7 +89,7 @@ namespace Financial_WPF_App.Views
             LoadGrid();
         }
 
-    
+
 
         private void Apply_DataGrid_Color_Theme()
         {
@@ -141,36 +142,36 @@ namespace Financial_WPF_App.Views
 
             if (ds.Tables.Count > 0)
             {
-                    DataTable temp_cash = ds.Tables[0];
-                    if (temp_cash != null && temp_cash.Rows.Count > 0)
+                DataTable temp_cash = ds.Tables[0];
+                if (temp_cash != null && temp_cash.Rows.Count > 0)
+                {
+                    if (Settings.Default.Role == "Employee")
                     {
-                            if (Settings.Default.Role == "Employee")
+                        string cash_filterExpression = "";
+
+                        if (CashAccount_ID.Count > 0)
+                        {
+                            cash_filterExpression += string.Join(" OR ", CashAccount_ID.Select(id => "CashAccount_id = " + id));
+
+                            System.Data.DataRow[] rows = temp_cash.Select(cash_filterExpression);
+                            DataTable selected_dt = new DataTable();
+                            if (rows.Length != 0)
                             {
-                                string cash_filterExpression = "";
-
-                                if (CashAccount_ID.Count > 0)
-                                {
-                                    cash_filterExpression += string.Join(" OR ", CashAccount_ID.Select(id => "CashAccount_id = " + id));
-
-                                    System.Data.DataRow[] rows = temp_cash.Select(cash_filterExpression);
-                                    DataTable selected_dt = new DataTable();
-                                    if (rows.Length != 0)
-                                    {
-                                        selected_dt = rows.CopyToDataTable();
-                                        cash_dt = selected_dt;
-                                    }
-                                }
-                                else
-                                {
-                                    cash_dt = null;
-                                }
-
+                                selected_dt = rows.CopyToDataTable();
+                                cash_dt = selected_dt;
                             }
-                            else
-                            {
-                                cash_dt = temp_cash;
-                            }
+                        }
+                        else
+                        {
+                            cash_dt = null;
+                        }
+
                     }
+                    else
+                    {
+                        cash_dt = temp_cash;
+                    }
+                }
                 if (cash_dt != null && cash_dt.Rows.Count > 0)
                 {
                     Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
@@ -183,4 +184,4 @@ namespace Financial_WPF_App.Views
         }
     }
 
-    }
+}
