@@ -674,7 +674,7 @@ namespace Financial_WPF_App.Models
 
         public int Insert(int Till_ID, string Till_Type, int ObserveTill_ID, string ObserveTill_Type, int Donor_ID, int ExchangeAcc_ID, bool WithObserveAcion_ID, bool WithExAcc, bool WithExchangeRate, string AType, Double Amount, Double rate, string ActionDate
             , string Note, string E_Note, int IsReceipt, string ReceiptNote, int Employee_Salary_ID, int Rate_ID
-            , int MicroProject_ID, int BudgetLine_ID, int IncomeType_ID, int CashAccount_ID, int ObserveCashAccount_ID, int Exchange_Cash_ID, int Account_ID, string Form_Name)
+            , int MicroProject_ID, int BudgetLine_ID, int IncomeType_ID, int CashAccount_ID, int ObserveCashAccount_ID, int Exchange_Cash_ID, int Account_ID, string Form_Name , int Currency_tilltype_id)
         {
             string query = "";
             string log_query = "";
@@ -812,6 +812,17 @@ namespace Financial_WPF_App.Models
                 else
                 {
                     sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+
+                }
+
+                if (Currency_tilltype_id == -1)
+                {
+                    sc.Parameters.AddWithValue("@Currency_tilltype_id", DBNull.Value);
+                }
+                else
+                {
+                    sc.Parameters.AddWithValue("@Currency_tilltype_id", Currency_tilltype_id);
+
                 }
 
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
@@ -833,10 +844,10 @@ namespace Financial_WPF_App.Models
                                     SELECT MAX(ID) FROM action_deleted
                                 ) AS combined_max_ids);";
 
-                query += @" INSERT INTO `action_not_approved`(`id`,`Till_ID`,`ObserveTill_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
+                query += @" INSERT INTO `action_not_approved`(`id`,`Till_ID`,`ObserveTill_ID`, `AType_ID`, `currency_tilltype_id` ,`Amount`, `rate`, `ActionDate`
                             , `Note`, `E_Note`, `IsReceipt`, `Employee_Salary_ID`, `ReceiptNote`, `Rate_ID`
                             , `MicroProject_ID`, `BudgetLine_ID`, `IncomeType_ID`, `CashAccount_ID`, `ObserveCashAccount_ID`, `Exchange_Cash_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES (@Action_ID, @Till_ID ,@ObserveTill_ID, (select id from actiontype where shortname = @AType), @Amount, @rate, @ActionDate, @Note,@E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @Rate_ID, 
+                            VALUES (@Action_ID, @Till_ID ,@ObserveTill_ID, (select id from actiontype where shortname = @AType), @Currency_tilltype_id, @Amount, @rate, @ActionDate, @Note,@E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @Rate_ID, 
                             @MicroProject_ID, @BudgetLine_ID, @IncomeType_ID, @CashAccount_ID, @ObserveCashAccount_ID, @Exchange_Cash_ID, @Donor_ID, @Todaydate, @Uesr_ID, '1');";
 
 
