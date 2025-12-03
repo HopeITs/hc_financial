@@ -189,6 +189,8 @@ PopupAnimation="Fade">
                         <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" MappingName="Project_Name" HeaderText="Program"/>
                         <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Project"/>
                         <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="Account_Name" HeaderText="Account"/>
+                        <syncfusion:GridTextColumn x:Name="MicroProjectID_DataGridColumn" MappingName="MicroProject_ID" HeaderText="MicroProject_ID"/>
+                        <syncfusion:GridTextColumn x:Name="Beneficiary_DataGridColumn" MappingName="Beneficiary" HeaderText="Beneficiary"/>
                         <syncfusion:GridTextColumn x:Name="Budget_DataGridColumn" HeaderText="Budget"  MappingName="Budget" />
                         <syncfusion:GridTextColumn x:Name="Donor_DataGridColumn" HeaderText="Donor"  MappingName="Donor" />
 
@@ -199,7 +201,7 @@ PopupAnimation="Fade">
                         <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>
                         <syncfusion:GridTextColumn x:Name="ActionYear_DataGridColumn" MappingName="ActionYear" HeaderText="Operation Year"/>
 
-                        <syncfusion:GridNumericColumn  x:Name="Expand_DataGridColumn" HeaderText="Export/Expense"  MappingName="Expand"
+                        <syncfusion:GridNumericColumn  x:Name="Expand_DataGridColumn" HeaderText="Expense"  MappingName="Expand"
                 NumberDecimalDigits="2"
                 NumberDecimalSeparator="."
                 NumberGroupSizes="3"

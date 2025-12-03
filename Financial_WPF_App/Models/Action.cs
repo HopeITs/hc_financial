@@ -567,18 +567,35 @@ namespace Financial_WPF_App.Models
         public DataTable SelectLines_Report()
         {
 
-            string query = @"SELECT  action.id AS `ID`, city.Name AS `City_Name`, project.Name AS `Project_Name`, subproject.Name AS `Subproject_Name`, account.Name as `Account_Name`,
-                        budget.Name as `Budget`, Group_Concat(donor.Name) as `Donor`,linecategory.Name as `Line Type`, line.Name as `Line`,
-                        action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
+            string query = @"SELECT  action.id AS `ID`,
+                        city.Name AS `City_Name`,
+                        project.Name AS `Project_Name`,
+                        subproject.Name AS `Subproject_Name`,
+                        account.Name as `Account_Name`,
+                        action.MicroProject_ID,
+                        CONCAT(b.FirstName,' ',b.FatherName,' ',b.LastName) as 'Beneficiary', 
+                        budget.Name as `Budget`,
+                        Group_Concat(donor.Name) as `Donor`,
+                        linecategory.Name as `Line Type`, 
+                        line.Name as `Line`,
+                        action.ActionDate,
+                        DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',
+                        DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
                         (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
-                        action.Note,action.E_Note,
+                        action.Note,
+                        action.E_Note,
                         (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
                         CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action.Employee_Salary_ID) AS 'Employee_Name',
-                        (case action.IsReceipt when 0 then 'receipt' when 1 then 'invoice' when 2 then 'payslip' else '' end) as `IsReceipt`, action.ReceiptNote ,
-                        action.`rate` as 'Rate', (Case when actiontype.shortname = 'Ex' then (action.Amount * action.rate) else 0 END) as `Exchanged`,
-                        all_avgrates.Name as `AvgRateName`, all_avgrates.value as `AvgRateValue`, (action.Amount/ all_avgrates.value) as `USD_Value`,
-                        cashaccount.Name as `CashAccount`, (select tilltypes.Name from till left join tilltypes on tilltypes.ID = till.Type_ID where till.id = action.ObserveTill_ID) as `ObserveTill`,
+                        (case action.IsReceipt when 0 then 'receipt' when 1 then 'invoice' when 2 then 'payslip' else '' end) as `IsReceipt`,
+                        action.ReceiptNote ,
+                        action.`rate` as 'Rate',
+                        (Case when actiontype.shortname = 'Ex' then (action.Amount * action.rate) else 0 END) as `Exchanged`,
+                        all_avgrates.Name as `AvgRateName`,
+                        all_avgrates.value as `AvgRateValue`, 
+                        (action.Amount/ all_avgrates.value) as `USD_Value`,
+                        cashaccount.Name as `CashAccount`,
+                        (select tilltypes.Name from till left join tilltypes on tilltypes.ID = till.Type_ID where till.id = action.ObserveTill_ID) as `ObserveTill`,
                         (select account.name from account left join till on till.account_id = account.id where till.id = action.ObserveTill_ID) as `ObserveAccount`,
                         obs_cashaccount.Name as `ObserveCashAccount`,
                         action.created_at, action.updated_at, COUNT(DISTINCT att.id) AS Attachments_count
@@ -602,11 +619,10 @@ namespace Financial_WPF_App.Models
                         LEFT JOIN category ON project.Category_ID = category.ID
                         LEFT JOIN city ON subproject.City_ID = city.ID
                         LEFT JOIN action_attachments att ON att.action_id = action.id
+                        LEFT JOIN beneficiary b ON b.MicroProject_ID = action.MicroProject_ID
 
 
-                        where actiontype.shortname IN ('E','Ex') AND LOWER(tilltypes.Name) = LOWER('Syr') AND category.Name = 'Budget'
-
-
+                        where actiontype.shortname IN ('E','Ex') AND LOWER(tilltypes.Name) = LOWER('Syr') AND category.Name in('Budget','Micro Projects')
                         Group by action.id;";
 
             DataTable dt = new DataTable();
