@@ -321,7 +321,7 @@ namespace Financial_WPF_App.Models
         {
             string query = "SELECT cash_balances.CashAccount_id as 'CashAccount_id',cash_balances.Account_Name as 'Account', cash_balances.CashAccount_Name AS 'Cash till', cash_balances.Account_I AS 'Income'," +
                 " cash_balances.Account_E AS 'Outcome', cash_balances.Account_Net AS 'Difference'" +
-                " FROM cash_balances WHERE cash_balances.Subproject_ID = @Subproject_ID and Lower(cash_balances.tilltype_Name) = 'pay';";
+                " FROM cash_balances WHERE cash_balances.Subproject_ID = @Subproject_ID and cash_balances.tilltype_Name = 'pay';";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())

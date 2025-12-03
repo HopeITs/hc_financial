@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Financial_WPF_App.Views.Till_Balances"
-        mc:Ignorable="d" Tag="Till Balances Window" 
+        mc:Ignorable="d" Tag="Balances Window" 
         Title="Till_Balances" Style="{StaticResource WindowPopupStyle}" Width="800">
     <Window.Resources>
         <!-- Left-aligned cell style -->
@@ -25,7 +25,7 @@
             <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
                 <local:WindowControlBar_Popup x:Name="ControlBar"/>
             </DockPanel>
-            <syncfusion:SfDataGrid x:Name="Cash_DataGrid" CellStyle="{StaticResource LeftAlignedCellStyle}"
+            <syncfusion:SfDataGrid x:Name="TillCash_DataGrid" CellStyle="{StaticResource LeftAlignedCellStyle}"
 Style="{DynamicResource SfDataGrid_body}"
 HeaderStyle="{DynamicResource SfDataGrid_header}"
 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
@@ -33,7 +33,7 @@ AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"
 TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
 AutoGenerateColumns="True"
 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"     
-Margin="1,1,0,0" Grid.Row="2" Loaded="Cash_DataGrid_Loaded">
+Margin="1,1,0,0" Grid.Row="2" Loaded="TillCash_DataGrid_Loaded">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn  x:Name="Account_DataGridColumn" HeaderText="Account"  MappingName="Account"/>
                     <syncfusion:GridNumericColumn  x:Name="IncomeSYR_DataGridColumn" HeaderText="Income(SYR)"  MappingName="Income_SYR" TextAlignment="Left"
@@ -98,6 +98,35 @@ Margin="1,1,0,0" Grid.Row="2" Loaded="Cash_DataGrid_Loaded">
                                 MappingName="Difference_USD"
                                 SummaryType="DoubleAggregate" />
                         </syncfusion:GridSummaryRow.SummaryColumns>
+                    </syncfusion:GridTableSummaryRow>
+                </syncfusion:SfDataGrid.TableSummaryRows>
+            </syncfusion:SfDataGrid>
+            <syncfusion:SfDataGrid x:Name="Cash_DataGrid" CellStyle="{StaticResource LeftAlignedCellStyle}"
+Style="{DynamicResource SfDataGrid_body}"
+HeaderStyle="{DynamicResource SfDataGrid_header}"
+RowStyle="{DynamicResource SfDataGrid_RowStyle}"
+AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" 
+TableSummaryRowStyle="{DynamicResource TableSummaryRowStyle}"
+AutoGenerateColumns="True"
+HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+Margin="1,1,0,0" Grid.Row="2" AutoGeneratingColumn="Cash_DataGrid_AutoGeneratingColumn" Loaded="Cash_DataGrid_Loaded">
+                <syncfusion:SfDataGrid.TableSummaryRows>
+                    <syncfusion:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
+                            Title="Total:">
+                        <syncfusion:GridTableSummaryRow.SummaryColumns>
+                            <syncfusion:GridSummaryColumn Name="Total_I"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="Income"
+                                    SummaryType="DoubleAggregate" />
+                            <syncfusion:GridSummaryColumn Name="Total_E"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="Outcome"
+                                    SummaryType="DoubleAggregate" />
+                            <syncfusion:GridSummaryColumn Name="Total_Dif"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="Difference"
+                                    SummaryType="DoubleAggregate" />
+                        </syncfusion:GridTableSummaryRow.SummaryColumns>
                     </syncfusion:GridTableSummaryRow>
                 </syncfusion:SfDataGrid.TableSummaryRows>
             </syncfusion:SfDataGrid>

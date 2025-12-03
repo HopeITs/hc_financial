@@ -33,9 +33,23 @@ namespace Financial_WPF_App.Views
                 throw new ArgumentException("This page will not open due to data fetching error.");
             }
         }
+        public Till_Balances(int SubProject_ID)
+        {
+            InitializeComponent();
+            this.SubProject_ID = SubProject_ID;
+            if (Onload())
+            {
+
+            }
+            else
+            {
+                throw new ArgumentException("This page will not open due to data fetching error.");
+            }
+        }
         private DataTable cash_dt;
         Models.Action a;
-        int Account_ID;
+        int Account_ID, SubProject_ID;
+        private Payment p;
         string Account_Type, Category;
         string HeaderStyle_Name = "SfDataGrid_header";
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
@@ -49,6 +63,45 @@ namespace Financial_WPF_App.Views
                 Export_btn.CommandTarget = Cash_DataGrid;
             }
         }
+
+        private void Cash_DataGrid_AutoGeneratingColumn(object sender, AutoGeneratingColumnArgs e)
+        {
+            try
+            {
+                if (e.Column is GridNumericColumn)
+                {
+                    (e.Column as GridNumericColumn).NumberDecimalDigits = 2;
+                    (e.Column as GridNumericColumn).NumberDecimalSeparator = ".";
+                    (e.Column as GridNumericColumn).NumberGroupSizes = new Int32Collection { 3 };
+                    (e.Column as GridNumericColumn).NumberGroupSeparator = ",";
+                }
+
+                if (e.Column.MappingName == "CashAccount_id")
+                    e.Cancel = true;
+
+                e.Column.TextAlignment = TextAlignment.Left;
+                e.Column.VerticalAlignment = VerticalAlignment.Center;
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void TillCash_DataGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (TillCash_DataGrid.View != null)
+            {
+                Export_btn.CommandTarget = TillCash_DataGrid;
+            }
+        }
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowUtils.TitleBar_MouseDown(this, e);
@@ -58,7 +111,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 a = new Models.Action();
-
+                p = new Payment();
                 Load_Data();
                 Dispatcher.BeginInvoke(new System.Action(() =>
                 {
@@ -127,11 +180,36 @@ namespace Financial_WPF_App.Views
                 TableSummaryRowStyle_Name = "DarkgrayishViolet_TableSummaryRowStyle";
                 GroupSummaryRowStyle = "DarkgrayishViolet_GroupSummaryRowStyle";
             }
+            else
+            {
+                HeaderStyle_Name = "HopeRed_SfDataGrid_header";
+                TableSummaryRowStyle_Name = "HopeRed_TableSummaryRowStyle";
+                GroupSummaryRowStyle = "HopeRed_GroupSummaryRowStyle";
+            }
+            
             Cash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
             Cash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             Cash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
+            TillCash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            TillCash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            TillCash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
         private void LoadGrid()
+        {
+            if (SubProject_ID == 0)
+            {
+                Cash_DataGrid.Visibility = Visibility.Collapsed;
+                loadTillCashDataGrid();
+            }
+            else
+            {
+                TillCash_DataGrid.Visibility = Visibility.Collapsed;
+                loadPaymentCashDataGrid();
+            }
+        }
+
+
+        private void loadTillCashDataGrid()
         {
             cash_dt = new DataTable();
             List<int> CashAccount_ID = new List<int>();
@@ -174,12 +252,27 @@ namespace Financial_WPF_App.Views
                 }
                 if (cash_dt != null && cash_dt.Rows.Count > 0)
                 {
-                    Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
+                    TillCash_DataGrid.ItemsSource = cash_dt.DefaultView;
                 }
                 else
                 {
-                    Cash_DataGrid.ItemsSource = null;
+                    TillCash_DataGrid.ItemsSource = null;
                 }
+            }
+        }
+
+            
+        private void loadPaymentCashDataGrid()
+        {
+            cash_dt = p.Select_Cash_Payments(SubProject_ID);
+            if (cash_dt != null && cash_dt.Rows.Count > 0)
+            {
+                Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
+                Export_btn.CommandTarget = Cash_DataGrid;
+            }
+            else
+            {
+                Cash_DataGrid.ItemsSource = null;
             }
         }
     }

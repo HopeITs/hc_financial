@@ -75,7 +75,7 @@ namespace Financial_WPF_App.Views
                 }
 
                 myExpander_Collapsed(this, new RoutedEventArgs());
-                myExpander.IsExpanded = false;
+                //myExpander.IsExpanded = false;
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
@@ -108,9 +108,9 @@ namespace Financial_WPF_App.Views
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
 
-            Cash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
-            Cash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
-            Cash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
+            //Cash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            //Cash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            //Cash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
 
         private void Load_Data()
@@ -330,18 +330,18 @@ namespace Financial_WPF_App.Views
 
             Bind_Show_Hide_Menu();
 
-            cash_dt = p.Select_Cash_Payments(SubProject_ID);
-            if (cash_dt != null && cash_dt.Rows.Count > 0)
-            {
-                Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
+            //cash_dt = p.Select_Cash_Payments(SubProject_ID);
+            //if (cash_dt != null && cash_dt.Rows.Count > 0)
+            //{
+            //    Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
 
-                Cash_Export_btn.CommandTarget = Cash_DataGrid;
+            //    Cash_Export_btn.CommandTarget = Cash_DataGrid;
 
-            }
-            else
-            {
-                Cash_DataGrid.ItemsSource = null;
-            }
+            //}
+            //else
+            //{
+            //    Cash_DataGrid.ItemsSource = null;
+            //}
         }
 
         private void Set_myDataGrid_ItemSource()
@@ -685,30 +685,19 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Cash_DataGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Cash_DataGrid.View != null)
-            {
-                Cash_Export_btn.CommandTarget = Cash_DataGrid;
-            }
-        }
+        //private void Cash_DataGrid_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    if (Cash_DataGrid.View != null)
+        //    {
+        //        Cash_Export_btn.CommandTarget = Cash_DataGrid;
+        //    }
+        //}
 
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
         {
             try
             {
-                myExpander.Width = double.NaN;
-                //if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
-                //{
-                //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
-                //}
-                //else
-                //{
-                //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
-                //}
-
+                //myExpander.Width = double.NaN;
             }
             catch (Exception ex)
             {
@@ -726,17 +715,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                myExpander.Width = 30;
-                //if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
-                //{
-                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(8, GridUnitType.Star);
-                //}
-                //else if (_currentWindowState == WindowState.Maximized)
-                //{
-                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
-                //}
+                //myExpander.Width = 30;
 
             }
             catch (Exception ex)
@@ -753,27 +732,27 @@ namespace Financial_WPF_App.Views
 
         private void OnMainWindowStateChanged(WindowState newState)
         {
-            _currentWindowState = newState;
-            if (newState == WindowState.Normal && myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                Expander_col.Width = new GridLength(50, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                Expander_col.Width = new GridLength(30, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(7, GridUnitType.Star);
-            }
-            else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(6, GridUnitType.Star);
-            }
+            //_currentWindowState = newState;
+            //if (newState == WindowState.Normal && myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(7, GridUnitType.Star);
+            //}
+            //else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+            //}
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
@@ -1201,6 +1180,25 @@ namespace Financial_WPF_App.Views
                 }
 
                 MircoProject_ID_autoSuggestionUserControl.CloseAutoSuggestionBox();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Balances_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Till_Balances _Window = new Till_Balances(SubProject_ID);
+                _Window.ShowDialog();
             }
             catch (Exception ex)
             {
