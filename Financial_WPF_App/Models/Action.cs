@@ -1,9 +1,10 @@
-﻿using Financial_WPF_App.Properties;
-using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Forms.VisualStyles;
+using Financial_WPF_App.Properties;
+using MySql.Data.MySqlClient;
 
 
 namespace Financial_WPF_App.Models
@@ -23,6 +24,7 @@ namespace Financial_WPF_App.Models
                 subproject.ID AS `Subproject_ID`, subproject.Name AS `Subproject_Name`,
                 account.ID AS `Account_ID`, account.Name AS `Account_Name`,
                 accounttype.id AS `Accounttype_UD`, accounttype.name AS `Accounttype_name`,
+                action.currency_tilltype_id AS 'Currency_TillType_ID', currency_type.Name AS 'Currency',
                 till.id AS `Till_ID`, tilltypes.id AS `Tilltypes_ID`, tilltypes.Name as `Tilltypes_Name`,
 
                 action.`ID` as 'ID' , action.`ObserveAcion_ID`,
@@ -83,7 +85,9 @@ namespace Financial_WPF_App.Models
                  Left join `fiscalbond` on fiscalbond.Till_ID = till.ID
                  LEFT JOIN `user` approved_byuser on approved_byuser.id = action.Approved_by
                  LEFT JOIN `user` created_byuser on created_byuser.id = action.User_ID
-                 LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by";
+                 LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by
+                 LEFT JOIN tilltypes AS currency_type ON currency_type.ID = action.currency_tilltype_id";
+
 
 
             string condition = " where 1 ";
