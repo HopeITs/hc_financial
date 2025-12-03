@@ -45,17 +45,17 @@
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Outcome_Label" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Label x:Name="Outcome_Label" Content="Outcome" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Outcome_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
                     </Border>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                <!--<StackPanel Orientation="Horizontal">
                     <Label x:Name="Returned_Label" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="Returned_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
-                    </Border>
-                </StackPanel>
+                    </Border>-->
+                <!--</StackPanel>-->
                 <StackPanel Orientation="Horizontal">
                     <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
                     <Border x:Name="Exchange_Border" Style="{StaticResource BorderStackPanelStyle}" >
@@ -97,17 +97,17 @@
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Outcome_Label1" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Label x:Name="Outcome_Label1" Content="Outcome:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Outcome_Border2" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Outcome_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
                     </Border>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                <!--<StackPanel Orientation="Horizontal">
                     <Label x:Name="Returned_Label1" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Returned_Border1" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Returned_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
                     </Border>
-                </StackPanel>
+                </StackPanel>-->
                 <StackPanel Orientation="Horizontal">
                     <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
                     <Border x:Name="Exchange_Border1" Style="{StaticResource BorderStackPanelStyle}" >
