@@ -232,6 +232,7 @@ namespace Financial_WPF_App.Views
                 Till_ID = fb_dt.Rows[0].Field<int>("Till_ID");
                 SubProject_ID = fb_dt.Rows[0].Field<int>("SubProject_ID");
                 Category = fb_dt.Rows[0].Field<string>("category");
+               
             }
 
             //Account_Budgets_dt = bud.Select(Account_ID);

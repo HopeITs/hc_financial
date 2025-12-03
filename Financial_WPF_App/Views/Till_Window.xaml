@@ -348,11 +348,7 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                 NumberDecimalSeparator="."
                                 NumberGroupSizes="3" 
                                 NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="Currency_DataGridColumn" HeaderText="Currency"  MappingName="Currency"
-                                   NumberDecimalDigits="2"
-                                NumberDecimalSeparator="."
-                                NumberGroupSizes="3" 
-                                NumberGroupSeparator=","/>
+                    <syncfusion:GridTextColumn   x:Name="Currency_DataGridColumn" HeaderText="Currency"  MappingName="Currency"/>
                     <syncfusion:GridDateTimeColumn x:Name="Action_DataGridColumn" HeaderText="Operation Date" MappingName="ActionDate"
                                                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
                     <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>
