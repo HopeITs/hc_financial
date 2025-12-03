@@ -111,7 +111,8 @@ namespace Financial_WPF_App.Views
                 }
 
                 myExpander_Collapsed(this, new RoutedEventArgs());
-                myExpander.IsExpanded = false;
+                //myExpander.IsExpanded = false;
+                Balances.Visibility = Visibility.Hidden;
 
                 Load_Data();
                 Apply_Color_Theme();
@@ -213,9 +214,9 @@ namespace Financial_WPF_App.Views
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
 
-            Cash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
-            Cash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
-            Cash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
+            //Cash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            //Cash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            //Cash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
 
         public void Load_Data()
@@ -379,27 +380,26 @@ namespace Financial_WPF_App.Views
                                 Originally_HiddenColumns.Add(C.HeaderText.ToString());
                             }
                     }
-                    //Balances.Visibility = Visibility.Visible;
+                    Balances.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    myExpander.Visibility = Visibility.Collapsed;
-                    myExpander.Width = 0;
+                    //myExpander.Visibility = Visibility.Collapsed;
+                    //myExpander.Width = 0;
+                    Balances.Visibility = Visibility.Hidden;
                     myDataGrid.Margin = new Thickness(2, 5, 35, 5);
                     Search_StackPanel.Margin = new Thickness(0, 0, 35, 0);
 
 
                     Outcome_Label.Visibility = Outcome_textBlock.Visibility = Outcome_Border.Visibility =
-                    //Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility = 
-                    Visibility.Collapsed;
+                        Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility = Visibility.Collapsed;
 
                     Outcome_Label1.Visibility = Outcome_textBlock1.Visibility =
-                    //Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility = 
-                    Visibility.Collapsed;
+                    Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility = Visibility.Collapsed;
 
 
                     foreach (var C in myDataGrid.Columns)
-                        if (//C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
+                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
                             C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                             C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number"
                             || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Currency")
@@ -418,22 +418,20 @@ namespace Financial_WPF_App.Views
             if (Account_Type == "Exchange")
             {
                 Outcome_Label.Visibility = Outcome_textBlock.Visibility = Outcome_Border.Visibility =
-                //Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility = 
-                Visibility.Collapsed;
+                Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility = Visibility.Collapsed;
 
                 Outcome_Label1.Visibility = Outcome_textBlock1.Visibility =
-                //Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility =
-                Visibility.Collapsed;
+                Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility = Visibility.Collapsed;
                 if (TillType_Name.ToLower() != "syr")
                 {
-                    myExpander.Visibility = Visibility.Collapsed;
-                    myExpander.Width = 0;
+                    //myExpander.Visibility = Visibility.Collapsed;
+                    //myExpander.Width = 0;
+                    Balances.Visibility = Visibility.Hidden;
                     myDataGrid.Margin = new Thickness(2, 5, 5, 5);
                     Search_StackPanel.Margin = new Thickness(0, 0, 5, 0);
                 }
                 foreach (var C in myDataGrid.Columns)
-                    if (
-                        //C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
+                    if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
                         C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                         C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number" ||
                         C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value"
@@ -449,18 +447,17 @@ namespace Financial_WPF_App.Views
             if (Account_Type == "Personal")
             {
                 Outcome_Label.Visibility = Outcome_textBlock.Visibility = Outcome_Border.Visibility =
-                //Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility =
+                Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility =
                 Exchange_Label.Visibility = Exchange_textBlock.Visibility = Exchange_Border.Visibility = Visibility.Collapsed;
 
                 Outcome_Label1.Visibility = Outcome_textBlock1.Visibility =
-                //Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility =
+                Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility =
                 Exchange_Label1.Visibility = Exchange_textBlock1.Visibility = Exchange_Border1.Visibility = Visibility.Collapsed;
 
                 if (TillType_Name.ToLower() == "syr")
                 {
                     foreach (var C in myDataGrid.Columns)
-                        if (//C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || 
-                            C.HeaderText.ToString() == "Exchange" ||
+                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Exchange" ||
                             C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                             C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Rate" || C.HeaderText.ToString() == "Exchanged" ||
                             C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value" ||
@@ -471,14 +468,13 @@ namespace Financial_WPF_App.Views
                             C.IsHidden = true;
                             Originally_HiddenColumns.Add(C.HeaderText.ToString());
                         }
+                    Balances.Visibility = Visibility.Visible;
 
                 }
                 else
                 {
                     foreach (var C in myDataGrid.Columns)
-                        if (
-                            //C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
-                            C.HeaderText.ToString() == "Exchange" ||
+                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Exchange" ||
                             C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                             C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Rate" || C.HeaderText.ToString() == "Exchanged" || C.HeaderText.ToString() == "Cash till" ||
                             C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value" ||
@@ -490,8 +486,9 @@ namespace Financial_WPF_App.Views
                             Originally_HiddenColumns.Add(C.HeaderText.ToString());
                         }
 
-                    myExpander.Visibility = Visibility.Collapsed;
-                    myExpander.Width = 0;
+                    //myExpander.Visibility = Visibility.Collapsed;
+                    //myExpander.Width = 0;
+                    Balances.Visibility = Visibility.Hidden;
                     myDataGrid.Margin = new Thickness(2, 5, 5, 5);
                     Search_StackPanel.Margin = new Thickness(0, 0, 5, 0);
                 }
@@ -673,7 +670,7 @@ namespace Financial_WPF_App.Views
                 {
                     Income_textBlock.Text = sum_dt.Rows[0].Field<double>(0).ToString("N2");
                     Outcome_textBlock.Text = sum_dt.Rows[0].Field<double>(1).ToString("N2");
-                    //Returned_textBlock.Text = sum_dt.Rows[0].Field<double>(2).ToString("N2");
+                    Returned_textBlock.Text = sum_dt.Rows[0].Field<double>(2).ToString("N2");
                     Exchange_textBlock.Text = sum_dt.Rows[0].Field<double>(3).ToString("N2");
                     Exchpand_textBlock.Text = sum_dt.Rows[0].Field<double>(4).ToString("N2");
 
@@ -682,9 +679,9 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
-                    Income_textBlock.Text = Outcome_textBlock.Text = //Returned_textBlock.Text =
-                        Exchange_textBlock.Text = Exchpand_textBlock.Text = 
-                        CashNet_textBlock.Text = Net_textBlock.Text = "00,00";
+                    Income_textBlock.Text = Outcome_textBlock.Text = Returned_textBlock.Text = Exchange_textBlock.Text =
+                        Exchpand_textBlock.Text = CashNet_textBlock.Text = Net_textBlock.Text = "00,00";
+
                 }
             }
             else
@@ -693,7 +690,7 @@ namespace Financial_WPF_App.Views
                 {
                     double incomes = 0;
                     double outcomes = 0;
-                    //double returned = 0;
+                    double returned = 0;
                     double exchange = 0;
                     double expaned = 0;
                     for (var i = 0; i < dt.Rows.Count; i++)
@@ -707,10 +704,10 @@ namespace Financial_WPF_App.Views
                         {
                             outcomes += double.Parse(R["Outcome"].ToString());
                         }
-                        //else if (double.Parse(R["Returned"].ToString()) != 0)
-                        //{
-                        //    returned += double.Parse(R["Returned"].ToString());
-                        //}
+                        else if (double.Parse(R["Returned"].ToString()) != 0)
+                        {
+                            returned += double.Parse(R["Returned"].ToString());
+                        }
                         else if (double.Parse(R["Exchange"].ToString()) != 0)
                         {
                             exchange += double.Parse(R["Exchange"].ToString());
@@ -722,7 +719,7 @@ namespace Financial_WPF_App.Views
                     }
                     Income_textBlock.Text = incomes.ToString("N2");
                     Outcome_textBlock.Text = outcomes.ToString("N2");
-                    //Returned_textBlock.Text = returned.ToString("N2");
+                    Returned_textBlock.Text = returned.ToString("N2");
                     Exchange_textBlock.Text = exchange.ToString("N2");
                     Exchpand_textBlock.Text = expaned.ToString("N2");
                 }
@@ -732,14 +729,15 @@ namespace Financial_WPF_App.Views
             {
                 if (TillType_Name.ToLower() == "syr")
                 {
-                    if (cash_dt != null && cash_dt.Rows.Count > 0)
-                    {
-                        Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
-                    }
-                    else
-                    {
-                        Cash_DataGrid.ItemsSource = null;
-                    }
+                    //if (cash_dt != null && cash_dt.Rows.Count > 0)
+                    //{
+                    //    Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
+                    //}
+                    //else
+                    //{
+                    //    Cash_DataGrid.ItemsSource = null;
+                    //}
+                    Balances.Visibility = Visibility.Visible;
                 }
             }
             GridLoaded = true;
@@ -824,7 +822,7 @@ namespace Financial_WPF_App.Views
 
                 double selected_incomes = 0;
                 double selected_outcomes = 0;
-                //double selected_returned = 0;
+                double selected_returned = 0;
                 double selected_Exchange = 0;
                 double selected_expaned = 0;
                 for (var i = 0; i < count; i++)
@@ -838,10 +836,10 @@ namespace Financial_WPF_App.Views
                     {
                         selected_outcomes += double.Parse(SelectedDataRow["Outcome"].ToString());
                     }
-                    //else if (double.Parse(SelectedDataRow["Returned"].ToString()) != 0)
-                    //{
-                    //    selected_returned += double.Parse(SelectedDataRow["Returned"].ToString());
-                    //}
+                    else if (double.Parse(SelectedDataRow["Returned"].ToString()) != 0)
+                    {
+                        selected_returned += double.Parse(SelectedDataRow["Returned"].ToString());
+                    }
                     else if (double.Parse(SelectedDataRow["Exchange"].ToString()) != 0)
                     {
                         selected_Exchange += double.Parse(SelectedDataRow["Exchange"].ToString());
@@ -853,7 +851,7 @@ namespace Financial_WPF_App.Views
                 }
                 Income_textBlock1.Text = selected_incomes.ToString("N2");
                 Outcome_textBlock1.Text = selected_outcomes.ToString("N2");
-                //Returned_textBlock1.Text = selected_returned.ToString("N2");
+                Returned_textBlock1.Text = selected_returned.ToString("N2");
                 Exchange_textBlock1.Text = selected_Exchange.ToString("N2");
                 Exchpand_textBlock1.Text = selected_expaned.ToString("N2");
             }
@@ -973,8 +971,8 @@ namespace Financial_WPF_App.Views
                             AType = "I";
                         if (dataRow["Outcome"].ToString() != "0")
                             AType = "O";
-                        //if (dataRow["Returned"].ToString() != "0")
-                        //    AType = "R";
+                        if (dataRow["Returned"].ToString() != "0")
+                            AType = "R";
                         if (dataRow["Exchange"].ToString() != "0")
                             AType = "Ex";
                         if (dataRow["Expand"].ToString() != "0")
@@ -1020,6 +1018,25 @@ namespace Financial_WPF_App.Views
             try
             {
                 AddAction_Window _Window = new AddAction_Window(Account_ID, IsAdminAccount, Account_Name, Account_Type, Category, Till_ID, TillType_Name, SubProject_ID, true, main_Window, this);
+                _Window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Balances_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Till_Balances _Window = new Till_Balances(Account_ID, Account_Type, Category);
                 _Window.ShowDialog();
             }
             catch (Exception ex)
@@ -1218,10 +1235,10 @@ namespace Financial_WPF_App.Views
 
         private void Returned_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //if (Returned_textBlock1.ActualWidth > Returned_textBlock.ActualWidth)
-            //    Returned_textBlock.MinWidth = Returned_textBlock1.ActualWidth;
-            //else
-            //    Returned_textBlock1.MinWidth = Returned_textBlock.ActualWidth;
+            if (Returned_textBlock1.ActualWidth > Returned_textBlock.ActualWidth)
+                Returned_textBlock.MinWidth = Returned_textBlock1.ActualWidth;
+            else
+                Returned_textBlock1.MinWidth = Returned_textBlock.ActualWidth;
 
         }
 
@@ -1333,8 +1350,8 @@ namespace Financial_WPF_App.Views
                                 AType = "I";
                             if (newView[k]["Outcome"].ToString() != "0")
                                 AType = "O";
-                            //if (newView[k]["Returned"].ToString() != "0")
-                            //    AType = "R";
+                            if (newView[k]["Returned"].ToString() != "0")
+                                AType = "R";
                             if (newView[k]["Exchange"].ToString() != "0")
                                 AType = "Ex";
                             if (newView[k]["Expand"].ToString() != "0")
@@ -1402,8 +1419,8 @@ namespace Financial_WPF_App.Views
                                 AType = "I";
                             if (newView[k]["Outcome"].ToString() != "0")
                                 AType = "O";
-                            //if (newView[k]["Returned"].ToString() != "0")
-                            //    AType = "R";
+                            if (newView[k]["Returned"].ToString() != "0")
+                                AType = "R";
                             if (newView[k]["Exchange"].ToString() != "0")
                                 AType = "Ex";
                             if (newView[k]["Expand"].ToString() != "0")
@@ -1473,44 +1490,9 @@ namespace Financial_WPF_App.Views
         }
         #endregion
 
-        private void Cash_DataGrid_AutoGeneratingColumn(object sender, AutoGeneratingColumnArgs e)
-        {
-            try
-            {
-                if (e.Column is GridNumericColumn)
-                {
-                    (e.Column as GridNumericColumn).NumberDecimalDigits = 2;
-                    (e.Column as GridNumericColumn).NumberDecimalSeparator = ".";
-                    (e.Column as GridNumericColumn).NumberGroupSizes = new Int32Collection { 3 };
-                    (e.Column as GridNumericColumn).NumberGroupSeparator = ",";
-                }
 
-                if (e.Column.MappingName == "CashAccount_id")
-                    e.Cancel = true;
 
-                e.Column.TextAlignment = TextAlignment.Left;
-                e.Column.VerticalAlignment = VerticalAlignment.Center;
 
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void Cash_DataGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Cash_DataGrid.View != null)
-            {
-                Cash_Export_btn.CommandTarget = Cash_DataGrid;
-            }
-        }
 
         private void myDataGrid_FilterChanged(object sender, GridFilterEventArgs e)
         {
@@ -1694,18 +1676,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                myExpander.Width = double.NaN;
-
-                //if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
-                //{
-                //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
-                //}
-                //else
-                //{
-                //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
-                //}
+                //myExpander.Width = double.NaN;
 
             }
             catch (Exception ex)
@@ -1724,17 +1695,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                myExpander.Width = 30;
-                //if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
-                //{
-                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(8, GridUnitType.Star);
-                //}
-                //else if (_currentWindowState == WindowState.Maximized)
-                //{
-                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
-                //}
+                //myExpander.Width = 30;
 
             }
             catch (Exception ex)
@@ -1751,27 +1712,27 @@ namespace Financial_WPF_App.Views
 
         private void OnMainWindowStateChanged(WindowState newState)
         {
-            _currentWindowState = newState;
-            if (newState == WindowState.Normal && myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                Expander_col.Width = new GridLength(50, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                Expander_col.Width = new GridLength(30, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(7, GridUnitType.Star);
-            }
-            else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(6, GridUnitType.Star);
-            }
+            //_currentWindowState = newState;
+            //if (newState == WindowState.Normal && myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(7, GridUnitType.Star);
+            //}
+            //else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+            //}
         }
 
         private void Delete_Selected_TextBlock_Click(object sender, RoutedEventArgs e)

@@ -131,6 +131,32 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        public DataSet Select_Account_Balances(int Account_ID)
+        {
+
+            string query = "SELECT cash_balances.CashAccount_Name AS 'Account', cash_balances.Account_I AS 'Income_SYR' , cash_balances.Account_E AS 'Expenses_SYR' , cash_balances.Account_Net AS 'Difference_SYR'" +
+                ", cash_balances.Account_I_USD AS 'Income_USD',cash_balances.Account_E_USD AS 'Expenses_USD',cash_balances.Account_Net_USD AS 'Difference_USD' " +
+                " FROM cash_balances WHERE cash_balances.Account_id = @Account_ID;";
+
+            DataSet ds = new DataSet();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+                sc.CommandTimeout = 21600;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(ds);
+                Login.CloseAndClearConnection();
+            }
+            return ds;
+        }
+
         public DataTable Select_action_not_approved(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed, bool ForApproval)
         {
 
