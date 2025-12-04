@@ -232,6 +232,7 @@ namespace Financial_WPF_App.Views
                 Till_ID = fb_dt.Rows[0].Field<int>("Till_ID");
                 SubProject_ID = fb_dt.Rows[0].Field<int>("SubProject_ID");
                 Category = fb_dt.Rows[0].Field<string>("category");
+               
             }
 
             //Account_Budgets_dt = bud.Select(Account_ID);
@@ -402,12 +403,15 @@ namespace Financial_WPF_App.Views
                         if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
                             C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                             C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number"
-                            || C.HeaderText.ToString() == "Volunteer")
+                            || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Currency")
                         {
                             C.IsHidden = true;
                             Originally_HiddenColumns.Add(C.HeaderText.ToString());
                         }
 
+                    var colOutcome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Expand");
+                    if (colOutcome != null)
+                        colOutcome.HeaderText = "Transfer";
                 }
             }
 
@@ -432,7 +436,8 @@ namespace Financial_WPF_App.Views
                         C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                         C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number" ||
                         C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value"
-                        || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer")
+                        || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer"
+                        || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Currency" )
                     {
                         C.IsHidden = true;
                         Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -458,7 +463,8 @@ namespace Financial_WPF_App.Views
                             C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Rate" || C.HeaderText.ToString() == "Exchanged" ||
                             C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value" ||
                             C.HeaderText.ToString() == "Corresponding till" || C.HeaderText.ToString() == "Corresponding account" || C.HeaderText.ToString() == "Corresponding cash till"
-                            || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer")
+                            || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer"
+                            || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Currency")
                         {
                             C.IsHidden = true;
                             Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -474,7 +480,8 @@ namespace Financial_WPF_App.Views
                             C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Rate" || C.HeaderText.ToString() == "Exchanged" || C.HeaderText.ToString() == "Cash till" ||
                             C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value" ||
                             C.HeaderText.ToString() == "Corresponding till" || C.HeaderText.ToString() == "Corresponding account" || C.HeaderText.ToString() == "Corresponding cash till"
-                            || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer")
+                            || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer"
+                             || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Currency")
                         {
                             C.IsHidden = true;
                             Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -486,6 +493,19 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Margin = new Thickness(2, 5, 5, 5);
                     Search_StackPanel.Margin = new Thickness(0, 0, 5, 0);
                 }
+            }
+
+            if (Account_Type == "Project" && TillType_Name.ToLower() == "syr")
+            {
+               
+                    var colIncome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Income");
+                    if (colIncome != null)
+                        colIncome.HeaderText = "Income(SYR)";
+
+                    var colOutcome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Expand");
+                    if (colOutcome != null)
+                        colOutcome.HeaderText = "Expenses(SYR)";
+                
             }
         }
 

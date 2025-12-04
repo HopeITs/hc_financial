@@ -1,9 +1,10 @@
-﻿using Financial_WPF_App.Properties;
-using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Forms.VisualStyles;
+using Financial_WPF_App.Properties;
+using MySql.Data.MySqlClient;
 
 
 namespace Financial_WPF_App.Models
@@ -23,15 +24,23 @@ namespace Financial_WPF_App.Models
                 subproject.ID AS `Subproject_ID`, subproject.Name AS `Subproject_Name`,
                 account.ID AS `Account_ID`, account.Name AS `Account_Name`,
                 accounttype.id AS `Accounttype_UD`, accounttype.name AS `Accounttype_name`,
+                action.currency_tilltype_id AS 'Currency_TillType_ID', currency_type.Name AS 'Currency',
                 till.id AS `Till_ID`, tilltypes.id AS `Tilltypes_ID`, tilltypes.Name as `Tilltypes_Name`,
 
                 action.`ID` as 'ID' , action.`ObserveAcion_ID`,
                 actiontype.`Name` as 'AType', action.`Amount`, action.`IsApproved`, approved_byuser.`Username` as 'approved_by', action.`Approved_at`, created_byuser.`Username` as 'created_by', created_byuser.`ID` as 'created_byuser_ID', edited_byuser.username as 'edited_by',
-                (CASE WHEN actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Income',
+                (CASE   WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                AND actiontype.shortname = 'I' THEN action.Amount  ELSE 0 END) AS 'Income',
+                (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action.Amount
+                ELSE 0 END) AS 'Incomeusd',
                 (CASE WHEN actiontype.shortname = 'O' THEN action.Amount ELSE 0 END) AS 'Outcome',
                 (CASE WHEN actiontype.shortname = 'R' THEN action.Amount ELSE 0 END) AS 'Returned',
                 (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
-                (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
+                (CASE  WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                AND actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
+               (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
+               THEN action.Amount  ELSE 0 END) AS 'Expandusd',
+
 
                 (SELECT account.ID FROM action oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',
                 (SELECT account.Name FROM action oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
@@ -83,7 +92,9 @@ namespace Financial_WPF_App.Models
                  Left join `fiscalbond` on fiscalbond.Till_ID = till.ID
                  LEFT JOIN `user` approved_byuser on approved_byuser.id = action.Approved_by
                  LEFT JOIN `user` created_byuser on created_byuser.id = action.User_ID
-                 LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by";
+                 LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by
+                 LEFT JOIN tilltypes AS currency_type ON currency_type.ID = action.currency_tilltype_id";
+
 
 
             string condition = " where 1 ";
@@ -161,15 +172,23 @@ namespace Financial_WPF_App.Models
                 subproject.ID AS `Subproject_ID`, subproject.Name AS `Subproject_Name`,
                 account.ID AS `Account_ID`, account.Name AS `Account_Name`,
                 accounttype.id AS `Accounttype_UD`, accounttype.name AS `Accounttype_name`,
+               action_not_approved.currency_tilltype_id AS 'Currency_TillType_ID', currency_type.Name AS 'Currency',
                 till.id AS `Till_ID`, tilltypes.id AS `Tilltypes_ID`, tilltypes.Name as `Tilltypes_Name`,
 
                 action_not_approved.`ID` as 'ID' , action_not_approved.`ObserveAcion_ID`,
                 actiontype.`Name` as 'AType', action_not_approved.`Amount`, action_not_approved.`IsApproved`, approved_byuser.`Username` as 'approved_by', action_not_approved.`Approved_at`, created_byuser.`Username` as 'created_by', created_byuser.`ID` as 'created_byuser_ID', edited_byuser.username as 'edited_by',
-                (CASE WHEN actiontype.shortname = 'I' THEN action_not_approved.Amount ELSE 0 END) AS 'Income',
+                (CASE   WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                AND actiontype.shortname = 'I' THEN action_not_approved.Amount  ELSE 0 END) AS 'Income',
+                (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action_not_approved.Amount
+                ELSE 0 END) AS 'Incomeusd',
                 (CASE WHEN actiontype.shortname = 'O' THEN action_not_approved.Amount ELSE 0 END) AS 'Outcome',
                 (CASE WHEN actiontype.shortname = 'R' THEN action_not_approved.Amount ELSE 0 END) AS 'Returned',
                 (CASE WHEN actiontype.shortname = 'Ex' THEN action_not_approved.Amount ELSE 0 END) AS 'Exchange',
-                (CASE WHEN actiontype.shortname = 'E' THEN action_not_approved.Amount ELSE 0 END) AS 'Expand',
+                (CASE  WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                AND actiontype.shortname = 'E' THEN action_not_approved.Amount ELSE 0 END) AS 'Expand',
+               (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
+               THEN action_not_approved.Amount  ELSE 0 END) AS 'Expandusd',
+
 
                 (SELECT account.ID FROM action_not_approved oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action_not_approved.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',
                 (SELECT account.Name FROM action_not_approved oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action_not_approved.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
@@ -222,7 +241,8 @@ namespace Financial_WPF_App.Models
                 Left join `fiscalbond` on fiscalbond.Till_ID = till.ID
                 LEFT JOIN `user` approved_byuser on approved_byuser.id = action_not_approved.Approved_by
                 LEFT JOIN `user` created_byuser on created_byuser.id = action_not_approved.User_ID
-                LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by";
+                LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by
+                LEFT JOIN tilltypes AS currency_type ON currency_type.ID = action_not_approved.currency_tilltype_id";
 
 
             string condition = " where 1 ";
@@ -716,7 +736,7 @@ namespace Financial_WPF_App.Models
 
         public int Insert(int Till_ID, string Till_Type, int ObserveTill_ID, string ObserveTill_Type, int Donor_ID, int ExchangeAcc_ID, bool WithObserveAcion_ID, bool WithExAcc, bool WithExchangeRate, string AType, Double Amount, Double rate, string ActionDate
             , string Note, string E_Note, int IsReceipt, string ReceiptNote, int Employee_Salary_ID, int Rate_ID
-            , int MicroProject_ID, int BudgetLine_ID, int IncomeType_ID, int CashAccount_ID, int ObserveCashAccount_ID, int Exchange_Cash_ID, int Account_ID, string Form_Name)
+            , int MicroProject_ID, int BudgetLine_ID, int IncomeType_ID, int CashAccount_ID, int ObserveCashAccount_ID, int Exchange_Cash_ID, int Account_ID, string Form_Name , int Currency_tilltype_id)
         {
             string query = "";
             string log_query = "";
@@ -854,6 +874,17 @@ namespace Financial_WPF_App.Models
                 else
                 {
                     sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+
+                }
+
+                if (Currency_tilltype_id == -1)
+                {
+                    sc.Parameters.AddWithValue("@Currency_tilltype_id", DBNull.Value);
+                }
+                else
+                {
+                    sc.Parameters.AddWithValue("@Currency_tilltype_id", Currency_tilltype_id);
+
                 }
 
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
@@ -875,10 +906,10 @@ namespace Financial_WPF_App.Models
                                     SELECT MAX(ID) FROM action_deleted
                                 ) AS combined_max_ids);";
 
-                query += @" INSERT INTO `action_not_approved`(`id`,`Till_ID`,`ObserveTill_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
+                query += @" INSERT INTO `action_not_approved`(`id`,`Till_ID`,`ObserveTill_ID`, `AType_ID`, `currency_tilltype_id` ,`Amount`, `rate`, `ActionDate`
                             , `Note`, `E_Note`, `IsReceipt`, `Employee_Salary_ID`, `ReceiptNote`, `Rate_ID`
                             , `MicroProject_ID`, `BudgetLine_ID`, `IncomeType_ID`, `CashAccount_ID`, `ObserveCashAccount_ID`, `Exchange_Cash_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES (@Action_ID, @Till_ID ,@ObserveTill_ID, (select id from actiontype where shortname = @AType), @Amount, @rate, @ActionDate, @Note,@E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @Rate_ID, 
+                            VALUES (@Action_ID, @Till_ID ,@ObserveTill_ID, (select id from actiontype where shortname = @AType), @Currency_tilltype_id, @Amount, @rate, @ActionDate, @Note,@E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @Rate_ID, 
                             @MicroProject_ID, @BudgetLine_ID, @IncomeType_ID, @CashAccount_ID, @ObserveCashAccount_ID, @Exchange_Cash_ID, @Donor_ID, @Todaydate, @Uesr_ID, '1');";
 
 
