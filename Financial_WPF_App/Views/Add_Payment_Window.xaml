@@ -25,10 +25,10 @@
                 </Grid.RowDefinitions>
             
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="580"/>
-                <ColumnDefinition Width="390"/>
+                    <ColumnDefinition Width="485"/>
+                    <ColumnDefinition Width="485"/>
             </Grid.ColumnDefinitions>
-            <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+            <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" VerticalAlignment="Center">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
                 </Border.Effect>
@@ -102,11 +102,11 @@
 
                 </Grid>
             </Border>
-            <Border Background="White"  CornerRadius="{StaticResource CornerRadius}" Padding="10" Margin="0,5,0,0"  Grid.Column="1">
+            <Border Background="White"  CornerRadius="{StaticResource CornerRadius}" Padding="10"  Grid.Column="1">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
                 </Border.Effect>
-                <Grid>
+                <Grid Margin="30,0,30,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="35"/>
                         <RowDefinition Height="35"/>
@@ -168,7 +168,7 @@
     Style="{DynamicResource SfDataGrid_body}"
     HeaderStyle="{DynamicResource SfDataGrid_header}"
     RowStyle="{DynamicResource SfDataGrid_RowStyle}"
-    AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="top" Loaded="payDataGrid_Loaded"  Grid.Column="0" Grid.RowSpan="2" Grid.Row="0" Margin="2,35,20,5" Height="470">
+    AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}" ShowGroupDropArea ="False" HorizontalAlignment="Stretch" VerticalAlignment="top" Loaded="payDataGrid_Loaded"  Grid.Column="0" Grid.Row="1" Margin="2,35,2,5" Height="470" Grid.ColumnSpan="2">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" 
             IsHidden="True" />
@@ -191,7 +191,7 @@
                     <syncfusion:GridTextColumn MappingName="Approved" HeaderText="Approved" />
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-            <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Cursor="Hand" Grid.Row="0" x:Name="Export_btn2" Command="Helper:Commands.ExportToExcel" Height="25" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,5,0,0">
+            <Button TabIndex="5" Style="{DynamicResource AddButtonStyle}" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Cursor="Hand" Grid.Row="1" x:Name="Export_btn2" Command="Helper:Commands.ExportToExcel" Height="25" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,5,0,0">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Buttons/DownloadExcel.png"></ImageBrush>
                 </Button.Background>
