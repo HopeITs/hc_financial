@@ -59,7 +59,7 @@ namespace Financial_WPF_App.Models
                  (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
                  CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action.Employee_Salary_ID) AS 'Employee_Name',
                  all_avgrates.id as 'AvgRateID',all_avgrates.value as 'AvgRateValue', all_avgrates.Name as 'AvgRateName',
-                 (action.`Amount`/ all_avgrates.value) as 'USD_Value',
+                 (CASE WHEN currency_type.Name = 'USD' THEN action.Amount ELSE  action.Amount / all_avgrates.value END) AS `USD_Value`,
                  budget_line.budget_id as 'Budget_ID', linecategory.id as 'LineCategory_ID', action.`BudgetLine_ID`, line.Name as 'Line', budget.Name as 'Budget',
                  action.`IncomeType_ID`, action.`Rate_ID`,
                  action.`ObserveTill_ID`,
@@ -207,7 +207,7 @@ namespace Financial_WPF_App.Models
                 (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
                 CONCAT(employee.FirstName,' ',employee.FatherName,' ',employee.LastName) END FROM employee_salary LEFT JOIN employee_subproject ON employee_subproject.id = employee_salary.employee_subproject_id LEFT JOIN employee ON employee.id = employee_subproject.employee_id WHERE employee_salary.id = action_not_approved.Employee_Salary_ID) AS 'Employee_Name',
                 all_avgrates.id as 'AvgRateID',all_avgrates.value as 'AvgRateValue', all_avgrates.Name as 'AvgRateName',
-                (action_not_approved.`Amount`/ all_avgrates.value) as 'USD_Value',
+                (CASE WHEN currency_type.Name = 'USD' THEN action_not_approved.Amount ELSE action_not_approved.Amount / all_avgrates.value END) AS `USD_Value`,
                 budget_line.budget_id as 'Budget_ID', linecategory.id as 'LineCategory_ID', action_not_approved.`BudgetLine_ID`, line.Name as 'Line', budget.Name as 'Budget',
                 action_not_approved.`IncomeType_ID`, action_not_approved.`Rate_ID`,
                 action_not_approved.`ObserveTill_ID`,
