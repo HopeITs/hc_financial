@@ -79,7 +79,7 @@ namespace Financial_WPF_App.Views
 
                 MircoProject_ID_autoSuggestionUserControl.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
                 Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
-
+                ReturnedAmount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 for (int i = 0; i < payDataGrid.Columns.Count; i++)
                 {
                     payDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
@@ -278,6 +278,29 @@ namespace Financial_WPF_App.Views
 
         }
 
+        private void ReturnedAmount_txtBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string value = ReturnedAmount_txtBox.Text;
+                if (value != "")
+                {
+                    ReturnedAmount_txtBox.Text = Login.ConvertToDouble(value);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+
+        }
+
         private void MircoProject_ID_autoSuggestionUserControl_LostFocus(object sender, RoutedEventArgs e)
         {
             try
@@ -351,7 +374,7 @@ namespace Financial_WPF_App.Views
             Save2_btn.IsEnabled = false;
             try
             {
-                if (Amount_txtBox.Text == "")
+                if (Amount_txtBox.Text == "" && ReturnedAmount_txtBox.Text == "")
                 {
                     MessageBox.Show("Please enter the amount.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
@@ -375,12 +398,14 @@ namespace Financial_WPF_App.Views
                     MessageBox.Show("Please select the cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
-                string amount_str, Date;
-                double amount = 0;
+                string amount_str, returnedamount_str, Date;
+                double amount , returnedamount =0;
                 int CashAccount_ID;
 
                 amount_str = Amount_txtBox.Text.Replace(",", "");
+                returnedamount_str = ReturnedAmount_txtBox.Text.Replace(",", "");
                 Double.TryParse(amount_str, out amount);
+                Double.TryParse(returnedamount_str, out returnedamount);
 
                 Date = ((DateTime)(Date_datepicker.SelectedDate)).ToString("yyyy/MM/dd");
                 CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);
@@ -412,7 +437,8 @@ namespace Financial_WPF_App.Views
                         foreach (System.Data.DataRow row in My_rows)
                             selected_rows_dt.ImportRow(row);
 
-                        p.Insert_Payment(amount, Date, Notes_txtBox.Text, MicroProject_ID, SubProject_ID, Beneficiary_ID, selected_rows_dt, CashAccount_ID, "Payment_Window");
+                        p.Insert_Payment(amount,returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, SubProject_ID, Beneficiary_ID, selected_rows_dt, CashAccount_ID, "Payment_Window");
+                        Fill_Calculations();
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
                         Clear_Details(false);
@@ -458,6 +484,7 @@ namespace Financial_WPF_App.Views
             }
 
             Amount_txtBox.Clear();
+            ReturnedAmount_txtBox.Clear();
             Notes_txtBox.Clear();
             Currency_txtBox.Clear();
             CashAccount_comboBox.SelectedIndex = -1;
@@ -526,7 +553,7 @@ namespace Financial_WPF_App.Views
             NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
 
 
-            double LoanAmount, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount;
+            double LoanAmount, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount, AmountReturned, AmountBalanced, NotApprovedAmountReturned;
 
 
             System.Data.DataRow[] rows = b_dt.Select("MicroProject_ID=" + MicroProject_ID);
@@ -567,6 +594,18 @@ namespace Financial_WPF_App.Views
                 AmountPaid = 0;
             }
 
+            if (rows[0].Field<double?>("returnedamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("returnedamount").ToString(), out AmountReturned))
+                {
+                    AmountReturned = 0;
+                }
+            }
+            else
+            {
+                AmountReturned = 0;
+            }
+
 
             if (rows[0].Field<double?>("NotApproved_paidamount") != null)
             {
@@ -579,16 +618,28 @@ namespace Financial_WPF_App.Views
             {
                 NotApprovedAmount = 0;
             }
-
+            if (rows[0].Field<double?>("NotApproved_returnedamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("NotApproved_returnedamount").ToString(), out NotApprovedAmountReturned))
+                {
+                    NotApprovedAmountReturned = 0;
+                }
+            }
+            else
+            {
+                NotApprovedAmountReturned = 0;
+            }
+            AmountBalanced = AmountPaid - AmountReturned;
             RemainingAmount = AmountAowed - AmountPaid;
 
             LoanAmount_txtBox.Content = Login.ConvertToDouble(LoanAmount.ToString());
             AmountAowed_txtBox.Content = Login.ConvertToDouble(AmountAowed.ToString());
             AmountPaid_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+            AmountReturned_txtBox.Content = Login.ConvertToDouble(AmountReturned.ToString());
             NotApprovedAmount_txtBox.Content = Login.ConvertToDouble(NotApprovedAmount.ToString());
+            NotApprovedAmountReturned_txtBox.Content = Login.ConvertToDouble(NotApprovedAmountReturned.ToString());
             RemainingAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
-
-
+            Balanced_txtBox.Content = Login.ConvertToDouble(AmountBalanced.ToString());
         }
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
