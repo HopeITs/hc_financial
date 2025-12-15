@@ -213,10 +213,23 @@ namespace Financial_WPF_App.Views
 
                 MircoProject_ID_autoSuggestionUserControl.IsEnabled = false;
                 BeneficiaryName_autoSuggestionUserControl.IsEnabled = false;
+                Date_datepicker.IsEnabled = false;
 
                 if (a_dt.Rows[0]["Income"] != DBNull.Value)
                 {
                     Amount_txtBox.Text = string.Format("{0:N2}", a_dt.Rows[0].Field<Double>("Income"));
+                    if(Amount_txtBox.Text == "0.00")
+                    {
+                        Amount_txtBox.IsEnabled = false;
+                    }
+                }
+                if (a_dt.Rows[0]["Outcome"] != DBNull.Value)
+                {
+                    ReturnedAmount_txtBox.Text = string.Format("{0:N2}", a_dt.Rows[0].Field<Double>("Outcome"));
+                    if (ReturnedAmount_txtBox.Text == "0.00")
+                    {
+                        ReturnedAmount_txtBox.IsEnabled = false;
+                    }
                 }
 
                 if (a_dt.Rows[0]["Note"] != DBNull.Value)
@@ -414,13 +427,13 @@ namespace Financial_WPF_App.Views
                 {
                     if (Approved_Action)
                     {
-                        p.Update_Payment(Action_ID, Till_ID, amount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
+                        p.Update_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
                         MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         this.Close();
                     }
                     else
                     {
-                        p.Update_Not_Approved_Payment(Action_ID, Till_ID, amount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
+                        p.Update_Not_Approved_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
                         MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         this.Close();
                     }

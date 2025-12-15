@@ -69,6 +69,15 @@
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount returned:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ReturnedAmount_textBlock"
+Text="0.00"
+Style="{DynamicResource statistic_textBlockStyle}" 
+OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
                             <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
                                 <TextBlock x:Name="RemainingAmount_textBlock"
@@ -95,7 +104,13 @@
                         Style="{DynamicResource statistic_textBlockStyle}" FontSize="15" SizeChanged="Amount_textBlock_SizeChanged" />
                             </Border>
                         </StackPanel>
-
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount returned:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}" >
+                                <TextBlock x:Name="ReturnedAmount_textBlock1" Text="0.00" 
+ Style="{DynamicResource statistic_textBlockStyle}" FontSize="15" />
+                            </Border>
+                        </StackPanel>
                     </WrapPanel>
                 </Border>
                 <Grid Grid.Row="2" Margin="0,5,0,5">
@@ -319,6 +334,11 @@
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
                     NumberGroupSeparator=","/>
+                            <syncfusion:GridNumericColumn  HeaderText="Returned amount"  MappingName="Outcome"
+NumberDecimalDigits="2"
+NumberDecimalSeparator="."
+NumberGroupSizes="3"
+NumberGroupSeparator=","/>
                             <syncfusion:GridTextColumn MappingName="MicroProject_ID" HeaderText="Micro Project number"/>
                             <syncfusion:GridTextColumn MappingName="Name" HeaderText="Beneficiary Name"/>
                             <syncfusion:GridTextColumn MappingName="beneficiary_ID" HeaderText="beneficiary_ID" IsHidden="True"/>

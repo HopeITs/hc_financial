@@ -92,7 +92,7 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',
-                 action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType', action.`Amount` AS 'Income', action.`note` as 'Note',
+                 action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType', action.`Amount` AS 'Income',action.`Returned_Amount` AS 'Outcome', action.`note` as 'Note',
                  action.`MicroProject_ID` ,action.`ActionDate`, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear', 
                  action.`IsApproved`, approved_byuser.`Username` as 'approved_by', action.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  action.`cashaccount_id` as 'cashaccount_id', cashaccount.`name` as 'cashaccount_name',
@@ -172,7 +172,7 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',
-                 action_not_approved.`ID` as 'ID' ,action_not_approved.`Till_ID`, actiontype.`Name` as 'AType', action_not_approved.`Amount` AS 'Income', action_not_approved.`note` as 'Note',
+                 action_not_approved.`ID` as 'ID' ,action_not_approved.`Till_ID`, actiontype.`Name` as 'AType', action_not_approved.`Amount` AS 'Income',action_not_approved.`Returned_Amount` AS 'Outcome', action_not_approved.`note` as 'Note',
                  action_not_approved.`MicroProject_ID` ,action_not_approved.`ActionDate`, DATE_FORMAT(action_not_approved.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action_not_approved.ActionDate, ""%Y"") as 'ActionYear', 
                  action_not_approved.`IsApproved`, approved_byuser.`Username` as 'approved_by', action_not_approved.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  action_not_approved.`cashaccount_id` as 'cashaccount_id', cashaccount.`name` as 'cashaccount_name',
@@ -261,7 +261,7 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',
-                 action_deleted.`ID` as 'ID' ,action_deleted.`Till_ID`, actiontype.`Name` as 'AType', action_deleted.`Amount` AS 'Income', action_deleted.`note` as 'Note',
+                 action_deleted.`ID` as 'ID' ,action_deleted.`Till_ID`, actiontype.`Name` as 'AType', action_deleted.`Amount` AS 'Income', action_deleted.`Returned_Amount` AS 'Outcome', action_deleted.`note` as 'Note',
                  action_deleted.`MicroProject_ID` ,action_deleted.`ActionDate`, DATE_FORMAT(action_deleted.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action_deleted.ActionDate, ""%Y"") as 'ActionYear', 
                  action_deleted.`IsApproved`, approved_byuser.`Username` as 'approved_by', action_deleted.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  deleted_byuser.username as 'deleted_by', action_deleted.`deleted_at` as 'deleted_at',
@@ -363,7 +363,6 @@ namespace Financial_WPF_App.Models
                 sc.Connection = Login.MyConn;
                 sc.CommandTimeout = 120;
 
-                // --- base parameters (kept for use in inline SELECTs) ---
                 sc.Parameters.Clear();
                 sc.Parameters.AddWithValue("@MicroProject_ID", MicroProject_ID == -1 ? (object)DBNull.Value : MicroProject_ID);
                 sc.Parameters.AddWithValue("@SubProject_ID", SubProject_ID == -1 ? (object)DBNull.Value : SubProject_ID);
@@ -376,7 +375,6 @@ namespace Financial_WPF_App.Models
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 sc.Parameters.AddWithValue("@Todaydate", Todaydate);
 
-                // ---------- get Till_ID (exactly as you used) ----------
                 sc.CommandText = "SELECT DISTINCT till.ID " +
                                  "FROM account " +
                                  "LEFT JOIN till ON till.Account_ID = account.ID " +
@@ -399,7 +397,6 @@ namespace Financial_WPF_App.Models
                 }
                 int tillID = Convert.ToInt32(tillObj);
 
-                // ---------- compute starting actionID (numeric) ----------
                 sc.CommandText = "SELECT IFNULL(MAX(x.max_id),0) + 1 " +
                                  "FROM (SELECT MAX(ID) AS max_id FROM action " +
                                  "      UNION ALL SELECT MAX(ID) FROM action_not_approved " +
@@ -407,11 +404,9 @@ namespace Financial_WPF_App.Models
                 object aObj = sc.ExecuteScalar();
                 int actionID = (aObj == DBNull.Value || aObj == null) ? 1 : Convert.ToInt32(aObj);
 
-                // We'll build one big query string composed of plain INSERT/UPDATE statements
                 string sql = "";
                 int numofinserts = 0;
 
-                // ---------------------------- REFUND PATH ----------------------------
                 if (Returned_Amount > 0 && Amount == 0)
                 {
                     double remainingRefund = Returned_Amount;
@@ -461,7 +456,7 @@ namespace Financial_WPF_App.Models
                         double sumReturn = Convert.ToDouble(r["SumReturn"]);
                         double netPaid = sumIncome - sumReturn; // current net paid on this payment
 
-                        if (netPaid <= 0) continue; // nothing to refund here
+                        if (netPaid <= 0) continue; // nothing to refund
 
                         double apply = Math.Min(remainingRefund, netPaid);
 
@@ -480,12 +475,10 @@ namespace Financial_WPF_App.Models
                     }
                     sql += "COMMIT;";
 
-                    // execute
                     sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
                     sc.Parameters.AddWithValue("@t", 600);
                     sc.ExecuteNonQuery();
 
-                    // logging: one log per inserted action (same style as you had)
                     int firstInsertedActionId = actionID - numofinserts;
                     string escapedQuery = Regex.Replace(sql, "'", "''");
                     for (int i = 0; i < numofinserts; i++)
@@ -506,9 +499,8 @@ namespace Financial_WPF_App.Models
                     resCmd.ExecuteNonQuery();
                     Login.CloseAndClearConnection();
                     return;
-                } // end refund
+                }
 
-                // ---------------------------- INCOME PATH ----------------------------
                 if (Amount > 0 && Returned_Amount == 0)
                 {
                     // 1) Get payments that are not fully paid (netPaid < scheduled Amount), ordered by Num ASC (fill earliest unpaid first)
@@ -526,7 +518,6 @@ namespace Financial_WPF_App.Models
                         da.Fill(payDT);
                     }
 
-                    // Build SQL for inserts
                     sql = "START TRANSACTION;";
                     foreach (DataRow r in payDT.Rows)
                     {
@@ -572,7 +563,7 @@ namespace Financial_WPF_App.Models
 
                         // get payment interval and default payment size from beneficiary if needed
                         sc.CommandText = "SELECT IFNULL(Payment_Interval,1) AS Payment_Interval, IFNULL(Payment,0) AS Payment FROM beneficiary WHERE ID = (SELECT MicroProject_ID FROM beneficiary WHERE ID = @Beneficiary_ID LIMIT 1) LIMIT 1;";
-                        // Note: above SELECT is conservative; adjust if beneficiary table schema differs. We'll default to 1 month.
+                       
                         int paymentInterval = 1;
                         double paymentSizeFallback = 0;
                         try
@@ -622,12 +613,10 @@ namespace Financial_WPF_App.Models
 
                     sql += "COMMIT;";
 
-                    // execute
                     sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
                     sc.Parameters.AddWithValue("@t", 600);
                     sc.ExecuteNonQuery();
 
-                    // logging similar to your previous style
                     int firstInsertedActionIdLog = actionID - numofinserts;
                     string escapedSql = Regex.Replace(sql, "'", "''");
                     for (int i = 0; i < numofinserts; i++)
@@ -643,15 +632,14 @@ namespace Financial_WPF_App.Models
 
                     Login.CloseAndClearConnection();
                     return;
-                } // end income
+                }
 
-                // nothing done
                 Login.CloseAndClearConnection();
                 throw new Exception("Please enter either Amount (income) or Returned Amount (refund), not both or none.");
             }
         }
 
-        public void Update_Payment(int Action_ID, int Till_ID, Double Amount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, string Form_Name)
+        public void Update_Payment(int Action_ID, int Till_ID, Double Amount, Double ReturnedAmount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, string Form_Name)
         {
             string query = "";
             string log_query = "";
@@ -663,6 +651,7 @@ namespace Financial_WPF_App.Models
                 sc.Parameters.AddWithValue("@Till_ID", Till_ID);
 
                 sc.Parameters.AddWithValue("@Amount", Amount);
+                sc.Parameters.AddWithValue("@ReturnedAmount", ReturnedAmount);
 
                 if (Date == "Null")
                 {
@@ -693,7 +682,7 @@ namespace Financial_WPF_App.Models
 
                 query = "START TRANSACTION;";
 
-                query += @"UPDATE`action` SET `Amount` = @Amount,
+                query += @"UPDATE`action` SET `Amount` = @Amount,`Returned_Amount` = @ReturnedAmount,
                             `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id =@CashAccount_ID , updated_at =  @Todaydate, `edited_by` = @Uesr_ID  
                             WHERE action.ID = @Action_ID;";
 
@@ -737,7 +726,7 @@ namespace Financial_WPF_App.Models
             }
         }
 
-        public void Update_Not_Approved_Payment(int Action_ID, int Till_ID, Double Amount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, string Form_Name)
+        public void Update_Not_Approved_Payment(int Action_ID, int Till_ID, Double Amount, Double ReturnedAmount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, string Form_Name)
         {
             string query = "";
             string log_query = "";
