@@ -925,8 +925,9 @@ namespace Financial_WPF_App.Models
                             VALUES (@Action_ID, @Till_ID ,@ObserveTill_ID, (select id from actiontype where shortname = @AType), @Currency_tilltype_id, @Amount, @rate, @ActionDate, @Note,@E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @Rate_ID, 
                             @MicroProject_ID, @BudgetLine_ID, @IncomeType_ID, @CashAccount_ID, @ObserveCashAccount_ID, @Exchange_Cash_ID, @Donor_ID, @Todaydate, @Uesr_ID, '1');";
 
+                bool isUsdExpenseFromSyr = AType == "E" && Till_Type.ToLower() == "syr" && Currency_tilltype_id == 2 && !WithExAcc;
 
-                if (WithObserveAcion_ID)
+                if (WithObserveAcion_ID && !isUsdExpenseFromSyr)
                 {
                     query += @" INSERT INTO `action_not_approved`(`Till_ID`,`ObserveTill_ID`, `ObserveAcion_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
                             , `Note`,`E_Note`, `IsReceipt`,`Employee_Salary_ID`, `ReceiptNote`, `CashAccount_ID`,`ObserveCashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
@@ -936,7 +937,9 @@ namespace Financial_WPF_App.Models
 
                     query += " UPDATE action_not_approved SET ObserveAcion_ID = @ObserveAcion_ID WHERE ID = @Action_ID;";
 
-                    if (WithExAcc)
+                }  
+
+                    if (WithObserveAcion_ID && WithExAcc)
                     {
                         query += " Set @From_id = (select till.id from till left join account on till.account_id = account.id left join tilltypes on tilltypes.id = till.type_id where account.id = @ExchangeAcc_ID and tilltypes.name = @Till_Type);";
                         query += " Set @To_id = (select till.id from till left join account on till.account_id = account.id left join tilltypes on tilltypes.id = till.type_id where account.id = @ExchangeAcc_ID and tilltypes.name = @ObserveTill_Type);";
@@ -953,7 +956,25 @@ namespace Financial_WPF_App.Models
 
                         query += " SET @ToExTill_Acc_ID = Last_Insert_ID();";
                     }
-                }
+
+                    else if (WithObserveAcion_ID && isUsdExpenseFromSyr)
+                    {
+                        //  Outcome من USD till
+                        query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, Amount, rate, ActionDate, Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote,
+                                 CashAccount_ID, Donor_ID, created_at, User_ID, SourceAction) VALUES (@ObserveTill_ID, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'O'), @Amount, @rate, @ActionDate,
+                                @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @CashAccount_ID, @Donor_ID, @Todaydate, @Uesr_ID, '0'); ";
+
+                        query += " SET @UsdOutcome_ID = Last_Insert_ID(); ";
+
+                        // Income على SYR till بعملة USD
+                        query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, currency_tilltype_id, Amount, rate, ActionDate,  Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote,
+                                 CashAccount_ID, Donor_ID, created_at, User_ID, SourceAction) VALUES (@Till_ID, @ObserveTill_ID, @Action_ID, (select id from actiontype where shortname = 'I'),@Currency_tilltype_id, @Amount, @rate, @ActionDate,
+                                 @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote,@CashAccount_ID, @Donor_ID, @Todaydate, @Uesr_ID, '0');";
+
+                        query += " SET @SyrIncome_ID = Last_Insert_ID(); ";
+                    }  
+
+                
 
                 log_query = Regex.Replace(query, "'", "''");
 
@@ -964,7 +985,7 @@ namespace Financial_WPF_App.Models
 
                 query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'INSERT', 'action_not_approved', @Action_ID, CONCAT('action Type = ', @AType), CONCAT('till ID = ',@Till_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
-                if (WithObserveAcion_ID)
+                if (WithObserveAcion_ID && !isUsdExpenseFromSyr)
                 {
                     query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'INSERT', 'action_not_approved', @ObserveAcion_ID, 'action Type = I', CONCAT('till ID = ', @ObserveTill_ID ,' - Auto Created With action ID = ',@Action_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     if (WithExAcc)
@@ -972,6 +993,14 @@ namespace Financial_WPF_App.Models
                         query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'INSERT', 'action_not_approved', @FromExTill_Acc_ID, 'action Type = I', CONCAT('till ID = ', @From_id ,' - Auto Created With action ID = ',@Action_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                         query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'INSERT', 'action_not_approved', @ToExTill_Acc_ID, 'action Type = E', CONCAT('till ID = ', @To_id ,' - Auto Created With action ID = ',@Action_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     }
+                }
+                if (WithObserveAcion_ID && isUsdExpenseFromSyr)
+                {
+                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
+                             " VALUES (@Form_Name, 'INSERT', 'action_not_approved', @UsdOutcome_ID, 'action Type = O', CONCAT('till ID = ', @ObserveTill_ID ,' - Linked to action ID = ',@Action_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+                    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
+                             " VALUES (@Form_Name, 'INSERT', 'action_not_approved', @SyrIncome_ID, 'action Type = I', CONCAT('till ID = ', @Till_ID ,' - Linked to action ID = ',@Action_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                 }
 
                 query += " SELECT @Action_ID;";

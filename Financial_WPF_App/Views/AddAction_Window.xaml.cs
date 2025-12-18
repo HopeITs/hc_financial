@@ -3508,75 +3508,100 @@ namespace Financial_WPF_App
                             return;
                         }
 
-                        int outcomeId = a.Insert(
-                            usdTillId, "usd",
-                            -1, "",
-                            Donor_ID, -1,
-                            false, false, false,
-                            "O",
-                            amount, rate, ActionDate,
-                            Notes, E_Notes, IsReceipt, ReceiptNum,
-                            Employee_Salary_ID,
-                            OriginalRate_ID,
-                            MicroProject_ID,
-                            budget_line_ID,
-                            -1,
-                            CashAccount_ID,
-                            ObserveCashAccount_ID,
-                            ExchangeCash_ID,
-                            -1,
-                            "AddAction_Window" , 2
-                        );
+                     int expenseId= a.Insert(
+                    Till_ID, "syr",
+                      usdTillId, "usd",
+    Donor_ID, -1,
+    true,      // WithObserveAcion_ID
+    false,     // WithExAcc
+    true,
+    "E",
+    amount,
+    rate,
+    ActionDate,
+    Notes, E_Notes, IsReceipt, ReceiptNum,
+    Employee_Salary_ID,
+    OriginalRate_ID,
+    MicroProject_ID,
+    budget_line_ID,
+    -1,
+    CashAccount_ID,
+    ObserveCashAccount_ID,
+    ExchangeCash_ID,
+    -1,
+    "AddAction_Window",
+    2   // USD
+);
 
-                        // ========== (2) Income على SYP till ==========
-                        int incomeId = a.Insert(
-                            Till_ID, TillType,
-                            usdTillId, "usd",
-                            Donor_ID, -1,
-                            false, false, false,
-                            "I",
-                            amount, rate, ActionDate,
-                            Notes, E_Notes, IsReceipt, ReceiptNum,
-                            Employee_Salary_ID,
-                            OriginalRate_ID,
-                            MicroProject_ID,
-                            budget_line_ID,
-                            -1,
-                            CashAccount_ID,
-                            ObserveCashAccount_ID,
-                            ExchangeCash_ID,
-                            -1,
-                            "AddAction_Window" ,2
-                        );
+                        //int outcomeId = a.Insert(
+                        //    usdTillId, "usd",
+                        //    -1, "",
+                        //    Donor_ID, -1,
+                        //    false, false, false,
+                        //    "O",
+                        //    amount, rate, ActionDate,
+                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
+                        //    Employee_Salary_ID,
+                        //    OriginalRate_ID,
+                        //    MicroProject_ID,
+                        //    budget_line_ID,
+                        //    -1,
+                        //    CashAccount_ID,
+                        //    ObserveCashAccount_ID,
+                        //    ExchangeCash_ID,
+                        //    -1,
+                        //    "AddAction_Window" , 2
+                        //);
 
-                        // ========== (3) Expense على SYP till ==========
-                        int expenseId = a.Insert(
-                            Till_ID, TillType,
-                            Till_ID, TillType,
-                            Donor_ID, -1,
-                            false, false, false,
-                            "E",
-                            amount, rate, ActionDate,
-                            Notes, E_Notes, IsReceipt, ReceiptNum,
-                            Employee_Salary_ID,
-                            OriginalRate_ID,
-                            MicroProject_ID,
-                            budget_line_ID,
-                            -1,
-                            CashAccount_ID,
-                            ObserveCashAccount_ID,
-                            ExchangeCash_ID,
-                            -1,
-                            "AddAction_Window" , 2
-                        );
+                        //// ========== (2) Income على SYP till ==========
+                        //int incomeId = a.Insert(
+                        //    Till_ID, TillType,
+                        //    usdTillId, "usd",
+                        //    Donor_ID, -1,
+                        //    false, false, false,
+                        //    "I",
+                        //    amount, rate, ActionDate,
+                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
+                        //    Employee_Salary_ID,
+                        //    OriginalRate_ID,
+                        //    MicroProject_ID,
+                        //    budget_line_ID,
+                        //    -1,
+                        //    CashAccount_ID,
+                        //    ObserveCashAccount_ID,
+                        //    ExchangeCash_ID,
+                        //    -1,
+                        //    "AddAction_Window" ,2
+                        //);
 
-                        MessageBox.Show("Three USD-expense transactions have been successfully recorded");
-                        
-                   
+                        //// ========== (3) Expense على SYP till ==========
+                        //int expenseId = a.Insert(
+                        //    Till_ID, TillType,
+                        //    Till_ID, TillType,
+                        //    Donor_ID, -1,
+                        //    false, false, false,
+                        //    "E",
+                        //    amount, rate, ActionDate,
+                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
+                        //    Employee_Salary_ID,
+                        //    OriginalRate_ID,
+                        //    MicroProject_ID,
+                        //    budget_line_ID,
+                        //    -1,
+                        //    CashAccount_ID,
+                        //    ObserveCashAccount_ID,
+                        //    ExchangeCash_ID,
+                        //    -1,
+                        //    "AddAction_Window" , 2
+                        //);
+
+                        //MessageBox.Show("Three USD-expense transactions have been successfully recorded");
 
 
-                   
-                    int success = 0;
+
+
+
+                        int success = 0;
                         if (FullAttachNames != null && FullAttachNames.Length > 0)
                         {
                             foreach (var FullAttachName in FullAttachNames)
