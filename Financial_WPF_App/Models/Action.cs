@@ -1304,7 +1304,9 @@ namespace Financial_WPF_App.Models
                     " ,`Donor_ID`= @Donor_ID" +
                     " ,`updated_at` = @Todaydate, `edited_by` = @Uesr_ID  WHERE ID = @Action_ID;";
 
-                if (WithObserveAcion_ID)
+                bool isUsdExpenseFromSyr = AType == "E" && !string.IsNullOrEmpty(Till_Type) && Till_Type.ToLower() == "syr" && !string.IsNullOrEmpty(ObserveTill_Type) && ObserveTill_Type.ToLower() == "usd" && !WithExAcc;
+
+                if (WithObserveAcion_ID && !isUsdExpenseFromSyr)
                 {
                     query += @" SET @ObserveAcion_ID = (SELECT ObserveAcion_ID FROM action WHERE action.ID = @Action_ID);";
 
@@ -1332,6 +1334,13 @@ namespace Financial_WPF_App.Models
                                 updated_at= @Todaydate, `edited_by` = @Uesr_ID  WHERE action.ID = @ToExTill_Acc_ID;";
                     }
                 }
+
+                if (WithObserveAcion_ID && isUsdExpenseFromSyr)
+                {
+                    query += @" UPDATE action SET Amount = @ConvertedAmount, rate = @rate, ActionDate = @ActionDate, Note = @Note  E_Note = @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID
+                             , Donor_ID = @Donor_ID, updated_at = @Todaydate,  edited_by = @Uesr_ID  WHERE action.ObserveAcion_ID = @Action_ID;";
+                }
+
 
                 query += "UPDATE `action` SET " +
                         " `IsApproved`= 0" +

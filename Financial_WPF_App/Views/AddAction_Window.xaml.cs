@@ -3430,8 +3430,10 @@ namespace Financial_WPF_App
 
                 if (Action_ID != -1)//Edit
                 {
+                    bool isUsdExpenseEdit = inserted_value == "E" && !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr" && currency_comboBox.SelectedValue != null && Convert.ToInt32(currency_comboBox.SelectedValue) == 2;
                     if (Approved_Action)
                     {
+                        
                         if (inserted_value == "Ex" || inserted_value == "M")
                         {
                             a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
@@ -3440,7 +3442,8 @@ namespace Financial_WPF_App
                         }
                         else
                         {
-                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
+    
+                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
                             , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
                                 , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
                         }
@@ -3455,7 +3458,7 @@ namespace Financial_WPF_App
                         }
                         else
                         {
-                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
+                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
                             , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
                                 , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
                         }
@@ -3500,7 +3503,6 @@ namespace Financial_WPF_App
                   
                     if (_isSpecialCase)
                     {
-                        // ========== (1) Outcome من USD till ==========
                         int usdTillId = GetUsdTillIdForCurrentAccount();
                         if (usdTillId == -1)
                         {
@@ -3508,30 +3510,8 @@ namespace Financial_WPF_App
                             return;
                         }
 
-                     int expenseId= a.Insert(
-                    Till_ID, "syr",
-                      usdTillId, "usd",
-    Donor_ID, -1,
-    true,      // WithObserveAcion_ID
-    false,     // WithExAcc
-    true,
-    "E",
-    amount,
-    rate,
-    ActionDate,
-    Notes, E_Notes, IsReceipt, ReceiptNum,
-    Employee_Salary_ID,
-    OriginalRate_ID,
-    MicroProject_ID,
-    budget_line_ID,
-    -1,
-    CashAccount_ID,
-    ObserveCashAccount_ID,
-    ExchangeCash_ID,
-    -1,
-    "AddAction_Window",
-    2   // USD
-);
+                     int expenseId  = a.Insert( Till_ID, "syr", usdTillId, "usd", Donor_ID, -1, true, false, true, "E", amount, rate, ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum,
+                                                Employee_Salary_ID, OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", 2 );
 
                         //int outcomeId = a.Insert(
                         //    usdTillId, "usd",
