@@ -171,9 +171,14 @@ namespace Financial_WPF_App.Views
                 Amount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amount)", string.Empty).ToString());
                 ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amount)", string.Empty).ToString());
                 PaidAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamount)", string.Empty).ToString());
+                ReturnedAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(returnedamount)", string.Empty).ToString());
                 if (PaidAmount_textBlock.Text == "")
                 {
                     PaidAmount_textBlock.Text = "0.00";
+                }
+                if (ReturnedAmount_textBlock.Text == "")
+                {
+                    ReturnedAmount_textBlock.Text = "0.00";
                 }
                 RemainingAmount_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmount_textBlock.Text) - double.Parse(PaidAmount_textBlock.Text)).ToString());
             }
@@ -1026,6 +1031,7 @@ namespace Financial_WPF_App.Views
                 Selected_textBlock.Text = count.ToString("N0");
 
                 double selected_amount = 0;
+                double selected_returned = 0;
                 for (var i = 0; i < count; i++)
                 {
                     DataRowView SelectedDataRow = (DataRowView)myDataGrid.SelectedItems[i];
@@ -1033,8 +1039,13 @@ namespace Financial_WPF_App.Views
                     {
                         selected_amount += double.Parse(SelectedDataRow["Income"].ToString());
                     }
+                    if (double.Parse(SelectedDataRow["Outcome"].ToString()) != 0)
+                    {
+                        selected_returned += double.Parse(SelectedDataRow["Outcome"].ToString());
+                    }
                 }
                 PaidAmount_textBlock1.Text = selected_amount.ToString("N2");
+                ReturnedAmount_textBlock1.Text = selected_returned.ToString("N2");
             }
             catch (Exception ex)
             {
