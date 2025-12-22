@@ -40,10 +40,24 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        public Attachments(int Account_ID)
+        {
+            InitializeComponent();
+            this.Account_ID = Account_ID;
+            if (OnLoad())
+            {
+
+            }
+            else
+            {
+                throw new ArgumentException("This page will not open due to data fetching error.");
+            }
+        }
 
         Document d;
+        Account a;
         DataTable attachments_dt = new DataTable();
-        int Action_ID; int Beneficiary_ID;
+        int Action_ID; int Beneficiary_ID, Account_ID;
         private string Account_Type; private string Category;
         private OpenFileDialog open;
         private string[] FullAttachNames;
@@ -169,23 +183,42 @@ namespace Financial_WPF_App.Views
 
         private void Load_Data()
         {
-
-            attachments_dt = d.GetAttachmentsNames(Action_ID, Beneficiary_ID);
-            if (attachments_dt != null && attachments_dt.Rows.Count > 0)
+            if (Account_ID != null)
             {
-                myDataGrid.ItemsSource = attachments_dt.DefaultView;
+                attachments_dt = a.get_attachments(Account_ID);
+                if (attachments_dt != null && attachments_dt.Rows.Count > 0)
+                {
+                    myDataGrid.ItemsSource = attachments_dt.DefaultView;
+                }
+                else
+                {
+                    myDataGrid.ItemsSource = null;
+                }
+
+                if (myDataGrid.View != null)
+                {
+                    int count = myDataGrid.View.Records.Count();
+                    All_Label.Content = count.ToString("N0");
+                }
             }
             else
             {
-                myDataGrid.ItemsSource = null;
-            }
+                attachments_dt = d.GetAttachmentsNames(Action_ID, Beneficiary_ID);
+                if (attachments_dt != null && attachments_dt.Rows.Count > 0)
+                {
+                    myDataGrid.ItemsSource = attachments_dt.DefaultView;
+                }
+                else
+                {
+                    myDataGrid.ItemsSource = null;
+                }
 
-            if (myDataGrid.View != null)
-            {
-                int count = myDataGrid.View.Records.Count();
-                All_Label.Content = count.ToString("N0");
+                if (myDataGrid.View != null)
+                {
+                    int count = myDataGrid.View.Records.Count();
+                    All_Label.Content = count.ToString("N0");
+                }
             }
-
         }
 
         private void View_Button_Click(object sender, RoutedEventArgs e)

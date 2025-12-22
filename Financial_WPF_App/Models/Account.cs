@@ -485,9 +485,39 @@ namespace Financial_WPF_App.Models
             return Account_ID;
         }
 
+        public DataTable get_attachments(int? Account_ID)
+        {
+            string query = "";
+
+            query = @"SELECT COUNT(action_attachments.`id`) as 'attachments' ,account.Name as 'account name' 
+                      FROM `action_attachments` 
+                      LEFT JOIN action on action.ID = action_attachments.action_id
+                      LEFT JOIN till on till.ID = action.Till_ID
+                      LEFT JOIN account on account.ID = till.Account_ID";
+
+            if (Account_ID != null)
+            {
+                query += " where account.id = @Account_ID";
+            }
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
 
 
-     
         public DataTable Select_Accounts_By_Subproject_And_TillType(
             string tillName,
             int subprojectId,
