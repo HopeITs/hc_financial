@@ -78,12 +78,12 @@ namespace Financial_WPF_App.Models
         public static void Set_ConnectionString(bool status)
         {
             //Should Change Before Publishing
-            test_database = "hcsyria_financial_test"; 
+            test_database = "hcsyria_financial"; 
             onlineserver  = "45.9.62.87";             
             string localserver = "localhost";         
 
             ConStr_Online = @"Server=" + onlineserver + ";Port=3306;Database=" + test_database +
-                            ";Uid=hcfi;Password=password@11;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
+                            ";Uid=hcfinancial;Password=Center2018Hope;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
             ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
                          ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";

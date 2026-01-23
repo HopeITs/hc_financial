@@ -137,7 +137,7 @@ namespace Financial_WPF_App.Helper
         {
             string Last_Column_Name = e.Row.Table.Columns[e.Row.Table.Columns.Count - 1].ColumnName;
 
-            if (e.Column.ColumnName == "Project Number")
+            if (e.Column.ColumnName == "Micro Project Number")
             {
                 bool isNumber = Int32.TryParse(e.ProposedValue.ToString(), out _MicroProject_ID);
                 bool Alreadyexists = false; bool isDuplicated = false;
