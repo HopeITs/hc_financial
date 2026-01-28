@@ -48,7 +48,7 @@ namespace Financial_WPF_App
             }
         }
 
-        public AddAction_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int Till_ID, string TillType, int Action_ID, int SubProject_ID, bool FromTillForm, bool Approved_Action, Main_Window_2 main_Window, Till_Window TW)
+        public AddAction_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int Till_ID, string TillType, int Action_ID, int SubProject_ID,  bool FromTillForm, bool Approved_Action, Main_Window_2 main_Window, Till_Window TW)
         {
             InitializeComponent();
             this.main_Window = main_Window;
@@ -95,7 +95,7 @@ namespace Financial_WPF_App
         }
 
 
-        int Action_ID, Account_ID, Till_ID, SubProject_ID;
+        int Action_ID, Account_ID, Till_ID, SubProject_ID ;
         string Account_Name; bool FromTillForm;
         string Account_Type; string Category;
         Till t;
@@ -315,6 +315,7 @@ namespace Financial_WPF_App
                 DestinationTill_comboBox.IsEnabled = false;
                 ExchangeAcc_comboBox.IsEnabled = false;
                 ExchangeCash_comboBox.IsEnabled = false;
+                currency_comboBox.IsEnabled = false;
                 DestinationTill_clear_btn.IsEnabled = ExchangeAcc_clear_btn.IsEnabled = ExchangeCash_clear_btn.IsEnabled = false;
 
                 if (Type_ComboBox_Exchange_Item.IsSelected)
@@ -1839,26 +1840,35 @@ namespace Financial_WPF_App
                     Type_comboBox.SelectedIndex = 0; //وارد
                     //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Income"));
                     Amount_txtBox.Text = dt.Rows[0].Field<Double>("Income").ToString();
+                    currency_comboBox.SelectedIndex = 0;
+                }
+
+            if (dt.Rows[0]["Incomeusd"] != DBNull.Value)
+                if (dt.Rows[0].Field<Double>("Incomeusd") != 0)
+                {
+                    Type_comboBox.SelectedIndex = 0; //وارد
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Incomeusd"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Incomeusd").ToString();
+                    currency_comboBox.SelectedIndex = 1;
                 }
 
             if (dt.Rows[0]["Outcome"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Outcome") != 0)
                 {
-                    Type_comboBox.SelectedIndex = 1; //سلفة
+                    Type_comboBox.SelectedIndex = 1; //سلفة أو TRANSFER
                     //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Outcome"));
                     Amount_txtBox.Text = dt.Rows[0].Field<Double>("Outcome").ToString();
 
                 }
 
-            if (dt.Rows[0]["Returned"] != DBNull.Value)
-                if (dt.Rows[0].Field<Double>("Returned") != 0)
-                {
-                    Type_comboBox.SelectedIndex = 2; //مرتجع
-                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Returned"));
-                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Returned").ToString();
+            //if (dt.Rows[0]["Returned"] != DBNull.Value)
+            //    if (dt.Rows[0].Field<Double>("Returned") != 0)
+            //    {
+            //        Type_comboBox.SelectedIndex = 2; //مرتجع
+            //        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Returned"));
+            //        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Returned").ToString();
+            //      }
 
-
-                }
             if (dt.Rows[0]["Exchange"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Exchange") != 0)
                 {
@@ -1868,25 +1878,43 @@ namespace Financial_WPF_App
 
 
                 }
+            //if (dt.Rows[0]["Expand"] != DBNull.Value)
+            //    if (dt.Rows[0].Field<Double>("Expand") != 0)
+            //    {
+            //        if (dt.Rows[0]["ObserveAcion_ID"] != DBNull.Value)
+            //        {
+            //            Type_comboBox.SelectedIndex = 5; //نقل
+            //            //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+            //            Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+
+            //        }
+            //        else
+            //        {
+            //            Type_comboBox.SelectedIndex = 4; //فاتورة
+            //            //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+            //            Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+
+            //        }
+
+            //    }
             if (dt.Rows[0]["Expand"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Expand") != 0)
                 {
-                    if (dt.Rows[0]["ObserveAcion_ID"] != DBNull.Value)
-                    {
-                        Type_comboBox.SelectedIndex = 5; //نقل
-                        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
-                        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
-
-                    }
-                    else
-                    {
-                        Type_comboBox.SelectedIndex = 4; //فاتورة
-                        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
-                        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
-
-                    }
-
+                    Type_comboBox.SelectedIndex = 4; //فاتورة
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+                    currency_comboBox.SelectedIndex = 0;
                 }
+
+            if (dt.Rows[0]["Expandusd"] != DBNull.Value)
+                if (dt.Rows[0].Field<Double>("Expandusd") != 0)
+                {
+                    Type_comboBox.SelectedIndex = 4; //فاتورة
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expandusd"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expandusd").ToString();
+                    currency_comboBox.SelectedIndex = 1;
+                }
+
             UserMode = true;
             ActionDate_datepicker.SelectedDate = Convert.ToDateTime(dt.Rows[0].Field<DateTime>("ActionDate").ToString());
             UserMode = false;

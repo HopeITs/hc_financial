@@ -986,7 +986,7 @@ namespace Financial_WPF_App.Views
                     {
                         Approved_Action = true;
                     }
-                    AddAction_Window _Window = new AddAction_Window(Account_ID, IsAdminAccount, Account_Name, Account_Type, Category, Till_ID, TillType_Name, Action_ID, SubProject_ID, true, Approved_Action, main_Window, this);
+                    AddAction_Window _Window = new AddAction_Window(Account_ID, IsAdminAccount, Account_Name, Account_Type, Category, Till_ID, TillType_Name, Action_ID, SubProject_ID,  true, Approved_Action, main_Window, this);
 
                     _Window.ShowDialog();
                 }
