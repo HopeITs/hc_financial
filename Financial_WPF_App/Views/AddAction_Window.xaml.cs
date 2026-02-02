@@ -3458,7 +3458,8 @@ namespace Financial_WPF_App
 
                 if (Action_ID != -1)//Edit
                 {
-                    bool isUsdExpenseEdit = inserted_value == "E" && !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr" && currency_comboBox.SelectedValue != null && Convert.ToInt32(currency_comboBox.SelectedValue) == 2;
+                    int selectedCurrencyID = (int)currency_comboBox.SelectedValue;
+                    bool isUsdExpenseEdit = inserted_value == "E" && !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr" && selectedCurrencyID == 2;
                     if (Approved_Action)
                     {
                         
@@ -3466,14 +3467,14 @@ namespace Financial_WPF_App
                         {
                             a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
                                 , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window" , selectedCurrencyID);
                         }
                         else
                         {
     
                             a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
                             , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window" , selectedCurrencyID); ;
                         }
                     }
                     else

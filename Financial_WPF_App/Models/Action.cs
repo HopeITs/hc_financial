@@ -1129,7 +1129,7 @@ namespace Financial_WPF_App.Models
 
         public void Update(int Action_ID, string AType, int Till_ID, string Till_Type, int ObserveTill_ID, string ObserveTill_Type, int Donor_ID, int ExchangeAcc_ID, bool WithObserveAcion_ID, bool WithExAcc, bool WithExchangeRate, Double Amount, Double rate
             , string ActionDate, string Note, string E_Note, int IsReceipt, string ReceiptNote, int Employee_Salary_ID, int Rate_ID
-            , int MicroProject_ID, int BudgetLine_ID, int IncomeType_ID, int CashAccount_ID, int ObserveCashAccount_ID, int Exchange_Cash_ID, int Account_ID, string Form_Name)
+            , int MicroProject_ID, int BudgetLine_ID, int IncomeType_ID, int CashAccount_ID, int ObserveCashAccount_ID, int Exchange_Cash_ID, int Account_ID, string Form_Name, int Currency_tilltype_id)
         {
             string query = "";
             string log_query = "";
@@ -1304,7 +1304,7 @@ namespace Financial_WPF_App.Models
                     " ,`Donor_ID`= @Donor_ID" +
                     " ,`updated_at` = @Todaydate, `edited_by` = @Uesr_ID  WHERE ID = @Action_ID;";
 
-                bool isUsdExpenseFromSyr = AType == "E" && !string.IsNullOrEmpty(Till_Type) && Till_Type.ToLower() == "syr" && !string.IsNullOrEmpty(ObserveTill_Type) && ObserveTill_Type.ToLower() == "usd" && !WithExAcc;
+                bool isUsdExpenseFromSyr = AType == "E" && Till_Type.ToLower() == "syr" && Currency_tilltype_id == 2 && !WithExAcc;
 
                 if (WithObserveAcion_ID && !isUsdExpenseFromSyr)
                 {
@@ -1319,7 +1319,7 @@ namespace Financial_WPF_App.Models
                     }
 
                     query += @" UPDATE action SET 
-                                Amount= @ConvertedAmount, rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID,Donor_ID = @Donor_ID,
+                                Amount= @Amount, rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID,Donor_ID = @Donor_ID,
                                 updated_at= @Todaydate, `edited_by` = @Uesr_ID  WHERE action.ID = @ObserveAcion_ID;";
 
 
@@ -1337,8 +1337,8 @@ namespace Financial_WPF_App.Models
 
                 if (WithObserveAcion_ID && isUsdExpenseFromSyr)
                 {
-                    query += @" UPDATE action SET Amount = @ConvertedAmount, rate = @rate, ActionDate = @ActionDate, Note = @Note  E_Note = @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID
-                             , Donor_ID = @Donor_ID, updated_at = @Todaydate,  edited_by = @Uesr_ID  WHERE action.ObserveAcion_ID = @Action_ID;";
+                    query += @" UPDATE action SET Amount = @Amount, rate = @rate, ActionDate = @ActionDate, Note = @Note ,  E_Note = @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID
+              , Donor_ID = @Donor_ID, updated_at = @Todaydate,  edited_by = @Uesr_ID  WHERE action.ObserveAcion_ID = @Action_ID;";
                 }
 
 
@@ -1377,7 +1377,7 @@ namespace Financial_WPF_App.Models
                 query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'action', @Action_ID, CONCAT('action Type = ', @AType), CONCAT('till ID = ',@Till_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
 
-                if (WithObserveAcion_ID)
+                if (WithObserveAcion_ID && !isUsdExpenseFromSyr)
                 {
                     query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'action', @ObserveAcion_ID, 'action Type = I', CONCAT('till ID = ', @ObserveTill_ID ,' - Auto updated With action ID = ',@Action_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     if (WithExAcc)
@@ -1386,6 +1386,17 @@ namespace Financial_WPF_App.Models
                         query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'action', @ToExTill_Acc_ID, 'action Type = E', CONCAT('till ID = ', @ObserveTill_ID ,' - Auto updated With action ID = ',@Action_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                     }
                 }
+                if (WithObserveAcion_ID && isUsdExpenseFromSyr)
+                {
+                    query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
+                             "SELECT @Form_Name, 'UPDATE', 'action', ID, 'action Type = O', CONCAT('till ID = ', @ObserveTill_ID, ' - linked to Action ID = ', @Action_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
+                             "FROM action_not_approved WHERE ObserveAcion_ID = @Action_ID AND AType_ID = 2;";
+
+                    query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
+                             "SELECT @Form_Name, 'UPDATE', 'action', ID, 'action Type = I', CONCAT('till ID = ', @ObserveTill_ID, ' - linked to Action ID = ', @Action_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
+                             "FROM action_not_approved WHERE ObserveAcion_ID = @Action_ID AND AType_ID = 1;";
+                }
+            
 
                 query += " COMMIT;";
 
