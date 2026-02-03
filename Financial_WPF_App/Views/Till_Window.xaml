@@ -33,7 +33,7 @@
         <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0" Padding="0,5,50,5">
             <WrapPanel  Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" x:Name="All_Label" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
                     </Border>
@@ -44,7 +44,7 @@
                         <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
                     </Border>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
+               <!-- <StackPanel Orientation="Horizontal">
                     <Label x:Name="Outcome_Label" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Outcome_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
@@ -55,7 +55,7 @@
                     <Border x:Name="Returned_Border" Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="Returned_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
                     </Border>
-                </StackPanel>
+                </StackPanel> -->
                 <StackPanel Orientation="Horizontal">
                     <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
                     <Border x:Name="Exchange_Border" Style="{StaticResource BorderStackPanelStyle}" >
@@ -66,6 +66,12 @@
                     <Label x:Name="Exchpand_Label" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Transfered_Label" Content="Transfered:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Transfered_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -82,7 +88,41 @@
                 </StackPanel>
             </WrapPanel>
         </Border>
-        <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+        <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1" Padding="0,5,50,5"   x:Name="USD_StatsPanel" Visibility="Collapsed">
+            <WrapPanel  Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="All(USD):" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="All_textBlockusd" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Income_Labelusd" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Income_textBlockusd" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Exchpand_Labelusd" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Exchpand_Borderusd" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Exchpand_textBlockusd" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Net_lableusd" Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Net_Borderusd" Style="{StaticResource BorderStackPanelStyle}" >
+                        <TextBlock x:Name="Net_textBlockusd" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="CashNet_labelusd" Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="CashNet_Borderusd" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="CashNet_textBlockusd" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+            </WrapPanel>
+        </Border>
+        <!--  <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
             <WrapPanel  Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
@@ -121,7 +161,7 @@
                     </Border>
                 </StackPanel>
             </WrapPanel >
-        </Border>
+        </Border> -->
         <Grid Grid.Row="2"  Margin="0,5,0,0">
             <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}">
                 <WrapPanel Orientation="Horizontal" Width="290">
@@ -257,7 +297,7 @@
                     </StackPanel>
                     <StackPanel Margin="5,8,5,8" x:Name="AddMultiAction_StackPanel"  Orientation="Horizontal" FlowDirection="RightToLeft">
                         <Button ToolTip="New Entry From Excel" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}"  Width="30" Height="25"
-x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,1,0">
+                          x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,1,0">
                             <Button.Background>
                                 <ImageBrush ImageSource="/Images/Buttons/newEntryExcel.png" Stretch="Uniform"/>
                             </Button.Background>
@@ -348,6 +388,11 @@ x:Name="AddMultiAction_btn" TabIndex="15" Click="AddMultiAction_btn_Click" Horiz
                                 NumberDecimalSeparator="."
                                 NumberGroupSizes="3" 
                                 NumberGroupSeparator=","/>
+                    <syncfusion:GridNumericColumn  x:Name="Transfer_DataGridColumn" HeaderText="Transfer"  MappingName="Outcome"
+                       NumberDecimalDigits="2"
+                       NumberDecimalSeparator="."
+                       NumberGroupSizes="3" 
+                       NumberGroupSeparator=","/>
                     <syncfusion:GridTextColumn   x:Name="Currency_DataGridColumn" HeaderText="Currency"  MappingName="Currency"/>
                     <syncfusion:GridDateTimeColumn x:Name="Action_DataGridColumn" HeaderText="Operation Date" MappingName="ActionDate"
                                                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />

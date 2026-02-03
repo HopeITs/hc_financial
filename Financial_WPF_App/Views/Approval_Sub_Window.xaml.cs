@@ -195,15 +195,25 @@ namespace Financial_WPF_App.Views
                 else
                 {
                     foreach (var C in myDataGrid.Columns)
-                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
+                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" ||
                             C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                             C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number"
-                            || C.HeaderText.ToString() == "Volunteer")
+                            || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Expenses" || C.HeaderText.ToString() == "Currency")
                         {
                             C.IsHidden = true;
                             Originally_HiddenColumns.Add(C.HeaderText.ToString());
                         }
-                }
+
+                    if (TillType_Name.ToLower() == "eur")
+                    {
+                        foreach (var C in myDataGrid.Columns)
+                            if (C.HeaderText.ToString() == "Transfer")
+                            {
+                                C.IsHidden = true;
+                                Originally_HiddenColumns.Add(C.HeaderText.ToString());
+                            }
+                    }
+                    }
             }
 
 
@@ -216,8 +226,8 @@ namespace Financial_WPF_App.Views
                 foreach (var C in myDataGrid.Columns)
                     if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
                         C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
-                        C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number" ||
-                        C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value"
+                        C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number" || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" ||
+                        C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value"  || C.HeaderText.ToString() == "Currency"
                         || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Project")
                     {
                         C.IsHidden = true;
@@ -236,7 +246,8 @@ namespace Financial_WPF_App.Views
                             C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Rate" || C.HeaderText.ToString() == "Exchanged" ||
                             C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value" ||
                             C.HeaderText.ToString() == "Corresponding till" || C.HeaderText.ToString() == "Corresponding account" || C.HeaderText.ToString() == "Corresponding cash till"
-                            || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Project")
+                            || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Project"
+                            || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Currency")
                         {
                             C.IsHidden = true;
                             Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -807,7 +818,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 int count = myDataGrid.SelectedItems.Count;
-                Selected_textBlock.Text = count.ToString("N0");
+                //Selected_textBlock.Text = count.ToString("N0");
             }
             catch (Exception ex)
             {
@@ -937,10 +948,10 @@ namespace Financial_WPF_App.Views
 
         private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
-                All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
-            else
-                Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
+            //if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
+            //    All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
+            //else
+            //    Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
         }
     }
 }
