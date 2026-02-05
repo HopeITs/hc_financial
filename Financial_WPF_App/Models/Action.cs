@@ -1389,11 +1389,11 @@ namespace Financial_WPF_App.Models
                 if (WithObserveAcion_ID && isUsdExpenseFromSyr)
                 {
                     query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
-                             "SELECT @Form_Name, 'UPDATE', 'action', ID, 'action Type = O', CONCAT('till ID = ', @ObserveTill_ID, ' - linked to Action ID = ', @Action_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
+                             "SELECT @Form_Name, 'UPDATE', 'action', ID, 'action Type = O', CONCAT('till ID = ', IFNULL(Till_ID,0),' - linked to Action ID = ', ObserveAcion_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
                              "FROM action_not_approved WHERE ObserveAcion_ID = @Action_ID AND AType_ID = 2;";
 
                     query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
-                             "SELECT @Form_Name, 'UPDATE', 'action', ID, 'action Type = I', CONCAT('till ID = ', @ObserveTill_ID, ' - linked to Action ID = ', @Action_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
+                             "SELECT @Form_Name, 'UPDATE', 'action', ID, 'action Type = I', CONCAT('till ID = ', IFNULL(Till_ID,0),' - linked to Action ID = ', ObserveAcion_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
                              "FROM action_not_approved WHERE ObserveAcion_ID = @Action_ID AND AType_ID = 1;";
                 }
             
@@ -1661,11 +1661,11 @@ namespace Financial_WPF_App.Models
                 if (WithObserveAcion_ID && isUsdExpenseFromSyr)
                 {
                     query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
-                             "SELECT @Form_Name, 'UPDATE', 'action_not_approved', ID, 'action Type = O', CONCAT('till ID = ', @ObserveTill_ID, ' - linked to Action ID = ', @Action_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
+                             "SELECT @Form_Name, 'UPDATE', 'action_not_approved', ID, 'action Type = O',  CONCAT('till ID = ', IFNULL(Till_ID,0),' - linked to Action ID = ', ObserveAcion_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
                              "FROM action_not_approved WHERE ObserveAcion_ID = @Action_ID AND AType_ID = 2;";
 
                     query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
-                             "SELECT @Form_Name, 'UPDATE', 'action_not_approved', ID, 'action Type = I', CONCAT('till ID = ', @ObserveTill_ID, ' - linked to Action ID = ', @Action_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
+                             "SELECT @Form_Name, 'UPDATE', 'action_not_approved', ID, 'action Type = I',  CONCAT('till ID = ', IFNULL(Till_ID,0),' - linked to Action ID = ', ObserveAcion_ID), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "' " +
                              "FROM action_not_approved WHERE ObserveAcion_ID = @Action_ID AND AType_ID = 1;";
                 }
 
