@@ -365,9 +365,11 @@ namespace Financial_WPF_App.Views
                     {
                         All_Label.Content = "All(SYR):";
                         USD_StatsPanel.Visibility = Visibility.Visible;
+                        Exchange_Label.Visibility = Visibility.Collapsed;
+                        Exchange_textBlock.Visibility = Visibility.Collapsed;
 
                         foreach (var C in myDataGrid.Columns)
-                            if (C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget"
+                            if (C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" || C.HeaderText.ToString() == "Exchange"
                                 || C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Volunteer")
                             {
                                 C.IsHidden = true;
@@ -378,9 +380,11 @@ namespace Financial_WPF_App.Views
                     {
                         All_Label.Content = "All(SYR):";
                         USD_StatsPanel.Visibility = Visibility.Visible;
+                        Exchange_Label.Visibility = Visibility.Collapsed;
+                        Exchange_textBlock.Visibility = Visibility.Collapsed;
 
                         foreach (var C in myDataGrid.Columns)
-                            if (C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name")
+                            if (C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Exchange")
                             {
                                 C.IsHidden = true;
                                 Originally_HiddenColumns.Add(C.HeaderText.ToString());

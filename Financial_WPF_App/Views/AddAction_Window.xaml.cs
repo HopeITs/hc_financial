@@ -3458,7 +3458,11 @@ namespace Financial_WPF_App
 
                 if (Action_ID != -1)//Edit
                 {
-                    int selectedCurrencyID = (int)currency_comboBox.SelectedValue;
+                    int selectedCurrencyID = 0;
+                    if (currency_comboBox.SelectedValue != null)
+                    {
+                         selectedCurrencyID = (int)currency_comboBox.SelectedValue;
+                    }
                     bool isUsdExpenseEdit = inserted_value == "E" && !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr" && selectedCurrencyID == 2;
                     if (Approved_Action)
                     {
