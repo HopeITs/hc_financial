@@ -48,7 +48,7 @@ namespace Financial_WPF_App
             }
         }
 
-        public AddAction_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int Till_ID, string TillType, int Action_ID, int SubProject_ID, bool FromTillForm, bool Approved_Action, Main_Window_2 main_Window, Till_Window TW)
+        public AddAction_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int Till_ID, string TillType, int Action_ID, int SubProject_ID,  bool FromTillForm, bool Approved_Action, Main_Window_2 main_Window, Till_Window TW)
         {
             InitializeComponent();
             this.main_Window = main_Window;
@@ -95,7 +95,7 @@ namespace Financial_WPF_App
         }
 
 
-        int Action_ID, Account_ID, Till_ID, SubProject_ID;
+        int Action_ID, Account_ID, Till_ID, SubProject_ID ;
         string Account_Name; bool FromTillForm;
         string Account_Type; string Category;
         Till t;
@@ -315,6 +315,7 @@ namespace Financial_WPF_App
                 DestinationTill_comboBox.IsEnabled = false;
                 ExchangeAcc_comboBox.IsEnabled = false;
                 ExchangeCash_comboBox.IsEnabled = false;
+                currency_comboBox.IsEnabled = false;
                 DestinationTill_clear_btn.IsEnabled = ExchangeAcc_clear_btn.IsEnabled = ExchangeCash_clear_btn.IsEnabled = false;
 
                 if (Type_ComboBox_Exchange_Item.IsSelected)
@@ -784,21 +785,21 @@ namespace Financial_WPF_App
 
                                 // Original_AvgRate_help.Visibility = Visibility.Visible;
 
-                                if (currency_comboBox.SelectedValue != null &&
-                                    (int)currency_comboBox.SelectedValue == 4)
-                                {
-                                    Original_AvgRate_lable.IsEnabled = true;
-                                    Original_AvgRate_comboBox.IsEnabled = true;
-                                    Original_AvgRate_clear_btn.IsEnabled = true;
-                                    Original_AvgRate_help.Visibility = Visibility.Visible;
-                                }
-                                else
-                                {
-                                    Original_AvgRate_lable.IsEnabled = false;
-                                    Original_AvgRate_comboBox.IsEnabled = false;
-                                    Original_AvgRate_clear_btn.IsEnabled = false;
-                                    Original_AvgRate_help.Visibility = Visibility.Hidden;
-                                }
+                                //if (currency_comboBox.SelectedValue != null &&
+                                //    (int)currency_comboBox.SelectedValue == 4)
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = true;
+                                //    Original_AvgRate_comboBox.IsEnabled = true;
+                                //    Original_AvgRate_clear_btn.IsEnabled = true;
+                                //    Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //}
+                                //else
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = false;
+                                //    Original_AvgRate_comboBox.IsEnabled = false;
+                                //    Original_AvgRate_clear_btn.IsEnabled = false;
+                                //    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                                //}
 
                             }
                             else if (Type_ComboBox_Move_Item.IsSelected)
@@ -972,21 +973,21 @@ namespace Financial_WPF_App
 
 
 
-                                if (currency_comboBox.SelectedValue != null &&
-                                    (int)currency_comboBox.SelectedValue == 4)
-                                {
-                                    Original_AvgRate_lable.IsEnabled = true;
-                                    Original_AvgRate_comboBox.IsEnabled = true;
-                                    Original_AvgRate_clear_btn.IsEnabled = true;
-                                    Original_AvgRate_help.Visibility = Visibility.Visible;
-                                }
-                                else
-                                {
-                                    Original_AvgRate_lable.IsEnabled = false;
-                                    Original_AvgRate_comboBox.IsEnabled = false;
-                                    Original_AvgRate_clear_btn.IsEnabled = false;
-                                    Original_AvgRate_help.Visibility = Visibility.Hidden;
-                                }
+                                //if (currency_comboBox.SelectedValue != null &&
+                                //    (int)currency_comboBox.SelectedValue == 4)
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = true;
+                                //    Original_AvgRate_comboBox.IsEnabled = true;
+                                //    Original_AvgRate_clear_btn.IsEnabled = true;
+                                //    Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //}
+                                //else
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = false;
+                                //    Original_AvgRate_comboBox.IsEnabled = false;
+                                //    Original_AvgRate_clear_btn.IsEnabled = false;
+                                //    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                                //}
                             }
                             else if (Type_ComboBox_Move_Item.IsSelected)
                             {
@@ -1643,6 +1644,7 @@ namespace Financial_WPF_App
                         selected_dt = rows.CopyToDataTable();
                         if (selected_dt != null && selected_dt.Rows.Count > 0)
                             CashAccount_comboBox.ItemsSource = selected_dt.DefaultView;
+                            ObserveCashAccount_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                 }
             }
@@ -1839,26 +1841,35 @@ namespace Financial_WPF_App
                     Type_comboBox.SelectedIndex = 0; //وارد
                     //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Income"));
                     Amount_txtBox.Text = dt.Rows[0].Field<Double>("Income").ToString();
+                    currency_comboBox.SelectedIndex = 0;
+                }
+
+            if (dt.Rows[0]["Incomeusd"] != DBNull.Value)
+                if (dt.Rows[0].Field<Double>("Incomeusd") != 0)
+                {
+                    Type_comboBox.SelectedIndex = 0; //وارد
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Incomeusd"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Incomeusd").ToString();
+                    currency_comboBox.SelectedIndex = 1;
                 }
 
             if (dt.Rows[0]["Outcome"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Outcome") != 0)
                 {
-                    Type_comboBox.SelectedIndex = 1; //سلفة
+                    Type_comboBox.SelectedIndex = 1; //سلفة أو TRANSFER
                     //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Outcome"));
                     Amount_txtBox.Text = dt.Rows[0].Field<Double>("Outcome").ToString();
 
                 }
 
-            if (dt.Rows[0]["Returned"] != DBNull.Value)
-                if (dt.Rows[0].Field<Double>("Returned") != 0)
-                {
-                    Type_comboBox.SelectedIndex = 2; //مرتجع
-                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Returned"));
-                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Returned").ToString();
+            //if (dt.Rows[0]["Returned"] != DBNull.Value)
+            //    if (dt.Rows[0].Field<Double>("Returned") != 0)
+            //    {
+            //        Type_comboBox.SelectedIndex = 2; //مرتجع
+            //        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Returned"));
+            //        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Returned").ToString();
+            //      }
 
-
-                }
             if (dt.Rows[0]["Exchange"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Exchange") != 0)
                 {
@@ -1868,25 +1879,43 @@ namespace Financial_WPF_App
 
 
                 }
+            //if (dt.Rows[0]["Expand"] != DBNull.Value)
+            //    if (dt.Rows[0].Field<Double>("Expand") != 0)
+            //    {
+            //        if (dt.Rows[0]["ObserveAcion_ID"] != DBNull.Value)
+            //        {
+            //            Type_comboBox.SelectedIndex = 5; //نقل
+            //            //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+            //            Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+
+            //        }
+            //        else
+            //        {
+            //            Type_comboBox.SelectedIndex = 4; //فاتورة
+            //            //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+            //            Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+
+            //        }
+
+            //    }
             if (dt.Rows[0]["Expand"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Expand") != 0)
                 {
-                    if (dt.Rows[0]["ObserveAcion_ID"] != DBNull.Value)
-                    {
-                        Type_comboBox.SelectedIndex = 5; //نقل
-                        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
-                        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
-
-                    }
-                    else
-                    {
-                        Type_comboBox.SelectedIndex = 4; //فاتورة
-                        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
-                        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
-
-                    }
-
+                    Type_comboBox.SelectedIndex = 4; //فاتورة
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+                    currency_comboBox.SelectedIndex = 0;
                 }
+
+            if (dt.Rows[0]["Expandusd"] != DBNull.Value)
+                if (dt.Rows[0].Field<Double>("Expandusd") != 0)
+                {
+                    Type_comboBox.SelectedIndex = 4; //فاتورة
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expandusd"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expandusd").ToString();
+                    currency_comboBox.SelectedIndex = 1;
+                }
+
             UserMode = true;
             ActionDate_datepicker.SelectedDate = Convert.ToDateTime(dt.Rows[0].Field<DateTime>("ActionDate").ToString());
             UserMode = false;
@@ -2663,11 +2692,25 @@ namespace Financial_WPF_App
         {
             try
             {
-            
-     
-                Show_Hide_Components();
 
-           
+                if (currency_comboBox.SelectedValue != null &&
+                   (int)currency_comboBox.SelectedValue == 4)
+                {
+                    Original_AvgRate_lable.IsEnabled = true;
+                    Original_AvgRate_comboBox.IsEnabled = true;
+                    Original_AvgRate_clear_btn.IsEnabled = true;
+                    Original_AvgRate_help.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Original_AvgRate_lable.IsEnabled = false;
+                    Original_AvgRate_comboBox.IsEnabled = false;
+                    Original_AvgRate_clear_btn.IsEnabled = false;
+                    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                }
+                //Show_Hide_Components();
+
+
             }
             catch (Exception ex)
             {
@@ -3175,6 +3218,14 @@ namespace Financial_WPF_App
                     else if (Type_comboBox.SelectedItem.ToString().Contains("Expenses"))
                     {
                         inserted_value = "E";
+                        if (currency_comboBox.SelectedValue == null ||
+                           Convert.ToInt32(currency_comboBox.SelectedValue) <= 0)
+                        {
+                            MessageBox.Show("Please make sure to select the currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                            currency_comboBox.Focus();
+                            return;
+                        }
+
                     }
                     else if (Type_comboBox.SelectedItem.ToString().Contains("Exchange"))
                     {
@@ -3303,20 +3354,20 @@ namespace Financial_WPF_App
                     }
                 }
 
-                //if (Original_AvgRate_comboBox.IsEnabled == true)
-                //{
-                //    if (Original_AvgRate_comboBox.SelectedIndex == -1)
-                //    {
-                //        if (Account_Type == "Project" && TillType.ToLower() == "syr")
-                //        {
-                //            MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                //            return;
+                if (Original_AvgRate_comboBox.IsEnabled == true)
+                {
+                    if (Original_AvgRate_comboBox.SelectedIndex == -1)
+                    {
+                        if (Account_Type == "Project" && TillType.ToLower() == "syr")
+                        {
+                            MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                            return;
 
-                //        }
-                //    }
-                //    else
-                //        OriginalRate_ID = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue);
-                //}
+                        }
+                    }
+                    else
+                        OriginalRate_ID = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue);
+                }
 
                 if (Donor_comboBox.IsEnabled == true)
                 {
@@ -3430,19 +3481,27 @@ namespace Financial_WPF_App
 
                 if (Action_ID != -1)//Edit
                 {
+                    int selectedCurrencyID = 0;
+                    if (currency_comboBox.SelectedValue != null)
+                    {
+                         selectedCurrencyID = (int)currency_comboBox.SelectedValue;
+                    }
+                    bool isUsdExpenseEdit = inserted_value == "E" && !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr" && selectedCurrencyID == 2;
                     if (Approved_Action)
                     {
+                        
                         if (inserted_value == "Ex" || inserted_value == "M")
                         {
                             a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
                                 , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window" , selectedCurrencyID);
                         }
                         else
                         {
-                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
+    
+                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
                             , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window" , selectedCurrencyID); ;
                         }
                     }
                     else
@@ -3451,13 +3510,13 @@ namespace Financial_WPF_App
                         {
                             a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
                                 , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window" , selectedCurrencyID);
                         }
                         else
                         {
-                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
+                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
                             , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window" , selectedCurrencyID); ;
                         }
                     }
                     int success = 0;
@@ -3500,7 +3559,6 @@ namespace Financial_WPF_App
                   
                     if (_isSpecialCase)
                     {
-                        // ========== (1) Outcome من USD till ==========
                         int usdTillId = GetUsdTillIdForCurrentAccount();
                         if (usdTillId == -1)
                         {
@@ -3508,30 +3566,8 @@ namespace Financial_WPF_App
                             return;
                         }
 
-                     int expenseId= a.Insert(
-                    Till_ID, "syr",
-                      usdTillId, "usd",
-    Donor_ID, -1,
-    true,      // WithObserveAcion_ID
-    false,     // WithExAcc
-    true,
-    "E",
-    amount,
-    rate,
-    ActionDate,
-    Notes, E_Notes, IsReceipt, ReceiptNum,
-    Employee_Salary_ID,
-    OriginalRate_ID,
-    MicroProject_ID,
-    budget_line_ID,
-    -1,
-    CashAccount_ID,
-    ObserveCashAccount_ID,
-    ExchangeCash_ID,
-    -1,
-    "AddAction_Window",
-    2   // USD
-);
+                     int expenseId  = a.Insert( Till_ID, "syr", usdTillId, "usd", Donor_ID, -1, true, false, true, "E", amount, rate, ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum,
+                                                Employee_Salary_ID, OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", 2 );
 
                         //int outcomeId = a.Insert(
                         //    usdTillId, "usd",

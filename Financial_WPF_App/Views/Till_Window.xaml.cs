@@ -1,8 +1,4 @@
-﻿using Financial_WPF_App.Models;
-using Financial_WPF_App.Properties;
-using Syncfusion.UI.Xaml.Grid;
-using Syncfusion.UI.Xaml.Grid.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,6 +7,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Financial_WPF_App.Helper;
+using Financial_WPF_App.Models;
+using Financial_WPF_App.Properties;
+using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.UI.Xaml.Grid.Helpers;
 
 namespace Financial_WPF_App.Views
 {
@@ -20,6 +21,7 @@ namespace Financial_WPF_App.Views
         public Till_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int SubProject_ID, int Till_ID, string TillType_Name, Account_Window account_Window, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            TillNotifier.RefreshTill += OnTillRefresh;
             //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             AsFiscalBond = false;
             this.main_Window = main_Window;
@@ -39,6 +41,7 @@ namespace Financial_WPF_App.Views
         public Till_Window(int FiscalBond_ID, string FiscalBond_Name, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            TillNotifier.RefreshTill += OnTillRefresh;
             //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             AsFiscalBond = true;
             this.main_Window = main_Window;
@@ -93,6 +96,14 @@ namespace Financial_WPF_App.Views
         bool Edit_privileges, Add_privileges, Delete_privileges;
 
         #endregion
+
+        private void OnTillRefresh()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                Load_Data();
+            });
+        }
 
         private bool Onload()
         {
@@ -365,9 +376,11 @@ namespace Financial_WPF_App.Views
                     {
                         All_Label.Content = "All(SYR):";
                         USD_StatsPanel.Visibility = Visibility.Visible;
+                        Exchange_Label.Visibility = Visibility.Collapsed;
+                        Exchange_textBlock.Visibility = Visibility.Collapsed;
 
                         foreach (var C in myDataGrid.Columns)
-                            if (C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget"
+                            if (C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" || C.HeaderText.ToString() == "Exchange"
                                 || C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Volunteer")
                             {
                                 C.IsHidden = true;
@@ -378,9 +391,11 @@ namespace Financial_WPF_App.Views
                     {
                         All_Label.Content = "All(SYR):";
                         USD_StatsPanel.Visibility = Visibility.Visible;
+                        Exchange_Label.Visibility = Visibility.Collapsed;
+                        Exchange_textBlock.Visibility = Visibility.Collapsed;
 
                         foreach (var C in myDataGrid.Columns)
-                            if (C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name")
+                            if (C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Exchange")
                             {
                                 C.IsHidden = true;
                                 Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -986,9 +1001,11 @@ namespace Financial_WPF_App.Views
                     {
                         Approved_Action = true;
                     }
-                    AddAction_Window _Window = new AddAction_Window(Account_ID, IsAdminAccount, Account_Name, Account_Type, Category, Till_ID, TillType_Name, Action_ID, SubProject_ID, true, Approved_Action, main_Window, this);
+                    AddAction_Window _Window = new AddAction_Window(Account_ID, IsAdminAccount, Account_Name, Account_Type, Category, Till_ID, TillType_Name, Action_ID, SubProject_ID,  true, Approved_Action, main_Window, this);
 
                     _Window.ShowDialog();
+                    TillNotifier.RaiseRefresh();
+
                 }
             }
             catch (Exception ex)
@@ -1047,6 +1064,8 @@ namespace Financial_WPF_App.Views
                         a.Delete(ID, Till_ID, AType, Approved_Action, "Till_Window");
 
                         ID = -1;
+
+                        TillNotifier.RaiseRefresh();
 
                         LoadGrid();
                     }
@@ -1171,6 +1190,8 @@ namespace Financial_WPF_App.Views
                 {
                     t.Delete(Till_ID, TillType_Name, Account_ID, "Till_Window");
                     account_Window.Fill_Account_Tabs("", "");
+                    TillNotifier.RaiseRefresh();
+
                 }
             }
             catch (Exception ex)
@@ -1224,6 +1245,8 @@ namespace Financial_WPF_App.Views
 
                                     AddAction_Window _Window = new AddAction_Window(Account_ID, IsAdminAccount, Account_Name, Account_Type, Category, Till_ID, TillType_Name, Action_ID, SubProject_ID, true, Approved_Action, main_Window, this);
                                     _Window.ShowDialog();
+                                    TillNotifier.RaiseRefresh();
+
                                 }
                             }
                         }
@@ -1470,6 +1493,9 @@ namespace Financial_WPF_App.Views
                         a.Delete_Multi_Actions();
 
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+
+                        TillNotifier.RaiseRefresh();
+
                         LoadGrid();
                     }
                     else
@@ -1826,6 +1852,11 @@ namespace Financial_WPF_App.Views
 
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            TillNotifier.RefreshTill -= OnTillRefresh;
+            base.OnClosed(e);
+        }
 
 
     }
