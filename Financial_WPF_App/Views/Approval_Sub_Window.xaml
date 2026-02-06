@@ -27,14 +27,14 @@
                 </Border>
             </StackPanel>
         </Border>
-        <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
+        <!--<Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
             <StackPanel Orientation="Horizontal">
                 <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
                 <Border Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
                 </Border>
             </StackPanel>
-        </Border>
+        </Border>-->
         <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
             <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
                 <WrapPanel Orientation="Horizontal" Width="Auto">
@@ -220,7 +220,12 @@
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
                         NumberGroupSeparator=","/>
-                <syncfusion:GridNumericColumn  x:Name="Outcome_DataGridColumn" HeaderText="Adv. Payment"  MappingName="Outcome"
+                <syncfusion:GridNumericColumn  x:Name="Incomeusd_DataGridColumn" HeaderText="Income(USD)"  MappingName="Incomeusd" 
+                       NumberDecimalDigits="2"
+                       NumberDecimalSeparator="."
+                       NumberGroupSizes="3" 
+                       NumberGroupSeparator=","/>
+                <!--<syncfusion:GridNumericColumn  x:Name="Outcome_DataGridColumn" HeaderText="Adv. Payment"  MappingName="Outcome"
                         NumberDecimalDigits="2"
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
@@ -229,7 +234,7 @@
                         NumberDecimalDigits="2"
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
-                        NumberGroupSeparator=","/>
+                        NumberGroupSeparator=","/>-->
                 <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
                         NumberDecimalDigits="2"
                         NumberDecimalSeparator="."
@@ -240,6 +245,17 @@
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
                         NumberGroupSeparator=","/>
+                <syncfusion:GridNumericColumn  x:Name="Expandusd_DataGridColumn" HeaderText="Expenses(USD)"  MappingName="Expandusd"
+                       NumberDecimalDigits="2"
+                       NumberDecimalSeparator="."
+                       NumberGroupSizes="3" 
+                       NumberGroupSeparator=","/>
+                <syncfusion:GridNumericColumn  x:Name="Transfer_DataGridColumn" HeaderText="Transfer"  MappingName="Outcome"
+                       NumberDecimalDigits="2"
+                       NumberDecimalSeparator="."
+                       NumberGroupSizes="3" 
+                       NumberGroupSeparator=","/>
+                <syncfusion:GridTextColumn   x:Name="Currency_DataGridColumn" HeaderText="Currency"  MappingName="Currency"/>
                 <syncfusion:GridDateTimeColumn x:Name="Action_DataGridColumn" HeaderText="Operation Date" MappingName="ActionDate"
                         CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
                 <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>
