@@ -485,19 +485,30 @@ namespace Financial_WPF_App.Models
             return Account_ID;
         }
 
-        public DataTable get_attachments(int? Account_ID)
+        public DataTable get_attachments(int? Account_ID, int? Action_ID, int? Beneficiary_ID, string FromDate, string ToDate)
         {
             string query = "";
 
-            query = @"SELECT COUNT(action_attachments.`id`) as 'attachments' ,account.Name as 'account name' 
+            query = @"SELECT action_attachments.id, action_attachments.action_id, action_attachments.attach_name
                       FROM `action_attachments` 
                       LEFT JOIN action on action.ID = action_attachments.action_id
                       LEFT JOIN till on till.ID = action.Till_ID
-                      LEFT JOIN account on account.ID = till.Account_ID";
+                      LEFT JOIN account on account.ID = till.Account_ID where 1";
 
             if (Account_ID != null)
             {
-                query += " where account.id = @Account_ID";
+                query += " and account.id = @Account_ID";
+            }
+            if (FromDate != "" && ToDate != "" && Action_ID == 0) {
+                query += " AND date(action.ActionDate) BETWEEN @FromDate and @ToDate ";
+            }
+            if (Action_ID != 0)
+            {
+                query += " and action_id = @action_id;";
+            }
+            if (Beneficiary_ID != -1 && Beneficiary_ID != 0)
+            {
+                query = " SELECT * FROM beneficiary_attachments WHERE beneficiary_id = @beneficiary_id;";
             }
 
             DataTable dt = new DataTable();
@@ -505,6 +516,10 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+                sc.Parameters.AddWithValue("@FromDate", FromDate);
+                sc.Parameters.AddWithValue("@ToDate", ToDate);
+                sc.Parameters.AddWithValue("@Action_ID", Action_ID);
+                sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
                 sc.Parameters.AddWithValue("@t", 600);
@@ -517,6 +532,85 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        public DataTable get_user_cities(int UserId)
+        {
+            string query = @"SELECT DISTINCT c.id, c.name
+                            FROM city c
+                            JOIN subproject sp ON sp.city_id = c.id
+                            JOIN user_accounts ua ON ua.subproject_id = sp.id
+                            WHERE ua.user_id = @UserId;";
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@UserId", UserId);
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        public DataTable get_user_projects(int UserId, int CityId)
+        {
+            string query = @"SELECT DISTINCT sp.id, sp.name
+                            FROM subproject sp
+                            JOIN user_accounts ua ON ua.subproject_id = sp.id
+                            WHERE ua.user_id = @UserId
+                            AND sp.city_id = @CityId;";
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@UserId", UserId);
+                sc.Parameters.AddWithValue("@CityId", CityId);
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        public DataTable get_user_accounts(int UserId,int SubProjectId)
+        {
+            string query = @"SELECT DISTINCT a.id, a.name
+                            FROM account a
+                            JOIN user_accounts ua ON ua.account_id = a.id
+                            WHERE ua.user_id = @UserId
+                            AND ua.subproject_id = @SubProjectId;";
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@UserId", UserId);
+                sc.Parameters.AddWithValue("@SubProjectId", SubProjectId);
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
 
         public DataTable Select_Accounts_By_Subproject_And_TillType(
             string tillName,

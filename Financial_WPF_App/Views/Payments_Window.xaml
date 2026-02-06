@@ -138,9 +138,9 @@ OverridesDefaultStyle="True" />
                           
                                 <Button ToolTip="Show Payments" ToolTipService.InitialShowDelay="100"
                             Style="{DynamicResource AddButtonStyle}"
-                            x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="11,0,0,0" VerticalAlignment="Center" Height="25" Width="25" >
+                            x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="2,0,0,0" VerticalAlignment="Center" Height="25" Width="55" >
                                     <Button.Background>
-                                        <ImageBrush ImageSource="/Images/Buttons/save_payment.png" Stretch="Uniform"/>
+                                        <ImageBrush ImageSource="/Images/Buttons/Apply.png" Stretch="Uniform"/>
                                     </Button.Background>
                                 </Button>
                         </WrapPanel>

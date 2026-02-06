@@ -466,6 +466,7 @@
                                 <MenuItem Header="All Budget Lines Report" Click="All_Budget_Lines_Report_MenuItemAdv_Click"/>
                                 <MenuItem Header="Revenue/Exchange Report" Click="Revenue_Exchange_Report_MenuItemAdv_Click"/>
                                 <MenuItem Header="Fixed Assets Report" Click="Fixed_Assets_Report_MenuItemAdv_Click"/>
+                                <MenuItem Header="Download All Attachments" Click="Download_All_Attachments_Click"/>
                             </MenuItem>
 
                             <MenuItem x:Name="Approval_MenuItem" Header="Approval" Style="{StaticResource MenuItemStyle}" DataContext="{Binding Source={StaticResource MenuIcon4}}" VerticalAlignment="Bottom"/>

@@ -1,13 +1,17 @@
 ﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Microsoft.Win32;
+using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.UI.Xaml.Grid.RowFilter;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -30,6 +34,10 @@ namespace Financial_WPF_App.Views
             this.Account_Type = Account_Type;
             this.Category = Category;
             this.Approved_Action = Approved_Action;
+            FilterRow2.Height = new GridLength(0);
+            FilterPanel2.Visibility = Visibility.Hidden;
+            FilterRow1.Height = new GridLength(0);
+            FilterPane11.Visibility = Visibility.Hidden;
             if (OnLoad())
             {
 
@@ -40,10 +48,14 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        public Attachments(int Account_ID)
+        public Attachments(int? Account_ID)
         {
             InitializeComponent();
             this.Account_ID = Account_ID;
+            AddAttachments_btn.Visibility = Visibility.Hidden;
+            Delete_DataGridColumn.IsHidden = true;
+            FilterRow1.Height = new GridLength(0);
+            FilterPane11.Visibility = Visibility.Hidden;
             if (OnLoad())
             {
 
@@ -53,15 +65,32 @@ namespace Financial_WPF_App.Views
                 throw new ArgumentException("This page will not open due to data fetching error.");
             }
         }
+        public Attachments()
+        {
+            InitializeComponent();
+            AddAttachments_btn.Visibility = Visibility.Hidden;
+            FilterPane11.Visibility = Visibility.Visible;
+            Delete_DataGridColumn.IsHidden = true;
+            if (OnLoad())
+            {
 
+            }
+            else
+            {
+                throw new ArgumentException("This page will not open due to data fetching error.");
+            }
+        }
         Document d;
         Account a;
         DataTable attachments_dt = new DataTable();
-        int Action_ID; int Beneficiary_ID, Account_ID;
+        int Action_ID; int Beneficiary_ID ;
+        int? Account_ID;
         private string Account_Type; private string Category;
         private OpenFileDialog open;
         private string[] FullAttachNames;
         private Thread myTh;
+        int userId = Properties.Settings.Default.User_ID;
+
 
         private System.Windows.Forms.FolderBrowserDialog FolderBrowserDialog1;
 
@@ -74,21 +103,43 @@ namespace Financial_WPF_App.Views
         Account_Beneficiaries_Window AB;
         Approval_Sub_Window App;
         Lines_Report_Window LR;
-
+        DateTime to_Date = new DateTime();
+        DateTime from_Date = new DateTime(); 
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
         string HeaderStyle_Name = "SfDataGrid_header";
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
+        List<Local_Account> objAccountList;
+        List<Local_Account> FilteredAccountList;
+        List<Local_Account> Original_objAccountList;
 
+
+        private class Local_Account
+        {
+            public int AccID { set; get; }
+
+            public string AccName { set; get; }
+
+            public Boolean Acc_Check_Status { set; get; }
+        }
         private bool OnLoad()
         {
             try
             {
                 circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Collapsed;
                 d = new Document();
+                a = new Account();
                 Load_Data();
+                Fill_Comboboxes();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
+                to_Date = DateTime.Today;
+                from_Date = to_Date.AddMonths(-1);
+
+                string ToDate = to_Date.ToString("yyyy-MM-dd");
+                string FromDate = from_Date.ToString("yyyy-MM-dd");
+                FromDate_datepicker.Text = FromDate;
+                ToDate_datepicker.Text = ToDate;
                 return true;
             }
             catch (Exception ex)
@@ -181,13 +232,111 @@ namespace Financial_WPF_App.Views
 
         }
 
+        private void Fill_Comboboxes()
+        {
+            LoadUserCities();
+        }
+
+        public void LoadUserCities()
+        {
+            DataTable dt = a.get_user_cities(userId);
+
+            City_comboBox.ItemsSource = dt.DefaultView;
+            City_comboBox.DisplayMemberPath = "name";
+            City_comboBox.SelectedValuePath = "id";
+
+            City_comboBox.SelectedIndex = -1;
+        }
+
+        public void LoadUserProjects(int city_id)
+        {
+            DataTable dt = a.get_user_projects(userId, city_id);
+
+            Subproject_comboBox.ItemsSource = dt.DefaultView;
+            Subproject_comboBox.DisplayMemberPath = "name";
+            Subproject_comboBox.SelectedValuePath = "id";
+
+            Subproject_comboBox.SelectedIndex = -1;
+        }
+
+        public void LoadUserAccounts(int subproject_id)
+        {
+            DataTable dt = a.get_user_accounts(userId, subproject_id);
+
+            Account_comboBox.ItemsSource = dt.DefaultView;
+            Account_comboBox.DisplayMemberPath = "name";
+            Account_comboBox.SelectedValuePath = "id";
+
+            Account_comboBox.SelectedIndex = -1;
+        }
+
+        private void Account_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                FilteredAccountList = new List<Local_Account>();
+                    if (objAccountList != null && objAccountList.Count > 0)
+                    {
+                        foreach (var account in objAccountList)
+                        {
+                            if (account.Acc_Check_Status == true)
+                            FilteredAccountList.Add(account);
+                        }
+                    }
+
+                    if (FilteredAccountList != null && FilteredAccountList.Count > 0)
+                    {
+                        Account_comboBox.ItemsSource = null;
+                    Account_comboBox.Text = "0 Selected";
+                    Account_comboBox.ItemsSource = FilteredAccountList;
+                        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
+                    Account_comboBox.Text = count.ToString() + " Selected";
+                    }
+                    else
+                    {
+                    Account_comboBox.ItemsSource = null;
+                    Account_comboBox.Text = "0 Selected";
+                    Account_comboBox.ItemsSource = objAccountList;
+                        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
+                    Account_comboBox.Text = count.ToString() + " Selected";
+                    }
+
+                
+
+                int AccoutCount = objAccountList.Count(item => item.Acc_Check_Status == true);
+                Account_comboBox.Text = AccoutCount.ToString() + " Selected";
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void Load_Data()
         {
+            string FromDate = null; string ToDate = null;
+            if (FromDate_datepicker.SelectedDate != null && FromDate_datepicker.SelectedDate.ToString() != "")
+                FromDate = ((DateTime)FromDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+
+
+            if (ToDate_datepicker.SelectedDate != null && ToDate_datepicker.SelectedDate.ToString() != "")
+                ToDate = ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+
             if (Account_ID != null)
             {
-                attachments_dt = a.get_attachments(Account_ID);
+                attachments_dt = a.get_attachments(Account_ID,Action_ID,Beneficiary_ID, FromDate, ToDate);
+                
                 if (attachments_dt != null && attachments_dt.Rows.Count > 0)
                 {
+                    System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(bool));
+                    attachments_dt.Columns.Add(newColumn);
+                    attachments_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", false));
                     myDataGrid.ItemsSource = attachments_dt.DefaultView;
                 }
                 else
@@ -203,9 +352,13 @@ namespace Financial_WPF_App.Views
             }
             else
             {
-                attachments_dt = d.GetAttachmentsNames(Action_ID, Beneficiary_ID);
+                attachments_dt = a.get_attachments(Account_ID, Action_ID, Beneficiary_ID, FromDate, ToDate);
+                //attachments_dt = d.GetAttachmentsNames(Action_ID, Beneficiary_ID);
                 if (attachments_dt != null && attachments_dt.Rows.Count > 0)
                 {
+                    System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(bool));
+                    attachments_dt.Columns.Add(newColumn);
+                    attachments_dt.AsEnumerable().ToList().ForEach(row => row.SetField("IsSelected", false));
                     myDataGrid.ItemsSource = attachments_dt.DefaultView;
                 }
                 else
@@ -361,6 +514,69 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void DownloadSelected_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var selectedRows = myDataGrid.View.Records
+                    .Select(r => r.Data as DataRowView)
+                    .Where(r => r != null && Convert.ToInt32(r["IsSelected"]) == 1)
+                    .ToList();
+
+                if (selectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select at least one file.", "Warning");
+                    return;
+                }
+
+                foreach (var dataRow in selectedRows)
+                {
+                    string saveFileName = dataRow["attach_name"].ToString();
+                    int attachmentId = Convert.ToInt32(dataRow["id"]);
+
+                    string downloadFileName = "";
+
+                    if (Action_ID != -1)
+                    {
+                        downloadFileName = "Action_id_" + Action_ID + "_" + saveFileName;
+                    }
+                    else if (Beneficiary_ID != -1)
+                    {
+                        downloadFileName = "Beneficiary_id_" + Beneficiary_ID + "_" + saveFileName;
+                    }
+
+                    if (d.file_Exist(downloadFileName))
+                    {
+                        DownloadFileName = downloadFileName;
+                        SaveFileName = saveFileName;
+                        attachments_id = attachmentId;
+
+                        myTh = new Thread(SaveDialog);
+                        myTh.SetApartmentState(ApartmentState.STA);
+                        myTh.Start();
+                        myTh.Join();
+                    }
+                    else
+                    {
+                        d.DeleteAttachmentTfromDatabase(
+                            attachmentId,
+                            saveFileName,
+                            Action_ID,
+                            Beneficiary_ID,
+                            Approved_Action,
+                            "Attachments"
+                        );
+                    }
+                }
+
+                Load_Data();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
         private void SaveDialog()
         {
             string OnlineFilePath = Login.OnlineRoot + @"/" + DownloadFileName;
@@ -417,6 +633,39 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void chkHeader_Loaded(object sender, RoutedEventArgs e)
+        {
+            headerCheckbox = sender as CheckBox;
+        }
+
+        private void chkHeader_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DataView view = (DataView)myDataGrid.ItemsSource;
+                bool Checked = (bool)(sender as CheckBox).IsChecked;
+
+                if (view != null)
+                {
+                    foreach (DataRowView row in view)
+                    {
+                        row["IsSelected"] = Checked;
+                    }
+                    myDataGrid.View.Refresh();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+        private CheckBox headerCheckbox;
         private async Task HandleAddAttachmentsAsync()
         {
             await Save_Attachments();
@@ -550,6 +799,24 @@ namespace Financial_WPF_App.Views
 
         }
 
+        private void myDataGrid_CurrentCellValueChanged(object sender, CurrentCellValueChangedEventArgs e)
+        {
+            var columnIndex = this.myDataGrid.ResolveToGridVisibleColumnIndex(e.RowColumnIndex.ColumnIndex);
+            var column = myDataGrid.Columns[columnIndex];
+            if (column.MappingName == "IsSelected" && headerCheckbox != null)
+            {
+                var rows = attachments_dt.AsEnumerable();
+
+                bool allChecked = rows.All(r => r.Field<bool>("IsSelected"));
+                bool anyChecked = rows.Any(r => r.Field<bool>("IsSelected"));
+
+                headerCheckbox.IsChecked =
+                    allChecked ? true :
+                    anyChecked ? (bool?)null :
+                    false;
+            }
+        }
+
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
@@ -571,9 +838,63 @@ namespace Financial_WPF_App.Views
         {
             if (myDataGrid.View != null)
             {
+                
                 int count = myDataGrid.View.Records.Count();
                 All_Label.Content = count.ToString("N0");
             }
+        }
+
+        private void Apply_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //GridFilled = true;
+                DownloadAttachments_btn.Visibility = Visibility.Visible;
+                DownloadAttachments_btn.Width = 24;
+                Load_Data();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void City_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (City_comboBox.SelectedValue == null)
+                return;
+
+            int cityId = Convert.ToInt32(City_comboBox.SelectedValue);
+
+            LoadUserProjects(cityId); // your next method
+            Subproject_comboBox.SelectedIndex = -1;
+            Subproject_comboBox.IsEnabled = true;
+            Account_comboBox.ItemsSource = null;
+        }
+
+        private void Subproject_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (Subproject_comboBox.SelectedValue == null)
+                return;
+
+            int subprojectId = Convert.ToInt32(Subproject_comboBox.SelectedValue);
+
+            LoadUserAccounts(subprojectId); // your next method
+            Account_comboBox.SelectedIndex = -1;
+            Account_comboBox.IsEnabled = true;
+        }
+
+        private void Account_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (Account_comboBox.SelectedValue == null)
+                return;
+
+            int AccountId = Convert.ToInt32(Account_comboBox.SelectedValue);
+            Account_ID = AccountId;
         }
     }
 }
