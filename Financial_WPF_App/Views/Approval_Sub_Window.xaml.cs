@@ -160,9 +160,9 @@ namespace Financial_WPF_App.Views
 
         public void Load_Data()
         {
+            LoadGrid();
             Show_Hide();
 
-            LoadGrid();
         }
 
         private void Show_Hide()

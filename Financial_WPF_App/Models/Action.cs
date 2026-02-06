@@ -307,6 +307,7 @@ namespace Financial_WPF_App.Models
                 project.ID AS `Project_ID`, project.Name AS `Project_Name`,
                 subproject.ID AS `Subproject_ID`, subproject.Name AS `Subproject_Name`,
                 account.ID AS `Account_ID`, account.Name AS `Account_Name`,
+                action_deleted.currency_tilltype_id AS 'Currency_TillType_ID', currency_type.Name AS 'Currency',
                 accounttype.id AS `Accounttype_UD`, accounttype.name AS `Accounttype_name`,
                 till.id AS `Till_ID`, tilltypes.id AS `Tilltypes_ID`, tilltypes.Name as `Tilltypes_Name`,
 
@@ -316,11 +317,17 @@ namespace Financial_WPF_App.Models
                 created_byuser.`Username` as 'created_by', created_byuser.`ID` as 'created_byuser_ID',
                 edited_byuser.username as 'edited_by',
                 deleted_byuser.username as 'deleted_by', action_deleted.`deleted_at` as 'deleted_at',
-                (CASE WHEN actiontype.shortname = 'I' THEN action_deleted.Amount ELSE 0 END) AS 'Income',
+                (CASE   WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                AND actiontype.shortname = 'I' THEN action_deleted.Amount  ELSE 0 END) AS 'Income',
+                (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action_deleted.Amount
+                ELSE 0 END) AS 'Incomeusd',
                 (CASE WHEN actiontype.shortname = 'O' THEN action_deleted.Amount ELSE 0 END) AS 'Outcome',
                 (CASE WHEN actiontype.shortname = 'R' THEN action_deleted.Amount ELSE 0 END) AS 'Returned',
                 (CASE WHEN actiontype.shortname = 'Ex' THEN action_deleted.Amount ELSE 0 END) AS 'Exchange',
-                (CASE WHEN actiontype.shortname = 'E' THEN action_deleted.Amount ELSE 0 END) AS 'Expand',
+                (CASE  WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                AND actiontype.shortname = 'E' THEN action_deleted.Amount ELSE 0 END) AS 'Expand',
+                (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
+                THEN action_deleted.Amount  ELSE 0 END) AS 'Expandusd',
 
                 (SELECT account.ID FROM action_deleted oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action_deleted.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',
                 (SELECT account.Name FROM action_deleted oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action_deleted.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
@@ -374,7 +381,8 @@ namespace Financial_WPF_App.Models
                 LEFT JOIN `user` approved_byuser on approved_byuser.id = action_deleted.Approved_by
                 LEFT JOIN `user` created_byuser on created_byuser.id = action_deleted.User_ID
                 LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by
-                LEFT JOIN `user` deleted_byuser on deleted_byuser.id = deleted_by";
+                LEFT JOIN `user` deleted_byuser on deleted_byuser.id = deleted_by
+                LEFT JOIN tilltypes AS currency_type ON currency_type.ID = action_deleted.currency_tilltype_id";
 
 
             string condition = " where 1 ";
@@ -961,15 +969,15 @@ namespace Financial_WPF_App.Models
                     {
                         //  Outcome من USD till
                         query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, Amount, rate, ActionDate, Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote,
-                                 CashAccount_ID, Donor_ID, created_at, User_ID, SourceAction) VALUES (@ObserveTill_ID, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'O'), @Amount, @rate, @ActionDate,
-                                @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @CashAccount_ID, @Donor_ID, @Todaydate, @Uesr_ID, '0'); ";
+                                 CashAccount_ID, Donor_ID, created_at, User_ID, SourceAction, `BudgetLine_ID`) VALUES (@ObserveTill_ID, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'O'), @Amount, @rate, @ActionDate,
+                                @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @CashAccount_ID, @Donor_ID, @Todaydate, @Uesr_ID, '0', @BudgetLine_ID); ";
 
                         query += " SET @UsdOutcome_ID = Last_Insert_ID(); ";
 
                         // Income على SYR till بعملة USD
                         query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, currency_tilltype_id, Amount, rate, ActionDate,  Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote,
-                                 CashAccount_ID, Donor_ID, created_at, User_ID, SourceAction) VALUES (@Till_ID, @ObserveTill_ID, @Action_ID, (select id from actiontype where shortname = 'I'),@Currency_tilltype_id, @Amount, @rate, @ActionDate,
-                                 @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote,@CashAccount_ID, @Donor_ID, @Todaydate, @Uesr_ID, '0');";
+                                 CashAccount_ID, Donor_ID, created_at, User_ID, SourceAction, `BudgetLine_ID`) VALUES (@Till_ID, @ObserveTill_ID, @Action_ID, (select id from actiontype where shortname = 'I'),@Currency_tilltype_id, @Amount, @rate, @ActionDate,
+                                 @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote,@CashAccount_ID, @Donor_ID, @Todaydate, @Uesr_ID, '0', @BudgetLine_ID);";
 
                         query += " SET @SyrIncome_ID = Last_Insert_ID(); ";
                     }  
@@ -1337,8 +1345,8 @@ namespace Financial_WPF_App.Models
 
                 if (WithObserveAcion_ID && isUsdExpenseFromSyr)
                 {
-                    query += @" UPDATE action SET Amount = @Amount, rate = @rate, ActionDate = @ActionDate, Note = @Note ,  E_Note = @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID
-              , Donor_ID = @Donor_ID, updated_at = @Todaydate,  edited_by = @Uesr_ID  WHERE action.ObserveAcion_ID = @Action_ID;";
+                    query += @" UPDATE action SET Amount = @Amount, rate = @rate, ActionDate = @ActionDate, Note = @Note ,  E_Note = @E_Note,`IsReceipt` = @IsReceipt ,`ReceiptNote`= @ReceiptNote , CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID
+                             , Donor_ID = @Donor_ID, updated_at = @Todaydate,`BudgetLine_ID`= @BudgetLine_ID , edited_by = @Uesr_ID  WHERE action.ObserveAcion_ID = @Action_ID;";
                 }
 
 
@@ -1621,8 +1629,8 @@ namespace Financial_WPF_App.Models
 
                 if (WithObserveAcion_ID && isUsdExpenseFromSyr)
                 {
-                    query += @" UPDATE action_not_approved SET Amount = @Amount, rate = @rate, ActionDate = @ActionDate, Note = @Note ,  E_Note = @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID
-                               , Donor_ID = @Donor_ID, updated_at = @Todaydate,  edited_by = @Uesr_ID  WHERE action_not_approved.ObserveAcion_ID = @Action_ID;";
+                    query += @" UPDATE action_not_approved SET Amount = @Amount, rate = @rate, ActionDate = @ActionDate, Note = @Note ,  E_Note = @E_Note,`IsReceipt` = @IsReceipt ,`ReceiptNote`= @ReceiptNote, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID
+                               , Donor_ID = @Donor_ID, updated_at = @Todaydate, `BudgetLine_ID`= @BudgetLine_ID , edited_by = @Uesr_ID  WHERE action_not_approved.ObserveAcion_ID = @Action_ID;";
                 }
 
                 query += "UPDATE `action_not_approved` SET " +

@@ -785,21 +785,21 @@ namespace Financial_WPF_App
 
                                 // Original_AvgRate_help.Visibility = Visibility.Visible;
 
-                                if (currency_comboBox.SelectedValue != null &&
-                                    (int)currency_comboBox.SelectedValue == 4)
-                                {
-                                    Original_AvgRate_lable.IsEnabled = true;
-                                    Original_AvgRate_comboBox.IsEnabled = true;
-                                    Original_AvgRate_clear_btn.IsEnabled = true;
-                                    Original_AvgRate_help.Visibility = Visibility.Visible;
-                                }
-                                else
-                                {
-                                    Original_AvgRate_lable.IsEnabled = false;
-                                    Original_AvgRate_comboBox.IsEnabled = false;
-                                    Original_AvgRate_clear_btn.IsEnabled = false;
-                                    Original_AvgRate_help.Visibility = Visibility.Hidden;
-                                }
+                                //if (currency_comboBox.SelectedValue != null &&
+                                //    (int)currency_comboBox.SelectedValue == 4)
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = true;
+                                //    Original_AvgRate_comboBox.IsEnabled = true;
+                                //    Original_AvgRate_clear_btn.IsEnabled = true;
+                                //    Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //}
+                                //else
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = false;
+                                //    Original_AvgRate_comboBox.IsEnabled = false;
+                                //    Original_AvgRate_clear_btn.IsEnabled = false;
+                                //    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                                //}
 
                             }
                             else if (Type_ComboBox_Move_Item.IsSelected)
@@ -973,21 +973,21 @@ namespace Financial_WPF_App
 
 
 
-                                if (currency_comboBox.SelectedValue != null &&
-                                    (int)currency_comboBox.SelectedValue == 4)
-                                {
-                                    Original_AvgRate_lable.IsEnabled = true;
-                                    Original_AvgRate_comboBox.IsEnabled = true;
-                                    Original_AvgRate_clear_btn.IsEnabled = true;
-                                    Original_AvgRate_help.Visibility = Visibility.Visible;
-                                }
-                                else
-                                {
-                                    Original_AvgRate_lable.IsEnabled = false;
-                                    Original_AvgRate_comboBox.IsEnabled = false;
-                                    Original_AvgRate_clear_btn.IsEnabled = false;
-                                    Original_AvgRate_help.Visibility = Visibility.Hidden;
-                                }
+                                //if (currency_comboBox.SelectedValue != null &&
+                                //    (int)currency_comboBox.SelectedValue == 4)
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = true;
+                                //    Original_AvgRate_comboBox.IsEnabled = true;
+                                //    Original_AvgRate_clear_btn.IsEnabled = true;
+                                //    Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //}
+                                //else
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = false;
+                                //    Original_AvgRate_comboBox.IsEnabled = false;
+                                //    Original_AvgRate_clear_btn.IsEnabled = false;
+                                //    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                                //}
                             }
                             else if (Type_ComboBox_Move_Item.IsSelected)
                             {
@@ -1644,6 +1644,7 @@ namespace Financial_WPF_App
                         selected_dt = rows.CopyToDataTable();
                         if (selected_dt != null && selected_dt.Rows.Count > 0)
                             CashAccount_comboBox.ItemsSource = selected_dt.DefaultView;
+                            ObserveCashAccount_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                 }
             }
@@ -2691,11 +2692,25 @@ namespace Financial_WPF_App
         {
             try
             {
-            
-     
-                Show_Hide_Components();
 
-           
+                if (currency_comboBox.SelectedValue != null &&
+                   (int)currency_comboBox.SelectedValue == 4)
+                {
+                    Original_AvgRate_lable.IsEnabled = true;
+                    Original_AvgRate_comboBox.IsEnabled = true;
+                    Original_AvgRate_clear_btn.IsEnabled = true;
+                    Original_AvgRate_help.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Original_AvgRate_lable.IsEnabled = false;
+                    Original_AvgRate_comboBox.IsEnabled = false;
+                    Original_AvgRate_clear_btn.IsEnabled = false;
+                    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                }
+                //Show_Hide_Components();
+
+
             }
             catch (Exception ex)
             {
@@ -3203,6 +3218,14 @@ namespace Financial_WPF_App
                     else if (Type_comboBox.SelectedItem.ToString().Contains("Expenses"))
                     {
                         inserted_value = "E";
+                        if (currency_comboBox.SelectedValue == null ||
+                           Convert.ToInt32(currency_comboBox.SelectedValue) <= 0)
+                        {
+                            MessageBox.Show("Please make sure to select the currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                            currency_comboBox.Focus();
+                            return;
+                        }
+
                     }
                     else if (Type_comboBox.SelectedItem.ToString().Contains("Exchange"))
                     {
@@ -3331,20 +3354,20 @@ namespace Financial_WPF_App
                     }
                 }
 
-                //if (Original_AvgRate_comboBox.IsEnabled == true)
-                //{
-                //    if (Original_AvgRate_comboBox.SelectedIndex == -1)
-                //    {
-                //        if (Account_Type == "Project" && TillType.ToLower() == "syr")
-                //        {
-                //            MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                //            return;
+                if (Original_AvgRate_comboBox.IsEnabled == true)
+                {
+                    if (Original_AvgRate_comboBox.SelectedIndex == -1)
+                    {
+                        if (Account_Type == "Project" && TillType.ToLower() == "syr")
+                        {
+                            MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                            return;
 
-                //        }
-                //    }
-                //    else
-                //        OriginalRate_ID = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue);
-                //}
+                        }
+                    }
+                    else
+                        OriginalRate_ID = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue);
+                }
 
                 if (Donor_comboBox.IsEnabled == true)
                 {
