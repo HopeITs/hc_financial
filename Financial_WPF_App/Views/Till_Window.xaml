@@ -164,7 +164,7 @@
         </Border> -->
         <Grid Grid.Row="2"  Margin="0,5,0,0">
             <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}">
-                <WrapPanel Orientation="Horizontal" Width="290">
+                <WrapPanel Orientation="Horizontal" Width="355">
                     <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                         <Menu.Resources>
                             <!-- Custom Menu Style -->
@@ -288,6 +288,14 @@
                             </Button.Background>
                         </Button>
                     </StackPanel>
+                    <StackPanel x:Name="Attachments"  RenderTransformOrigin="0.5,0.5" Width="31" Orientation="Horizontal" FlowDirection="LeftToRight">
+                        <Button ToolTip="Download Attachments" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
+        x:Name="Attachments_btn" TabIndex="15" Width="30" Height="25"   Click="Attachments_btn_Click" Margin="1,5,1,1" >
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/Buttons/DownloadMedia.png" Stretch="Uniform"/>
+                            </Button.Background>
+                        </Button>
+                    </StackPanel>
                     <StackPanel Margin="5,2,5,2" x:Name="Add_btn"  Orientation="Horizontal" FlowDirection="RightToLeft" ToolTip="New Entry" ToolTipService.InitialShowDelay="100">
                         <Button  Style="{DynamicResource AddButtonStyle}"  Width="22" Height="22" x:Name="AddNewAction_btn" TabIndex="15" Click="AddNewAction_btn_Click" Margin="0,0,1,0" HorizontalAlignment="Center">
                             <Button.Background>
@@ -327,6 +335,7 @@
                             </Button.Background>
                         </Button>
                     </StackPanel>
+                    
                 </WrapPanel>
                 <StackPanel x:Name="Search_StackPanel" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right"  Margin="0,0,35,0">
                     <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Click="NotApproved_RadioButton_Click" Tag="False" Margin="0,9,0,9" VerticalAlignment="Stretch" Width="170"/>

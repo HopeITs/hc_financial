@@ -1231,6 +1231,15 @@
   <ItemGroup>
     <Resource Include="Images\Buttons\show_balances.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\Download.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\apply.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\DownloadMedia.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.2.2-ci882\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

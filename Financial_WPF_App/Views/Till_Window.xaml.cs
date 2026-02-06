@@ -1129,6 +1129,25 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        private void Attachments_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Window _AttachmentWindow = new Attachments(Account_ID);
+                _AttachmentWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void Search_txtBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
