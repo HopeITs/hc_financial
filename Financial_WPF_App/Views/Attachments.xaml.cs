@@ -34,6 +34,7 @@ namespace Financial_WPF_App.Views
             this.Account_Type = Account_Type;
             this.Category = Category;
             this.Approved_Action = Approved_Action;
+            SelectedAccountIDs = new List<int>();
             FilterRow2.Height = new GridLength(0);
             FilterPanel2.Visibility = Visibility.Hidden;
             FilterRow1.Height = new GridLength(0);
@@ -51,7 +52,8 @@ namespace Financial_WPF_App.Views
         public Attachments(int? Account_ID)
         {
             InitializeComponent();
-            this.Account_ID = Account_ID;
+            SelectedAccountIDs = new List<int>();
+            SelectedAccountIDs.Add(Account_ID.Value);
             AddAttachments_btn.Visibility = Visibility.Hidden;
             Delete_DataGridColumn.IsHidden = true;
             FilterRow1.Height = new GridLength(0);
@@ -71,6 +73,7 @@ namespace Financial_WPF_App.Views
             AddAttachments_btn.Visibility = Visibility.Hidden;
             FilterPane11.Visibility = Visibility.Visible;
             Delete_DataGridColumn.IsHidden = true;
+            SelectedAccountIDs = new List<int>();
             if (OnLoad())
             {
 
@@ -84,13 +87,12 @@ namespace Financial_WPF_App.Views
         Account a;
         DataTable attachments_dt = new DataTable();
         int Action_ID; int Beneficiary_ID ;
-        int? Account_ID;
         private string Account_Type; private string Category;
         private OpenFileDialog open;
         private string[] FullAttachNames;
         private Thread myTh;
         int userId = Properties.Settings.Default.User_ID;
-
+        string userRole = Properties.Settings.Default.Role;
 
         private System.Windows.Forms.FolderBrowserDialog FolderBrowserDialog1;
 
@@ -111,8 +113,8 @@ namespace Financial_WPF_App.Views
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
         List<Local_Account> objAccountList;
         List<Local_Account> FilteredAccountList;
-        List<Local_Account> Original_objAccountList;
-
+        List<Local_Account> Original_AccountList;
+        List<int> SelectedAccountIDs;
 
         private class Local_Account
         {
@@ -239,7 +241,7 @@ namespace Financial_WPF_App.Views
 
         public void LoadUserCities()
         {
-            DataTable dt = a.get_user_cities(userId);
+            DataTable dt = a.get_user_cities(userId,userRole);
 
             City_comboBox.ItemsSource = dt.DefaultView;
             City_comboBox.DisplayMemberPath = "name";
@@ -250,7 +252,7 @@ namespace Financial_WPF_App.Views
 
         public void LoadUserProjects(int city_id)
         {
-            DataTable dt = a.get_user_projects(userId, city_id);
+            DataTable dt = a.get_user_projects(userId, city_id, userRole);
 
             Subproject_comboBox.ItemsSource = dt.DefaultView;
             Subproject_comboBox.DisplayMemberPath = "name";
@@ -261,50 +263,73 @@ namespace Financial_WPF_App.Views
 
         public void LoadUserAccounts(int subproject_id)
         {
-            DataTable dt = a.get_user_accounts(userId, subproject_id);
+            DataTable dt = a.get_user_accounts(userId, subproject_id, userRole);
+            List<string> AllAccount_ID = new List<string>();
+            Original_AccountList = new List<Local_Account>();
+            objAccountList = new List<Local_Account>();
 
-            Account_comboBox.ItemsSource = dt.DefaultView;
-            Account_comboBox.DisplayMemberPath = "name";
-            Account_comboBox.SelectedValuePath = "id";
-
-            Account_comboBox.SelectedIndex = -1;
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Local_Account obj = new Local_Account();
+                    obj.AccID = dt.Rows[i].Field<int>(0);
+                    obj.AccName = dt.Rows[i].Field<string>(1);
+                    objAccountList.Add(obj);
+                }
+                Account_comboBox.ItemsSource = objAccountList;
+                int count = objAccountList.Count(item => item.Acc_Check_Status == true);
+                Account_comboBox.Text = count.ToString() + " Selected";
+            }
         }
 
         private void Account_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
         {
             try
             {
-                FilteredAccountList = new List<Local_Account>();
-                    if (objAccountList != null && objAccountList.Count > 0)
-                    {
-                        foreach (var account in objAccountList)
-                        {
-                            if (account.Acc_Check_Status == true)
-                            FilteredAccountList.Add(account);
-                        }
-                    }
+                //FilteredAccountList = new List<Local_Account>();
+                //    if (objAccountList != null && objAccountList.Count > 0)
+                //    {
+                //        foreach (var account in objAccountList)
+                //        {
+                //            if (account.Acc_Check_Status == true)
+                //            FilteredAccountList.Add(account);
+                //        }
+                //    }
 
-                    if (FilteredAccountList != null && FilteredAccountList.Count > 0)
-                    {
-                        Account_comboBox.ItemsSource = null;
+                //    if (FilteredAccountList != null && FilteredAccountList.Count > 0)
+                //    {
+                //        Account_comboBox.ItemsSource = null;
+                //    Account_comboBox.Text = "0 Selected";
+                //    Account_comboBox.ItemsSource = FilteredAccountList;
+                //        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
+                //    Account_comboBox.Text = count.ToString() + " Selected";
+                //    }
+                //    else
+                //    {
+                //    Account_comboBox.ItemsSource = null;
+                //    Account_comboBox.Text = "0 Selected";
+                //    Account_comboBox.ItemsSource = objAccountList;
+                //        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
+                //    Account_comboBox.Text = count.ToString() + " Selected";
+                //    }
+
+
+
+                //int AccoutCount = objAccountList.Count(item => item.Acc_Check_Status == true);
+                //Account_comboBox.Text = AccoutCount.ToString() + " Selected";
+                if (objAccountList == null || objAccountList.Count == 0)
+                {
                     Account_comboBox.Text = "0 Selected";
-                    Account_comboBox.ItemsSource = FilteredAccountList;
-                        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
-                    Account_comboBox.Text = count.ToString() + " Selected";
-                    }
-                    else
-                    {
-                    Account_comboBox.ItemsSource = null;
-                    Account_comboBox.Text = "0 Selected";
-                    Account_comboBox.ItemsSource = objAccountList;
-                        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
-                    Account_comboBox.Text = count.ToString() + " Selected";
-                    }
+                    return;
+                }
 
-                
+                int selectedCount = objAccountList.Count(x => x.Acc_Check_Status);
+                SelectedAccountIDs = new List<int>();
+                Account_comboBox.Text = $"{selectedCount} Selected";
 
-                int AccoutCount = objAccountList.Count(item => item.Acc_Check_Status == true);
-                Account_comboBox.Text = AccoutCount.ToString() + " Selected";
+                Account_comboBox.IsDropDownOpen = true;
+                SelectedAccountIDs = objAccountList.Where(x => x.Acc_Check_Status).Select(x => x.AccID).ToList();
             }
             catch (Exception ex)
             {
@@ -328,9 +353,9 @@ namespace Financial_WPF_App.Views
             if (ToDate_datepicker.SelectedDate != null && ToDate_datepicker.SelectedDate.ToString() != "")
                 ToDate = ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
 
-            if (Account_ID != null)
+            if (SelectedAccountIDs != null)
             {
-                attachments_dt = a.get_attachments(Account_ID,Action_ID,Beneficiary_ID, FromDate, ToDate);
+                attachments_dt = a.get_attachments(SelectedAccountIDs, Action_ID,Beneficiary_ID, FromDate, ToDate);
                 
                 if (attachments_dt != null && attachments_dt.Rows.Count > 0)
                 {
@@ -348,11 +373,19 @@ namespace Financial_WPF_App.Views
                 {
                     int count = myDataGrid.View.Records.Count();
                     All_Label.Content = count.ToString("N0");
+                    DownloadAttachments_btn.Visibility = Visibility.Visible;
+                    DownloadAttachments_btn.Width = 24;
+                }
+                else
+                {
+                    All_Label.Content = "0";
+                    DownloadAttachments_btn.Visibility = Visibility.Hidden;
+                    All_Label.Content = "0";
                 }
             }
             else
             {
-                attachments_dt = a.get_attachments(Account_ID, Action_ID, Beneficiary_ID, FromDate, ToDate);
+                attachments_dt = a.get_attachments(SelectedAccountIDs, Action_ID, Beneficiary_ID, FromDate, ToDate);
                 //attachments_dt = d.GetAttachmentsNames(Action_ID, Beneficiary_ID);
                 if (attachments_dt != null && attachments_dt.Rows.Count > 0)
                 {
@@ -370,6 +403,14 @@ namespace Financial_WPF_App.Views
                 {
                     int count = myDataGrid.View.Records.Count();
                     All_Label.Content = count.ToString("N0");
+                    DownloadAttachments_btn.Visibility = Visibility.Visible;
+                    DownloadAttachments_btn.Width = 24;
+                }
+                else
+                {
+                    All_Label.Content = "0";
+                    DownloadAttachments_btn.Visibility = Visibility.Hidden;
+                    All_Label.Content = "0";
                 }
             }
         }
@@ -382,7 +423,7 @@ namespace Financial_WPF_App.Views
                 string fileName = "";
                 if (Action_ID != -1)
                 {
-                    fileName = "Action_id_" + Action_ID.ToString() + "_" + dataRow["attach_name"].ToString();
+                    fileName = "Action_id_" + dataRow["action_id"].ToString() + "_" + dataRow["attach_name"].ToString();
 
                 }
                 else if (Beneficiary_ID != -1)
@@ -478,7 +519,7 @@ namespace Financial_WPF_App.Views
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
                 if (Action_ID != -1)
                 {
-                    DownloadFileName = "Action_id_" + Action_ID.ToString() + "_" + dataRow["attach_name"].ToString();
+                    DownloadFileName = "Action_id_" + dataRow["action_id"].ToString() + "_" + dataRow["attach_name"].ToString();
                 }
                 else if (Beneficiary_ID != -1)
                 {
@@ -534,23 +575,18 @@ namespace Financial_WPF_App.Views
                     string saveFileName = dataRow["attach_name"].ToString();
                     int attachmentId = Convert.ToInt32(dataRow["id"]);
 
-                    string downloadFileName = "";
 
                     if (Action_ID != -1)
                     {
-                        downloadFileName = "Action_id_" + Action_ID + "_" + saveFileName;
+                        DownloadFileName = "Action_id_" + dataRow["action_id"].ToString() + "_" + saveFileName;
                     }
                     else if (Beneficiary_ID != -1)
                     {
-                        downloadFileName = "Beneficiary_id_" + Beneficiary_ID + "_" + saveFileName;
+                        DownloadFileName = "Beneficiary_id_" + Beneficiary_ID.ToString() + "_" + saveFileName;
                     }
 
-                    if (d.file_Exist(downloadFileName))
+                    if (d.file_Exist(DownloadFileName))
                     {
-                        DownloadFileName = downloadFileName;
-                        SaveFileName = saveFileName;
-                        attachments_id = attachmentId;
-
                         myTh = new Thread(SaveDialog);
                         myTh.SetApartmentState(ApartmentState.STA);
                         myTh.Start();
@@ -838,10 +874,11 @@ namespace Financial_WPF_App.Views
         {
             if (myDataGrid.View != null)
             {
-                
+
                 int count = myDataGrid.View.Records.Count();
                 All_Label.Content = count.ToString("N0");
             }
+           
         }
 
         private void Apply_btn_Click(object sender, RoutedEventArgs e)
@@ -849,8 +886,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 //GridFilled = true;
-                DownloadAttachments_btn.Visibility = Visibility.Visible;
-                DownloadAttachments_btn.Width = 24;
+                
                 Load_Data();
             }
             catch (Exception ex)
@@ -888,13 +924,16 @@ namespace Financial_WPF_App.Views
             Account_comboBox.IsEnabled = true;
         }
 
-        private void Account_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (Account_comboBox.SelectedValue == null)
-                return;
+        
 
-            int AccountId = Convert.ToInt32(Account_comboBox.SelectedValue);
-            Account_ID = AccountId;
+        private void comboBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = e.Key == Key.Space || e.Key == Key.Back || e.Key == Key.Delete;
+        }
+
+        private void comboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

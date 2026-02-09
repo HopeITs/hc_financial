@@ -44,16 +44,16 @@ VerticalAlignment="Stretch" SelectionChanged="City_comboBox_SelectionChanged" >
                     </ComboBox>
                     <Label x:Name="Account_Label" Style="{DynamicResource statistic_lableStyle}" Content="Account:"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70" Margin="14,2,1,2"/>
                     <ComboBox Grid.Row="0" Grid.Column="5" x:Name="Account_comboBox" TabIndex="2" Style="{StaticResource ActionComboboxStyle}"
-                          IsEnabled="False"
-                        HorizontalContentAlignment="Left" VerticalAlignment="Stretch" SelectionChanged="Account_comboBox_SelectionChanged">
+                          IsEnabled="False"  PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown" 
+                        HorizontalContentAlignment="Left" VerticalAlignment="Stretch">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <CheckBox x:Name="Account_comboBox" Width="220" 
                     Click="Account_Checkbox_Item_Clicked"
                     Style="{DynamicResource CheckBoxStyle}"
-                    Content="{Binding SubName}" 
-                    IsChecked="{Binding Sub_Check_Status}" 
-                    CommandParameter="{Binding SubID}"/>
+                    Content="{Binding AccName}" 
+                    IsChecked="{Binding Acc_Check_Status}" 
+                    CommandParameter="{Binding AccID}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
