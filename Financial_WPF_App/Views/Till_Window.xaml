@@ -349,7 +349,7 @@
                 <ColumnDefinition Name="Grid_col" Width="Auto" ></ColumnDefinition>
                 <ColumnDefinition Name="Expander_col" Width="*" ></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="6"                                            
+            <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="7"                                            
                 Style="{DynamicResource SfDataGrid_body}"
                 HeaderStyle="{DynamicResource SfDataGrid_header}"
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
