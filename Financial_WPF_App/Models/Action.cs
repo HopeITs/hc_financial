@@ -121,7 +121,7 @@ namespace Financial_WPF_App.Models
                 condition += " and account.IsClosed = 0 ";
             }
 
-            query += condition + " Group by action.id;";
+            query += condition + " Group by action.id " + " ORDER BY action.ActionDate DESC, action.ID DESC;";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -279,7 +279,7 @@ namespace Financial_WPF_App.Models
                     condition += " and action_not_approved.`Amount` <= (select role.Approval_Limit from role where role.Name = '" + Properties.Settings.Default.Role + "')";
             }
 
-            query += condition + " Group by action_not_approved.id;";
+            query += condition + " GROUP BY action_not_approved.id " +" ORDER BY action_not_approved.ActionDate DESC, action_not_approved.ID DESC;";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -401,7 +401,7 @@ namespace Financial_WPF_App.Models
                     condition += " and action_deleted.`Amount` <= (select role.Approval_Limit from role where role.Name = '" + Properties.Settings.Default.Role + "')";
             }
 
-            query += condition + " Group by action_deleted.id;";
+            query += condition + " Group by action_deleted.id " + " ORDER BY action_deleted.ActionDate DESC, action_deleted.ID DESC;";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
