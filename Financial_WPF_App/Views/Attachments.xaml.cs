@@ -602,6 +602,7 @@ namespace Financial_WPF_App.Views
                             Approved_Action,
                             "Attachments"
                         );
+                        MessageBox.Show("The file is missing - The name has been deleted from the list.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     }
                 }
 

@@ -80,7 +80,7 @@ VerticalAlignment="Stretch" SelectionChanged="City_comboBox_SelectionChanged" >
             </WrapPanel>
             <DockPanel Grid.Row="3">
                 <StackPanel Orientation="Horizontal"  Height="40">
-                    <Image Source="/Images/Icons/attachement.png" Width="15" Height="15"/>
+                    <Image Source="/Images/Icons/attachement.png" Width="15" Height="15" Margin="5,0,0,0"/>
                     <Label  Style="{DynamicResource statistic_lableStyle}" FontSize="11" Content="Attachments:" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <Label x:Name="All_Label" FontSize="11"  Style="{DynamicResource statistic_lableStyle}" Content="0" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                 </StackPanel>
@@ -97,7 +97,7 @@ x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" Verti
                         </Button.Background>
                     </Button>
                     <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Download Selected Attachments" Visibility="Hidden" ToolTipService.InitialShowDelay="100" Cursor="Hand"
-x:Name="DownloadAttachments_btn" TabIndex="15" Click="DownloadSelected_Button_Click" VerticalAlignment="Stretch" Height="23" Width="5">
+x:Name="DownloadAttachments_btn" TabIndex="15" Click="DownloadSelected_Button_Click" VerticalAlignment="Stretch" Height="23" Width="5" Margin="5,0,1,0">
                         <Button.Background>
                             <ImageBrush ImageSource="/Images/Buttons/Download.png" Stretch="Uniform"/>
                         </Button.Background>
