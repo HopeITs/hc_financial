@@ -936,5 +936,24 @@ namespace Financial_WPF_App.Views
         {
             e.Handled = true;
         }
+
+        private void ValidateDates(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (FromDate_datepicker.SelectedDate != null &&
+        ToDate_datepicker.SelectedDate != null)
+            {
+                if (ToDate_datepicker.SelectedDate < FromDate_datepicker.SelectedDate)
+                {
+                    MessageBox.Show(
+                        "To Date cannot be earlier than From Date",
+                        "Invalid Date",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+
+                    ToDate_datepicker.SelectedDate = FromDate_datepicker.SelectedDate;
+                }
+            }
+        }
     }
 }
