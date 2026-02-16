@@ -32,23 +32,26 @@ HorizontalContentAlignment="Left"
 VerticalAlignment="Stretch" SelectionChanged="City_comboBox_SelectionChanged" >
 
                     </ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Height="50">
-                    <Label x:Name="Project_Label" Style="{DynamicResource statistic_lableStyle}"  Content="Project:" Margin="0,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70"  />
+
+                    <Label x:Name="Project_Label" Style="{DynamicResource statistic_lableStyle}"  Content="Project:"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70" Margin="14,2,1,2"  />
                     <ComboBox Grid.Row="0" x:Name="Subproject_comboBox" TabIndex="1" Grid.Column="2" DisplayMemberPath="Subproject_Name" SelectedValuePath="Subproject_ID" 
-                        Style="{DynamicResource ActionComboboxStyle}" IsEnabled="False"
-                        SelectionChanged="Subproject_comboBox_SelectionChanged" >
+    Style="{DynamicResource ActionComboboxStyle}" IsEnabled="False"
+    SelectionChanged="Subproject_comboBox_SelectionChanged" >
                         <i:Interaction.Behaviors>
                             <helper:MouseClickComboBoxBehavior />
                         </i:Interaction.Behaviors>
                     </ComboBox>
-                    <Label x:Name="Account_Label" Style="{DynamicResource statistic_lableStyle}" Content="Account:"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70" Margin="14,2,1,2"/>
+
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="50">
+
+                    <Label x:Name="Account_Label" Style="{DynamicResource statistic_lableStyle}" Content="Account:" Margin="0,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70" />
                     <ComboBox Grid.Row="0" Grid.Column="5" x:Name="Account_comboBox" TabIndex="2" Style="{StaticResource ActionComboboxStyle}"
                           IsEnabled="False"  PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown" 
-                        HorizontalContentAlignment="Left" VerticalAlignment="Stretch">
+                        HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Width="437">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="Account_comboBox" Width="220" 
+                                <CheckBox x:Name="Account_comboBox" Width="427" 
                     Click="Account_Checkbox_Item_Clicked"
                     Style="{DynamicResource CheckBoxStyle}"
                     Content="{Binding AccName}" 
