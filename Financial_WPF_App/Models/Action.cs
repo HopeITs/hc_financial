@@ -623,7 +623,8 @@ namespace Financial_WPF_App.Models
                         DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',
                         DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
-                        (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
+                        (CASE WHEN actiontype.shortname = 'E' and action.currency_tilltype_id = 4 THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
+                        (CASE WHEN actiontype.shortname = 'E' and action.currency_tilltype_id = 2 THEN action.Amount ELSE 0 END) AS 'ExpenseUSD',
                         action.Note,
                         action.E_Note,
                         (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE

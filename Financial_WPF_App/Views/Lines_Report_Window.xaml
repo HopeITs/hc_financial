@@ -201,16 +201,21 @@ PopupAnimation="Fade">
                         <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>
                         <syncfusion:GridTextColumn x:Name="ActionYear_DataGridColumn" MappingName="ActionYear" HeaderText="Operation Year"/>
 
-                        <syncfusion:GridNumericColumn  x:Name="Expand_DataGridColumn" HeaderText="Expense"  MappingName="Expand"
+                        <syncfusion:GridNumericColumn  x:Name="Expensesyr_DataGridColumn" HeaderText="Expense(SYR)"  MappingName="ExpenseSYR"
                 NumberDecimalDigits="2"
                 NumberDecimalSeparator="."
                 NumberGroupSizes="3"
                 NumberGroupSeparator=","/>
-                        <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
+                        <syncfusion:GridNumericColumn  x:Name="Expenseusd_DataGridColumn" HeaderText="Expense(USD)"  MappingName="ExpenseUSD"
+NumberDecimalDigits="2"
+NumberDecimalSeparator="."
+NumberGroupSizes="3"
+NumberGroupSeparator=","/>
+                        <!--<syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
                                           NumberDecimalDigits="2"
                                        NumberDecimalSeparator="."
                                        NumberGroupSizes="3"
-                                       NumberGroupSeparator=","/>
+                                       NumberGroupSeparator=","/>-->
 
                         <syncfusion:GridTextColumn x:Name="Note_DataGridColumn" HeaderText="Description (Ar)"  MappingName="Note"  />
                         <syncfusion:GridTextColumn x:Name="E_Note_DataGridColumn" HeaderText="Description (Eng)"  MappingName="E_Note"  />
