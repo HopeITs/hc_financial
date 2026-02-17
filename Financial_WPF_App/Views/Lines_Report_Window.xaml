@@ -269,7 +269,11 @@ NumberGroupSeparator=","/>
                             <syncfusion:GridSummaryRow.SummaryColumns>
                                 <syncfusion:GridSummaryColumn Name="Total_E"                                                      
                            Format="'{Sum:N2}'"
-                           MappingName="Expand"
+                           MappingName="ExpenseSYR"
+                           SummaryType="DoubleAggregate" />
+                                <syncfusion:GridSummaryColumn Name="Total_Exp_USD"                                                      
+                           Format="'{Sum:N2}'"
+                           MappingName="ExpenseUSD"
                            SummaryType="DoubleAggregate" />
                                 <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
                            Format="'{Sum:N2}'"
@@ -293,7 +297,11 @@ NumberGroupSeparator=","/>
                             <syncfusion:GridSummaryRow.SummaryColumns>
                                 <syncfusion:GridSummaryColumn Name="Total_E"                                                      
                                     Format="'{Sum:N2}'"
-                                    MappingName="Expand"
+                                    MappingName="ExpenseSYR"
+                                    SummaryType="DoubleAggregate" />
+                                <syncfusion:GridSummaryColumn Name="Total_Exp_USD"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="ExpenseUSD"
                                     SummaryType="DoubleAggregate" />
                                 <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
                                     Format="'{Sum:N2}'"
