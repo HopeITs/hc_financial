@@ -16,7 +16,7 @@ namespace Financial_WPF_App.Helper
     public class CustomCopyPaste : GridCutCopyPaste
     {
         public event EventHandler PasteCompleted;
-        private DataTable _all_Original_AvgRate_dt, _all_AvgRate_dt, _all_b_dt, _all_t_dt, _all_ExAcc_dt, _all_Accounts_dt, _all_Lines_dt, _all_budgets_dt, _all_cashAccounts_dt, _all_Donors_dt, _all_Employee_dt, _all_Tills_dt;
+        private DataTable _all_Original_AvgRate_dt, _all_AvgRate_dt, _all_b_dt, _all_t_dt, _all_ExAcc_dt, _all_Accounts_dt, _all_Lines_dt, _all_budgets_dt, _all_cashAccounts_dt, _all_Donors_dt, _all_Employee_dt, _all_Tills_dt, _currency_dt;
         public int TotalPastedRows { get; private set; } = 0;
         public int TotalErrorRows { get; private set; } = 0;
 
@@ -34,6 +34,8 @@ namespace Financial_WPF_App.Helper
         DataTable _cashAccounts_dt = new DataTable();
         DataTable _Donors_dt = new DataTable();
         DataTable _Employee_dt = new DataTable();
+        DataTable currncy_dt = new DataTable();
+
 
 
 
@@ -41,6 +43,7 @@ namespace Financial_WPF_App.Helper
         int _Subproject_ID = -1;
         int _Till_ID = -1;
         int _Account_ID = -1;
+        int _currency_tilltype_id = -1;
         string _Form_Name = "Add_MultiActions_Window";
         double _Amount = 0;
         string _ActionDate = "";
@@ -68,6 +71,7 @@ namespace Financial_WPF_App.Helper
         bool _WithObserveAcion_ID = false;
 
         bool _ExchangeToForeign_privileges;
+        bool isUsdExpenseFromSyr;
 
         int k = -1;
 
@@ -76,7 +80,7 @@ namespace Financial_WPF_App.Helper
         List<string> _ShownColumns = new List<string>();
 
         public CustomCopyPaste(SfDataGrid dataGrid, string Account_Type, string TillType, string inserted_value, List<string> ShownColumns, bool ExchangeToForeign_privileges,
-            DataTable Original_AvgRate_dt, DataTable AvgRate_dt, DataTable b_dt, DataTable t_dt, DataTable ExAcc_dt, DataTable Accounts_dt,
+            DataTable Currency_dt, DataTable Original_AvgRate_dt, DataTable AvgRate_dt, DataTable b_dt, DataTable t_dt, DataTable ExAcc_dt, DataTable Accounts_dt, 
             DataTable Lines_dt, DataTable budgets_dt, DataTable all_cashAccounts_dt, DataTable Donors_dt, DataTable Employee_dt, DataTable AllTills_dt)
             : base(dataGrid)
         {
@@ -100,6 +104,7 @@ namespace Financial_WPF_App.Helper
             _all_Donors_dt = Donors_dt ?? new DataTable();
             _all_Employee_dt = Employee_dt ?? new DataTable();
             _all_Tills_dt = AllTills_dt ?? new DataTable();
+            _currency_dt = Currency_dt ?? new DataTable();
 
 
             _ExchangeToForeign_privileges = ExchangeToForeign_privileges;
@@ -195,10 +200,12 @@ namespace Financial_WPF_App.Helper
             _Rate_ID = -1;
             _ReceiptNote = "";
             _rate = 0;
+            _currency_tilltype_id = -1;
 
             _WithExAcc = false;
             _WithExchangeRate = false;
             _WithObserveAcion_ID = false;
+            isUsdExpenseFromSyr = false;
         }
 
 
@@ -416,6 +423,44 @@ namespace Financial_WPF_App.Helper
                     e.Row.RowError = "There are errors in this row.";
                 }
             }
+            else if (e.Column.ColumnName == "Currency")
+            {
+                bool exists = false;
+
+                if (_currency_dt.Rows.Count > 0)
+                {
+                    _currency_tilltype_id = _currency_dt.AsEnumerable()
+                        .Where(row => row.Field<string>("Name")?.ToLower().Trim()
+                            == e.ProposedValue.ToString().ToLower().Trim())
+                        .Select(row => row.Field<int>("Currency_ID"))
+                        .DefaultIfEmpty(-1)
+                        .FirstOrDefault();
+                }
+
+                if (_currency_tilltype_id != -1)
+                {
+                    exists = true;
+                    if (_Till_Type.ToLower() == "syr" &&
+                     e.ProposedValue.ToString().ToLower().Trim() == "usd" &&
+                    _inserted_value == "E")
+                    {
+                        isUsdExpenseFromSyr = true;
+                    }
+                    else
+                    {
+                        isUsdExpenseFromSyr = false;
+                    }
+
+                }
+
+                    if (!exists)
+                {
+                    Login.MultiAction_AnyError = true;
+                    e.Row.SetColumnError(e.Column.ColumnName, "This currency does not exist.");
+                    e.Row.RowError = "There are errors in this row.";
+                }
+            }
+
             else if (e.Column.ColumnName == "Amount")
             {
                 bool isNumber = Double.TryParse(e.ProposedValue.ToString(), out _Amount);
@@ -1209,6 +1254,11 @@ namespace Financial_WPF_App.Helper
                     {
                         _WithObserveAcion_ID = false;
                     }
+                    if (isUsdExpenseFromSyr)
+                    {
+                        _WithObserveAcion_ID = true;
+                    }
+
                     build_insert_query();
                 }
                 else
@@ -1358,6 +1408,15 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Account_ID" + k, _Account_ID);
             }
+            if (_currency_tilltype_id == -1)
+            {
+                Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, DBNull.Value);
+            }
+            else
+            {
+                Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, _currency_tilltype_id);
+            }
+
 
             string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
             Login.MultiAction_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
@@ -1381,16 +1440,18 @@ namespace Financial_WPF_App.Helper
 
             temp_query += "SET @Action_ID" + k + " = @Action_ID;";
 
-            temp_query += @"INSERT INTO `action_not_approved`(`id`,`Till_ID`,`ObserveTill_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
+            temp_query += @"INSERT INTO `action_not_approved`(`id`,`Till_ID`,`ObserveTill_ID`, `AType_ID`,`currency_tilltype_id`, `Amount`, `rate`, `ActionDate`
                             ,  `Note`, `E_Note`, `IsReceipt`, `ReceiptNote`, `Employee_Salary_ID`, `Rate_ID`
                             , `MicroProject_ID`, `BudgetLine_ID`, `IncomeType_ID`, `CashAccount_ID`, `ObserveCashAccount_ID`, `Exchange_Cash_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES (@Action_ID" + k + " ,@Till_ID" + k + " ,@ObserveTill_ID" + k + " ,(select id from actiontype where shortname = @AType" + k + "), @Amount" + k + ", @rate" + k + ", @ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ",  @Employee_Salary_ID" + k + ",@Rate_ID" + k + ", "
+                            VALUES (@Action_ID" + k + " ,@Till_ID" + k + " ,@ObserveTill_ID" + k + " ,(select id from actiontype where shortname = @AType" + k + "), @Currency_tilltype_id" + k + ", @Amount" + k + ", @rate" + k + ", @ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ",  @Employee_Salary_ID" + k + ",@Rate_ID" + k + ", "
                             + "@MicroProject_ID" + k + ", @BudgetLine_ID" + k + ", @IncomeType_ID" + k + ", @CashAccount_ID" + k + ", @ObserveCashAccount_ID" + k + ", @Exchange_Cash_ID" + k + ", @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '1');";
 
             temp_query += "SET @Action_ID = @Action_ID" + k + " +1;";
 
+            bool isUsdExpenseFromSyr = _inserted_value == "E" && _Till_Type.ToLower() == "syr" && _currency_tilltype_id == 2 && !_WithExAcc;
 
-            if (_WithObserveAcion_ID)
+
+            if (_WithObserveAcion_ID && !isUsdExpenseFromSyr)
             {
                 temp_query += @" INSERT INTO `action_not_approved`(`Till_ID`,`ObserveTill_ID`, `ObserveAcion_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
                             ,  `Note`,`E_Note`, `IsReceipt`, `ReceiptNote`, `Employee_Salary_ID`, `CashAccount_ID`,`ObserveCashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
@@ -1423,10 +1484,30 @@ namespace Financial_WPF_App.Helper
                     temp_query += "SET @Action_ID = @Action_ID" + k + " +4;";
                 }
             }
+            else if (_WithObserveAcion_ID && isUsdExpenseFromSyr)
+{
+                // Outcome من USD till
+                temp_query += @"INSERT INTO action_not_approved (`Till_ID`,`ObserveTill_ID`,`ObserveAcion_ID`,`AType_ID`,`currency_tilltype_id`,`Amount`,`rate`,`ActionDate`,`Note`,`E_Note`,`IsReceipt`,`ReceiptNote`,`Employee_Salary_ID`,`CashAccount_ID`,`Donor_ID`,`created_at`,`User_ID`,`SourceAction`,`BudgetLine_ID`) 
+                              VALUES (@ObserveTill_ID" + k + ",@Till_ID" + k + ",@Action_ID" + k + ",(select id from actiontype where shortname='O'),@Currency_tilltype_id" + k + ",@Amount" + k + ",@rate" + k + ",@ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ",@IsReceipt" + k + ",@ReceiptNote" + k + ",@Employee_Salary_ID" + k + ",@CashAccount_ID" + k + ",@Donor_ID" + k + ",@Todaydate" + k + ",@Uesr_ID" + k + ",'0',@BudgetLine_ID" + k + ");";
+
+                temp_query += "SET @UsdOutcome_ID" + k + " = Last_Insert_ID();";
+
+
+                temp_query += " SET @UsdOutcome_ID" + k + " = Last_Insert_ID();";
+
+                // Income على SYR till بعملة USD
+                temp_query += @"INSERT INTO action_not_approved (`Till_ID`,`ObserveTill_ID`,`ObserveAcion_ID`,`AType_ID`,`currency_tilltype_id`,`Amount`,`rate`,`ActionDate`,`Note`,`E_Note`,`IsReceipt`,`ReceiptNote`,`Employee_Salary_ID`,`CashAccount_ID`,`Donor_ID`,`created_at`,`User_ID`,`SourceAction`,`BudgetLine_ID`)
+                              VALUES (@Till_ID" + k + ",@ObserveTill_ID" + k + ",@Action_ID" + k + ",(select id from actiontype where shortname='I'),@Currency_tilltype_id" + k + ",@Amount" + k + ",@rate" + k + ",@ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ",@IsReceipt" + k + ",@ReceiptNote" + k + ",@Employee_Salary_ID" + k + ",@CashAccount_ID" + k + ",@Donor_ID" + k + ",@Todaydate" + k + ",@Uesr_ID" + k + ",'0',@BudgetLine_ID" + k + ");";
+
+                temp_query += " SET @SyrIncome_ID" + k + " = LAST_INSERT_ID();";
+
+                temp_query += " SET @Action_ID = @Action_ID" + k + " + 3;";
+            }
+
 
             temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @Action_ID" + k + ", CONCAT('action Type = ', @AType" + k + "), CONCAT('till ID = ',@Till_ID" + k + ") , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
-            if (_WithObserveAcion_ID)
+            if (_WithObserveAcion_ID && !isUsdExpenseFromSyr)
             {
                 temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @ObserveAcion_ID" + k + ", 'action Type = I', CONCAT('till ID = ', @ObserveTill_ID" + k + " ,' - Auto Created With action ID = ',@Action_ID" + k + ") , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                 if (_WithExAcc)
@@ -1435,6 +1516,23 @@ namespace Financial_WPF_App.Helper
                     temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @ToExTill_Acc_ID" + k + ", 'action Type = E', CONCAT('till ID = ', @To_id" + k + " ,' - Auto Created With action ID = ',@Action_ID" + k + ") , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                 }
             }
+            if (_WithObserveAcion_ID && isUsdExpenseFromSyr)
+            {
+                // Log USD Outcome
+                temp_query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
+                              "VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @UsdOutcome_ID" + k + ", 'action Type = O', " +
+                              "CONCAT('till ID = ', @ObserveTill_ID" + k + " ,' - Linked to action ID = ', @Action_ID" + k + "), " +
+                              "'" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+
+                // Log SYP Income
+                temp_query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
+                              "VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @SyrIncome_ID" + k + ", 'action Type = I', " +
+                              "CONCAT('till ID = ', @Till_ID" + k + " ,' - Linked to action ID = ', @Action_ID" + k + "), " +
+                              "'" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+            }
+
+
+
 
 
             Login.MultiAction_List.Add(temp_query);

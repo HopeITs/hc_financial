@@ -3566,7 +3566,7 @@ namespace Financial_WPF_App
                             return;
                         }
 
-                     int expenseId  = a.Insert( Till_ID, "syr", usdTillId, "usd", Donor_ID, -1, true, false, true, "E", amount, rate, ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum,
+                     int expenseId  = a.Insert( Till_ID, "syr", usdTillId, "usd", Donor_ID, -1, true, false, false, "E", amount, rate, ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum,
                                                 Employee_Salary_ID, OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", 2 );
 
                         //int outcomeId = a.Insert(
