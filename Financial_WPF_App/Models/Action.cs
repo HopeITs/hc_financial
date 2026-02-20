@@ -635,7 +635,17 @@ namespace Financial_WPF_App.Models
                         (Case when actiontype.shortname = 'Ex' then (action.Amount * action.rate) else 0 END) as `Exchanged`,
                         all_avgrates.Name as `AvgRateName`,
                         all_avgrates.value as `AvgRateValue`, 
-                        (action.Amount/ all_avgrates.value) as `USD_Value`,
+                        CASE 
+    WHEN actiontype.shortname = 'E' 
+         AND LOWER(Currency_Tilltype.Name) = LOWER('Syr') 
+        THEN action.Amount / NULLIF(all_avgrates.value,0)
+
+    WHEN actiontype.shortname = 'E' 
+         AND LOWER(Currency_Tilltype.Name) = LOWER('Usd') 
+        THEN action.Amount
+
+    ELSE NULL
+END AS `USD_Value`,
                         cashaccount.Name as `CashAccount`,
                         (select tilltypes.Name from till left join tilltypes on tilltypes.ID = till.Type_ID where till.id = action.ObserveTill_ID) as `ObserveTill`,
                         (select account.name from account left join till on till.account_id = account.id where till.id = action.ObserveTill_ID) as `ObserveAccount`,
