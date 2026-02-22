@@ -83,7 +83,7 @@ namespace Financial_WPF_App.Models
             string localserver = "localhost";         
 
             ConStr_Online = @"Server=" + onlineserver + ";Port=3306;Database=" + test_database +
-                            ";Uid=hcfi;Password=password@11;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
+                            ";Uid=hcfi;Password=}+&>CsWe6M1?3JtI;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
             ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
                          ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
