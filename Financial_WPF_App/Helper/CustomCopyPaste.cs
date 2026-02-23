@@ -430,11 +430,11 @@ namespace Financial_WPF_App.Helper
                 if (_currency_dt.Rows.Count > 0)
                 {
                     _currency_tilltype_id = _currency_dt.AsEnumerable()
-                        .Where(row => row.Field<string>("Name")?.ToLower().Trim()
-                            == e.ProposedValue.ToString().ToLower().Trim())
-                        .Select(row => row.Field<int>("Currency_ID"))
-                        .DefaultIfEmpty(-1)
-                        .FirstOrDefault();
+                    .Where(row => row.Field<string>("Name")?.ToLower().Trim()
+                     == e.ProposedValue.ToString().ToLower().Trim())
+                    .Select(row => row.Field<int>("ID")) // صح: عمود رقم العملة
+                    .DefaultIfEmpty(-1)
+                    .FirstOrDefault();
                 }
 
                 if (_currency_tilltype_id != -1)
@@ -914,6 +914,12 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
 
+                string currency = e.Row["Currency"]?.ToString(); // افترض أن عمود العملة اسمه "Currency"
+                if (!string.IsNullOrEmpty(currency) && currency.ToUpper() == "USD")
+                {
+                    exists = true; // إذا العملة USD → السماح بأي قيمة أو فارغة
+                }
+
                 if (e.ProposedValue.ToString().IsNullOrWhiteSpace())
                 {
                     if (_Account_Type != "Project" || _Till_Type.ToLower() != "syr")
@@ -1271,6 +1277,27 @@ namespace Financial_WPF_App.Helper
             }
         }
 
+        private int GetUsdTillIdForCurrentAccount()
+        {
+            if (_t_dt == null || _t_dt.Rows.Count == 0)
+                return -1;
+
+            if (_Account_ID <= 0)
+                return -1;
+
+            var row = _t_dt.AsEnumerable()
+                .FirstOrDefault(r =>
+                    !r.IsNull("Tilltypes_Name") &&
+                    r["Tilltypes_Name"].ToString().Equals("usd", StringComparison.OrdinalIgnoreCase) &&
+                    !r.IsNull("Account_ID") &&
+                    Convert.ToInt32(r["Account_ID"]) == _Account_ID
+                );
+
+            if (row == null)
+                return -1;
+
+            return Convert.ToInt32(row["Till_ID"]);
+        }
 
         public void build_insert_query()
         {
@@ -1280,15 +1307,28 @@ namespace Financial_WPF_App.Helper
 
             Login.MultiAction_sc.Parameters.AddWithValue("@Till_ID" + k, _Till_ID);
             Login.MultiAction_sc.Parameters.AddWithValue("@Till_Type" + k, _Till_Type);
-            if (_ObserveTill_ID == -1)
-            {
-                Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, DBNull.Value);
-            }
-            else
-            {
-                Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, _ObserveTill_ID);
-            }
-            Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_Type" + k, _ObserveTill_Type);
+
+            bool isUsdExpenseFromSyr = _inserted_value == "E" && _Till_Type.ToLower() == "syr" && _currency_tilltype_id == 2 && !_WithExAcc;
+            //if (isUsdExpenseFromSyr)
+            //{
+            //    _ObserveTill_ID = GetUsdTillIdForCurrentAccount();
+            //    Console.WriteLine("USD Till for this Account: " + _ObserveTill_ID);
+
+            //    if (_ObserveTill_ID == -1)
+            //    {
+            //        Console.WriteLine("Warning: No USD Till found for this Account!");
+                    
+            //    }
+            //}
+            //if (_ObserveTill_ID == -1)
+            //{
+            //    Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, DBNull.Value);
+            //}
+            //else
+            //{
+            //    Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, _ObserveTill_ID);
+            //}
+            //Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_Type" + k, _ObserveTill_Type);
 
             if (_Donor_ID == -1)
             {
@@ -1416,7 +1456,19 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, _currency_tilltype_id);
             }
+            if (isUsdExpenseFromSyr)
+            {
+                _ObserveTill_ID = GetUsdTillIdForCurrentAccount();
 
+            }
+            if (_ObserveTill_ID == -1)
+            {
+                Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, DBNull.Value);
+            }
+            else
+            {
+                Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, _ObserveTill_ID);
+            }
 
             string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
             Login.MultiAction_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
@@ -1448,7 +1500,7 @@ namespace Financial_WPF_App.Helper
 
             temp_query += "SET @Action_ID = @Action_ID" + k + " +1;";
 
-            bool isUsdExpenseFromSyr = _inserted_value == "E" && _Till_Type.ToLower() == "syr" && _currency_tilltype_id == 2 && !_WithExAcc;
+           
 
 
             if (_WithObserveAcion_ID && !isUsdExpenseFromSyr)

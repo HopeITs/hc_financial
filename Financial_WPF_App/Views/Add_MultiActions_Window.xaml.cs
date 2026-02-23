@@ -801,6 +801,15 @@ namespace Financial_WPF_App.Views
                     {
                         t_dt = null;
                     }
+                    if (ShownColumns.Contains("Currency"))
+                    {
+                        Currency_dt = t.Select_All_TillTypes_Currency();
+                       
+                    }
+                    else
+                    {
+                        Currency_dt = null;
+                    }
                     if (ShownColumns.Contains("Exchange account"))
                     {
                         ExAcc_dt = Acc.Select_ExAcc_Tills(TillType, "");
@@ -958,24 +967,7 @@ namespace Financial_WPF_App.Views
                     }
                 }
 
-                if (Original_AvgRate_dt != null && Currency_dt != null)
-                {
-                    foreach (System.Data.DataRow row in Original_AvgRate_dt.Rows)
-                    {
-                        string currency = row["CurrencyCode"].ToString().ToUpper(); // العمود اللي فيه رمز العملة
-                        if (currency == "USD")
-                        {
-                            row["Original_AvgRate"] = DBNull.Value; // يسمح يكون فاضي
-                        }
-                        else
-                        {
-                            if (row.IsNull("Original_AvgRate"))
-                            {
-                                throw new Exception($"Original Avg Rate is missing for currency {currency}");
-                            }
-                        }
-                    }
-                }
+               
             }
 
         }
@@ -1039,6 +1031,7 @@ namespace Financial_WPF_App.Views
                                 else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                                 {
                                     dt.Columns.Add("Currency");
+                                    //dt.Columns.Add("Corresponding till");
                                     dt.Columns.Add("Micro Project number");
                                     dt.Columns.Add("Cash till");
                                     dt.Columns.Add("Document type");
@@ -1121,6 +1114,7 @@ namespace Financial_WPF_App.Views
                                 else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                                 {
                                     dt.Columns.Add("Currency");
+                                   // dt.Columns.Add("Corresponding till");
                                     dt.Columns.Add("Budget");
                                     dt.Columns.Add("Line");
                                     dt.Columns.Add("Cash till");
@@ -1260,6 +1254,7 @@ namespace Financial_WPF_App.Views
                             else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                             {
                                 dt.Columns.Add("Currency");
+                               // dt.Columns.Add("Corresponding till");
                                 dt.Columns.Add("Cash till");
 
                                 dt.Columns.Add("Document type");
