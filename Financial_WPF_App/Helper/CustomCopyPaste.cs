@@ -914,7 +914,7 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
 
-                string currency = e.Row["Currency"]?.ToString(); // افترض أن عمود العملة اسمه "Currency"
+                string currency = e.Row["Currency"]?.ToString(); 
                 if (!string.IsNullOrEmpty(currency) && currency.ToUpper() == "USD")
                 {
                     exists = true; // إذا العملة USD → السماح بأي قيمة أو فارغة
@@ -1262,7 +1262,23 @@ namespace Financial_WPF_App.Helper
                     }
                     if (isUsdExpenseFromSyr)
                     {
-                        _WithObserveAcion_ID = true;
+                       _ObserveTill_ID = _all_Tills_dt.AsEnumerable()
+                       .Where(row =>
+                        row.Field<int>("Account_ID") == _Account_ID &&
+                        row.Field<string>("Name")?.ToLower().Trim() == "usd")
+                       .Select(row => row.Field<int>("Till_ID"))
+                       .DefaultIfEmpty(-1)
+                       .FirstOrDefault();
+
+                        if (_ObserveTill_ID != -1)
+                        {
+                            _WithObserveAcion_ID = true;
+                        }
+                        else
+                        {
+                            Login.MultiAction_AnyError = true;
+                            e.Row.RowError = "USD till does not exist for this account.";
+                        }
                     }
 
                     build_insert_query();
@@ -1277,28 +1293,7 @@ namespace Financial_WPF_App.Helper
             }
         }
 
-        private int GetUsdTillIdForCurrentAccount()
-        {
-            if (_t_dt == null || _t_dt.Rows.Count == 0)
-                return -1;
-
-            if (_Account_ID <= 0)
-                return -1;
-
-            var row = _t_dt.AsEnumerable()
-                .FirstOrDefault(r =>
-                    !r.IsNull("Tilltypes_Name") &&
-                    r["Tilltypes_Name"].ToString().Equals("usd", StringComparison.OrdinalIgnoreCase) &&
-                    !r.IsNull("Account_ID") &&
-                    Convert.ToInt32(r["Account_ID"]) == _Account_ID
-                );
-
-            if (row == null)
-                return -1;
-
-            return Convert.ToInt32(row["Till_ID"]);
-        }
-
+        
         public void build_insert_query()
         {
             k++;
@@ -1309,25 +1304,15 @@ namespace Financial_WPF_App.Helper
             Login.MultiAction_sc.Parameters.AddWithValue("@Till_Type" + k, _Till_Type);
 
             bool isUsdExpenseFromSyr = _inserted_value == "E" && _Till_Type.ToLower() == "syr" && _currency_tilltype_id == 2 && !_WithExAcc;
-            //if (isUsdExpenseFromSyr)
-            //{
-            //    _ObserveTill_ID = GetUsdTillIdForCurrentAccount();
-            //    Console.WriteLine("USD Till for this Account: " + _ObserveTill_ID);
-
-            //    if (_ObserveTill_ID == -1)
-            //    {
-            //        Console.WriteLine("Warning: No USD Till found for this Account!");
-                    
-            //    }
-            //}
-            //if (_ObserveTill_ID == -1)
-            //{
-            //    Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, DBNull.Value);
-            //}
-            //else
-            //{
-            //    Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, _ObserveTill_ID);
-            //}
+            
+            if (_ObserveTill_ID == -1)
+            {
+                Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, DBNull.Value);
+            }
+            else
+            {
+                Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, _ObserveTill_ID);
+            }
             //Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_Type" + k, _ObserveTill_Type);
 
             if (_Donor_ID == -1)
@@ -1456,19 +1441,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, _currency_tilltype_id);
             }
-            if (isUsdExpenseFromSyr)
-            {
-                _ObserveTill_ID = GetUsdTillIdForCurrentAccount();
-
-            }
-            if (_ObserveTill_ID == -1)
-            {
-                Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, DBNull.Value);
-            }
-            else
-            {
-                Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, _ObserveTill_ID);
-            }
+           
 
             string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
             Login.MultiAction_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);

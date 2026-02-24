@@ -23,7 +23,7 @@ namespace Financial_WPF_App.Models
                                     FROM `log`
                                     ";
 
-            string condition = " WHERE 1";
+            string condition = " WHERE 1 ORDER BY log.date DESC, log.id DESC";
 
             query += condition;
 
