@@ -338,7 +338,8 @@ namespace Financial_WPF_App
             Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
             Type_ComboBox_Exchange_Item.Visibility = Visibility.Visible;
             Type_ComboBox_Expand_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
+            //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+            //Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
 
             if (Account_Type == "Project" && TillType != null)
             {
@@ -383,11 +384,12 @@ namespace Financial_WPF_App
 
                     Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
 
+                    //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
                     // تم إيقاف هذه العملية لحين دراستها
-                    if (Move_privileges &&  TillType.ToLower() == "usd")
-                        Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
-                    else
-                        Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                    //if (Move_privileges &&  TillType.ToLower() == "usd")
+                    //    Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
+                    //else
+                    //    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
                 }
             }
             else if (Account_Type == "Exchange")
