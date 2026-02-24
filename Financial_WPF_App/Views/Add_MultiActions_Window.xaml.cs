@@ -312,7 +312,8 @@ namespace Financial_WPF_App.Views
             //OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
             OperationType_dt.Rows.Add("Type_ComboBox_Exchange_Item", "Exchange");
             OperationType_dt.Rows.Add("Type_ComboBox_Expand_Item", "Expenses");
-            OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Transfer");
+            //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+            //OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Transfer");
 
 
 
@@ -579,7 +580,8 @@ namespace Financial_WPF_App.Views
             //OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
             OperationType_dt.Rows.Add("Type_ComboBox_Exchange_Item", "Exchange");
             OperationType_dt.Rows.Add("Type_ComboBox_Expand_Item", "Expenses");
-            OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Transfer");
+            //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+            //OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Transfer");
 
             var valuesToRemove = new HashSet<string>();
 
@@ -607,8 +609,9 @@ namespace Financial_WPF_App.Views
                     if (!Expand_privileges)
                         valuesToRemove.Add("Type_ComboBox_Expand_Item");
 
-                    if (!Move_privileges)
-                        valuesToRemove.Add("Type_ComboBox_Move_Item");
+                    //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+                    //if (!Move_privileges)
+                    //    valuesToRemove.Add("Type_ComboBox_Move_Item");
 
 
                     // تم إيقاف هذه العملية لحين دراستها
@@ -619,7 +622,8 @@ namespace Financial_WPF_App.Views
 
                     //Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
 
-                    //valuesToRemove.Add("Type_ComboBox_Move_Item");
+                    //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+                    valuesToRemove.Add("Type_ComboBox_Move_Item");
                 }
                 else
                 {
