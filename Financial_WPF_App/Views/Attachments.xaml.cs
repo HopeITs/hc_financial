@@ -22,7 +22,7 @@ namespace Financial_WPF_App.Views
     /// </summary>
     public partial class Attachments : Window
     {
-        public Attachments(int Action_ID, int Beneficiary_ID, bool Approved_Action, string Account_Type, string Category, Till_Window TW, Account_Beneficiaries_Window AB, Approval_Sub_Window App , Lines_Report_Window LR)
+        public Attachments(int Action_ID, int Beneficiary_ID, bool Approved_Action, string Account_Type, string Category, Till_Window TW, Account_Beneficiaries_Window AB, Approval_Sub_Window App, Lines_Report_Window LR)
         {
             InitializeComponent();
             this.TW = TW;
@@ -34,6 +34,7 @@ namespace Financial_WPF_App.Views
             this.Account_Type = Account_Type;
             this.Category = Category;
             this.Approved_Action = Approved_Action;
+            SelectedAccountIDs = new List<int>();
             FilterRow2.Height = new GridLength(0);
             FilterPanel2.Visibility = Visibility.Hidden;
             FilterRow1.Height = new GridLength(0);
@@ -51,7 +52,8 @@ namespace Financial_WPF_App.Views
         public Attachments(int? Account_ID)
         {
             InitializeComponent();
-            this.Account_ID = Account_ID;
+            SelectedAccountIDs = new List<int>();
+            SelectedAccountIDs.Add(Account_ID.Value);
             AddAttachments_btn.Visibility = Visibility.Hidden;
             Delete_DataGridColumn.IsHidden = true;
             FilterRow1.Height = new GridLength(0);
@@ -71,6 +73,7 @@ namespace Financial_WPF_App.Views
             AddAttachments_btn.Visibility = Visibility.Hidden;
             FilterPane11.Visibility = Visibility.Visible;
             Delete_DataGridColumn.IsHidden = true;
+            SelectedAccountIDs = new List<int>();
             if (OnLoad())
             {
 
@@ -83,14 +86,13 @@ namespace Financial_WPF_App.Views
         Document d;
         Account a;
         DataTable attachments_dt = new DataTable();
-        int Action_ID; int Beneficiary_ID ;
-        int? Account_ID;
+        int Action_ID; int Beneficiary_ID;
         private string Account_Type; private string Category;
         private OpenFileDialog open;
         private string[] FullAttachNames;
         private Thread myTh;
         int userId = Properties.Settings.Default.User_ID;
-
+        string userRole = Properties.Settings.Default.Role;
 
         private System.Windows.Forms.FolderBrowserDialog FolderBrowserDialog1;
 
@@ -104,15 +106,15 @@ namespace Financial_WPF_App.Views
         Approval_Sub_Window App;
         Lines_Report_Window LR;
         DateTime to_Date = new DateTime();
-        DateTime from_Date = new DateTime(); 
+        DateTime from_Date = new DateTime();
         System.Windows.Media.Brush Theme_Color = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
         string HeaderStyle_Name = "SfDataGrid_header";
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
         List<Local_Account> objAccountList;
         List<Local_Account> FilteredAccountList;
-        List<Local_Account> Original_objAccountList;
-
+        List<Local_Account> Original_AccountList;
+        List<int> SelectedAccountIDs;
 
         private class Local_Account
         {
@@ -239,7 +241,7 @@ namespace Financial_WPF_App.Views
 
         public void LoadUserCities()
         {
-            DataTable dt = a.get_user_cities(userId);
+            DataTable dt = a.get_user_cities(userId, userRole);
 
             City_comboBox.ItemsSource = dt.DefaultView;
             City_comboBox.DisplayMemberPath = "name";
@@ -250,7 +252,7 @@ namespace Financial_WPF_App.Views
 
         public void LoadUserProjects(int city_id)
         {
-            DataTable dt = a.get_user_projects(userId, city_id);
+            DataTable dt = a.get_user_projects(userId, city_id, userRole);
 
             Subproject_comboBox.ItemsSource = dt.DefaultView;
             Subproject_comboBox.DisplayMemberPath = "name";
@@ -261,50 +263,73 @@ namespace Financial_WPF_App.Views
 
         public void LoadUserAccounts(int subproject_id)
         {
-            DataTable dt = a.get_user_accounts(userId, subproject_id);
+            DataTable dt = a.get_user_accounts(userId, subproject_id, userRole);
+            List<string> AllAccount_ID = new List<string>();
+            Original_AccountList = new List<Local_Account>();
+            objAccountList = new List<Local_Account>();
 
-            Account_comboBox.ItemsSource = dt.DefaultView;
-            Account_comboBox.DisplayMemberPath = "name";
-            Account_comboBox.SelectedValuePath = "id";
-
-            Account_comboBox.SelectedIndex = -1;
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Local_Account obj = new Local_Account();
+                    obj.AccID = dt.Rows[i].Field<int>(0);
+                    obj.AccName = dt.Rows[i].Field<string>(1);
+                    objAccountList.Add(obj);
+                }
+                Account_comboBox.ItemsSource = objAccountList;
+                int count = objAccountList.Count(item => item.Acc_Check_Status == true);
+                Account_comboBox.Text = count.ToString() + " Selected";
+            }
         }
 
         private void Account_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
         {
             try
             {
-                FilteredAccountList = new List<Local_Account>();
-                    if (objAccountList != null && objAccountList.Count > 0)
-                    {
-                        foreach (var account in objAccountList)
-                        {
-                            if (account.Acc_Check_Status == true)
-                            FilteredAccountList.Add(account);
-                        }
-                    }
+                //FilteredAccountList = new List<Local_Account>();
+                //    if (objAccountList != null && objAccountList.Count > 0)
+                //    {
+                //        foreach (var account in objAccountList)
+                //        {
+                //            if (account.Acc_Check_Status == true)
+                //            FilteredAccountList.Add(account);
+                //        }
+                //    }
 
-                    if (FilteredAccountList != null && FilteredAccountList.Count > 0)
-                    {
-                        Account_comboBox.ItemsSource = null;
+                //    if (FilteredAccountList != null && FilteredAccountList.Count > 0)
+                //    {
+                //        Account_comboBox.ItemsSource = null;
+                //    Account_comboBox.Text = "0 Selected";
+                //    Account_comboBox.ItemsSource = FilteredAccountList;
+                //        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
+                //    Account_comboBox.Text = count.ToString() + " Selected";
+                //    }
+                //    else
+                //    {
+                //    Account_comboBox.ItemsSource = null;
+                //    Account_comboBox.Text = "0 Selected";
+                //    Account_comboBox.ItemsSource = objAccountList;
+                //        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
+                //    Account_comboBox.Text = count.ToString() + " Selected";
+                //    }
+
+
+
+                //int AccoutCount = objAccountList.Count(item => item.Acc_Check_Status == true);
+                //Account_comboBox.Text = AccoutCount.ToString() + " Selected";
+                if (objAccountList == null || objAccountList.Count == 0)
+                {
                     Account_comboBox.Text = "0 Selected";
-                    Account_comboBox.ItemsSource = FilteredAccountList;
-                        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
-                    Account_comboBox.Text = count.ToString() + " Selected";
-                    }
-                    else
-                    {
-                    Account_comboBox.ItemsSource = null;
-                    Account_comboBox.Text = "0 Selected";
-                    Account_comboBox.ItemsSource = objAccountList;
-                        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
-                    Account_comboBox.Text = count.ToString() + " Selected";
-                    }
+                    return;
+                }
 
-                
+                int selectedCount = objAccountList.Count(x => x.Acc_Check_Status);
+                SelectedAccountIDs = new List<int>();
+                Account_comboBox.Text = $"{selectedCount} Selected";
 
-                int AccoutCount = objAccountList.Count(item => item.Acc_Check_Status == true);
-                Account_comboBox.Text = AccoutCount.ToString() + " Selected";
+                Account_comboBox.IsDropDownOpen = true;
+                SelectedAccountIDs = objAccountList.Where(x => x.Acc_Check_Status).Select(x => x.AccID).ToList();
             }
             catch (Exception ex)
             {
@@ -328,10 +353,10 @@ namespace Financial_WPF_App.Views
             if (ToDate_datepicker.SelectedDate != null && ToDate_datepicker.SelectedDate.ToString() != "")
                 ToDate = ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
 
-            if (Account_ID != null)
+            if (SelectedAccountIDs != null)
             {
-                attachments_dt = a.get_attachments(Account_ID,Action_ID,Beneficiary_ID, FromDate, ToDate);
-                
+                attachments_dt = a.get_attachments(SelectedAccountIDs, Action_ID, Beneficiary_ID, FromDate, ToDate);
+
                 if (attachments_dt != null && attachments_dt.Rows.Count > 0)
                 {
                     System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(bool));
@@ -348,11 +373,19 @@ namespace Financial_WPF_App.Views
                 {
                     int count = myDataGrid.View.Records.Count();
                     All_Label.Content = count.ToString("N0");
+                    DownloadAttachments_btn.Visibility = Visibility.Visible;
+                    DownloadAttachments_btn.Width = 24;
+                }
+                else
+                {
+                    All_Label.Content = "0";
+                    DownloadAttachments_btn.Visibility = Visibility.Hidden;
+                    All_Label.Content = "0";
                 }
             }
             else
             {
-                attachments_dt = a.get_attachments(Account_ID, Action_ID, Beneficiary_ID, FromDate, ToDate);
+                attachments_dt = a.get_attachments(SelectedAccountIDs, Action_ID, Beneficiary_ID, FromDate, ToDate);
                 //attachments_dt = d.GetAttachmentsNames(Action_ID, Beneficiary_ID);
                 if (attachments_dt != null && attachments_dt.Rows.Count > 0)
                 {
@@ -370,6 +403,14 @@ namespace Financial_WPF_App.Views
                 {
                     int count = myDataGrid.View.Records.Count();
                     All_Label.Content = count.ToString("N0");
+                    DownloadAttachments_btn.Visibility = Visibility.Visible;
+                    DownloadAttachments_btn.Width = 24;
+                }
+                else
+                {
+                    All_Label.Content = "0";
+                    DownloadAttachments_btn.Visibility = Visibility.Hidden;
+                    All_Label.Content = "0";
                 }
             }
         }
@@ -382,7 +423,7 @@ namespace Financial_WPF_App.Views
                 string fileName = "";
                 if (Action_ID != -1)
                 {
-                    fileName = "Action_id_" + Action_ID.ToString() + "_" + dataRow["attach_name"].ToString();
+                    fileName = "Action_id_" + dataRow["action_id"].ToString() + "_" + dataRow["attach_name"].ToString();
 
                 }
                 else if (Beneficiary_ID != -1)
@@ -476,41 +517,49 @@ namespace Financial_WPF_App.Views
             try
             {
                 DataRowView dataRow = (DataRowView)myDataGrid.CurrentItem;
+
+                if (dataRow == null)
+                    return;
+
+                SaveFileName = dataRow["attach_name"].ToString();
+                attachments_id = Convert.ToInt32(dataRow["id"]);
+
                 if (Action_ID != -1)
                 {
-                    DownloadFileName = "Action_id_" + Action_ID.ToString() + "_" + dataRow["attach_name"].ToString();
+                    DownloadFileName = "Action_id_" + dataRow["action_id"] + "_" + SaveFileName;
                 }
                 else if (Beneficiary_ID != -1)
                 {
-                    DownloadFileName = "Beneficiary_id_" + Beneficiary_ID.ToString() + "_" + dataRow["attach_name"].ToString();
+                    DownloadFileName = "Beneficiary_id_" + Beneficiary_ID + "_" + SaveFileName;
                 }
-                SaveFileName = dataRow["attach_name"].ToString();
-                attachments_id = Convert.ToInt32(dataRow["id"].ToString());
-                if (d.file_Exist(DownloadFileName))
+
+                if (!d.file_Exist(DownloadFileName))
                 {
-                    myTh = new Thread(SaveDialog);
-                    myTh.SetApartmentState(ApartmentState.STA);
-                    myTh.Start();
-                    myTh.Join();
-                }
-                else
-                {
-                    d.DeleteAttachmentTfromDatabase(attachments_id, SaveFileName, Action_ID, Beneficiary_ID, Approved_Action, "Attachments");
-                    MessageBox.Show("The file is missing - The name has been deleted from the list.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    d.DeleteAttachmentTfromDatabase(
+                        attachments_id,
+                        SaveFileName,
+                        Action_ID,
+                        Beneficiary_ID,
+                        Approved_Action,
+                        "Attachments"
+                    );
+
+                    MessageBox.Show("The file is missing - The name has been deleted from the list.", "Error");
                     Load_Data();
+                    return;
                 }
 
+                var folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+                if (folderDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                    return;
 
+                SaveDialog(folderDialog.SelectedPath);
+
+                MessageBox.Show("File saved successfully.", "Confirmation");
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
@@ -529,38 +578,39 @@ namespace Financial_WPF_App.Views
                     return;
                 }
 
+                // 🔥 Ask folder ONCE
+                var folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+                var res = folderDialog.ShowDialog();
+
+                if (res != System.Windows.Forms.DialogResult.OK ||
+                    string.IsNullOrWhiteSpace(folderDialog.SelectedPath))
+                    return;
+
+                string selectedPath = folderDialog.SelectedPath;
+
                 foreach (var dataRow in selectedRows)
                 {
-                    string saveFileName = dataRow["attach_name"].ToString();
-                    int attachmentId = Convert.ToInt32(dataRow["id"]);
-
-                    string downloadFileName = "";
+                    SaveFileName = dataRow["attach_name"].ToString();
+                    attachments_id = Convert.ToInt32(dataRow["id"]);
 
                     if (Action_ID != -1)
                     {
-                        downloadFileName = "Action_id_" + Action_ID + "_" + saveFileName;
+                        DownloadFileName = "Action_id_" + dataRow["action_id"].ToString() + "_" + SaveFileName;
                     }
                     else if (Beneficiary_ID != -1)
                     {
-                        downloadFileName = "Beneficiary_id_" + Beneficiary_ID + "_" + saveFileName;
+                        DownloadFileName = "Beneficiary_id_" + Beneficiary_ID.ToString() + "_" + SaveFileName;
                     }
 
-                    if (d.file_Exist(downloadFileName))
+                    if (d.file_Exist(DownloadFileName))
                     {
-                        DownloadFileName = downloadFileName;
-                        SaveFileName = saveFileName;
-                        attachments_id = attachmentId;
-
-                        myTh = new Thread(SaveDialog);
-                        myTh.SetApartmentState(ApartmentState.STA);
-                        myTh.Start();
-                        myTh.Join();
+                        SaveDialog(selectedPath); // 🔥 pass same folder
                     }
                     else
                     {
                         d.DeleteAttachmentTfromDatabase(
-                            attachmentId,
-                            saveFileName,
+                            attachments_id,
+                            SaveFileName,
                             Action_ID,
                             Beneficiary_ID,
                             Approved_Action,
@@ -569,6 +619,7 @@ namespace Financial_WPF_App.Views
                     }
                 }
 
+                MessageBox.Show("Files saved successfully.", "Confirmation");
                 Load_Data();
             }
             catch (Exception ex)
@@ -577,27 +628,28 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void SaveDialog()
+        private void SaveDialog(string selectedPath)
         {
-            string OnlineFilePath = Login.OnlineRoot + @"/" + DownloadFileName;
+            string OnlineFilePath = Login.OnlineRoot + "/" + DownloadFileName;
 
-            FolderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            var res = FolderBrowserDialog1.ShowDialog();
-            if (res == System.Windows.Forms.DialogResult.OK && FolderBrowserDialog1.SelectedPath != "")
+            if (string.IsNullOrWhiteSpace(selectedPath))
+                return;
+
+            string fullPath = System.IO.Path.Combine(selectedPath, SaveFileName);
+
+            string name = System.IO.Path.GetFileNameWithoutExtension(SaveFileName);
+            string ext = System.IO.Path.GetExtension(SaveFileName);
+
+            int counter = 1;
+
+            while (System.IO.File.Exists(fullPath))
             {
-                FileInfo file = new FileInfo(FolderBrowserDialog1.SelectedPath + "\\" + SaveFileName);
-
-                while (file.Exists.Equals(true))
-                {
-                    SaveFileName = "(1)" + SaveFileName;
-                    file = new FileInfo(FolderBrowserDialog1.SelectedPath + "\\" + SaveFileName);
-                }
-
-                d.CopyToLocal(OnlineFilePath, FolderBrowserDialog1.SelectedPath + "\\" + SaveFileName);
-                MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                string newFileName = $"{name}({counter}){ext}";
+                fullPath = System.IO.Path.Combine(selectedPath, newFileName);
+                counter++;
             }
 
-
+            d.CopyToLocal(OnlineFilePath, fullPath);
         }
 
         private void AddAttachments_btn_Click(object sender, RoutedEventArgs e)
@@ -838,10 +890,11 @@ namespace Financial_WPF_App.Views
         {
             if (myDataGrid.View != null)
             {
-                
+
                 int count = myDataGrid.View.Records.Count();
                 All_Label.Content = count.ToString("N0");
             }
+
         }
 
         private void Apply_btn_Click(object sender, RoutedEventArgs e)
@@ -849,8 +902,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 //GridFilled = true;
-                DownloadAttachments_btn.Visibility = Visibility.Visible;
-                DownloadAttachments_btn.Width = 24;
+
                 Load_Data();
             }
             catch (Exception ex)
@@ -888,13 +940,34 @@ namespace Financial_WPF_App.Views
             Account_comboBox.IsEnabled = true;
         }
 
-        private void Account_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (Account_comboBox.SelectedValue == null)
-                return;
 
-            int AccountId = Convert.ToInt32(Account_comboBox.SelectedValue);
-            Account_ID = AccountId;
+
+        private void comboBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = e.Key == Key.Space || e.Key == Key.Back || e.Key == Key.Delete;
+        }
+
+        private void comboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void ValidateDates(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (FromDate_datepicker.SelectedDate != null && ToDate_datepicker.SelectedDate != null)
+            {
+                if (ToDate_datepicker.SelectedDate < FromDate_datepicker.SelectedDate)
+                {
+                    MessageBox.Show(
+                        "To Date cannot be earlier than From Date",
+                        "Invalid Date",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+
+                    ToDate_datepicker.SelectedDate = FromDate_datepicker.SelectedDate;
+                }
+            }
         }
     }
 }

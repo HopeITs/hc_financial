@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Financial_WPF_App.Models
 {
@@ -485,26 +487,30 @@ namespace Financial_WPF_App.Models
             return Account_ID;
         }
 
-        public DataTable get_attachments(int? Account_ID, int? Action_ID, int? Beneficiary_ID, string FromDate, string ToDate)
+        public DataTable get_attachments(List<int> Account_IDs, int? Action_ID, int? Beneficiary_ID, string FromDate, string ToDate)
         {
             string query = "";
-
+            var accParams = Account_IDs
+            .Select((id, i) => $"@acc{i}")
+            .ToArray();
             query = @"SELECT action_attachments.id, action_attachments.action_id, action_attachments.attach_name
                       FROM `action_attachments` 
                       LEFT JOIN action on action.ID = action_attachments.action_id
                       LEFT JOIN till on till.ID = action.Till_ID
                       LEFT JOIN account on account.ID = till.Account_ID where 1";
 
-            if (Account_ID != null)
+            if (Account_IDs != null && Account_IDs.Count > 0)
             {
-                query += " and account.id = @Account_ID";
+                query += $" AND account.ID IN ({string.Join(",", accParams)})";
+
+                
             }
             if (FromDate != "" && ToDate != "" && Action_ID == 0) {
                 query += " AND date(action.ActionDate) BETWEEN @FromDate and @ToDate ";
             }
             if (Action_ID != 0)
             {
-                query += " and action_id = @action_id;";
+                query += " and action_id = @Action_ID;";
             }
             if (Beneficiary_ID != -1 && Beneficiary_ID != 0)
             {
@@ -515,7 +521,9 @@ namespace Financial_WPF_App.Models
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
-                sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+                
+                for (int i = 0; i < Account_IDs.Count; i++)
+                    sc.Parameters.AddWithValue(accParams[i], Account_IDs[i]);
                 sc.Parameters.AddWithValue("@FromDate", FromDate);
                 sc.Parameters.AddWithValue("@ToDate", ToDate);
                 sc.Parameters.AddWithValue("@Action_ID", Action_ID);
@@ -532,15 +540,24 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable get_user_cities(int UserId)
+        public DataTable get_user_cities(int UserId,string UserRole)
         {
-            string query = @"SELECT DISTINCT c.id, c.name
+            string query = "";
+            if(UserRole != "Head Office" && UserRole != "Financial Manager")
+            {
+                query = @"SELECT DISTINCT c.id, c.name
                             FROM city c
                             JOIN subproject sp ON sp.city_id = c.id
                             JOIN user_accounts ua ON ua.subproject_id = sp.id
                             WHERE ua.user_id = @UserId;";
+            }
+            else
+            {
+                query = @"SELECT DISTINCT c.id, c.name from city c;";
+            }
 
-            DataTable dt = new DataTable();
+
+                DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
@@ -558,15 +575,25 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable get_user_projects(int UserId, int CityId)
+        public DataTable get_user_projects(int UserId, int CityId, string UserRole)
         {
-            string query = @"SELECT DISTINCT sp.id, sp.name
+            string query = "";
+            if (UserRole != "Head Office" && UserRole != "Financial Manager")
+            {
+                query = @"SELECT DISTINCT sp.id, sp.name
                             FROM subproject sp
                             JOIN user_accounts ua ON ua.subproject_id = sp.id
                             WHERE ua.user_id = @UserId
                             AND sp.city_id = @CityId;";
+            }
+            else
+            {
+                query = @"SELECT DISTINCT sp.id, sp.name
+                  FROM subproject sp
+                  WHERE sp.city_id = @CityId";
+            }
 
-            DataTable dt = new DataTable();
+                DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
@@ -585,15 +612,24 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable get_user_accounts(int UserId,int SubProjectId)
+        public DataTable get_user_accounts(int UserId,int SubProjectId , string UserRole)
         {
-            string query = @"SELECT DISTINCT a.id, a.name
+            string query = "";
+            if (UserRole != "Head Office" && UserRole != "Financial Manager")
+            {
+                query = @"SELECT DISTINCT a.id, a.name
                             FROM account a
                             JOIN user_accounts ua ON ua.account_id = a.id
                             WHERE ua.user_id = @UserId
                             AND ua.subproject_id = @SubProjectId;";
+            }
+            else {
+                query = @"SELECT DISTINCT a.id, a.name
+                  FROM account a
+                  WHERE a.subproject_id = @SubProjectId;";
+            }
 
-            DataTable dt = new DataTable();
+                DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
