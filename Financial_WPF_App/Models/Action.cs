@@ -623,7 +623,8 @@ namespace Financial_WPF_App.Models
                         DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',
                         DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
-                        (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
+                        (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Syr') THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
+                        (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Usd') THEN action.Amount ELSE 0 END) AS 'ExpenseUSD',
                         action.Note,
                         action.E_Note,
                         (SELECT CASE WHEN employee.FatherName = '' THEN CONCAT(employee.FirstName,' ',employee.LastName) ELSE
@@ -634,7 +635,17 @@ namespace Financial_WPF_App.Models
                         (Case when actiontype.shortname = 'Ex' then (action.Amount * action.rate) else 0 END) as `Exchanged`,
                         all_avgrates.Name as `AvgRateName`,
                         all_avgrates.value as `AvgRateValue`, 
-                        (action.Amount/ all_avgrates.value) as `USD_Value`,
+                        CASE 
+    WHEN actiontype.shortname = 'E' 
+         AND LOWER(Currency_Tilltype.Name) = LOWER('Syr') 
+        THEN action.Amount / NULLIF(all_avgrates.value,0)
+
+    WHEN actiontype.shortname = 'E' 
+         AND LOWER(Currency_Tilltype.Name) = LOWER('Usd') 
+        THEN action.Amount
+
+    ELSE NULL
+END AS `USD_Value`,
                         cashaccount.Name as `CashAccount`,
                         (select tilltypes.Name from till left join tilltypes on tilltypes.ID = till.Type_ID where till.id = action.ObserveTill_ID) as `ObserveTill`,
                         (select account.name from account left join till on till.account_id = account.id where till.id = action.ObserveTill_ID) as `ObserveAccount`,
@@ -654,6 +665,7 @@ namespace Financial_WPF_App.Models
                         LEFT JOIN all_avgrates on action.Rate_ID = all_avgrates.id
                         LEFT join till on action.Till_ID = till.ID 
                         LEFT join tilltypes on tilltypes.ID = till.Type_ID
+                        LEFT join tilltypes Currency_Tilltype on action.currency_tilltype_id = Currency_Tilltype.ID
                         LEFT join account on account.ID = till.Account_ID
                         LEFT JOIN subproject ON account.SubProject_ID = subproject.ID
                         LEFT JOIN project ON subproject.Project_ID = project.ID
@@ -692,7 +704,11 @@ namespace Financial_WPF_App.Models
                                 subproject.Name AS `Subproject_Name`,
                                 account.Name as `Account_Name`,
                                 action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
-                                (CASE WHEN actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Income',
+                                (CASE WHEN (Currency_Tilltype.Name = 'SYR')
+                                AND actiontype.shortname = 'I' THEN action.Amount  ELSE 0 END) AS 'Income',
+                               (CASE WHEN (Currency_Tilltype.Name = 'USD')
+                                AND actiontype.shortname = 'I' THEN action.Amount  ELSE 0 END) AS 'Incomeusd',
+                                (CASE WHEN actiontype.shortname = 'O'  THEN action.Amount ELSE 0 END) AS 'Outcome',
                                 (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
                                 (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
                                 ((CASE WHEN actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) - 
@@ -712,10 +728,11 @@ namespace Financial_WPF_App.Models
                                 donor.name as 'Donor',
                                 action.created_at, action.updated_at, action.approved_at
 
-                                FROM action LEFT JOIN actiontype on actiontype.id = action.atype_id
+                                FROM action LEFT JOIN actiontype on action.AType_ID = actiontype.id
                                 LEFT JOIN all_avgrates on action.Rate_ID = all_avgrates.id
                                 LEFT join till on action.Till_ID = till.ID 
                                 LEFT join tilltypes on tilltypes.ID = till.Type_ID
+                                LEFT join tilltypes Currency_Tilltype on Currency_Tilltype.ID = action.currency_tilltype_id
                                 LEFT JOIN donor on donor.id = action.`Donor_ID`
                                 LEFT join account on account.ID = till.Account_ID
                                 LEFT JOIN accounttype on account.Accounttype_id = accounttype.id
@@ -731,7 +748,7 @@ namespace Financial_WPF_App.Models
             }
             else
             {
-                query += " where actiontype.shortname IN ('I','Ex','E') AND LOWER(accounttype.name) = 'project' AND tilltypes.ID = @TillType_ID";
+                query += " where actiontype.shortname IN ('I','Ex','E','O') AND LOWER(accounttype.name) = 'project' AND tilltypes.ID = @TillType_ID";
             }
 
 

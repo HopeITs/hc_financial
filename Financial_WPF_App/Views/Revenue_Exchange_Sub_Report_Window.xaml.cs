@@ -109,14 +109,26 @@ namespace Financial_WPF_App.Views
 
 
                 foreach (var C in myDataGrid.Columns)
-                    if (C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Expenses"
+                    if (C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Expenses" || C.HeaderText.ToString() == "Transfer"
                         || C.HeaderText.ToString() == "Balance" || C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount"
                         || C.HeaderText.ToString() == "Value" || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchanged")
                     {
                         C.IsHidden = true;
                         Originally_HiddenColumns.Add(C.HeaderText.ToString());
                     }
+                var colIncome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Income");
+                if (colIncome != null)
+                    colIncome.HeaderText = "Income(SYR)";
 
+            }
+            if (TillType_Name.ToLower() == "eur" || TillType_Name.ToLower() == "usd")
+            {
+                foreach (var C in myDataGrid.Columns)
+                    if (C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses")
+                    {
+                        C.IsHidden = true;
+                        Originally_HiddenColumns.Add(C.HeaderText.ToString());
+                    }
             }
         }
 
