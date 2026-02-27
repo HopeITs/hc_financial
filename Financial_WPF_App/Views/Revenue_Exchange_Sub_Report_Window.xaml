@@ -34,6 +34,10 @@
                 <Border Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
                 </Border>
+                <Label x:Name="Incomeusd_Label" Content="Income(USD):" Style="{DynamicResource statistic_lableStyle}"/>
+                <Border Style="{StaticResource BorderStackPanelStyle}">
+                    <TextBlock x:Name="Incomeusd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                </Border>
                 <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
                 <Border x:Name="Exchange_Border" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Exchange_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
@@ -59,6 +63,10 @@
                 <Label x:Name="Income_Label1" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
                 <Border Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Income_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                </Border>
+                <Label x:Name="Incomeusd_Label1" Content="Income(USD):" Style="{DynamicResource statistic_lableStyle}"/>
+                <Border Style="{StaticResource BorderStackPanelStyle}">
+                    <TextBlock x:Name="Incomeusd_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
                 </Border>
                 <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border x:Name="Exchange_Border1" Style="{StaticResource BorderStackPanelStyle}">
