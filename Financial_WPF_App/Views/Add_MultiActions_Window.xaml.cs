@@ -87,7 +87,7 @@ namespace Financial_WPF_App.Views
         string TillType;
         private DataTable dt, Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt, Lines_dt,
             budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, Actions_dt;
-        private DataTable tills_dt, tilltypes_dt;
+        private DataTable tills_dt, tilltypes_dt, Currency_dt;
 
 
 
@@ -208,7 +208,7 @@ namespace Financial_WPF_App.Views
             if (!MultiAttachments)
             {
                 copyPasteHandler = new CustomCopyPaste(myDataGrid, Account_Type, TillType, inserted_value, ShownColumns, ExchangeToForeign_privileges,
-                        Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
+                      Currency_dt, Original_AvgRate_dt, AvgRate_dt, b_dt, t_dt, ExAcc_dt, Accounts_dt,
                         Lines_dt, budgets_dt, all_cashAccounts_dt, Donors_dt, Employee_dt, tills_dt);
                 this.myDataGrid.GridCopyPaste = copyPasteHandler;
                 copyPasteHandler.PasteCompleted += CopyPasteHandler_PasteCompleted;
@@ -312,7 +312,8 @@ namespace Financial_WPF_App.Views
             //OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
             OperationType_dt.Rows.Add("Type_ComboBox_Exchange_Item", "Exchange");
             OperationType_dt.Rows.Add("Type_ComboBox_Expand_Item", "Expenses");
-            OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Move");
+            //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+            //OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Transfer");
 
 
 
@@ -579,7 +580,8 @@ namespace Financial_WPF_App.Views
             //OperationType_dt.Rows.Add("Type_ComboBox_Returned_Item", "Returned");
             OperationType_dt.Rows.Add("Type_ComboBox_Exchange_Item", "Exchange");
             OperationType_dt.Rows.Add("Type_ComboBox_Expand_Item", "Expenses");
-            OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Move");
+            //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+            //OperationType_dt.Rows.Add("Type_ComboBox_Move_Item", "Transfer");
 
             var valuesToRemove = new HashSet<string>();
 
@@ -589,11 +591,11 @@ namespace Financial_WPF_App.Views
                 {
                     valuesToRemove.Add("Type_ComboBox_Income_Item");
 
-                    if (!Outcome_privileges)
-                        valuesToRemove.Add("Type_ComboBox_Outcome_Item");
+                    //if (!Outcome_privileges)
+                    //    valuesToRemove.Add("Type_ComboBox_Outcome_Item");
 
-                    if (!Returned_privileges)
-                        valuesToRemove.Add("Type_ComboBox_Returned_Item");
+                    //if (!Returned_privileges)
+                    //    valuesToRemove.Add("Type_ComboBox_Returned_Item");
 
                     // تم إيقاف هذه العملية لحين دراستها
                     //if (Exchange_privileges)
@@ -607,6 +609,10 @@ namespace Financial_WPF_App.Views
                     if (!Expand_privileges)
                         valuesToRemove.Add("Type_ComboBox_Expand_Item");
 
+                    //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+                    //if (!Move_privileges)
+                    //    valuesToRemove.Add("Type_ComboBox_Move_Item");
+
 
                     // تم إيقاف هذه العملية لحين دراستها
                     //if (Move_privileges)
@@ -616,6 +622,7 @@ namespace Financial_WPF_App.Views
 
                     //Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
 
+                    //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
                     valuesToRemove.Add("Type_ComboBox_Move_Item");
                 }
                 else
@@ -629,6 +636,7 @@ namespace Financial_WPF_App.Views
                     if (!Exchange_privileges)
                         valuesToRemove.Add("Type_ComboBox_Exchange_Item");
 
+                   
                     valuesToRemove.Add("Type_ComboBox_Expand_Item");
 
 
@@ -637,12 +645,12 @@ namespace Financial_WPF_App.Views
                     //    Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
                     //else
                     //    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
-
-                    valuesToRemove.Add("Type_ComboBox_Move_Item");
+                    if (TillType.ToLower() == "eur")
+                        valuesToRemove.Add("Type_ComboBox_Move_Item");
 
                 }
             }
-            else if (Account_Type == "Exchange")
+            else if (Account_Type == "Exchange" && TillType != null)
             {
                 valuesToRemove.Add("Type_ComboBox_Income_Item");
                 valuesToRemove.Add("Type_ComboBox_Outcome_Item");
@@ -655,7 +663,7 @@ namespace Financial_WPF_App.Views
                 valuesToRemove.Add("Type_ComboBox_Move_Item");
 
             }
-            else if (Account_Type == "Personal")
+            else if (Account_Type == "Personal" && TillType != null)
             {
                 if (!Income_privileges)
                     valuesToRemove.Add("Type_ComboBox_Income_Item");
@@ -668,8 +676,8 @@ namespace Financial_WPF_App.Views
                 if (!Expand_privileges)
                     valuesToRemove.Add("Type_ComboBox_Expand_Item");
 
-
-                valuesToRemove.Add("Type_ComboBox_Move_Item");
+                if (TillType.ToLower() == "eur")
+                    valuesToRemove.Add("Type_ComboBox_Move_Item");
             }
             else
             {
@@ -797,6 +805,15 @@ namespace Financial_WPF_App.Views
                     {
                         t_dt = null;
                     }
+                    if (ShownColumns.Contains("Currency"))
+                    {
+                        Currency_dt = t.Select_All_TillTypes_Currency();
+                       
+                    }
+                    else
+                    {
+                        Currency_dt = null;
+                    }
                     if (ShownColumns.Contains("Exchange account"))
                     {
                         ExAcc_dt = Acc.Select_ExAcc_Tills(TillType, "");
@@ -920,7 +937,7 @@ namespace Financial_WPF_App.Views
                     {
                         Donors_dt = null;
                     }
-                    if (inserted_value == "Ex" & Account_Type == "Project")
+                    if (inserted_value == "Ex" && Account_Type == "Project")
                     {
                         if (Account_ID > 0)
                             AvgRate_dt = r.Check_AvgRate_Availability(Account_ID.ToString(), "", TillType, "");
@@ -953,6 +970,8 @@ namespace Financial_WPF_App.Views
                         Actions_dt = a.Select_All_Actions(Account_Type, Category, inserted_value, "", TillType);
                     }
                 }
+
+               
             }
 
         }
@@ -1015,6 +1034,8 @@ namespace Financial_WPF_App.Views
                                 }
                                 else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                                 {
+                                    dt.Columns.Add("Currency");
+                                    //dt.Columns.Add("Corresponding till");
                                     dt.Columns.Add("Micro Project number");
                                     dt.Columns.Add("Cash till");
                                     dt.Columns.Add("Document type");
@@ -1096,6 +1117,8 @@ namespace Financial_WPF_App.Views
                                 }
                                 else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                                 {
+                                    dt.Columns.Add("Currency");
+                                   // dt.Columns.Add("Corresponding till");
                                     dt.Columns.Add("Budget");
                                     dt.Columns.Add("Line");
                                     dt.Columns.Add("Cash till");
@@ -1234,6 +1257,8 @@ namespace Financial_WPF_App.Views
                             }
                             else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                             {
+                                dt.Columns.Add("Currency");
+                               // dt.Columns.Add("Corresponding till");
                                 dt.Columns.Add("Cash till");
 
                                 dt.Columns.Add("Document type");
