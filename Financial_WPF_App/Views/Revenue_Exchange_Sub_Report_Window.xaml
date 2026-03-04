@@ -43,7 +43,7 @@
                     <TextBlock x:Name="Exchange_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
                 </Border>
 
-                <Label x:Name="Exchpand_Label" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                <Label x:Name="Exchpand_Label" Content="Transfer:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
                 </Border>
@@ -73,7 +73,7 @@
                     <TextBlock x:Name="Exchange_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
                 </Border>
 
-                <Label x:Name="Exchpand_Label1" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                <Label x:Name="Exchpand_Label1" Content="Transfer:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border x:Name="Exchpand_Border1" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Exchpand_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
                 </Border>
