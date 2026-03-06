@@ -622,6 +622,7 @@ namespace Financial_WPF_App.Models
                         action.ActionDate,
                         DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',
                         DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
+                        Currency_Tilltype.Name as 'Currency',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
                         (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Syr') THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
                         (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Usd') THEN action.Amount ELSE 0 END) AS 'ExpenseUSD',
