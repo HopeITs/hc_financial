@@ -538,7 +538,15 @@ namespace Financial_WPF_App.Views
                     var colOutcome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Expand");
                     if (colOutcome != null)
                         colOutcome.HeaderText = "Expenses(SYR)";
-                
+                foreach (var C in myDataGrid.Columns)
+                    if (C.HeaderText.ToString() == "Transfer")
+                    {
+                        C.IsHidden = true;
+                        Originally_HiddenColumns.Add(C.HeaderText.ToString());
+                    }
+                Transfered_Label.Visibility = Visibility.Collapsed;
+                Transfered_textBlock.Visibility = Visibility.Collapsed;
+
             }
         }
 
