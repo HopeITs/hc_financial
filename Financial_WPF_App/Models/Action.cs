@@ -564,7 +564,8 @@ namespace Financial_WPF_App.Models
 
                             ",( (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'I')" +
                             " - (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'E')" +
-                            " - (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'Ex') ) as 'Net'" +
+                            " - (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'Ex')" +
+                            " - (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'O')) as 'Net'" +
 
                             ",( (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'I' AND tilltypes.Name = 'SYR' AND currency_type.Name = 'USD') - (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + " AND actiontype.shortname = 'E' AND tilltypes.Name = 'SYR' AND currency_type.Name = 'USD') ) AS 'CashNetUSD'" +
 
@@ -714,7 +715,8 @@ END AS `USD_Value`,
                                 (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
                                 ((CASE WHEN actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) - 
                                  (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) - 
-                                 (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END)) AS 'Balance',
+                                 (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) - 
+                                 (CASE WHEN actiontype.shortname = 'O' THEN action.Amount ELSE 0 END)) AS 'Balance',
                                 action.Note,
                                 action.E_Note,
                                 action.`rate` as 'Rate',
