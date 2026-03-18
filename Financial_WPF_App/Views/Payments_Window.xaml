@@ -36,7 +36,7 @@
                 <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
                     <WrapPanel  Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="61" Margin="10,0,13,0"/>
+                            <Label Content="All(SYR):" Style="{DynamicResource statistic_lableStyle}" Width="70" Margin="10,0,13,0"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
                                 <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
                             </Border>
@@ -92,23 +92,54 @@ OverridesDefaultStyle="True" />
                 <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1">
                     <WrapPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Label Width="81" Content="All(USD):" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                                <TextBlock x:Name="Allusd_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
+                            <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="Amountusd_textBlock" Text="0.00" 
+                    Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Amount_textBlock_SizeChanged" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ToPayAmountusd_textBlock"
+                        Text="0.00"
+                        Style="{DynamicResource statistic_textBlockStyle}" 
+                        OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
                             <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
-                            <Border Style="{StaticResource BorderStackPanelStyle}" >
-                                <TextBlock x:Name="PaidAmount_textBlock1" Text="0.00" 
-                        Style="{DynamicResource statistic_textBlockStyle}" FontSize="15" SizeChanged="Amount_textBlock_SizeChanged" />
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="PaidAmountusd_textBlock"
+                    Text="0.00"
+                    Style="{DynamicResource statistic_textBlockStyle}" 
+                    OverridesDefaultStyle="True" />
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Amount returned:" Style="{DynamicResource statistic_lableStyle}"/>
-                            <Border Style="{StaticResource BorderStackPanelStyle}" >
-                                <TextBlock x:Name="ReturnedAmount_textBlock1" Text="0.00" 
- Style="{DynamicResource statistic_textBlockStyle}" FontSize="15" />
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ReturnedAmountusd_textBlock"
+                                    Text="0.00"
+                                    Style="{DynamicResource statistic_textBlockStyle}" 
+                                    OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
+                                <TextBlock x:Name="RemainingAmountusd_textBlock"
+                        Text="0.00"
+                        Style="{DynamicResource statistic_textBlockStyle}" 
+                        OverridesDefaultStyle="True" />
                             </Border>
                         </StackPanel>
                     </WrapPanel>
@@ -325,16 +356,26 @@ OverridesDefaultStyle="True" />
             HeaderStyle="{DynamicResource SfDataGrid_header}"
             RowStyle="{DynamicResource SfDataGrid_RowStyle}"
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"                              
-            SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" Margin="2,5,10,5">
+            Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" Margin="2,5,10,5">
 
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
-                            <syncfusion:GridNumericColumn  HeaderText="Payment amount"  MappingName="Income"
+                            <syncfusion:GridNumericColumn  HeaderText="Payment amount(SYR)" Width="200"  MappingName="Income"
                     NumberDecimalDigits="2"
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
                     NumberGroupSeparator=","/>
-                            <syncfusion:GridNumericColumn  HeaderText="Returned amount"  MappingName="Outcome"
+                            <syncfusion:GridNumericColumn  HeaderText="Payment amount(USD)" Width="200"  MappingName="Incomeusd"
+NumberDecimalDigits="2"
+NumberDecimalSeparator="."
+NumberGroupSizes="3"
+NumberGroupSeparator=","/>
+                            <syncfusion:GridNumericColumn  HeaderText="Returned amount(SYR)" Width="200"  MappingName="Outcome"
+NumberDecimalDigits="2"
+NumberDecimalSeparator="."
+NumberGroupSizes="3"
+NumberGroupSeparator=","/>
+                            <syncfusion:GridNumericColumn  HeaderText="Returned amount(USD)" Width="200" MappingName="Outcomeusd"
 NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"

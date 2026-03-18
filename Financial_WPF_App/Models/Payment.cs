@@ -92,7 +92,16 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',
-                 action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType', action.`Amount` AS 'Income',action.`Returned_Amount` AS 'Outcome', action.`note` as 'Note',
+                 action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType',
+                (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action.Amount
+                ELSE 0 END) AS 'Income',
+                (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action.Amount
+                ELSE 0 END) AS 'Incomeusd',
+                (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action.Returned_Amount
+                ELSE 0 END) AS 'Outcome',
+                (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action.Returned_Amount
+                ELSE 0 END) AS 'Outcomeusd',
+                action.`note` as 'Note',
                  action.`MicroProject_ID` ,action.`ActionDate`, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear', 
                  action.`IsApproved`, approved_byuser.`Username` as 'approved_by', action.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  action.`cashaccount_id` as 'cashaccount_id', cashaccount.`name` as 'cashaccount_name',
@@ -115,7 +124,10 @@ namespace Financial_WPF_App.Models
                  donor.`ID` AS 'beneficiaryDonor_ID', donor.`Name` AS 'beneficiaryDonor_Name' 
 
                  FROM `action` LEFT JOIN actiontype on actiontype.id = action.atype_id
-                 LEFT join `till` on action.Till_ID = till.ID LEFT join `tilltypes` on tilltypes.ID = till.Type_ID
+                 LEFT join `till` on action.Till_ID = till.ID 
+                 LEFT join `tilltypes` on tilltypes.ID = till.Type_ID
+                 LEFT join `beneficiary` on  beneficiary.MicroProject_ID = action.MicroProject_ID
+                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = beneficiary.currency_tilltype_id
                  LEFT join `account` on account.ID = till.Account_ID
                  LEFT join `subproject` on account.SubProject_ID = subproject.ID
                  LEFT join `cashaccount` on action.cashaccount_id = cashaccount.id
@@ -172,7 +184,18 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',
-                 action_not_approved.`ID` as 'ID' ,action_not_approved.`Till_ID`, actiontype.`Name` as 'AType', action_not_approved.`Amount` AS 'Income',action_not_approved.`Returned_Amount` AS 'Outcome', action_not_approved.`note` as 'Note',
+                 action_not_approved.`ID` as 'ID' ,action_not_approved.`Till_ID`, actiontype.`Name` as 'AType',
+
+               (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_not_approved.Amount
+                ELSE 0 END) AS 'Income',
+                (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_not_approved.Amount
+                ELSE 0 END) AS 'Incomeusd',
+                (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_not_approved.Returned_Amount
+                ELSE 0 END) AS 'Outcome',
+                (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_not_approved.Returned_Amount
+                ELSE 0 END) AS 'Outcomeusd',
+
+                 action_not_approved.`note` as 'Note',
                  action_not_approved.`MicroProject_ID` ,action_not_approved.`ActionDate`, DATE_FORMAT(action_not_approved.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action_not_approved.ActionDate, ""%Y"") as 'ActionYear', 
                  action_not_approved.`IsApproved`, approved_byuser.`Username` as 'approved_by', action_not_approved.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  action_not_approved.`cashaccount_id` as 'cashaccount_id', cashaccount.`name` as 'cashaccount_name',
@@ -196,6 +219,8 @@ namespace Financial_WPF_App.Models
 
                  FROM `action_not_approved` LEFT JOIN actiontype on actiontype.id = action_not_approved.atype_id
                  LEFT join `till` on action_not_approved.Till_ID = till.ID LEFT join `tilltypes` on tilltypes.ID = till.Type_ID
+                 LEFT join `beneficiary` on  beneficiary.MicroProject_ID = action_not_approved.MicroProject_ID
+                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = beneficiary.currency_tilltype_id
                  LEFT join `account` on account.ID = till.Account_ID
                  LEFT join `subproject` on account.SubProject_ID = subproject.ID
                  LEFT join `cashaccount` on action_not_approved.cashaccount_id = cashaccount.id
@@ -261,7 +286,17 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',
-                 action_deleted.`ID` as 'ID' ,action_deleted.`Till_ID`, actiontype.`Name` as 'AType', action_deleted.`Amount` AS 'Income', action_deleted.`Returned_Amount` AS 'Outcome', action_deleted.`note` as 'Note',
+                 action_deleted.`ID` as 'ID' ,action_deleted.`Till_ID`, actiontype.`Name` as 'AType',
+(CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_deleted.Amount
+ELSE 0 END) AS 'Income',
+(CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_deleted.Amount
+ELSE 0 END) AS 'Incomeusd',
+(CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_deleted.Returned_Amount
+ELSE 0 END) AS 'Outcome',
+(CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_deleted.Returned_Amount
+ELSE 0 END) AS 'Outcomeusd',
+
+action_deleted.`note` as 'Note',
                  action_deleted.`MicroProject_ID` ,action_deleted.`ActionDate`, DATE_FORMAT(action_deleted.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action_deleted.ActionDate, ""%Y"") as 'ActionYear', 
                  action_deleted.`IsApproved`, approved_byuser.`Username` as 'approved_by', action_deleted.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  deleted_byuser.username as 'deleted_by', action_deleted.`deleted_at` as 'deleted_at',
@@ -286,6 +321,8 @@ namespace Financial_WPF_App.Models
 
                  FROM `action_deleted` LEFT JOIN actiontype on actiontype.id = action_deleted.atype_id
                  LEFT join `till` on action_deleted.Till_ID = till.ID LEFT join `tilltypes` on tilltypes.ID = till.Type_ID
+                 LEFT join `beneficiary` on  beneficiary.MicroProject_ID = action_deleted.MicroProject_ID
+                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = beneficiary.currency_tilltype_id
                  LEFT join `account` on account.ID = till.Account_ID
                  LEFT join `subproject` on account.SubProject_ID = subproject.ID
                  LEFT join `cashaccount` on action_deleted.cashaccount_id = cashaccount.id

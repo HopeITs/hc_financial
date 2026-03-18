@@ -79,6 +79,7 @@ namespace Financial_WPF_App.Views
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
+                
                 return true;
             }
             catch (Exception ex)
@@ -118,6 +119,7 @@ namespace Financial_WPF_App.Views
             Set_privileges();
             Show_Hide();
             Fill_ComboBoxes();
+            
             //LoadGrid();
         }
 
@@ -172,6 +174,12 @@ namespace Financial_WPF_App.Views
                 ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amount)", string.Empty).ToString());
                 PaidAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamount)", string.Empty).ToString());
                 ReturnedAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(returnedamount)", string.Empty).ToString());
+
+                Amountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amountusd)", string.Empty).ToString());
+                ToPayAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amountusd)", string.Empty).ToString());
+                PaidAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamountusd)", string.Empty).ToString());
+                ReturnedAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(returnedamountusd)", string.Empty).ToString());
+
                 if (PaidAmount_textBlock.Text == "")
                 {
                     PaidAmount_textBlock.Text = "0.00";
@@ -180,7 +188,18 @@ namespace Financial_WPF_App.Views
                 {
                     ReturnedAmount_textBlock.Text = "0.00";
                 }
+                if (PaidAmountusd_textBlock.Text == "")
+                {
+                    PaidAmountusd_textBlock.Text = "0.00";
+                }
+                if (ReturnedAmountusd_textBlock.Text == "")
+                {
+                    ReturnedAmountusd_textBlock.Text = "0.00";
+                }
+
+
                 RemainingAmount_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmount_textBlock.Text) - double.Parse(PaidAmount_textBlock.Text)).ToString());
+                RemainingAmountusd_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmountusd_textBlock.Text) - double.Parse(PaidAmountusd_textBlock.Text)).ToString());
             }
         }
         private void Set_privileges()
@@ -595,6 +614,7 @@ namespace Financial_WPF_App.Views
                     Action_ID = -1;
                     Approved_Action = false;
                     LoadGrid();
+                    UpdateAllCounters();
                 }
             }
             catch (Exception ex)
@@ -645,18 +665,18 @@ namespace Financial_WPF_App.Views
 
         private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
-                All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
+            if (Allusd_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Allusd_textBlock.ActualWidth;
             else
-                Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
+                Allusd_textBlock.MinWidth = All_textBlock.ActualWidth;
         }
 
         private void Amount_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Amount_textBlock.ActualWidth > PaidAmount_textBlock1.ActualWidth)
-                PaidAmount_textBlock1.MinWidth = Amount_textBlock.ActualWidth;
+            if (Amount_textBlock.ActualWidth > Amountusd_textBlock.ActualWidth)
+                Amount_textBlock.MinWidth = Amount_textBlock.ActualWidth;
             else
-                Amount_textBlock.MinWidth = PaidAmount_textBlock1.ActualWidth;
+                Amount_textBlock.MinWidth = Amount_textBlock.ActualWidth;
         }
 
         private void Cash_DataGrid_AutoGeneratingColumn(object sender, AutoGeneratingColumnArgs e)
@@ -785,13 +805,42 @@ namespace Financial_WPF_App.Views
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
 
-                //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
-
-                int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
 
                 Export_btn.CommandTarget = myDataGrid;
+               
             }
+            
+        }
+
+
+        private void UpdateAllCounters()
+        {
+            if (myDataGrid.View == null)
+                return;
+
+            // غير SYR → عدّ عادي
+
+            All_textBlock.Text = myDataGrid.View.Records.Count().ToString("N0");
+               
+
+            int allUSD = 0;
+            int allSYR = 0;
+
+            foreach (var record in myDataGrid.View.Records)
+            {
+                if (record.Data is DataRowView rowView)
+                {
+                    string currency = rowView["Currency"]?.ToString();
+
+                    if (string.Equals(currency, "USD", StringComparison.OrdinalIgnoreCase))
+                        allUSD++;
+                    else
+                        allSYR++;
+                }
+            }
+
+            Allusd_textBlock.Text = allUSD.ToString("N0");
+            All_textBlock.Text = allSYR.ToString("N0");
         }
 
         private void myDataGrid_FilterChanged(object sender, GridFilterEventArgs e)
@@ -1023,41 +1072,7 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
-        {
-            try
-            {
-                int count = myDataGrid.SelectedItems.Count;
-                Selected_textBlock.Text = count.ToString("N0");
-
-                double selected_amount = 0;
-                double selected_returned = 0;
-                for (var i = 0; i < count; i++)
-                {
-                    DataRowView SelectedDataRow = (DataRowView)myDataGrid.SelectedItems[i];
-                    if (double.Parse(SelectedDataRow["Income"].ToString()) != 0)
-                    {
-                        selected_amount += double.Parse(SelectedDataRow["Income"].ToString());
-                    }
-                    if (double.Parse(SelectedDataRow["Outcome"].ToString()) != 0)
-                    {
-                        selected_returned += double.Parse(SelectedDataRow["Outcome"].ToString());
-                    }
-                }
-                PaidAmount_textBlock1.Text = selected_amount.ToString("N2");
-                ReturnedAmount_textBlock1.Text = selected_returned.ToString("N2");
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
+        
 
         private void Bind_Show_Hide_Menu()
         {
