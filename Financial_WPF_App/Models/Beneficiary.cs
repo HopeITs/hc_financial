@@ -29,10 +29,15 @@ namespace Financial_WPF_App.Models
                                 + ", `FatherName`, `NationalNumber`, `Mobile`, `Partners`"
                                 + ", `MicroProject_ID`, `Project_Name`,`currency_tilltype_id` as 'Currency'"
                                 + ", `Date`,`FirstPaymentDate`, (`ToReturn_Amount`/`Amount`)*100 as 'rate'"
-                                + ", (CASE WHEN Lower(tilltypes.Name) = 'syr' THEN beneficiary.Amount ELSE 0 END) AS 'Amount'"
+                                
+                                + ", beneficiary.Amount AS 'Amount'"
+                                + ", (CASE WHEN Lower(tilltypes.Name) = 'syr' THEN beneficiary.Amount ELSE 0 END) AS 'Amountsyr'"
                                 + ", (CASE WHEN Lower(tilltypes.Name) = 'usd' THEN beneficiary.Amount ELSE 0 END) AS 'Amountusd'"
-                                + ", (CASE WHEN Lower(tilltypes.Name) = 'syr' THEN beneficiary.ToReturn_Amount ELSE 0 END) AS 'ToReturn_Amount'"
+
+                                + ", beneficiary.ToReturn_Amount AS 'ToReturn_Amount'"
+                                + ", (CASE WHEN Lower(tilltypes.Name) = 'syr' THEN beneficiary.ToReturn_Amount ELSE 0 END) AS 'ToReturn_Amountsyr'"
                                 + ", (CASE WHEN Lower(tilltypes.Name) = 'usd' THEN beneficiary.ToReturn_Amount ELSE 0 END) AS 'ToReturn_Amountusd'"
+
                                 + ", (select sum(action.amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID` and lower(tilltypes.Name) = 'syr') as 'paidamount'"
                                 + ", (select sum(action.amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID` and lower(tilltypes.Name) = 'usd') as 'paidamountusd'"
                                 + ", (select sum(action.Returned_Amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID` and lower(tilltypes.Name) = 'syr') as 'returnedamount'"
@@ -46,7 +51,7 @@ namespace Financial_WPF_App.Models
                                 + ", account_donor.Donor_ID as 'Donor_ID'"
                                 + ", tilltypes.Name as 'Currency_Name'"
                                 + ", beneficiary.ExchangeRate as 'ExchangeRate'"
-                                + ", Round(CASE WHEN tilltypes.Name = 'SYR' THEN Amount / ExchangeRate WHEN tilltypes.Name = 'USD' THEN Amount * ExchangeRate END,2) AS 'CorrespondingLoan'"
+                                + ", IFNULL(Round(CASE WHEN tilltypes.Name = 'SYR' THEN Amount / ExchangeRate WHEN tilltypes.Name = 'USD' THEN Amount * ExchangeRate END,2),0) AS 'CorrespondingLoan'"
 
                                 + " FROM `beneficiary` left join `account` on account.ID = beneficiary.Account_ID"
                                 + " LEFT JOIN account_donor ON account_donor.account_ID = account.ID"
