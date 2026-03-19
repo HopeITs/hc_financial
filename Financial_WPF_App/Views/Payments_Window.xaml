@@ -156,33 +156,37 @@ OverridesDefaultStyle="True" />
                         x:Name="MircoProject_ID_autoSuggestionUserControl" 
                         LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus"
                          VerticalAlignment="Center" Width="175" Margin="14,0,6,0" />
-                           
-                                <Label x:Name="ActionDate_Label" Style="{DynamicResource statistic_lableStyle}" Content="Operation date:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                        
-                                <Label x:Name="ActionDate_Label_Copy" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="2,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                          
-                                <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker"  Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175" Height="30"/>
-                          
-                                <Label x:Name="ActionDate_Label_Copy1" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                         
-                                <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
-                          
-                                <Button ToolTip="Show Payments" ToolTipService.InitialShowDelay="100"
+
+                            <Label x:Name="ActionDate_Label" Style="{DynamicResource statistic_lableStyle}" Content="Operation date:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+
+                            <Label x:Name="ActionDate_Label_Copy" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="2,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+
+                            <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker"  Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175" Height="30"/>
+
+                            <Label x:Name="ActionDate_Label_Copy1" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+
+                            <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
+
+                            <Button ToolTip="Show Payments" ToolTipService.InitialShowDelay="100"
                             Style="{DynamicResource AddButtonStyle}"
                             x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="2,0,0,0" VerticalAlignment="Center" Height="25" Width="55" >
-                                    <Button.Background>
-                                        <ImageBrush ImageSource="/Images/Buttons/Apply.png" Stretch="Uniform"/>
-                                    </Button.Background>
-                                </Button>
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/Apply.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
                         </WrapPanel>
                     </DockPanel>
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,0,0,5" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="403*"/>
+                        <ColumnDefinition Width="237*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" VerticalAlignment="Center" Height="40">
+                    <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" VerticalAlignment="Center" Height="40" Grid.ColumnSpan="2">
                         <WrapPanel Orientation="Horizontal" Width="Auto">
                             <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                                 <Menu.Resources>
@@ -492,7 +496,9 @@ Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalConten
                             <Grid Grid.Row="0" Margin="0,5,0,5" Height="25">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    --><!-- For the button --><!--
+                                    -->
+                    <!-- For the button -->
+                    <!--
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Button Style="{DynamicResource AddButtonStyle}" x:Name="Cash_Export_btn" Command="local:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
