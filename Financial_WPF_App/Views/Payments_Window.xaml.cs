@@ -170,8 +170,8 @@ namespace Financial_WPF_App.Views
                 }
 
 
-                Amount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amount)", string.Empty).ToString());
-                ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amount)", string.Empty).ToString());
+                Amount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amountsyr)", string.Empty).ToString());
+                ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amountsyr)", string.Empty).ToString());
                 PaidAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamount)", string.Empty).ToString());
                 ReturnedAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(returnedamount)", string.Empty).ToString());
 
@@ -354,6 +354,8 @@ namespace Financial_WPF_App.Views
 
             Bind_Show_Hide_Menu();
 
+            UpdateAllCounters();
+
             //cash_dt = p.Select_Cash_Payments(SubProject_ID);
             //if (cash_dt != null && cash_dt.Rows.Count > 0)
             //{
@@ -404,6 +406,7 @@ namespace Financial_WPF_App.Views
                     if (HOffset != 0)
                         this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
                 }
+                UpdateAllCounters();
             }
             catch (Exception ex)
             {
@@ -614,7 +617,7 @@ namespace Financial_WPF_App.Views
                     Action_ID = -1;
                     Approved_Action = false;
                     LoadGrid();
-                    UpdateAllCounters();
+                    
                 }
             }
             catch (Exception ex)
@@ -818,8 +821,7 @@ namespace Financial_WPF_App.Views
             if (myDataGrid.View == null)
                 return;
 
-            // غير SYR → عدّ عادي
-
+           
             All_textBlock.Text = myDataGrid.View.Records.Count().ToString("N0");
                
 

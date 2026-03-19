@@ -91,7 +91,7 @@ namespace Financial_WPF_App.Models
         public DataTable Select_All_Payments(string SubProject_ID, int Action_ID, string FromDate, string ToDate, int Microproject_ID)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
-                 account.ID as 'AccountID', account.Name as 'AccountName',
+                 account.ID as 'AccountID', account.Name as 'AccountName', currency_tilltype.Name as 'Currency',
                  action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action.Amount
                 ELSE 0 END) AS 'Income',
@@ -183,7 +183,7 @@ namespace Financial_WPF_App.Models
         public DataTable Select_All_Not_Approved_Payments(string SubProject_ID, bool ForApproval, int Action_ID, string FromDate, string ToDate, int Microproject_ID)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
-                 account.ID as 'AccountID', account.Name as 'AccountName',
+                 account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
                  action_not_approved.`ID` as 'ID' ,action_not_approved.`Till_ID`, actiontype.`Name` as 'AType',
 
                (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_not_approved.Amount
@@ -285,7 +285,7 @@ namespace Financial_WPF_App.Models
         public DataTable Select_All_Deleted_Payments(string SubProject_ID, bool ForApproval)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
-                 account.ID as 'AccountID', account.Name as 'AccountName',
+                 account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
                  action_deleted.`ID` as 'ID' ,action_deleted.`Till_ID`, actiontype.`Name` as 'AType',
 (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_deleted.Amount
 ELSE 0 END) AS 'Income',
