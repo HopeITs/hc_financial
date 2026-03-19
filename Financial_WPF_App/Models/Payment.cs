@@ -92,13 +92,13 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName', currency_tilltype.Name as 'Currency',
-                 action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType',
+                 action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType',action.Amount as 'Income',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action.Amount
-                ELSE 0 END) AS 'Income',
+                ELSE 0 END) AS 'Incomesyr',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action.Amount
-                ELSE 0 END) AS 'Incomeusd',
+                ELSE 0 END) AS 'Incomeusd',action.Returned_Amount as 'Outcome',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action.Returned_Amount
-                ELSE 0 END) AS 'Outcome',
+                ELSE 0 END) AS 'Outcomesyr',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action.Returned_Amount
                 ELSE 0 END) AS 'Outcomeusd',
                 action.`note` as 'Note',
@@ -185,13 +185,13 @@ namespace Financial_WPF_App.Models
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
                  action_not_approved.`ID` as 'ID' ,action_not_approved.`Till_ID`, actiontype.`Name` as 'AType',
-
+                action_not_approved.Amount as 'Income',
                (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_not_approved.Amount
-                ELSE 0 END) AS 'Income',
+                ELSE 0 END) AS 'Incomesyr',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_not_approved.Amount
-                ELSE 0 END) AS 'Incomeusd',
+                ELSE 0 END) AS 'Incomeusd',action_not_approved.Returned_Amount as 'Outcome',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_not_approved.Returned_Amount
-                ELSE 0 END) AS 'Outcome',
+                ELSE 0 END) AS 'Outcomesyr',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_not_approved.Returned_Amount
                 ELSE 0 END) AS 'Outcomeusd',
 
@@ -286,13 +286,13 @@ namespace Financial_WPF_App.Models
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
-                 action_deleted.`ID` as 'ID' ,action_deleted.`Till_ID`, actiontype.`Name` as 'AType',
+                 action_deleted.`ID` as 'ID' ,action_deleted.`Till_ID`, actiontype.`Name` as 'AType',action_deleted.Amount as 'Income',
 (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_deleted.Amount
-ELSE 0 END) AS 'Income',
+ELSE 0 END) AS 'Incomesyr',
 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_deleted.Amount
-ELSE 0 END) AS 'Incomeusd',
+ELSE 0 END) AS 'Incomeusd',action_deleted.Returned_Amount as 'Outcome',
 (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_deleted.Returned_Amount
-ELSE 0 END) AS 'Outcome',
+ELSE 0 END) AS 'Outcomesyr',
 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_deleted.Returned_Amount
 ELSE 0 END) AS 'Outcomeusd',
 

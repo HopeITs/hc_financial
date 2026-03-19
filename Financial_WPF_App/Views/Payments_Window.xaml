@@ -360,7 +360,7 @@ OverridesDefaultStyle="True" />
 
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
-                            <syncfusion:GridNumericColumn  HeaderText="Payment amount(SYR)" Width="200"  MappingName="Income"
+                            <syncfusion:GridNumericColumn  HeaderText="Payment amount(SYR)" Width="200"  MappingName="Incomesyr"
                     NumberDecimalDigits="2"
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
@@ -370,7 +370,7 @@ NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"
 NumberGroupSeparator=","/>
-                            <syncfusion:GridNumericColumn  HeaderText="Returned amount(SYR)" Width="200"  MappingName="Outcome"
+                            <syncfusion:GridNumericColumn  HeaderText="Returned amount(SYR)" Width="200"  MappingName="Outcomesyr"
 NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"
