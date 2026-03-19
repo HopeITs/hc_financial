@@ -472,7 +472,7 @@ action_deleted.`note` as 'Note',
                         sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
                                "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
                                actionID + ", " + tillID + ", (SELECT ID FROM actiontype WHERE shortname='O' LIMIT 1), " +
-                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `cashaccount` on `cashaccount`.`currency_tilltype_id` = `tilltypes`.ID WHERE `cashaccount`.`id` = @CashAccount_ID), " +
+                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` on `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID where beneficiary.id = @Beneficiary_ID), " +
                                "0, " + remainingRefund + ", 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @Uesr_ID);";
                         sql += "COMMIT;";
                         sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
@@ -501,7 +501,7 @@ action_deleted.`note` as 'Note',
                         sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
                                "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
                                actionID + ", " + tillID + ", (SELECT ID FROM actiontype WHERE shortname='O' LIMIT 1), " +
-                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `cashaccount` on `cashaccount`.`currency_tilltype_id` = `tilltypes`.ID WHERE `cashaccount`.`id` = @CashAccount_ID), " +
+                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` on `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID where beneficiary.id = @Beneficiary_ID), " +
                                "0, " + apply + ", 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @Uesr_ID);";
 
                         sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ", " + payId + ");";
@@ -575,7 +575,7 @@ action_deleted.`note` as 'Note',
                         sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
                                "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
                                actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='I' LIMIT 1), " +
-                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `cashaccount` on `cashaccount`.`currency_tilltype_id` = `tilltypes`.ID WHERE `cashaccount`.`id` = @CashAccount_ID), " +
+                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` on `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID where beneficiary.id = @Beneficiary_ID), " +
                                apply + ", 0, 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @Uesr_ID);";
 
                         sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ", " + payId + ");";
@@ -638,7 +638,7 @@ action_deleted.`note` as 'Note',
                             sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
                                    "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
                                    actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='I' LIMIT 1), " +
-                                   "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `cashaccount` on `cashaccount`.`currency_tilltype_id` = `tilltypes`.ID WHERE `cashaccount`.`id` = @CashAccount_ID), " +
+                                   "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` on `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID), " +
                                    createAmount + ", 0, 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @Uesr_ID);";
                             sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ", @NewPaymentID);";
 
