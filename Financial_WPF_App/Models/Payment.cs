@@ -106,8 +106,7 @@ namespace Financial_WPF_App.Models
                  action.`MicroProject_ID` ,action.`ActionDate`, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear', 
                  action.`IsApproved`, approved_byuser.`Username` as 'approved_by', action.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  action.`cashaccount_id` as 'cashaccount_id', cashaccount.`name` as 'cashaccount_name',
-
-                (select Max(payment.Num) from payment join action_payment on action_payment.payment_id = payment.id where action_payment.action_id = action.`ID`) AS 'Payment_Num',
+                (select GROUP_CONCAT(payment.Num) from payment join action_payment on action_payment.payment_id = payment.id where action_payment.action_id = action.`ID`) AS 'Payment_Num',
 
                  (select CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) from beneficiary JOIN account on beneficiary.Account_ID = account.ID
                  where beneficiary.MicroProject_ID = action.MicroProject_ID and account.SubProject_ID = SubProjectID ) as 'Name',
@@ -441,7 +440,7 @@ action_deleted.`note` as 'Note',
                 
                 int numofinserts = 0;
 
-                // handle refunds
+                
                 if (Returned_Amount > 0 && Amount == 0)
                 {
                     double remainingRefund = Returned_Amount;
@@ -480,7 +479,6 @@ action_deleted.`note` as 'Note',
                         return;
                     }
 
-                    // Iterate payments and apply refund up to their netPaid (never more)
                     sql += "START TRANSACTION;";
                     foreach (DataRow r in paidTbl.Rows)
                     {
@@ -489,9 +487,9 @@ action_deleted.`note` as 'Note',
                         int payId = Convert.ToInt32(r["PaymentID"]);
                         double sumIncome = Convert.ToDouble(r["SumIncome"]);
                         double sumReturn = Convert.ToDouble(r["SumReturn"]);
-                        double netPaid = sumIncome - sumReturn; // current net paid on this payment
+                        double netPaid = sumIncome - sumReturn; 
 
-                        if (netPaid <= 0) continue; // nothing to refund
+                        if (netPaid <= 0) continue; 
 
                         double apply = Math.Min(remainingRefund, netPaid);
 
@@ -536,37 +534,36 @@ action_deleted.`note` as 'Note',
                     return;
                 }
 
-                // Logic for regular payment (Amount > 0 and Returned_Amount == 0)
                 if (Amount > 0 && Returned_Amount == 0)
                 {
                     sql = "START TRANSACTION;";
                     foreach (DataRow r in payments.Rows)
                     {
-                        if (Amount <= 0) break; // Stop if there's no more amount to process
+                        if (Amount <= 0) break; 
 
-                        int payId = Convert.ToInt32(r["ID"]); // Payment ID
-                        double scheduled = Convert.ToDouble(r["Amount"]); // Scheduled Amount
-                        double paidAmount = Convert.ToDouble(r["Paid_Amount"]); // Paid Amount
-                        string paymentState = r["payment_state"].ToString(); // Payment State (e.g., "incomplete", "unpaid")
+                        int payId = Convert.ToInt32(r["ID"]); 
+                        double scheduled = Convert.ToDouble(r["Amount"]); 
+                        double paidAmount = Convert.ToDouble(r["Paid_Amount"]); 
+                        string paymentState = r["payment_state"].ToString();
                         
-                        // Calculate the remaining amount (need) for the payment
+                       
                         double netPaid = paidAmount;
                         double need = scheduled - netPaid;
 
-                        // If payment is already fully paid, skip it
+                        
                         if (need <= 0 || paymentState == "paid") continue;
 
-                        // If the payment is incomplete, apply the remaining amount
+                        
                         double apply = Math.Min(Amount, need); // Apply the minimum of remaining amount and available funds
 
-                        // Insert Income Action for this payment
+                        
                         sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
                                "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
                                actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='I' LIMIT 1), " +
                                "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID), " +
                                apply + ", 0, 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @User_ID);";
 
-                        // Link the action to the current payment
+                        
                         sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ", " + payId + ");";
 
                         actionID++;
