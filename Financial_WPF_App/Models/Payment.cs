@@ -1,5 +1,7 @@
 ﻿using Financial_WPF_App.Properties;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
+using Org.BouncyCastle.Utilities.Collections;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,14 +26,18 @@ namespace Financial_WPF_App.Models
                                 payment.Beneficiary_ID, 
                                 payment.Num,
                                 GROUP_CONCAT(DATE_FORMAT(combined_action.ActionDate, '%Y-%m-%d')) AS 'action_date',
-                            
                                 -- Net Paid Amount = sum(Amount) - sum(Returned_Amount)
                                 IFNULL(SUM(combined_action.Amount),0) - IFNULL(SUM(combined_action.Returned_Amount),0) AS 'Paid_Amount',
-                            
+                                CASE 
+                                    WHEN (payment.Amount) > 0 THEN SUM(combined_action.Amount)
+                                    WHEN (payment.Amount) < 0 THEN -SUM(combined_action.Returned_Amount)
+                                END AS 'Amount_Paid',
                                 -- Payment state based on net paid amount
                                 CASE 
+                                    WHEN (payment.Amount) < 0 THEN 'Returned'
                                     WHEN (IFNULL(SUM(combined_action.Amount),0) - IFNULL(SUM(combined_action.Returned_Amount),0)) <= 0 THEN 'Unpaid'
                                     WHEN (IFNULL(SUM(combined_action.Amount),0) - IFNULL(SUM(combined_action.Returned_Amount),0)) < payment.Amount THEN 'Incomplete'
+                                    
                                     ELSE 'Done'
                                 END AS 'payment_state',
                             
@@ -404,9 +410,10 @@ action_deleted.`note` as 'Note',
                 sc.Parameters.AddWithValue("@MicroProject_ID", MicroProject_ID == -1 ? (object)DBNull.Value : MicroProject_ID);
                 sc.Parameters.AddWithValue("@SubProject_ID", SubProject_ID == -1 ? (object)DBNull.Value : SubProject_ID);
                 sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
+                sc.Parameters.AddWithValue("@Returned_Amount", Returned_Amount);
                 sc.Parameters.AddWithValue("@CashAccount_ID", CashAccount_ID);
                 sc.Parameters.AddWithValue("@Form_Name", Form_Name);
-                sc.Parameters.AddWithValue("@Uesr_ID", Settings.Default.User_ID);
+                sc.Parameters.AddWithValue("@User_ID", Settings.Default.User_ID);
                 sc.Parameters.AddWithValue("@Note", Note);
                 sc.Parameters.AddWithValue("@Date", Date == "Null" ? (object)DBNull.Value : Date);
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
@@ -440,101 +447,61 @@ action_deleted.`note` as 'Note',
                 
                 int numofinserts = 0;
 
-                
-                if (Returned_Amount > 0 && Amount == 0)
+
+                if (Amount == 0 && Returned_Amount > 0)
                 {
-                    double remainingRefund = Returned_Amount;
+                    sql = "START TRANSACTION;";
 
-                    // Fetch payments ordered by latest income action id DESC (latest paid first)
-                    // For each payment we compute netPaid = SUM(income.Amount) - SUM(refund.Returned_Amount)
-                    sc.CommandText =
-                        "SELECT p.ID AS PaymentID, p.Amount AS ScheduledAmount, " +
-                        "  IFNULL((SELECT SUM(a1.Amount) FROM action_not_approved a1 JOIN action_payment ap1 ON ap1.action_id=a1.ID WHERE ap1.payment_id=p.ID AND a1.AType_ID=(SELECT ID FROM actiontype WHERE shortname='I' LIMIT 1)),0) AS SumIncome, " +
-                        "  IFNULL((SELECT SUM(a2.Returned_Amount) FROM action_not_approved a2 JOIN action_payment ap2 ON ap2.action_id=a2.ID WHERE ap2.payment_id=p.ID AND a2.AType_ID=(SELECT ID FROM actiontype WHERE shortname='O' LIMIT 1)),0) AS SumReturn, " +
-                        "  IFNULL((SELECT MAX(a3.ID) FROM action_not_approved a3 JOIN action_payment ap3 ON ap3.action_id=a3.ID WHERE ap3.payment_id=p.ID AND a3.AType_ID=(SELECT ID FROM actiontype WHERE shortname='I' LIMIT 1)),0) AS MaxIncomeActionID " +
-                        "FROM payment p " +
-                        "WHERE p.Beneficiary_ID = @Beneficiary_ID " +
-                        "ORDER BY MaxIncomeActionID DESC, p.ID ASC;";
+                    sql += @"SET @num = (
+                       SELECT p.Num
+                       FROM payment p
+                       WHERE p.Beneficiary_ID = 2604
+                       ORDER BY (
+                           SELECT MAX(a3.ID)
+                           FROM action_not_approved a3
+                           JOIN action_payment ap3 ON ap3.action_id = a3.ID
+                           WHERE ap3.payment_id = p.ID
+                           AND a3.AType_ID = (SELECT ID FROM actiontype WHERE shortname = 'I' LIMIT 1)
+                       ) DESC, p.ID ASC
+                       LIMIT 1);";
+                    sql += @"INSERT INTO payment(Amount, DueDate, Beneficiary_ID, Num)
+                            VALUES(-@Returned_Amount, @Date, @Beneficiary_ID, @num + 1);";
+                    sql += @"SET @payId = Last_Insert_ID() ;";
+                    sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
+                                   "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
+                                   actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='I' LIMIT 1), " +
+                                   "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID), " +
+                                   " 0," + Returned_Amount + ", 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @User_ID);";
+                    sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ",@payId);";
 
-                    DataTable paidTbl = new DataTable();
-                    using (MySqlDataAdapter da = new MySqlDataAdapter(sc))
-                    {
-                        da.Fill(paidTbl);
-                    }
+                    sql += "CALL ReGenerate_allPayments(@Beneficiary_ID);";
 
-                    // If no payments have any income, insert an unlinked refund action (keeps history)
-                    if (paidTbl.Rows.Count == 0)
-                    {
-                        sql += "START TRANSACTION;";
-                        sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
-                               "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
-                               actionID + ", " + tillID + ", (SELECT ID FROM actiontype WHERE shortname='O' LIMIT 1), " +
-                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` on `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID where beneficiary.id = @Beneficiary_ID), " +
-                               "0, " + remainingRefund + ", 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @Uesr_ID);";
-                        sql += "COMMIT;";
-                        sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
-                        sc.Parameters.AddWithValue("@t", 600);
-                        sc.ExecuteNonQuery();
-                        Login.CloseAndClearConnection();
-                        return;
-                    }
-
-                    sql += "START TRANSACTION;";
-                    foreach (DataRow r in paidTbl.Rows)
-                    {
-                        if (remainingRefund <= 0) break;
-
-                        int payId = Convert.ToInt32(r["PaymentID"]);
-                        double sumIncome = Convert.ToDouble(r["SumIncome"]);
-                        double sumReturn = Convert.ToDouble(r["SumReturn"]);
-                        double netPaid = sumIncome - sumReturn; 
-
-                        if (netPaid <= 0) continue; 
-
-                        double apply = Math.Min(remainingRefund, netPaid);
-
-                        // Insert refund action (Returned_Amount = apply) and link to this payment
-                        sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
-                               "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
-                               actionID + ", " + tillID + ", (SELECT ID FROM actiontype WHERE shortname='O' LIMIT 1), " +
-                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` on `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID where beneficiary.id = @Beneficiary_ID), " +
-                               "0, " + apply + ", 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @Uesr_ID);";
-
-                        sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ", " + payId + ");";
-
-                        actionID++;
-                        numofinserts++;
-                        remainingRefund -= apply;
-                    }
                     sql += "COMMIT;";
 
+                    // Execute the SQL commands
                     sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
                     sc.Parameters.AddWithValue("@t", 600);
                     sc.ExecuteNonQuery();
 
-                    int firstInsertedActionId = actionID - numofinserts;
-                    string escapedQuery = Regex.Replace(sql, "'", "''");
+                    // Log the actions that were inserted
+                    int firstInsertedActionIdLog = actionID - numofinserts;
+                    string escapedSql = Regex.Replace(sql, "'", "''");
                     for (int i = 0; i < numofinserts; i++)
                     {
-                        int insertedId = firstInsertedActionId + i;
-                        string details = "Return";
+                        int insertedId = firstInsertedActionIdLog + i;
+                        string details = "payment - I (Return)";
                         string logQ = "INSERT INTO log(form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
-                                      "VALUES (@Form_Name, 'INSERT', 'action_not_approved', " + insertedId + ", '" + details + "', CONCAT('beneficiary ID = ',@Beneficiary_ID), '" +
-                                      escapedQuery + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+                                     "VALUES (@Form_Name, 'INSERT', 'action_not_approved', " + insertedId + ", '" + details + "', CONCAT('beneficiary ID = ',@Beneficiary_ID), '" +
+                                     escapedSql + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                         sc.CommandText = logQ;
                         sc.ExecuteNonQuery();
                     }
-                    MySqlCommand resCmd = new MySqlCommand("CALL ReschedulePayments(@bID,  @actionDate)", Login.MyConn);
 
-                    resCmd.Parameters.AddWithValue("@bID", Beneficiary_ID);
-                    resCmd.Parameters.AddWithValue("@actionDate", Date);
-
-                    resCmd.ExecuteNonQuery();
                     Login.CloseAndClearConnection();
                     return;
                 }
 
-                if (Amount > 0 && Returned_Amount == 0)
+                else if (Amount > 0 && Returned_Amount == 0)
                 {
                     sql = "START TRANSACTION;";
                     foreach (DataRow r in payments.Rows)
@@ -640,13 +607,13 @@ action_deleted.`note` as 'Note',
 
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
                 sc.Parameters.AddWithValue("@Todaydate", Todaydate);
-                sc.Parameters.AddWithValue("@Uesr_ID", Settings.Default.User_ID);
+                sc.Parameters.AddWithValue("@User_ID", Settings.Default.User_ID);
                 sc.Parameters.AddWithValue("@Form_Name", Form_Name);
 
                 query = "START TRANSACTION;";
 
                 query += @"UPDATE`action` SET `Amount` = @Amount,`Returned_Amount` = @ReturnedAmount,
-                            `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id =@CashAccount_ID , updated_at =  @Todaydate, `edited_by` = @Uesr_ID  
+                            `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id =@CashAccount_ID , updated_at =  @Todaydate, `edited_by` = @User_ID  
                             WHERE action.ID = @Action_ID;";
 
 
@@ -701,6 +668,7 @@ action_deleted.`note` as 'Note',
                 sc.Parameters.AddWithValue("@Till_ID", Till_ID);
 
                 sc.Parameters.AddWithValue("@Amount", Amount);
+                sc.Parameters.AddWithValue("@Returned_Amount", ReturnedAmount);
 
                 if (Date == "Null")
                 {
@@ -726,13 +694,13 @@ action_deleted.`note` as 'Note',
 
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
                 sc.Parameters.AddWithValue("@Todaydate", Todaydate);
-                sc.Parameters.AddWithValue("@Uesr_ID", Settings.Default.User_ID);
+                sc.Parameters.AddWithValue("@User_ID", Settings.Default.User_ID);
                 sc.Parameters.AddWithValue("@Form_Name", Form_Name);
 
                 query = "START TRANSACTION;";
 
-                query += @"UPDATE`action_not_approved` SET `Amount` = @Amount,
-                            `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id =@CashAccount_ID , updated_at =  @Todaydate, `edited_by` = @Uesr_ID  
+                query += @"UPDATE`action_not_approved` SET `Amount` = @Amount,Returned_Amount = @Returned_Amount,
+                            `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id =@CashAccount_ID , updated_at =  @Todaydate, `edited_by` = @User_ID  
                             WHERE action_not_approved.ID = @Action_ID;";
 
 
@@ -785,7 +753,7 @@ action_deleted.`note` as 'Note',
 
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
                 sc.Parameters.AddWithValue("@Todaydate", Todaydate);
-                sc.Parameters.AddWithValue("@Uesr_ID", Settings.Default.User_ID);
+                sc.Parameters.AddWithValue("@User_ID", Settings.Default.User_ID);
 
                 query += "START TRANSACTION;";
 
@@ -793,7 +761,7 @@ action_deleted.`note` as 'Note',
                 {
                     query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID OR action.ObserveAcion_ID = @ID;";
 
-                    query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
+                    query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @User_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
 
                     query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID;";
 
@@ -811,7 +779,7 @@ action_deleted.`note` as 'Note',
                 {
                     query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID OR action_not_approved.ObserveAcion_ID = @ID;";
 
-                    query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
+                    query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @User_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
 
                     query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID;";
 

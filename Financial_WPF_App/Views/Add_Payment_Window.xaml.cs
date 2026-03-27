@@ -443,8 +443,10 @@ namespace Financial_WPF_App.Views
                     if (p_dt.Rows.Count != 0)
                     {
                         DataTable selected_rows_dt = new DataTable();
+                        DataTable returned_rows_dt = new DataTable();
 
                         System.Data.DataRow[] My_rows = p_dt.Select("payment_state is null OR payment_state <> 'Done'");
+                        
                         selected_rows_dt = p_dt.Copy();
                         selected_rows_dt.Rows.Clear();
                         foreach (System.Data.DataRow row in My_rows)
@@ -513,6 +515,7 @@ namespace Financial_WPF_App.Views
             PaidPaymentCount_txtBox.Content = "";
             UnpaidPaymentCount_txtBox.Content = "";
             InComplete_txtBox.Content = "";
+            Returned_txtBox.Content = "";
             DelayedPaymentCont_txtBox.Content = "";
             NotApprovedPaymentCont_txtBox.Content = "";
         }
@@ -549,12 +552,13 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Calculations()
         {
-            int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont;
+            int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont, ReturnedPaymentCont;
 
             TotalPaymentCount = p_dt.Rows.Count;
             PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
             UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
             InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
+            ReturnedPaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Returned'").Length.ToString());
             DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
             NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
 
@@ -562,6 +566,7 @@ namespace Financial_WPF_App.Views
             PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
             UnpaidPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
             InComplete_txtBox.Content = InCompletePaymentCont.ToString();
+            Returned_txtBox.Content = ReturnedPaymentCont.ToString();
             DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
             NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
 

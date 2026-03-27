@@ -786,12 +786,13 @@ namespace Financial_WPF_App
                 myDataGrid.ItemsSource = p_dt.DefaultView;
 
 
-                int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont;
+                int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, ReturnedCount, DelayedPaymentCont, NotApprovedPaymentCont;
 
                 TotalPaymentCount = p_dt.Rows.Count;
                 PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
                 UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
                 InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
+                ReturnedCount = Convert.ToInt32(p_dt.Select("payment_state='Returned'").Length.ToString());
                 DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
                 NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
 
@@ -799,6 +800,7 @@ namespace Financial_WPF_App
                 PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
                 RemainedPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
                 NotCompleted_txtBox.Content = InCompletePaymentCont.ToString();
+                ReturnedCount_txtBox.Content = ReturnedCount.ToString();
                 DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
                 NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
             }
@@ -806,7 +808,7 @@ namespace Financial_WPF_App
             {
                 myDataGrid.ItemsSource = null;
                 Returned_txtBox.Content = RemainedِAmount_txtBox.Content = PaymentCount_txtBox.Content
-                    = NotCompleted_txtBox.Content = RemainedPaymentCount_txtBox.Content = "0.00";
+                    = NotCompleted_txtBox.Content = RemainedPaymentCount_txtBox.Content = ReturnedCount_txtBox.Content = "0.00";
             }
         }
 

@@ -55,13 +55,15 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50*" />
                         <ColumnDefinition Width=".3*" />
                         <ColumnDefinition Width="40*" />
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Column="1" Grid.RowSpan="14" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    <Border Grid.Column="1" Grid.RowSpan="16" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                     <Label Style="{DynamicResource statistic_lableStyle}" Content="Total payments:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="6" VerticalAlignment="Stretch" />
                     <Label x:Name="TotalPaymentCount_txtBox"  Style="{DynamicResource statistic_lableStyle}" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
                     TabIndex="13"   Content="###,###"  Grid.Column="2" Grid.Row="6" VerticalAlignment="Stretch" />
@@ -105,12 +107,15 @@ TabIndex="13"   Content="###,###"  />
                     <Label Style="{DynamicResource statistic_lableStyle}" Content="Incomplete:"   HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="12"  />
                     <Label x:Name="InComplete_txtBox"  Style="{DynamicResource statistic_lableStyle}" TabIndex="13" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
                       Content="###,###" Grid.Column="2" Grid.Row="12"  />
-                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Not approved"   HorizontalAlignment="Right" Grid.Column="0" Grid.Row="13" VerticalAlignment="Stretch"   />
-                    <Label x:Name="NotApprovedPaymentCont_txtBox" Grid.Column="2" Grid.Row="13" FontSize="12" Margin="0,0,0,0" Content="###,###" Foreground="{StaticResource HopeRed}"
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Returned:"   HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="13"  />
+                        <Label x:Name="Returned_txtBox"  Style="{DynamicResource statistic_lableStyle}" TabIndex="13" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+  Content="###,###" Grid.Column="2" Grid.Row="13"  />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Not approved"   HorizontalAlignment="Right" Grid.Column="0" Grid.Row="14" VerticalAlignment="Stretch"   />
+                    <Label x:Name="NotApprovedPaymentCont_txtBox" Grid.Column="2" Grid.Row="14" FontSize="12" Margin="0,0,0,0" Content="###,###" Foreground="{StaticResource HopeRed}"
     Style="{DynamicResource statistic_lableStyle}" TabIndex="13"   />
-                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Late:"  HorizontalAlignment="Right" Grid.Column="0" Grid.Row="14" VerticalAlignment="Stretch"   />
+                    <Label Style="{DynamicResource statistic_lableStyle}" Content="Late:"  HorizontalAlignment="Right" Grid.Column="0" Grid.Row="15" VerticalAlignment="Stretch"   />
                     <Label x:Name="DelayedPaymentCont_txtBox" FontSize="12" Margin="0,0,0,0"
-    Style="{DynamicResource statistic_lableStyle}" TabIndex="13"    Content="###,###" Grid.Column="2" Grid.Row="14" Foreground="{StaticResource HopeRed}" />
+    Style="{DynamicResource statistic_lableStyle}" TabIndex="13"    Content="###,###" Grid.Column="2" Grid.Row="15" Foreground="{StaticResource HopeRed}" />
 
                 </Grid>
             </Border>
@@ -199,7 +204,7 @@ TabIndex="3"  LostFocus="ReturnedAmount_txtBox_LostFocus"  Grid.Row="4"  />
             CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
 
                     <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Payment status"  MappingName="payment_state" />
-                    <syncfusion:GridNumericColumn  HeaderText="Amount paid"  MappingName="Paid_Amount"
+                        <syncfusion:GridNumericColumn  HeaderText="Amount paid"  MappingName="Amount_Paid"
             NumberDecimalDigits="2"
             NumberDecimalSeparator="."
             NumberGroupSizes="3"
