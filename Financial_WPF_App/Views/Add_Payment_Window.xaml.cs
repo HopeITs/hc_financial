@@ -648,7 +648,7 @@ namespace Financial_WPF_App.Views
                 NotApprovedAmountReturned = 0;
             }
             AmountBalanced = AmountPaid - AmountReturned;
-            RemainingAmount = AmountAowed - AmountPaid;
+            RemainingAmount = AmountAowed - AmountPaid + AmountReturned;
 
             LoanAmount_txtBox.Content = Login.ConvertToDouble(LoanAmount.ToString());
             AmountAowed_txtBox.Content = Login.ConvertToDouble(AmountAowed.ToString());

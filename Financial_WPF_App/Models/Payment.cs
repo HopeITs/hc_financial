@@ -455,7 +455,7 @@ action_deleted.`note` as 'Note',
                     sql += @"SET @num = (
                        SELECT p.Num
                        FROM payment p
-                       WHERE p.Beneficiary_ID = 2604
+                       WHERE p.Beneficiary_ID = @Beneficiary_ID
                        ORDER BY (
                            SELECT MAX(a3.ID)
                            FROM action_not_approved a3

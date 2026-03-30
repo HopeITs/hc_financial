@@ -211,7 +211,7 @@ namespace Financial_WPF_App
                 SubProject_clear_btn.IsEnabled = false;
                 Currency_label.IsEnabled = false;
 
-                double Rate, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount, CorrespondingLoan;
+                double Rate, AmountAowed, AmountPaid, AmountReturned, RemainingAmount, NotApprovedAmount, CorrespondingLoan;
 
                 CorrespondingLoan = dt.Rows[0].Field<double>("correspondingLoan");
 
@@ -251,6 +251,18 @@ namespace Financial_WPF_App
                     AmountPaid = 0;
                 }
 
+                if (dt.Rows[0].Field<double?>("returnedamount") != null)
+                {
+                    if (!double.TryParse(dt.Rows[0].Field<double>("returnedamount").ToString(), out AmountReturned))
+                    {
+                        AmountReturned = 0;
+                    }
+                }
+                else
+                {
+                    AmountReturned = 0;
+                }
+
                 if (dt.Rows[0].Field<double?>("NotApproved_paidamount") != null)
                 {
                     if (!double.TryParse(dt.Rows[0].Field<double>("NotApproved_paidamount").ToString(), out NotApprovedAmount))
@@ -263,10 +275,11 @@ namespace Financial_WPF_App
                     NotApprovedAmount = 0;
                 }
 
-                RemainingAmount = AmountAowed - AmountPaid;
+                RemainingAmount = AmountAowed - AmountPaid + AmountReturned;
 
                 Rate_txtBox.Content = Login.ConvertToDouble(Rate.ToString());
-                Returned_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+                AmountPaid_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+                Returned_txtBox.Content = Login.ConvertToDouble(AmountReturned.ToString());
                 NotApprovedAmount_txtBox.Content = Login.ConvertToDouble(NotApprovedAmount.ToString());
                 RemainedِAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
                 correspondingLoan_txtBox.Text = Login.ConvertToDouble(CorrespondingLoan.ToString());
@@ -807,7 +820,7 @@ namespace Financial_WPF_App
             else
             {
                 myDataGrid.ItemsSource = null;
-                Returned_txtBox.Content = RemainedِAmount_txtBox.Content = PaymentCount_txtBox.Content
+                AmountPaid_txtBox.Content = Returned_txtBox.Content= RemainedِAmount_txtBox.Content = PaymentCount_txtBox.Content
                     = NotCompleted_txtBox.Content = RemainedPaymentCount_txtBox.Content = ReturnedCount_txtBox.Content = "0.00";
             }
         }
