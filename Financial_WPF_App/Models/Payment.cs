@@ -474,10 +474,10 @@ action_deleted.`note` as 'Note',
                                    " 0," + Returned_Amount + ", 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @User_ID);";
                     sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ",@payId);";
 
-                    sql += "CALL ReGenerate_allPayments(@Beneficiary_ID);";
-
+                    
+                    sql += "CALL ReGenerate_allPayments("+ Beneficiary_ID + ");";
                     sql += "COMMIT;";
-
+                    numofinserts++;
                     // Execute the SQL commands
                     sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
                     sc.Parameters.AddWithValue("@t", 600);
@@ -564,7 +564,6 @@ action_deleted.`note` as 'Note',
                     return;
                 }
 
-                Login.CloseAndClearConnection();
                 throw new Exception("Please enter either Amount (income) or Returned Amount (refund), not both or none.");
             }
         }
