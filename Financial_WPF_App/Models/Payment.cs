@@ -469,13 +469,13 @@ action_deleted.`note` as 'Note',
                     sql += @"SET @payId = Last_Insert_ID() ;";
                     sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
                                    "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
-                                   actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='I' LIMIT 1), " +
+                                   actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='O' LIMIT 1), " +
                                    "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID), " +
                                    " 0," + Returned_Amount + ", 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @User_ID);";
                     sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ",@payId);";
 
                     
-                    sql += "CALL ReGenerate_allPayments("+ Beneficiary_ID + ");";
+                    sql += "CALL ReGenerate_AllPayments("+ Beneficiary_ID + ");";
                     sql += "COMMIT;";
                     numofinserts++;
                     // Execute the SQL commands
