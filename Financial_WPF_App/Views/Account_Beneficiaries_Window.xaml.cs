@@ -178,9 +178,9 @@ namespace Financial_WPF_App.Views
             Set_privileges();
             Show_Hide();
         
-                sum_imports_lbl.Content = sum_BAmounts_lbl.Content = sum_PaidAmounts_lbl.Content = sum_RAmounts_lbl.Content = sum_ReturnedAmounts_lbl.Content =
+                sum_imports_lbl.Content = sum_BAmounts_lbl.Content = sum_RAmounts_lbl.Content = sum_ReturnedAmounts_lbl.Content =
                 sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = avg_amounts_lbl.Content =  usd_sum_imports_lbl.Content =
-                usd_sum_BAmounts_lbl.Content = usd_sum_PaidAmounts_lbl.Content = usd_sum_ReturnedAmounts_lbl.Content = usd_sum_RAmounts_lbl.Content = usd_sum_RemainedAmounts_lbl.Content =
+                usd_sum_BAmounts_lbl.Content =  usd_sum_ReturnedAmounts_lbl.Content = usd_sum_RAmounts_lbl.Content = usd_sum_RemainedAmounts_lbl.Content =
                 usd_sum_NetAmounts_lbl.Content = usd_avg_amounts_lbl.Content = ongoing_textBlock.Text = financed_textBlock.Text = "0.0";
 
                 myExpander.Visibility = Visibility.Hidden;
@@ -311,9 +311,6 @@ namespace Financial_WPF_App.Views
                 if (account_dt.Rows[0]["Total loans amount"] != DBNull.Value)
                     sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
 
-                //if (account_dt.Rows[0]["Total paid amount"] != DBNull.Value)
-                //    sum_PaidAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total paid amount").ToString("N", new CultureInfo("en-US"));
-
                 //if (account_dt.Rows[0]["Total returned amount"] != DBNull.Value)
                 //    sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
 
@@ -334,9 +331,6 @@ namespace Financial_WPF_App.Views
 
                 if (account_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
                     usd_sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
-
-                //if (account_dt.Rows[0]["Total paid amount usd"] != DBNull.Value)
-                //    usd_sum_PaidAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total paid amount usd").ToString("N", new CultureInfo("en-US"));
 
                 //if (account_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
                 //    usd_sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
@@ -366,9 +360,7 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Total loans amount"] != DBNull.Value)
                     sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
 
-                //if (subproject_dt.Rows[0]["Total paid amount"] != DBNull.Value)
-                //    sum_PaidAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total paid amount").ToString("N", new CultureInfo("en-US"));
-
+              
                 //if (subproject_dt.Rows[0]["Total returned amount"] != DBNull.Value)
                 //    sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
 
@@ -389,9 +381,6 @@ namespace Financial_WPF_App.Views
 
                 if (subproject_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
                     usd_sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
-
-                //if (subproject_dt.Rows[0]["Total paid amount usd"] != DBNull.Value)
-                //    usd_sum_PaidAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total paid amount usd").ToString("N", new CultureInfo("en-US"));
 
                 //if (subproject_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
                 //    usd_sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));

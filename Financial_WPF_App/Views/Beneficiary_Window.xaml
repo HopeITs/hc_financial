@@ -66,7 +66,7 @@
                             <ColumnDefinition Width="40*" />
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="1" Grid.RowSpan="6" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <Border Grid.Column="1" Grid.RowSpan="6" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="6" />
+                        <Border Grid.Column="1" Grid.RowSpan="7" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="6" />
                         <Label Style="{DynamicResource statistic_lableStyle}" Content="Percentage:" Grid.Row="0" Grid.Column="0"  HorizontalContentAlignment="Right"  />
                         <Label x:Name="Rate_txtBox"  Style="{DynamicResource statistic_lableStyle}" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0" TabIndex="13"  Grid.Row="0" Grid.Column="2" />
                         <Label Style="{DynamicResource statistic_lableStyle}" Content="Amount paid:"   HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="1" />
