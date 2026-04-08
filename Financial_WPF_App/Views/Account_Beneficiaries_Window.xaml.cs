@@ -311,8 +311,8 @@ namespace Financial_WPF_App.Views
                 if (account_dt.Rows[0]["Total loans amount"] != DBNull.Value)
                     sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
 
-                //if (account_dt.Rows[0]["Total returned amount"] != DBNull.Value)
-                //    sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
+                if (account_dt.Rows[0]["Total returned amount"] != DBNull.Value)
+                    sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
                     sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
@@ -332,8 +332,8 @@ namespace Financial_WPF_App.Views
                 if (account_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
                     usd_sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
 
-                //if (account_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
-                //    usd_sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
+                if (account_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
+                    usd_sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
                     usd_sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
@@ -360,9 +360,9 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Total loans amount"] != DBNull.Value)
                     sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
 
-              
-                //if (subproject_dt.Rows[0]["Total returned amount"] != DBNull.Value)
-                //    sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total returned amount"] != DBNull.Value)
+                    sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
                     sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
@@ -382,8 +382,8 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
                     usd_sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
 
-                //if (subproject_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
-                //    usd_sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
+                if (subproject_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
+                    usd_sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
                     usd_sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
