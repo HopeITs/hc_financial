@@ -215,9 +215,9 @@ namespace Financial_WPF_App
 
                 CorrespondingLoan = dt.Rows[0].Field<double>("correspondingLoan");
 
-                if (dt.Rows[0].Field<double?>("Rate") != null)
+                if (dt.Rows[0].Field<double?>("rate") != null)
                 {
-                    if (!double.TryParse(dt.Rows[0].Field<double>("Rate").ToString(), out Rate))
+                    if (!double.TryParse(dt.Rows[0].Field<double>("rate").ToString(), out Rate))
                     {
                         Rate = 0;
                     }
@@ -281,7 +281,7 @@ namespace Financial_WPF_App
                 AmountPaid_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
                 Returned_txtBox.Content = Login.ConvertToDouble(AmountReturned.ToString());
                 NotApprovedAmount_txtBox.Content = Login.ConvertToDouble(NotApprovedAmount.ToString());
-                RemainedِAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
+                RemainingAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
                 correspondingLoan_txtBox.Text = Login.ConvertToDouble(CorrespondingLoan.ToString());
                 Calculate_values();
                 Fill_Payments();
@@ -797,34 +797,136 @@ namespace Financial_WPF_App
             if (p_dt != null && p_dt.Rows.Count > 0)
             {
                 myDataGrid.ItemsSource = p_dt.DefaultView;
+                Fill_Calculations();
 
-
-                int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, ReturnedCount, DelayedPaymentCont, NotApprovedPaymentCont;
-
-                TotalPaymentCount = p_dt.Rows.Count;
-                PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
-                UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
-                InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
-                ReturnedCount = Convert.ToInt32(p_dt.Select("payment_state='Returned'").Length.ToString());
-                DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
-                NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
-
-                PaymentCount_txtBox.Content = TotalPaymentCount.ToString();
-                PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
-                RemainedPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
-                NotCompleted_txtBox.Content = InCompletePaymentCont.ToString();
-                ReturnedCount_txtBox.Content = ReturnedCount.ToString();
-                DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
-                NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
             }
             else
             {
                 myDataGrid.ItemsSource = null;
-                AmountPaid_txtBox.Content = Returned_txtBox.Content= RemainedِAmount_txtBox.Content = PaymentCount_txtBox.Content
-                    = NotCompleted_txtBox.Content = RemainedPaymentCount_txtBox.Content = ReturnedCount_txtBox.Content = "0.00";
             }
         }
 
+        private void Fill_Calculations()
+        {
+            int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont, ReturnedPaymentCont;
+
+            TotalPaymentCount = p_dt.Rows.Count;
+            PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
+            UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
+            InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
+            ReturnedPaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Returned'").Length.ToString());
+            DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
+            NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
+
+            TotalPaymentCount_txtBox.Content = TotalPaymentCount.ToString();
+            PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
+            UnpaidPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
+            InComplete_txtBox.Content = InCompletePaymentCont.ToString();
+            Returned_txtBox.Content = ReturnedPaymentCont.ToString();
+            DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
+            NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
+
+
+            double LoanAmount, Rate, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount, AmountReturned, AmountBalanced, NotApprovedAmountReturned;
+
+            DataTable b_dt = b.Select("", "", SubProject_ID.ToString());
+            System.Data.DataRow[] rows = b_dt.Select("MicroProject_ID=" + MP_ID_txtBox.Text.ToString());
+
+            if (rows[0].Field<double?>("Amount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("Amount").ToString(), out LoanAmount))
+                {
+                    LoanAmount = 0;
+                }
+            }
+            else
+            {
+                LoanAmount = 0;
+            }
+
+            if (rows[0].Field<double?>("ToReturn_Amount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("ToReturn_Amount").ToString(), out AmountAowed))
+                {
+                    AmountAowed = 0;
+                }
+            }
+            else
+            {
+                AmountAowed = 0;
+            }
+
+            if (rows[0].Field<double?>("paidamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("paidamount").ToString(), out AmountPaid))
+                {
+                    AmountPaid = 0;
+                }
+            }
+            else
+            {
+                AmountPaid = 0;
+            }
+
+            if (rows[0].Field<double?>("returnedamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("returnedamount").ToString(), out AmountReturned))
+                {
+                    AmountReturned = 0;
+                }
+            }
+            else
+            {
+                AmountReturned = 0;
+            }
+
+
+            if (rows[0].Field<double?>("NotApproved_paidamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("NotApproved_paidamount").ToString(), out NotApprovedAmount))
+                {
+                    NotApprovedAmount = 0;
+                }
+            }
+            else
+            {
+                NotApprovedAmount = 0;
+            }
+            if (rows[0].Field<double?>("NotApproved_returnedamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("NotApproved_returnedamount").ToString(), out NotApprovedAmountReturned))
+                {
+                    NotApprovedAmountReturned = 0;
+                }
+            }
+            else
+            {
+                NotApprovedAmountReturned = 0;
+            }
+            if (rows[0].Field<double?>("Rate") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double?>("Rate").ToString(), out Rate))
+                {
+                    Rate = 0;
+                }
+            }
+            else
+            {
+                Rate = 0;
+            }
+            AmountBalanced = AmountPaid - AmountReturned;
+            RemainingAmount = AmountAowed - AmountPaid + AmountReturned;
+
+            LoanAmount_txtBox.Content = Login.ConvertToDouble(LoanAmount.ToString());
+            AmountAowed_txtBox.Content = Login.ConvertToDouble(AmountAowed.ToString());
+            AmountPaid_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+            AmountReturned_txtBox.Content = Login.ConvertToDouble(AmountReturned.ToString());
+            NotApprovedAmount_txtBox.Content = Login.ConvertToDouble(NotApprovedAmount.ToString());
+            NotApprovedAmountReturned_txtBox.Content = Login.ConvertToDouble(NotApprovedAmountReturned.ToString());
+            RemainingAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
+            Balanced_txtBox.Content = Login.ConvertToDouble(AmountBalanced.ToString());
+            Rate_txtBox.Content = Login.ConvertToDouble(Rate.ToString());
+        }
         private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
         {
             try

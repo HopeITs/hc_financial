@@ -585,9 +585,9 @@ namespace Financial_WPF_App.Views
             Returned_txtBox.Content = ReturnedPaymentCont.ToString();
             DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
             NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
+            
 
-
-            double LoanAmount, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount, AmountReturned, AmountBalanced, NotApprovedAmountReturned;
+            double LoanAmount,Rate, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount, AmountReturned, AmountBalanced, NotApprovedAmountReturned;
 
 
             System.Data.DataRow[] rows = b_dt.Select("MicroProject_ID=" + MicroProject_ID);
@@ -663,6 +663,17 @@ namespace Financial_WPF_App.Views
             {
                 NotApprovedAmountReturned = 0;
             }
+            if (rows[0].Field<double?>("Rate") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double?>("Rate").ToString(), out Rate))
+                {
+                    Rate = 0;
+                }
+            }
+            else
+            {
+                Rate = 0;
+            }
             AmountBalanced = AmountPaid - AmountReturned;
             RemainingAmount = AmountAowed - AmountPaid + AmountReturned;
 
@@ -674,6 +685,7 @@ namespace Financial_WPF_App.Views
             NotApprovedAmountReturned_txtBox.Content = Login.ConvertToDouble(NotApprovedAmountReturned.ToString());
             RemainingAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
             Balanced_txtBox.Content = Login.ConvertToDouble(AmountBalanced.ToString());
+            Rate_txtBox.Content = Login.ConvertToDouble(Rate.ToString());
         }
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {

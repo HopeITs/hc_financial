@@ -40,57 +40,92 @@
                     <ColumnDefinition Width="360"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Grid.Column="0" Margin="0,5,0,0"  Grid.Row="0">
+                <Border Background="White" CornerRadius="{StaticResource CornerRadius}" Padding="10" Margin="0,5,0,0"  VerticalAlignment="Center">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="7" ShadowDepth="1" Opacity=".3" Color="{StaticResource Color_DarkGray}" />
                     </Border.Effect>
                     <Grid  >
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
-                            <RowDefinition Height="35" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50*" />
                             <ColumnDefinition Width=".3*" />
                             <ColumnDefinition Width="40*" />
                         </Grid.ColumnDefinitions>
-                        <Border Grid.Column="1" Grid.RowSpan="6" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <Border Grid.Column="1" Grid.RowSpan="7" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="6" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Percentage:" Grid.Row="0" Grid.Column="0"  HorizontalContentAlignment="Right"  />
-                        <Label x:Name="Rate_txtBox"  Style="{DynamicResource statistic_lableStyle}" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0" TabIndex="13"  Grid.Row="0" Grid.Column="2" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Amount paid:"   HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="1" />
-                        <Label x:Name="AmountPaid_txtBox" Grid.Row="1" Grid.Column="2" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Amount returned:"   HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="2" />
-                        <Label x:Name="Returned_txtBox" Grid.Row="2" Grid.Column="2" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Not Approved:" HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="3" />
-                        <Label x:Name="NotApprovedAmount_txtBox" Grid.Column="2" Grid.Row="3" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0"  Style="{DynamicResource statistic_lableStyle}" TabIndex="13" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Remaining:" HorizontalContentAlignment="Right" Grid.Column="0" Grid.Row="4" />
-                        <Label x:Name="RemainedِAmount_txtBox" Grid.Column="2" Grid.Row="4" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Total payments:"  HorizontalContentAlignment="Right" Grid.Row="6" />
-                        <Label x:Name="PaymentCount_txtBox" Grid.Column="2" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" Content="###,###" FontSize="12" Margin="0,0,0,0" TabIndex="13" Grid.Row="6"  />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Paid:"   HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Row="7" />
-                        <Label x:Name="PaidPaymentCount_txtBox" Grid.Column="2" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Content="###,###" FontSize="12" Margin="0,0,0,0" Grid.Row="7" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Incomplete:" Grid.Row="8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                        <Label x:Name="NotCompleted_txtBox" Grid.Column="2" Grid.Row="8" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Content="###,###" FontSize="12" Margin="0,0,0,0" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Returned:" Grid.Row="9" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                        <Label x:Name="ReturnedCount_txtBox" Grid.Column="2" Grid.Row="9" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Content="###,###" FontSize="12" Margin="0,0,0,0" />
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Late:" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Grid.Row="11" />
-                        <Label x:Name="NotApprovedPaymentCont_txtBox" Foreground="{StaticResource HopeRed}" Style="{DynamicResource statistic_lableStyle}" TabIndex="13"  Grid.Column="2" Grid.Row="12" Content="###,###" FontSize="12" Margin="0,0,0,0"/>
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Unpaid:" Grid.Row="10"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"/>
-                        <Label x:Name="RemainedPaymentCount_txtBox" Grid.Column="2" Grid.Row="10" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0"/>
-                        <Label x:Name="DelayedPaymentCont_txtBox" Style="{DynamicResource statistic_lableStyle}" TabIndex="13" Grid.Column="2" Grid.Row="11" Foreground="{StaticResource HopeRed}" Content="###,###" FontSize="12" Margin="0,0,0,0"/>
-                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Not Approved:"   HorizontalContentAlignment="Right"  Grid.Row="12"  />
+                        <Border Grid.Column="1" Grid.RowSpan="17" Background="{StaticResource DarkGray}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Total payments:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="10" VerticalAlignment="Stretch" />
+                        <Label x:Name="TotalPaymentCount_txtBox"  Style="{DynamicResource statistic_lableStyle}" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+                    TabIndex="13"   Content="###,###"  Grid.Column="2" Grid.Row="10" VerticalAlignment="Stretch" />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Paid payments:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="11" VerticalAlignment="Stretch" />
+                        <Label x:Name="PaidPaymentCount_txtBox"  Style="{DynamicResource statistic_lableStyle}" Grid.Column="2" Grid.Row="11" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+                    TabIndex="13"   Content="###,###"  />
+
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Loan amount:"    HorizontalAlignment="Right" Grid.Column="0" VerticalAlignment="Stretch" />
+                        <Label x:Name="LoanAmount_txtBox"  Style="{DynamicResource statistic_lableStyle}" Content="###,###" Grid.Column="2" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+        TabIndex="13"    VerticalAlignment="Stretch" />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Percentage:"    HorizontalAlignment="Right" Grid.Column="0" VerticalAlignment="Stretch" Grid.Row="1" />
+                        <Label x:Name="Rate_txtBox"  Style="{DynamicResource statistic_lableStyle}" Content="###,###" Grid.Column="2" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+TabIndex="13"    VerticalAlignment="Stretch" Grid.Row="1" />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Amount owed:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="2" VerticalAlignment="Stretch" />
+                        <Label x:Name="AmountAowed_txtBox"  Style="{DynamicResource statistic_lableStyle}" Grid.Column="2" Grid.Row="2" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+        TabIndex="13"   Content="###,###"   />
+
+
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Amount paid:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="3" VerticalAlignment="Stretch" />
+                        <Label x:Name="AmountPaid_txtBox"  Style="{DynamicResource statistic_lableStyle}" Grid.Column="2" Grid.Row="3" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+        TabIndex="13"   Content="###,###"  />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Amount returned:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="4" VerticalAlignment="Stretch" />
+                        <Label x:Name="AmountReturned_txtBox"  Style="{DynamicResource statistic_lableStyle}" Grid.Column="2" Grid.Row="4" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+TabIndex="13"   Content="###,###"  />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Balanced:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="7" VerticalAlignment="Stretch" />
+                        <Label x:Name="Balanced_txtBox"  Style="{DynamicResource statistic_lableStyle}" Grid.Column="2" Grid.Row="7" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+TabIndex="13"   Content="###,###"  />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Not Approved Amount paid:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="5" VerticalAlignment="Stretch" />
+                        <Label x:Name="NotApprovedAmount_txtBox"  Style="{DynamicResource statistic_lableStyle}" Grid.Column="2" Grid.Row="5" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+        TabIndex="13"   Content="###,###"  />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Not Approved Amount returned:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="6" VerticalAlignment="Stretch" />
+                        <Label x:Name="NotApprovedAmountReturned_txtBox"  Style="{DynamicResource statistic_lableStyle}" Grid.Column="2" Grid.Row="6" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+TabIndex="13"   Content="###,###"  />
+
+
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Remaining amount:"    HorizontalAlignment="Right" Grid.Column="0" Grid.Row="8" VerticalAlignment="Stretch" />
+                        <Label x:Name="RemainingAmount_txtBox"  Style="{DynamicResource statistic_lableStyle}"  Grid.Column="2" Grid.Row="8" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+                    TabIndex="13"   Content="###,###"  />
+
+
+                        <Label Grid.Column="0" Grid.Row="12" Style="{DynamicResource statistic_lableStyle}" Content="Unpaid:"   HorizontalAlignment="Right"  VerticalAlignment="Stretch"  />
+                        <Label x:Name="UnpaidPaymentCount_txtBox" Grid.Column="2" Grid.Row="12"  Style="{DynamicResource statistic_lableStyle}" TabIndex="13" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+                      Content="###,###"   />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Incomplete:"   HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="13"  />
+                        <Label x:Name="InComplete_txtBox"  Style="{DynamicResource statistic_lableStyle}" TabIndex="13" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+                      Content="###,###" Grid.Column="2" Grid.Row="13"  />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Returned:"   HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="14"  />
+                        <Label x:Name="Returned_txtBox"  Style="{DynamicResource statistic_lableStyle}" TabIndex="13" FontSize="12" Margin="0,0,0,0" Foreground="{StaticResource HopeRed}"
+  Content="###,###" Grid.Column="2" Grid.Row="14"  />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Not approved"   HorizontalAlignment="Right" Grid.Column="0" Grid.Row="15" VerticalAlignment="Stretch"   />
+                        <Label x:Name="NotApprovedPaymentCont_txtBox" Grid.Column="2" Grid.Row="15" FontSize="12" Margin="0,0,0,0" Content="###,###" Foreground="{StaticResource HopeRed}"
+    Style="{DynamicResource statistic_lableStyle}" TabIndex="13"   />
+                        <Label Style="{DynamicResource statistic_lableStyle}" Content="Late:"  HorizontalAlignment="Right" Grid.Column="0" Grid.Row="16" VerticalAlignment="Stretch"   />
+                        <Label x:Name="DelayedPaymentCont_txtBox" FontSize="12" Margin="0,0,0,0"
+    Style="{DynamicResource statistic_lableStyle}" TabIndex="13"    Content="###,###" Grid.Column="2" Grid.Row="16" Foreground="{StaticResource HopeRed}" />
+
                     </Grid>
                 </Border>
                 <Border Background="White"  CornerRadius="{StaticResource CornerRadius}" Padding="10" Margin="0,5,0,0"  Grid.Column="1" Grid.Row="0">
