@@ -428,13 +428,24 @@ namespace Financial_WPF_App.Views
                     if (Approved_Action)
                     {
                         p.Update_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
-                        MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        if(returnedamount != 0.0)
+                        {
+                            MessageBox.Show("Payment updated!! The installment rescheduling has been completed based on the returned amount.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        }
+                        else
+                            MessageBox.Show("Payment updated ", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+
                         this.Close();
                     }
                     else
                     {
                         p.Update_Not_Approved_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
-                        MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        if (returnedamount != 0.0)
+                        {
+                            MessageBox.Show("Payment updated!! The installment rescheduling has been completed based on the returned amount.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        }
+                        else
+                            MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         this.Close();
                     }
                 }
@@ -454,7 +465,12 @@ namespace Financial_WPF_App.Views
 
                         p.Insert_Payment(amount,returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, SubProject_ID, Beneficiary_ID, selected_rows_dt, CashAccount_ID, "Payment_Window");
                         Fill_Calculations();
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        if (returnedamount != 0.0)
+                        {
+                            MessageBox.Show("Saved successfully!! The installment rescheduling has been completed based on the returned amount.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        }
+                        else
+                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
                         Clear_Details(false);
                         Load_Data();
