@@ -112,7 +112,7 @@ namespace Financial_WPF_App.Models
                  action.`MicroProject_ID` ,action.`ActionDate`, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear', 
                  action.`IsApproved`, approved_byuser.`Username` as 'approved_by', action.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  action.`cashaccount_id` as 'cashaccount_id', cashaccount.`name` as 'cashaccount_name',
-                (select GROUP_CONCAT(payment.Num) from payment join action_payment on action_payment.payment_id = payment.id where action_payment.action_id = action.`ID`) AS 'Payment_Num',
+                (select DISTINCT payment.Num from payment join action_payment on action_payment.payment_id = payment.id where action_payment.action_id = action.`ID`) AS 'Payment_Num',
 
                  (select CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) from beneficiary JOIN account on beneficiary.Account_ID = account.ID
                  where beneficiary.MicroProject_ID = action.MicroProject_ID and account.SubProject_ID = SubProjectID ) as 'Name',
@@ -206,7 +206,7 @@ namespace Financial_WPF_App.Models
                  action_not_approved.`IsApproved`, approved_byuser.`Username` as 'approved_by', action_not_approved.`Approved_at`, created_byuser.`Username` as 'created_by', edited_byuser.username as 'edited_by',
                  action_not_approved.`cashaccount_id` as 'cashaccount_id', cashaccount.`name` as 'cashaccount_name',
 
-                 (select GROUP_CONCAT(payment.Num) from payment join action_payment on action_payment.payment_id = payment.id where action_payment.action_id = action_not_approved.`ID`) AS 'Payment_Num',
+                 (select DISTINCT payment.Num from payment join action_payment on action_payment.payment_id = payment.id where action_payment.action_id = action_not_approved.`ID`) AS 'Payment_Num',
 
                  (select CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) from beneficiary JOIN account on beneficiary.Account_ID = account.ID
                  where beneficiary.MicroProject_ID = action_not_approved.MicroProject_ID and account.SubProject_ID = SubProjectID ) as 'Name',
