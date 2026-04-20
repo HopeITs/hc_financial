@@ -273,7 +273,7 @@ namespace Financial_WPF_App.Views
                         DataRowView dataRow = (DataRowView)myDataGrid.SelectedItem;
                         int Beneficiary_ID = Convert.ToInt32(dataRow["beneficiary_ID"].ToString());
                         int SubProject_ID = Convert.ToInt32(dataRow["subproject_ID"].ToString());
-                        string Name = dataRow["Beneficiary"].ToString();
+                        string Name = dataRow["Beneficiary Name"].ToString();
                         int Account_ID = Convert.ToInt32(dataRow["Accoun_ID"].ToString());
 
                         b.Delete(Beneficiary_ID, SubProject_ID.ToString(), Name, Account_ID, "Account_Beneficiaries_Window");
@@ -1250,7 +1250,7 @@ namespace Financial_WPF_App.Views
 
                         var Beneficiary_ID = newView[k]["beneficiary_ID"];
                         var SubProject_ID = newView[k]["subproject_ID"];
-                        var Name = newView[k]["Beneficiary"];
+                        var Name = newView[k]["Beneficiary Name"];
                         var Account_ID = newView[k]["Accoun_ID"];
 
                         Login.DeleteMultiBeneficiary_sc.Parameters.AddWithValue("@Beneficiary_ID" + k, Beneficiary_ID);
