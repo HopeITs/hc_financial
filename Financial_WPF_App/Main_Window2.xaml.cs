@@ -272,7 +272,7 @@ namespace Financial_WPF_App
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            defaultBackground.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/MainForm/Home_Background2_new.png"));
+            defaultBackground.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/MainForm/Home_Background2_new.jpg"));
             defaultBackground.Stretch = Stretch.UniformToFill;
             TransformGroup transformGroup = new TransformGroup();
             ScaleTransform scaleTransform = new ScaleTransform
