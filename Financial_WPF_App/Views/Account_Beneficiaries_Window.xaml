@@ -387,7 +387,7 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
                             <Label Grid.Column="2" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total loans amount:" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="1" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_BAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
 
-                            <Label Grid.Column="2" Grid.Row="3" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total returned amount:" HorizontalAlignment="Left"/>
+                            <Label Grid.Column="2" Grid.Row="3" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total returned amount(pay):" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="3" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="sum_ReturnedAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
 
                             <Label Grid.Column="2" Grid.Row="2" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total income:" HorizontalAlignment="Left" />
@@ -412,7 +412,7 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
                             <Label Grid.Column="2" Grid.Row="9" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total loans amount:" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="9" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_BAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
 
-                            <Label Grid.Column="2" Grid.Row="11" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total returned amount:" HorizontalAlignment="Left"/>
+                            <Label Grid.Column="2" Grid.Row="11" FontSize="12" Margin="0,0,0,10" Style="{DynamicResource statistic_lableStyle}" Content="Total returned amount(pay):" HorizontalAlignment="Left"/>
                             <Label Grid.Column="0" Grid.Row="11" FontSize="12" Margin="0,0,0,10" Foreground="{StaticResource HopeRed}" x:Name="usd_sum_ReturnedAmounts_lbl" Style="{DynamicResource statistic_lableStyle}" Content="###,###" HorizontalAlignment="Right" />
 
 
