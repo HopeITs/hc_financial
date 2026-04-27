@@ -1923,7 +1923,7 @@ namespace Financial_WPF_App
             UserMode = false;
 
             Notes_txtBox.Text = dt.Rows[0].Field<string>("Note").ToString();
-            E_Notes_txtBox.Text = dt.Rows[0].Field<string>("E_Note").ToString();
+            E_Notes_txtBox.Text = dt.Rows[0].Field<string>("E_Note") ?? "";
             // ObserveTill_ID //
             if (dt.Rows[0]["ObserveTill_ID"] != DBNull.Value)
             {
