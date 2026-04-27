@@ -585,6 +585,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 Load_Data();
+                Bind_Show_Hide_GridColumns();
             }
             catch (Exception ex)
             {
@@ -703,6 +704,34 @@ namespace Financial_WPF_App.Views
 
         }
 
+        private void Bind_Show_Hide_GridColumns()
+        {
+            if (myDataGrid.View != null)
+            {
+                this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
+
+                int count = myDataGrid.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
+
+                Export_btn.CommandTarget = myDataGrid;
+                move_Columns();
+                foreach (var col in myDataGrid.Columns)
+                {
+                    string h = col.HeaderText;
+                    if (h.Contains("Advance Payment amount") ||
+                        h.Contains("Returned amount") ||
+                        h.Contains("Paid in advance for purchases") ||
+                        h.Contains("Remaining from the loan for purchases"))
+                    {
+                        col.IsHidden = true;
+                    }
+                }
+                Bind_Show_Hide_Menu();
+            }
+
+
+        }
+
         private void ShowColumn(object sender, RoutedEventArgs e)
         {
             try
@@ -796,28 +825,7 @@ namespace Financial_WPF_App.Views
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            if (myDataGrid.View != null)
-            {
-                this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
-
-                int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
-
-                Export_btn.CommandTarget = myDataGrid;
-                move_Columns();
-                foreach (var col in myDataGrid.Columns)
-                {
-                    string h = col.HeaderText;
-                    if (h.Contains("Advance Payment amount") ||
-                        h.Contains("Returned amount") ||
-                        h.Contains("Paid in advance for purchases") ||
-                        h.Contains("Remaining from the loan for purchases"))
-                    {
-                        col.IsHidden = true;
-                    }
-                }
-                Bind_Show_Hide_Menu();
-            }
+            Bind_Show_Hide_GridColumns();
         }
 
         void ScrollOwner_ScrollChanged(object sender, ScrollChangedEventArgs e)
