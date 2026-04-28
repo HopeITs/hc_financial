@@ -179,8 +179,10 @@ namespace Financial_WPF_App.Views
             Show_Hide();
         
                 sum_imports_lbl.Content = sum_BAmounts_lbl.Content = sum_RAmounts_lbl.Content = sum_ReturnedAmounts_lbl.Content =
-                sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = avg_amounts_lbl.Content =  usd_sum_imports_lbl.Content =
-                usd_sum_BAmounts_lbl.Content =  usd_sum_ReturnedAmounts_lbl.Content = usd_sum_RAmounts_lbl.Content = usd_sum_RemainedAmounts_lbl.Content =
+                //sum_RemainedAmounts_lbl.Content = 
+                sum_NetAmounts_lbl.Content = avg_amounts_lbl.Content =  usd_sum_imports_lbl.Content =
+                usd_sum_BAmounts_lbl.Content =  usd_sum_ReturnedAmounts_lbl.Content = usd_sum_RAmounts_lbl.Content = 
+                //usd_sum_RemainedAmounts_lbl.Content =
                 usd_sum_NetAmounts_lbl.Content = usd_avg_amounts_lbl.Content = ongoing_textBlock.Text = financed_textBlock.Text = "0.0";
 
                 myExpander.Visibility = Visibility.Hidden;
@@ -317,8 +319,8 @@ namespace Financial_WPF_App.Views
                 if (account_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
                     sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
 
-                if (account_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
-                    sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
+                //if (account_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
+                //    sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Net account"] != DBNull.Value)
                     sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
@@ -338,8 +340,8 @@ namespace Financial_WPF_App.Views
                 if (account_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
                     usd_sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
 
-                if (account_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
-                    usd_sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
+                //if (account_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
+                //    usd_sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Net account usd"] != DBNull.Value)
                     usd_sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
@@ -367,8 +369,8 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
                     sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
 
-                if (subproject_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
-                    sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
+                //if (subproject_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
+                //    sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Net account"] != DBNull.Value)
                     sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
@@ -388,8 +390,8 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
                     usd_sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
 
-                if (subproject_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
-                    usd_sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
+                //if (subproject_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
+                //    usd_sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Net account usd"] != DBNull.Value)
                     usd_sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
