@@ -428,13 +428,24 @@ namespace Financial_WPF_App.Views
                     if (Approved_Action)
                     {
                         p.Update_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
-                        MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        if(returnedamount != 0.0)
+                        {
+                            MessageBox.Show("Payment updated!! The installment rescheduling has been completed based on the returned amount.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        }
+                        else
+                            MessageBox.Show("Payment updated ", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+
                         this.Close();
                     }
                     else
                     {
                         p.Update_Not_Approved_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
-                        MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        if (returnedamount != 0.0)
+                        {
+                            MessageBox.Show("Payment updated!! The installment rescheduling has been completed based on the returned amount.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        }
+                        else
+                            MessageBox.Show("Payment updated", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         this.Close();
                     }
                 }
@@ -443,8 +454,10 @@ namespace Financial_WPF_App.Views
                     if (p_dt.Rows.Count != 0)
                     {
                         DataTable selected_rows_dt = new DataTable();
+                        DataTable returned_rows_dt = new DataTable();
 
                         System.Data.DataRow[] My_rows = p_dt.Select("payment_state is null OR payment_state <> 'Done'");
+                        
                         selected_rows_dt = p_dt.Copy();
                         selected_rows_dt.Rows.Clear();
                         foreach (System.Data.DataRow row in My_rows)
@@ -452,7 +465,12 @@ namespace Financial_WPF_App.Views
 
                         p.Insert_Payment(amount,returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, SubProject_ID, Beneficiary_ID, selected_rows_dt, CashAccount_ID, "Payment_Window");
                         Fill_Calculations();
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        if (returnedamount != 0.0)
+                        {
+                            MessageBox.Show("Saved successfully!! The installment rescheduling has been completed based on the returned amount.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        }
+                        else
+                            MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
                         Clear_Details(false);
                         Load_Data();
@@ -513,6 +531,7 @@ namespace Financial_WPF_App.Views
             PaidPaymentCount_txtBox.Content = "";
             UnpaidPaymentCount_txtBox.Content = "";
             InComplete_txtBox.Content = "";
+            Returned_txtBox.Content = "";
             DelayedPaymentCont_txtBox.Content = "";
             NotApprovedPaymentCont_txtBox.Content = "";
         }
@@ -549,12 +568,13 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Calculations()
         {
-            int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont;
+            int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont, ReturnedPaymentCont;
 
             TotalPaymentCount = p_dt.Rows.Count;
             PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
             UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
             InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
+            ReturnedPaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Returned'").Length.ToString());
             DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
             NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
 
@@ -562,11 +582,12 @@ namespace Financial_WPF_App.Views
             PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
             UnpaidPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
             InComplete_txtBox.Content = InCompletePaymentCont.ToString();
+            Returned_txtBox.Content = ReturnedPaymentCont.ToString();
             DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
             NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
+            
 
-
-            double LoanAmount, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount, AmountReturned, AmountBalanced, NotApprovedAmountReturned;
+            double LoanAmount,Rate, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount, AmountReturned, AmountBalanced, NotApprovedAmountReturned;
 
 
             System.Data.DataRow[] rows = b_dt.Select("MicroProject_ID=" + MicroProject_ID);
@@ -642,8 +663,19 @@ namespace Financial_WPF_App.Views
             {
                 NotApprovedAmountReturned = 0;
             }
+            if (rows[0].Field<double?>("Rate") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double?>("Rate").ToString(), out Rate))
+                {
+                    Rate = 0;
+                }
+            }
+            else
+            {
+                Rate = 0;
+            }
             AmountBalanced = AmountPaid - AmountReturned;
-            RemainingAmount = AmountAowed - AmountPaid;
+            RemainingAmount = AmountAowed - AmountPaid + AmountReturned;
 
             LoanAmount_txtBox.Content = Login.ConvertToDouble(LoanAmount.ToString());
             AmountAowed_txtBox.Content = Login.ConvertToDouble(AmountAowed.ToString());
@@ -653,6 +685,7 @@ namespace Financial_WPF_App.Views
             NotApprovedAmountReturned_txtBox.Content = Login.ConvertToDouble(NotApprovedAmountReturned.ToString());
             RemainingAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
             Balanced_txtBox.Content = Login.ConvertToDouble(AmountBalanced.ToString());
+            Rate_txtBox.Content = Login.ConvertToDouble(Rate.ToString());
         }
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {

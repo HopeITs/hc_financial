@@ -178,9 +178,11 @@ namespace Financial_WPF_App.Views
             Set_privileges();
             Show_Hide();
         
-                sum_imports_lbl.Content = sum_BAmounts_lbl.Content = sum_BAmounts_lbl.Content = sum_RAmounts_lbl.Content =
-                sum_RemainedAmounts_lbl.Content = sum_NetAmounts_lbl.Content = avg_amounts_lbl.Content =  usd_sum_imports_lbl.Content =
-                usd_sum_BAmounts_lbl.Content = usd_sum_BAmounts_lbl.Content = usd_sum_RAmounts_lbl.Content = usd_sum_RemainedAmounts_lbl.Content =
+                sum_imports_lbl.Content = sum_BAmounts_lbl.Content = sum_RAmounts_lbl.Content = sum_ReturnedAmounts_lbl.Content =
+                //sum_RemainedAmounts_lbl.Content = 
+                sum_NetAmounts_lbl.Content = avg_amounts_lbl.Content =  usd_sum_imports_lbl.Content =
+                usd_sum_BAmounts_lbl.Content =  usd_sum_ReturnedAmounts_lbl.Content = usd_sum_RAmounts_lbl.Content = 
+                //usd_sum_RemainedAmounts_lbl.Content =
                 usd_sum_NetAmounts_lbl.Content = usd_avg_amounts_lbl.Content = ongoing_textBlock.Text = financed_textBlock.Text = "0.0";
 
                 myExpander.Visibility = Visibility.Hidden;
@@ -273,7 +275,7 @@ namespace Financial_WPF_App.Views
                         DataRowView dataRow = (DataRowView)myDataGrid.SelectedItem;
                         int Beneficiary_ID = Convert.ToInt32(dataRow["beneficiary_ID"].ToString());
                         int SubProject_ID = Convert.ToInt32(dataRow["subproject_ID"].ToString());
-                        string Name = dataRow["Beneficiary"].ToString();
+                        string Name = dataRow["Beneficiary Name"].ToString();
                         int Account_ID = Convert.ToInt32(dataRow["Accoun_ID"].ToString());
 
                         b.Delete(Beneficiary_ID, SubProject_ID.ToString(), Name, Account_ID, "Account_Beneficiaries_Window");
@@ -311,11 +313,14 @@ namespace Financial_WPF_App.Views
                 if (account_dt.Rows[0]["Total loans amount"] != DBNull.Value)
                     sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
 
+                if (account_dt.Rows[0]["Total returned amount"] != DBNull.Value)
+                    sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
+
                 if (account_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
                     sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
 
-                if (account_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
-                    sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
+                //if (account_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
+                //    sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Net account"] != DBNull.Value)
                     sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
@@ -329,11 +334,14 @@ namespace Financial_WPF_App.Views
                 if (account_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
                     usd_sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
 
+                if (account_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
+                    usd_sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
+
                 if (account_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
                     usd_sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
 
-                if (account_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
-                    usd_sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
+                //if (account_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
+                //    usd_sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Net account usd"] != DBNull.Value)
                     usd_sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
@@ -354,11 +362,15 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Total loans amount"] != DBNull.Value)
                     sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
 
+
+                if (subproject_dt.Rows[0]["Total returned amount"] != DBNull.Value)
+                    sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
+
                 if (subproject_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
                     sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
 
-                if (subproject_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
-                    sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
+                //if (subproject_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
+                //    sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Net account"] != DBNull.Value)
                     sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
@@ -372,11 +384,14 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
                     usd_sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
 
+                if (subproject_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
+                    usd_sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
+
                 if (subproject_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
                     usd_sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
 
-                if (subproject_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
-                    usd_sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
+                //if (subproject_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
+                //    usd_sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Net account usd"] != DBNull.Value)
                     usd_sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
@@ -572,6 +587,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 Load_Data();
+                Bind_Show_Hide_GridColumns();
             }
             catch (Exception ex)
             {
@@ -690,6 +706,34 @@ namespace Financial_WPF_App.Views
 
         }
 
+        private void Bind_Show_Hide_GridColumns()
+        {
+            if (myDataGrid.View != null)
+            {
+                this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
+
+                int count = myDataGrid.View.Records.Count();
+                All_textBlock.Text = count.ToString("N0");
+
+                Export_btn.CommandTarget = myDataGrid;
+                move_Columns();
+                foreach (var col in myDataGrid.Columns)
+                {
+                    string h = col.HeaderText;
+                    if (h.Contains("Advance Payment amount") ||
+                        h.Contains("Returned amount") ||
+                        h.Contains("Paid in advance for purchases") ||
+                        h.Contains("Remaining from the loan for purchases"))
+                    {
+                        col.IsHidden = true;
+                    }
+                }
+                Bind_Show_Hide_Menu();
+            }
+
+
+        }
+
         private void ShowColumn(object sender, RoutedEventArgs e)
         {
             try
@@ -783,28 +827,7 @@ namespace Financial_WPF_App.Views
 
         private void myDataGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            if (myDataGrid.View != null)
-            {
-                this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
-
-                int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
-
-                Export_btn.CommandTarget = myDataGrid;
-                move_Columns();
-                foreach (var col in myDataGrid.Columns)
-                {
-                    string h = col.HeaderText;
-                    if (h.Contains("Advance Payment amount") ||
-                        h.Contains("Returned amount") ||
-                        h.Contains("Paid in advance for purchases") ||
-                        h.Contains("Remaining from the loan for purchases"))
-                    {
-                        col.IsHidden = true;
-                    }
-                }
-                Bind_Show_Hide_Menu();
-            }
+            Bind_Show_Hide_GridColumns();
         }
 
         void ScrollOwner_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -1237,7 +1260,7 @@ namespace Financial_WPF_App.Views
 
                         var Beneficiary_ID = newView[k]["beneficiary_ID"];
                         var SubProject_ID = newView[k]["subproject_ID"];
-                        var Name = newView[k]["Beneficiary"];
+                        var Name = newView[k]["Beneficiary Name"];
                         var Account_ID = newView[k]["Accoun_ID"];
 
                         Login.DeleteMultiBeneficiary_sc.Parameters.AddWithValue("@Beneficiary_ID" + k, Beneficiary_ID);
