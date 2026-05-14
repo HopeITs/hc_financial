@@ -367,6 +367,37 @@ namespace Financial_WPF_App.Views
                 Delete_Selected.Visibility = Visibility.Collapsed;
             }
 
+            // Hide expenses & exchange for PAY till type
+            if (TillType_Name.ToLower() == "pay")
+            {
+                var colIncome = myDataGrid.Columns
+                .FirstOrDefault(c => c.MappingName == "Income");
+
+                if (colIncome != null)
+                    colIncome.HeaderText = "Income(SYR)";
+
+                All_Label.Content = "All(SYR):";
+                USD_StatsPanel.Visibility = Visibility.Visible;
+
+                Exchange_Label.Visibility = Visibility.Collapsed;
+                Exchange_textBlock.Visibility = Visibility.Collapsed;
+
+                Exchpand_Label.Visibility = Visibility.Collapsed;
+                Exchpand_textBlock.Visibility = Visibility.Collapsed;
+
+                Exchpand_Labelusd.Visibility = Visibility.Collapsed;
+                Exchpand_textBlockusd.Visibility = Visibility.Collapsed;
+
+                foreach (var C in myDataGrid.Columns)
+                    if (C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" || C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Document type"
+                        || C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Expenses" ||
+                        C.HeaderText.ToString() == "Document number" || C.HeaderText.ToString() == "Corresponding account" || C.HeaderText.ToString() == "Corresponding till" || C.HeaderText.ToString() == "Corresponding Operation ID"
+                            || C.HeaderText.ToString() == "Corresponding cash till" || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" )
+                    {
+                        C.IsHidden = true;
+                        Originally_HiddenColumns.Add(C.HeaderText.ToString());
+                    }
+            }
 
             if (Account_Type == "Project")
             {
@@ -378,10 +409,12 @@ namespace Financial_WPF_App.Views
                         USD_StatsPanel.Visibility = Visibility.Visible;
                         Exchange_Label.Visibility = Visibility.Collapsed;
                         Exchange_textBlock.Visibility = Visibility.Collapsed;
+                        Transfered_textBlockusd.Visibility = Visibility.Collapsed;
+                        Transfered_Labelusd.Visibility = Visibility.Collapsed;
 
                         foreach (var C in myDataGrid.Columns)
                             if (C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" || C.HeaderText.ToString() == "Exchange"
-                                || C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Volunteer")
+                                || C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Transfer(USD)")
                             {
                                 C.IsHidden = true;
                                 Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -393,9 +426,11 @@ namespace Financial_WPF_App.Views
                         USD_StatsPanel.Visibility = Visibility.Visible;
                         Exchange_Label.Visibility = Visibility.Collapsed;
                         Exchange_textBlock.Visibility = Visibility.Collapsed;
+                        Transfered_textBlockusd.Visibility = Visibility.Collapsed;
+                        Transfered_Labelusd.Visibility = Visibility.Collapsed;
 
                         foreach (var C in myDataGrid.Columns)
-                            if (C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Exchange")
+                            if (C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Transfer(USD)")
                             {
                                 C.IsHidden = true;
                                 Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -412,6 +447,8 @@ namespace Financial_WPF_App.Views
                     Search_StackPanel.Margin = new Thickness(0, 0, 35, 0);
                     Exchpand_Label.Visibility = Visibility.Collapsed;
                     Exchpand_Border.Visibility = Visibility.Collapsed;
+                    Transfered_textBlockusd.Visibility = Visibility.Collapsed;
+                    Transfered_Labelusd.Visibility = Visibility.Collapsed;
 
                     //  Outcome_Label.Visibility = Outcome_textBlock.Visibility = Outcome_Border.Visibility =
                     //    Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility = Visibility.Collapsed;
@@ -423,7 +460,7 @@ namespace Financial_WPF_App.Views
                     foreach (var C in myDataGrid.Columns)
                         if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
                             C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
-                            C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number" || C.HeaderText.ToString() == "Expenses"
+                            C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number" || C.HeaderText.ToString() == "Expenses" || C.HeaderText.ToString() == "Transfer(USD)"
                             || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Currency" )
                         {
                             C.IsHidden = true;
@@ -433,19 +470,21 @@ namespace Financial_WPF_App.Views
                     if (TillType_Name.ToLower() == "eur")
                     {
                         foreach (var C in myDataGrid.Columns)
-                            if (C.HeaderText.ToString() == "Transfer")
+                            if (C.HeaderText.ToString() == "Transfer" || C.HeaderText.ToString() == "Transfer(USD)")
                             {
                                 C.IsHidden = true;
                                 Originally_HiddenColumns.Add(C.HeaderText.ToString());
                             }
                         Transfered_Label.Visibility = Visibility.Collapsed;
                         Transfered_textBlock.Visibility = Visibility.Collapsed;
+                        Transfered_textBlockusd.Visibility = Visibility.Collapsed;
+                        Transfered_Labelusd.Visibility = Visibility.Collapsed;
                     }
 
-                        //var colOutcome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Expand");
-                        //if (colOutcome != null)
-                        //    colOutcome.HeaderText = "Transfer";
-                    }
+                    //var colOutcome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Expand");
+                    //if (colOutcome != null)
+                    //    colOutcome.HeaderText = "Transfer";
+                }
             }
 
 
@@ -463,9 +502,11 @@ namespace Financial_WPF_App.Views
                     Balances.Visibility = Visibility.Hidden;
                     myDataGrid.Margin = new Thickness(2, 5, 5, 5);
                     Search_StackPanel.Margin = new Thickness(0, 0, 5, 0);
+                    Transfered_textBlockusd.Visibility = Visibility.Collapsed;
+                    Transfered_Labelusd.Visibility = Visibility.Collapsed;
                 }
                 foreach (var C in myDataGrid.Columns)
-                    if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" ||
+                    if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Transfer(USD)" || 
                         C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                         C.HeaderText.ToString() == "Document type" || C.HeaderText.ToString() == "Document number" ||
                         C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value"
@@ -480,8 +521,10 @@ namespace Financial_WPF_App.Views
 
             if (Account_Type == "Personal")
             {
-               // Outcome_Label.Visibility = Outcome_textBlock.Visibility = Outcome_Border.Visibility =
-             //   Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility =
+                Transfered_textBlockusd.Visibility = Visibility.Collapsed;
+                Transfered_Labelusd.Visibility = Visibility.Collapsed;
+                // Outcome_Label.Visibility = Outcome_textBlock.Visibility = Outcome_Border.Visibility =
+                //   Returned_Label.Visibility = Returned_textBlock.Visibility = Returned_Border.Visibility =
                 Exchange_Label.Visibility = Exchange_textBlock.Visibility = Exchange_Border.Visibility = Visibility.Collapsed;
 
               //  Outcome_Label1.Visibility = Outcome_textBlock1.Visibility =
@@ -491,7 +534,7 @@ namespace Financial_WPF_App.Views
                 if (TillType_Name.ToLower() == "syr")
                 {
                     foreach (var C in myDataGrid.Columns)
-                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Exchange" ||
+                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Transfer(USD)" || 
                             C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                             C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Rate" || C.HeaderText.ToString() == "Exchanged" ||
                             C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value" ||
@@ -507,8 +550,11 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
+                    Transfered_textBlockusd.Visibility = Visibility.Collapsed;
+                    Transfered_Labelusd.Visibility = Visibility.Collapsed;
+
                     foreach (var C in myDataGrid.Columns)
-                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Exchange" ||
+                        if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Transfer(USD)" ||
                             C.HeaderText.ToString() == "Micro project number" || C.HeaderText.ToString() == "Beneficiary name" || C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" ||
                             C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Rate" || C.HeaderText.ToString() == "Exchanged" || C.HeaderText.ToString() == "Cash till" ||
                             C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount" || C.HeaderText.ToString() == "Value" ||
@@ -539,13 +585,15 @@ namespace Financial_WPF_App.Views
                     if (colOutcome != null)
                         colOutcome.HeaderText = "Expenses(SYR)";
                 foreach (var C in myDataGrid.Columns)
-                    if (C.HeaderText.ToString() == "Transfer")
+                    if (C.HeaderText.ToString() == "Transfer" || C.HeaderText.ToString() == "Transfer(USD)")
                     {
                         C.IsHidden = true;
                         Originally_HiddenColumns.Add(C.HeaderText.ToString());
                     }
                 Transfered_Label.Visibility = Visibility.Collapsed;
                 Transfered_textBlock.Visibility = Visibility.Collapsed;
+                Transfered_textBlockusd.Visibility = Visibility.Collapsed;
+                Transfered_Labelusd.Visibility = Visibility.Collapsed;
 
             }
         }

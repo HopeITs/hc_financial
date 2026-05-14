@@ -109,6 +109,12 @@
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
+                    <Label x:Name="Transfered_Labelusd" Content="Transfered:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border x:Name="Transfered_Borderusd" Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="Transfered_textBlockusd" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <Label x:Name="Net_lableusd" Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Net_Borderusd" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Net_textBlockusd" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
@@ -402,6 +408,11 @@
                        NumberDecimalSeparator="."
                        NumberGroupSizes="3" 
                        NumberGroupSeparator=","/>
+                    <syncfusion:GridNumericColumn  x:Name="Transferusd_DataGridColumn" HeaderText="Transfer(USD)"  MappingName="Outcomeusd"
+                     NumberDecimalDigits="2"
+                     NumberDecimalSeparator="."
+                     NumberGroupSizes="3" 
+                     NumberGroupSeparator=","/>
                     <syncfusion:GridTextColumn   x:Name="Currency_DataGridColumn" HeaderText="Currency"  MappingName="Currency"/>
                     <syncfusion:GridDateTimeColumn x:Name="Action_DataGridColumn" HeaderText="Operation Date" MappingName="ActionDate"
                                                    CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"   />
