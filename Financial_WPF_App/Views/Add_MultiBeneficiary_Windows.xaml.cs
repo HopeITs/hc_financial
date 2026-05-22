@@ -122,6 +122,8 @@ namespace Financial_WPF_App.Views
             dt.Columns.Add("Names of partners");
             dt.Columns.Add("ID number");
             dt.Columns.Add("Mobile number");
+            dt.Columns.Add("Currency");
+            dt.Columns.Add("Exchange Rate");
             dt.Columns.Add("Loan amount");
             dt.Columns.Add("Amount owed");
             dt.Columns.Add("Payment");

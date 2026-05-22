@@ -1,4 +1,4 @@
-﻿using Financial_WPF_App.Helper;
+﻿    using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using System;
 using System.Data;
@@ -55,9 +55,10 @@ namespace Financial_WPF_App
         private int Beneficiary_ID, SubProject_ID, Acc_ID;
         private Account a;
         private Beneficiary b;
+        private Till t;
         Payment p;
-        private DataTable dt, a_dt, p_dt;
-        string Original_ToReturn_Amount, Original_Payment, Original_Amount, Original_Payment_interval;
+        private DataTable dt, a_dt, p_dt, curruncy_dt;
+        string Original_ToReturn_Amount, Original_Payment, Original_Amount, Original_Payment_interval, Original_ExchangeRate;
         DateTime? Original_FirstPaymentDate;
         int Original_MicroProject_ID;
         bool RegeneratePayments = false;
@@ -76,12 +77,17 @@ namespace Financial_WPF_App
                 a = new Account();
                 b = new Beneficiary(); p = new Payment();
                 a_dt = new DataTable();
+                t = new Till();
 
                 Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 ToReturn_Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 Payment_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 Payment_interval_TextBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
                 MP_ID_txtBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
+
+                Currency_label.IsEnabled = true;
+                SubProject_clear_btn.IsEnabled = true;
+                Currency_comboBox.IsEnabled = true;
 
                 for (int i = 0; i < myDataGrid.Columns.Count; i++)
                 {
@@ -125,6 +131,7 @@ namespace Financial_WPF_App
 
         private void Load_Data()
         {
+            LoadCurrencyComboBox();
             if (SubProject_ID != -1)
             {
                 LoadAccountComboBox(SubProject_ID.ToString());
@@ -137,7 +144,23 @@ namespace Financial_WPF_App
             }
 
             if (Beneficiary_ID != -1)
+            {
                 Fill_Beneficiary_ByID();
+                
+            }
+                
+        }
+
+        public void LoadCurrencyComboBox() {
+            curruncy_dt = t.Select_All_TillTypes_Currency();
+            if (curruncy_dt != null && curruncy_dt.Rows.Count > 0)
+            {
+                Currency_comboBox.ItemsSource = curruncy_dt.DefaultView;
+            }
+            else
+            {
+                Currency_comboBox.ItemsSource = null;
+            }
         }
 
         private void Fill_Beneficiary_ByID()
@@ -155,6 +178,9 @@ namespace Financial_WPF_App
                 Mobile_txtBox.Text = dt.Rows[0]["Mobile"].ToString();
                 Partners_txtBox.Text = dt.Rows[0]["Partners"].ToString();
                 Amount_txtBox.Text = Original_Amount = Login.ConvertToDouble(dt.Rows[0]["Amount"].ToString());
+                ExchangeRate_txtBox.Text = Original_ExchangeRate = Login.ConvertToDouble(dt.Rows[0]["ExchangeRate"].ToString());
+                
+                
                 if (dt.Rows[0]["Date"] == DBNull.Value)
                     Date_datepicker.SelectedDate = null;
                 else
@@ -175,13 +201,23 @@ namespace Financial_WPF_App
                 if (dt.Rows[0]["Account_ID"] != DBNull.Value)
                     Account_comboBox.SelectedValue = Convert.ToInt32(dt.Rows[0]["Account_ID"]);
 
+                Currency_comboBox.SelectedValue = Convert.ToInt32(dt.Rows[0]["Currency"]);
 
-                double Rate, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount;
+                if (Currency_comboBox.Text.ToString() == "SYR")
+                    correspondingLoan_label.Content = "Loan Amount (USD):";
+                else if (Currency_comboBox.Text.ToString() == "USD") correspondingLoan_label.Content = "Loan Amount (SYR):";
 
+                Currency_comboBox.IsEnabled = false;
+                SubProject_clear_btn.IsEnabled = false;
+                Currency_label.IsEnabled = false;
 
-                if (dt.Rows[0].Field<double?>("Rate") != null)
+                double Rate, AmountAowed, AmountPaid, AmountReturned, RemainingAmount, NotApprovedAmount, CorrespondingLoan;
+
+                CorrespondingLoan = dt.Rows[0].Field<double>("correspondingLoan");
+
+                if (dt.Rows[0].Field<double?>("rate") != null)
                 {
-                    if (!double.TryParse(dt.Rows[0].Field<double>("Rate").ToString(), out Rate))
+                    if (!double.TryParse(dt.Rows[0].Field<double>("rate").ToString(), out Rate))
                     {
                         Rate = 0;
                     }
@@ -215,6 +251,18 @@ namespace Financial_WPF_App
                     AmountPaid = 0;
                 }
 
+                if (dt.Rows[0].Field<double?>("returnedamount") != null)
+                {
+                    if (!double.TryParse(dt.Rows[0].Field<double>("returnedamount").ToString(), out AmountReturned))
+                    {
+                        AmountReturned = 0;
+                    }
+                }
+                else
+                {
+                    AmountReturned = 0;
+                }
+
                 if (dt.Rows[0].Field<double?>("NotApproved_paidamount") != null)
                 {
                     if (!double.TryParse(dt.Rows[0].Field<double>("NotApproved_paidamount").ToString(), out NotApprovedAmount))
@@ -227,18 +275,36 @@ namespace Financial_WPF_App
                     NotApprovedAmount = 0;
                 }
 
-                RemainingAmount = AmountAowed - AmountPaid;
+                RemainingAmount = AmountAowed - AmountPaid + AmountReturned;
 
                 Rate_txtBox.Content = Login.ConvertToDouble(Rate.ToString());
-                Returned_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+                AmountPaid_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+                Returned_txtBox.Content = Login.ConvertToDouble(AmountReturned.ToString());
                 NotApprovedAmount_txtBox.Content = Login.ConvertToDouble(NotApprovedAmount.ToString());
-                RemainedِAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
-
+                RemainingAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
+                correspondingLoan_txtBox.Text = Login.ConvertToDouble(CorrespondingLoan.ToString());
                 Calculate_values();
                 Fill_Payments();
             }
         }
 
+        private void Currency_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Currency_comboBox.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else
+                { MessageBox.Show(ex.Message, "Error"); }
+            }
+
+        }
         private void LoadAccountComboBox(string SubProject_ID)
         {
             Account_comboBox.ItemsSource = null;
@@ -275,6 +341,55 @@ namespace Financial_WPF_App
 
         }
 
+        private void ExchangeRate_txtBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                decimal rate = Convert.ToDecimal(ExchangeRate_txtBox.Text.ToString());
+                decimal amount; 
+                decimal correspondingLoan= 0;
+
+                if (decimal.TryParse(Amount_txtBox.Text, out amount) && decimal.TryParse(ExchangeRate_txtBox.Text, out rate))
+                {
+                    if (Original_ExchangeRate != rate.ToString() || Original_Amount != amount.ToString())
+                    {
+                        if (Currency_comboBox.Text == "SYR")
+                        {
+                            correspondingLoan = amount / rate;
+                        }
+                        else if (Currency_comboBox.Text == "USD")
+                        {
+                            correspondingLoan = amount * rate;
+                        }
+                    }
+                    if (!(correspondingLoan_label.Content.ToString().Contains("USD") || correspondingLoan_label.Content.ToString().Contains("SYR")))
+                    {
+                        if (Currency_comboBox.Text == "SYR")
+                            correspondingLoan_label.Content += " (USD):";
+                        if (Currency_comboBox.Text == "USD")
+                            correspondingLoan_label.Content += " (SYR):";
+                    }
+                    correspondingLoan_txtBox.Text = Login.ConvertToDouble(correspondingLoan.ToString());
+
+                }
+                else
+                {
+                    MessageBox.Show("Please enter valid numbers.");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DialogResult = true;
@@ -288,6 +403,33 @@ namespace Financial_WPF_App
                 {
                     Amount_txtBox.Text = Login.ConvertToDouble(Amount_txtBox.Text);
                 }
+                if(ExchangeRate_txtBox.Text != "")
+                {
+                    decimal rate = Convert.ToDecimal(ExchangeRate_txtBox.Text.ToString());
+                    decimal amount;
+                    decimal correspondingLoan = 0;
+
+                    if (decimal.TryParse(Amount_txtBox.Text, out amount) && decimal.TryParse(ExchangeRate_txtBox.Text, out rate))
+                    {
+                        if (Original_ExchangeRate != rate.ToString() || Original_Amount != amount.ToString())
+                        {
+                            if (Currency_comboBox.Text == "SYR")
+                            {
+                                correspondingLoan = amount / rate;
+                            }
+                            else if (Currency_comboBox.Text == "USD")
+                            {
+                                correspondingLoan = amount * rate;
+                            }
+                        }
+                        correspondingLoan_txtBox.Text = Login.ConvertToDouble(correspondingLoan.ToString());
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please enter valid numbers.");
+                    }
+                }
+                
                 Calculate_values();
             }
             catch (Exception ex)
@@ -334,7 +476,7 @@ namespace Financial_WPF_App
             try
             {
                 Save_Beneficiry();
-                Load_Data();
+                
             }
             catch (Exception ex)
             {
@@ -499,7 +641,7 @@ namespace Financial_WPF_App
                 if (ToSave)
                 {
                     b.Update(Beneficiary_ID, FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
-                        , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text
+                        , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text, Convert.ToInt32(Currency_comboBox.SelectedValue), Convert.ToDecimal(ExchangeRate_txtBox.Text)
                         , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
                         , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, Original_MicroProject_ID, SubProject_ID, RegeneratePayments, DeleteSchedualedPayments, "Beneficiary_Window");
 
@@ -511,14 +653,14 @@ namespace Financial_WPF_App
             else//Add new
             {
                 Beneficiary_ID = b.Insert(FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
-                    , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text
+                    , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text, Convert.ToInt32(Currency_comboBox.SelectedValue),Convert.ToDecimal(ExchangeRate_txtBox.Text)
                     , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
                     , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, RegeneratePayments, "Beneficiary_Window");
 
                 MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
 
             }
-
+            Load_Data();
 
         }
 
@@ -570,7 +712,7 @@ namespace Financial_WPF_App
 
         private void Clear_Boxes()
         {
-            MP_ID_txtBox.Text = MP_Name_txtBox.Text = FName_txtBox.Text = LName_txtBox.Text = FaName_txtBox.Text =
+            MP_ID_txtBox.Text = MP_Name_txtBox.Text = FName_txtBox.Text = LName_txtBox.Text = FaName_txtBox.Text = ExchangeRate_txtBox.Text = correspondingLoan_txtBox.Text = 
                 Partners_txtBox.Text = NationalNumber_txtBox.Text = Mobile_txtBox.Text = Amount_txtBox.Text =
                 ToReturn_Amount_txtBox.Text = Payment_txtBox.Text = ReceiptNumber_txtBox.Text = OrderNumber_txtBox.Text = Notes_txtBox.Text = "";
 
@@ -655,32 +797,136 @@ namespace Financial_WPF_App
             if (p_dt != null && p_dt.Rows.Count > 0)
             {
                 myDataGrid.ItemsSource = p_dt.DefaultView;
+                Fill_Calculations();
 
-
-                int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont;
-
-                TotalPaymentCount = p_dt.Rows.Count;
-                PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
-                UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
-                InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
-                DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
-                NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
-
-                PaymentCount_txtBox.Content = TotalPaymentCount.ToString();
-                PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
-                RemainedPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
-                NotCompleted_txtBox.Content = InCompletePaymentCont.ToString();
-                DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
-                NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
             }
             else
             {
                 myDataGrid.ItemsSource = null;
-                Returned_txtBox.Content = RemainedِAmount_txtBox.Content = PaymentCount_txtBox.Content
-                    = NotCompleted_txtBox.Content = RemainedPaymentCount_txtBox.Content = "0.00";
             }
         }
 
+        private void Fill_Calculations()
+        {
+            int TotalPaymentCount, PaidPaymentCount, UnpaidPaymentCount, InCompletePaymentCont, DelayedPaymentCont, NotApprovedPaymentCont, ReturnedPaymentCont;
+
+            TotalPaymentCount = p_dt.Rows.Count;
+            PaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Done' and Approved = 'Yes'").Length.ToString());
+            UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
+            InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
+            ReturnedPaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Returned'").Length.ToString());
+            DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
+            NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
+
+            TotalPaymentCount_txtBox.Content = TotalPaymentCount.ToString();
+            PaidPaymentCount_txtBox.Content = PaidPaymentCount.ToString();
+            UnpaidPaymentCount_txtBox.Content = UnpaidPaymentCount.ToString();
+            InComplete_txtBox.Content = InCompletePaymentCont.ToString();
+            Returned_txtBox.Content = ReturnedPaymentCont.ToString();
+            DelayedPaymentCont_txtBox.Content = DelayedPaymentCont.ToString();
+            NotApprovedPaymentCont_txtBox.Content = NotApprovedPaymentCont.ToString();
+
+
+            double LoanAmount, Rate, AmountAowed, AmountPaid, RemainingAmount, NotApprovedAmount, AmountReturned, AmountBalanced, NotApprovedAmountReturned;
+
+            DataTable b_dt = b.Select("", "", SubProject_ID.ToString());
+            System.Data.DataRow[] rows = b_dt.Select("MicroProject_ID=" + MP_ID_txtBox.Text.ToString());
+
+            if (rows[0].Field<double?>("Amount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("Amount").ToString(), out LoanAmount))
+                {
+                    LoanAmount = 0;
+                }
+            }
+            else
+            {
+                LoanAmount = 0;
+            }
+
+            if (rows[0].Field<double?>("ToReturn_Amount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("ToReturn_Amount").ToString(), out AmountAowed))
+                {
+                    AmountAowed = 0;
+                }
+            }
+            else
+            {
+                AmountAowed = 0;
+            }
+
+            if (rows[0].Field<double?>("paidamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("paidamount").ToString(), out AmountPaid))
+                {
+                    AmountPaid = 0;
+                }
+            }
+            else
+            {
+                AmountPaid = 0;
+            }
+
+            if (rows[0].Field<double?>("returnedamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("returnedamount").ToString(), out AmountReturned))
+                {
+                    AmountReturned = 0;
+                }
+            }
+            else
+            {
+                AmountReturned = 0;
+            }
+
+
+            if (rows[0].Field<double?>("NotApproved_paidamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("NotApproved_paidamount").ToString(), out NotApprovedAmount))
+                {
+                    NotApprovedAmount = 0;
+                }
+            }
+            else
+            {
+                NotApprovedAmount = 0;
+            }
+            if (rows[0].Field<double?>("NotApproved_returnedamount") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double>("NotApproved_returnedamount").ToString(), out NotApprovedAmountReturned))
+                {
+                    NotApprovedAmountReturned = 0;
+                }
+            }
+            else
+            {
+                NotApprovedAmountReturned = 0;
+            }
+            if (rows[0].Field<double?>("Rate") != null)
+            {
+                if (!double.TryParse(rows[0].Field<double?>("Rate").ToString(), out Rate))
+                {
+                    Rate = 0;
+                }
+            }
+            else
+            {
+                Rate = 0;
+            }
+            AmountBalanced = AmountPaid - AmountReturned;
+            RemainingAmount = AmountAowed - AmountPaid + AmountReturned;
+
+            LoanAmount_txtBox.Content = Login.ConvertToDouble(LoanAmount.ToString());
+            AmountAowed_txtBox.Content = Login.ConvertToDouble(AmountAowed.ToString());
+            AmountPaid_txtBox.Content = Login.ConvertToDouble(AmountPaid.ToString());
+            AmountReturned_txtBox.Content = Login.ConvertToDouble(AmountReturned.ToString());
+            NotApprovedAmount_txtBox.Content = Login.ConvertToDouble(NotApprovedAmount.ToString());
+            NotApprovedAmountReturned_txtBox.Content = Login.ConvertToDouble(NotApprovedAmountReturned.ToString());
+            RemainingAmount_txtBox.Content = Login.ConvertToDouble(RemainingAmount.ToString());
+            Balanced_txtBox.Content = Login.ConvertToDouble(AmountBalanced.ToString());
+            Rate_txtBox.Content = Login.ConvertToDouble(Rate.ToString());
+        }
         private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
         {
             try

@@ -48,7 +48,7 @@ namespace Financial_WPF_App
             }
         }
 
-        public AddAction_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int Till_ID, string TillType, int Action_ID, int SubProject_ID, bool FromTillForm, bool Approved_Action, Main_Window_2 main_Window, Till_Window TW)
+        public AddAction_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int Till_ID, string TillType, int Action_ID, int SubProject_ID,  bool FromTillForm, bool Approved_Action, Main_Window_2 main_Window, Till_Window TW)
         {
             InitializeComponent();
             this.main_Window = main_Window;
@@ -95,7 +95,7 @@ namespace Financial_WPF_App
         }
 
 
-        int Action_ID, Account_ID, Till_ID, SubProject_ID;
+        int Action_ID, Account_ID, Till_ID, SubProject_ID ;
         string Account_Name; bool FromTillForm;
         string Account_Type; string Category;
         Till t;
@@ -315,6 +315,7 @@ namespace Financial_WPF_App
                 DestinationTill_comboBox.IsEnabled = false;
                 ExchangeAcc_comboBox.IsEnabled = false;
                 ExchangeCash_comboBox.IsEnabled = false;
+                currency_comboBox.IsEnabled = false;
                 DestinationTill_clear_btn.IsEnabled = ExchangeAcc_clear_btn.IsEnabled = ExchangeCash_clear_btn.IsEnabled = false;
 
                 if (Type_ComboBox_Exchange_Item.IsSelected)
@@ -333,11 +334,12 @@ namespace Financial_WPF_App
         private void Set_Available_Operations()
         {
             Type_ComboBox_Income_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Outcome_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Returned_Item.Visibility = Visibility.Visible;
+            Type_ComboBox_Outcome_Item.Visibility = Visibility.Collapsed;
+            Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
             Type_ComboBox_Exchange_Item.Visibility = Visibility.Visible;
             Type_ComboBox_Expand_Item.Visibility = Visibility.Visible;
-            Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
+            //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
+            //Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
 
             if (Account_Type == "Project" && TillType != null)
             {
@@ -363,12 +365,10 @@ namespace Financial_WPF_App
 
 
                     // تم إيقاف هذه العملية لحين دراستها
-                    //if (Move_privileges)
-                    //    Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
-                    //else
-                    //    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                    if (!Move_privileges)
+                        Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
 
-                    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                    //Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -384,13 +384,12 @@ namespace Financial_WPF_App
 
                     Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
 
+                    //TRANSFER OPERATION IS UNDER STUDY AND TESTING, SO IT WILL BE HIDDEN FOR NOW
                     // تم إيقاف هذه العملية لحين دراستها
-                    //if (Move_privileges)
+                    //if (Move_privileges &&  TillType.ToLower() == "usd")
                     //    Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
                     //else
-                    //
-
-                    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                    //    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
                 }
             }
             else if (Account_Type == "Exchange")
@@ -422,7 +421,8 @@ namespace Financial_WPF_App
                 if (!Expand_privileges)
                     Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
 
-                Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                if (!Move_privileges || TillType.ToLower() == "eur")
+                    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -603,7 +603,38 @@ namespace Financial_WPF_App
                 selected_dt = view.ToTable(true, "Subproject_ID", "Subproject_Name");
 
                 if (selected_dt != null && selected_dt.Rows.Count > 0)
+                {
                     Subproject_comboBox.ItemsSource = selected_dt.DefaultView;
+
+                   
+                  
+
+                
+                    DataTable dest_dt = selected_dt.Copy();
+                    dest_dt.Columns.Add("Display_Name", typeof(string));
+
+                    foreach (DataRow r in dest_dt.Rows)
+                    {
+                        var idObj = r["Subproject_ID"];
+                        var name = (r["Subproject_Name"]?.ToString() ?? "").Trim();
+
+                        bool isPersonalById = (idObj == DBNull.Value) || Convert.ToInt32(idObj) == 0;
+                        bool isPersonalByName = string.Equals(name, "Personal / Exchange", StringComparison.OrdinalIgnoreCase)
+                                             || string.Equals(name, "Personal/Exchange", StringComparison.OrdinalIgnoreCase)
+                                             || string.Equals(name, "Exchange / Personal", StringComparison.OrdinalIgnoreCase)
+                                             || string.Equals(name, "Exchange/Personal", StringComparison.OrdinalIgnoreCase);
+
+                        r["Display_Name"] = (isPersonalById || isPersonalByName) ? "Personal" : name;
+                    }
+
+                    
+                    DestinationProject_comboBox.ItemsSource = dest_dt.DefaultView;
+                    DestinationProject_comboBox.DisplayMemberPath = "Display_Name";
+                    DestinationProject_comboBox.SelectedValuePath = "Subproject_ID";
+
+
+               
+                }
             }
 
         }
@@ -654,8 +685,10 @@ namespace Financial_WPF_App
 
                 Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
 
-                Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = false;
-
+                Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled =
+               DestinationAccount_lable.IsEnabled = DestinationAccount_comboBox.IsEnabled =
+                false;
+                
 
             Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
@@ -665,7 +698,7 @@ namespace Financial_WPF_App
 
             Exchange_Note_lable.Visibility = Visibility.Collapsed;
             DestinationTill_help.Visibility = ExchangeAcc_help.Visibility = Budget_help.Visibility = Employee_help.Visibility = Original_AvgRate_help.Visibility = Visibility.Collapsed;
-
+            DestinationProject_help.Visibility = DestinationAccount_help.Visibility = Visibility.Collapsed;
 
             payslip_ComboBoxItem.Visibility = Visibility.Collapsed;  //IsReceipt_comboBox Item
 
@@ -746,29 +779,54 @@ namespace Financial_WPF_App
 
                                     Document_Label.IsEnabled = IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled =
 
-                                    CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
+                                    CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled = true;
 
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
+                                //  Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                                // Original_AvgRate_help.Visibility = Visibility.Visible;
+
+                                //if (currency_comboBox.SelectedValue != null &&
+                                //    (int)currency_comboBox.SelectedValue == 4)
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = true;
+                                //    Original_AvgRate_comboBox.IsEnabled = true;
+                                //    Original_AvgRate_clear_btn.IsEnabled = true;
+                                //    Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //}
+                                //else
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = false;
+                                //    Original_AvgRate_comboBox.IsEnabled = false;
+                                //    Original_AvgRate_clear_btn.IsEnabled = false;
+                                //    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                                //}
 
                             }
                             else if (Type_ComboBox_Move_Item.IsSelected)
                             {
+
+
                                 DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                 ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
+                                Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
+                                 Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
-                                    CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
 
-                                    ObserveCashAccount_lable.IsEnabled = ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = true;
+                                DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                                CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
 
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //Original_AvgRate_help.Visibility = Visibility.Visible;
+                                DestinationProject_help.Visibility = Visibility.Visible;
+                                DestinationAccount_help.Visibility = Visibility.Visible;
+
+                                SyncDestinationTillWithMainTill();
 
                             }
                         }
@@ -814,17 +872,24 @@ namespace Financial_WPF_App
                             else if (Type_ComboBox_Move_Item.IsSelected)
                             {
                                 DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                 ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
+
                                 Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled  =
+                                 Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
-                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
+                                DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                                CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
 
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                               // Original_AvgRate_help.Visibility = Visibility.Visible;
+                                DestinationProject_help.Visibility = Visibility.Visible;
+                                DestinationAccount_help.Visibility = Visibility.Visible;
 
-
+                                SyncDestinationTillWithMainTill();
                             }
                         }
                     }
@@ -898,38 +963,55 @@ namespace Financial_WPF_App
 
                                     CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
 
-                                    Document_Label.IsEnabled = IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled =
+                                    Document_Label.IsEnabled = IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled = true;
 
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
+                                //Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 Budget_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                                // Original_AvgRate_help.Visibility = Visibility.Visible;
                                 payslip_ComboBoxItem.Visibility = Visibility.Visible;
+
+
+
+                                //if (currency_comboBox.SelectedValue != null &&
+                                //    (int)currency_comboBox.SelectedValue == 4)
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = true;
+                                //    Original_AvgRate_comboBox.IsEnabled = true;
+                                //    Original_AvgRate_clear_btn.IsEnabled = true;
+                                //    Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //}
+                                //else
+                                //{
+                                //    Original_AvgRate_lable.IsEnabled = false;
+                                //    Original_AvgRate_comboBox.IsEnabled = false;
+                                //    Original_AvgRate_clear_btn.IsEnabled = false;
+                                //    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                                //}
                             }
                             else if (Type_ComboBox_Move_Item.IsSelected)
                             {
                                 DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                 ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
 
-                                    Budget_lable.IsEnabled = Budget_comboBox.IsEnabled = Budget_comboBox_clear.IsEnabled =
+                                Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
+                                 Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
 
-                                    Category_lable.IsEnabled = Category_comboBox.IsEnabled = Category_comboBox_clear_btn.IsEnabled =
 
-                                    CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled = CashAccount_clear_btn.IsEnabled =
-
-                                    ObserveCashAccount_lable.IsEnabled = ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled =
-
-                                    Line_lable.IsEnabled = Line_comboBox.IsEnabled = Line_comboBox_clear_btn.IsEnabled =
-
-                                    Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
+                                DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                                CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
 
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
-                                Budget_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                               // Original_AvgRate_help.Visibility = Visibility.Visible;
+                                DestinationProject_help.Visibility = Visibility.Visible;
+                                DestinationAccount_help.Visibility = Visibility.Visible;
 
+                                SyncDestinationTillWithMainTill();
 
 
                             }
@@ -976,13 +1058,24 @@ namespace Financial_WPF_App
                             else if (Type_ComboBox_Move_Item.IsSelected)
                             {
                                 DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                 ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
+
                                 Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
-                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
+                                 Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
+
+
+                                DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                                CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
 
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
                                 DestinationTill_help.Visibility = Visibility.Visible;
-                                Original_AvgRate_help.Visibility = Visibility.Visible;
+                                //Original_AvgRate_help.Visibility = Visibility.Visible;
+                                DestinationProject_help.Visibility = Visibility.Visible;
+                                DestinationAccount_help.Visibility = Visibility.Visible;
+
+                                SyncDestinationTillWithMainTill();
 
 
                             }
@@ -1021,7 +1114,25 @@ namespace Financial_WPF_App
                         }
                         else if (Type_ComboBox_Move_Item.IsSelected)
                         {
-                            //Not allowed.
+                            DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                  ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
+
+                            Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
+                             Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
+
+
+                            DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                            CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
+
+                            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
+
+                            DestinationTill_help.Visibility = Visibility.Visible;
+                           // Original_AvgRate_help.Visibility = Visibility.Visible;
+                            DestinationProject_help.Visibility = Visibility.Visible;
+                            DestinationAccount_help.Visibility = Visibility.Visible;
+
+                            SyncDestinationTillWithMainTill();
                         }
                     }
                     else
@@ -1051,7 +1162,25 @@ namespace Financial_WPF_App
                         }
                         else if (Type_ComboBox_Move_Item.IsSelected)
                         {
-                            //Not allowed.
+                            DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                  ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
+
+                            Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = 
+                             Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
+
+
+                            DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                            CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
+
+                            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
+
+                            DestinationTill_help.Visibility = Visibility.Visible;
+                            //Original_AvgRate_help.Visibility = Visibility.Visible;
+                            DestinationProject_help.Visibility = Visibility.Visible;
+                            DestinationAccount_help.Visibility = Visibility.Visible;
+
+                            SyncDestinationTillWithMainTill();
                         }
                     }
                 }
@@ -1083,7 +1212,25 @@ namespace Financial_WPF_App
                         }
                         else if (Type_ComboBox_Move_Item.IsSelected)
                         {
-                            //Not allowed.
+                            DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                  ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
+
+                            Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
+                             Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
+
+
+                            DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                            CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
+
+                            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
+
+                            DestinationTill_help.Visibility = Visibility.Visible;
+                            //Original_AvgRate_help.Visibility = Visibility.Visible;
+                            DestinationProject_help.Visibility = Visibility.Visible;
+                            DestinationAccount_help.Visibility = Visibility.Visible;
+
+                            SyncDestinationTillWithMainTill();
                         }
                     }
                     else
@@ -1110,11 +1257,49 @@ namespace Financial_WPF_App
                         }
                         else if (Type_ComboBox_Move_Item.IsSelected)
                         {
-                            //Not allowed.
+                            
+                                DestinationTill_lable.IsEnabled = DestinationTill_comboBox.IsEnabled = DestinationTill_clear_btn.IsEnabled =
+                                      ObserveCashAccount_comboBox.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = ObserveCashAccount_lable.IsEnabled = true;
+
+                                Donor_lable.IsEnabled = Donor_comboBox.IsEnabled = Donor_comboBox_clear_btn.IsEnabled =
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled =
+                                 Attachment_lable.IsEnabled = AddedAttachments_lable.IsEnabled = AddedAttachments_clear_btn.IsEnabled = Add_Attachment_btn.IsEnabled = false;
+
+
+                                DestinationProject_lable.IsEnabled = DestinationProject_comboBox.IsEnabled = CashAccount_lable.IsEnabled = CashAccount_comboBox.IsEnabled =
+                                CashAccount_clear_btn.IsEnabled = DestinationAccount_comboBox.IsEnabled = DestinationAccount_lable.IsEnabled = true;
+
+                                USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
+
+                                DestinationTill_help.Visibility = Visibility.Visible;
+                                //Original_AvgRate_help.Visibility = Visibility.Visible;
+                                DestinationProject_help.Visibility = Visibility.Visible;
+                                DestinationAccount_help.Visibility = Visibility.Visible;
+
+                                SyncDestinationTillWithMainTill();
+                            
                         }
                     }
                 }
             }
+
+            if (Account_Type == "Project" &&  TillType != null && TillType.ToLower() == "syr" && 
+               Type_comboBox.SelectedItem is ComboBoxItem selectedType
+               && selectedType.Content.ToString().ToLower() == "expenses")
+            {
+                currency_comboBox.IsEnabled = true;
+                Currency_Label.IsEnabled = true;
+            }
+            else
+            {
+                currency_comboBox.SelectedIndex = -1;
+                currency_comboBox.SelectedValue = null;
+                currency_comboBox.Text = string.Empty;
+
+                currency_comboBox.IsEnabled = false;
+                Currency_Label.IsEnabled = false;
+            }
+
         }
 
         private void Clear_Boxes()
@@ -1127,7 +1312,8 @@ namespace Financial_WPF_App
             USD_Value_TxtBox.Content = Exchanged_txtBox.Content = "";
             DestinationTill_comboBox.SelectedIndex = ExchangeAcc_comboBox.SelectedIndex = Donor_comboBox.SelectedIndex = Budget_comboBox.SelectedIndex =
                 Category_comboBox.SelectedIndex = Line_comboBox.SelectedIndex = CashAccount_comboBox.SelectedIndex = ObserveCashAccount_comboBox.SelectedIndex =
-                Original_AvgRate_comboBox.SelectedIndex = IsReceipt_comboBox.SelectedIndex = Employee_comboBox.SelectedIndex = -1;
+                Original_AvgRate_comboBox.SelectedIndex = IsReceipt_comboBox.SelectedIndex = Employee_comboBox.SelectedIndex  = -1;
+                DestinationProject_comboBox.SelectedIndex = DestinationAccount_comboBox.SelectedIndex = -1;
 
 
             ActionDate_datepicker.SelectedDate = DateTime.Today;
@@ -1349,6 +1535,12 @@ namespace Financial_WPF_App
 
         private void Fill_ComboBoxes()
         {
+            DataTable dtCurrency = t.Select_All_TillTypes_Currency();
+            if (dtCurrency != null && dtCurrency.Rows.Count > 0)
+            { 
+                currency_comboBox.ItemsSource = dtCurrency.DefaultView; 
+            }
+
             if (Original_AvgRate_comboBox.IsEnabled == true)
             {
                 Original_AvgRate_comboBox.ItemsSource = null;
@@ -1454,6 +1646,7 @@ namespace Financial_WPF_App
                         selected_dt = rows.CopyToDataTable();
                         if (selected_dt != null && selected_dt.Rows.Count > 0)
                             CashAccount_comboBox.ItemsSource = selected_dt.DefaultView;
+                            ObserveCashAccount_comboBox.ItemsSource = selected_dt.DefaultView;
                     }
                 }
             }
@@ -1480,67 +1673,110 @@ namespace Financial_WPF_App
 
             if (DestinationTill_comboBox.IsEnabled == true)
             {
+                //    if (Type_ComboBox_Move_Item.IsSelected)
+                //    {
+                //        //DestinationTill_lable.Content = "Corresponding account:";
+                //        DestinationTill_help.Visibility = Visibility.Visible;
+                //        DestinationTill_comboBox.ItemsSource = null;
+
+
+                //        if (TillType.ToLower() == "syr")
+                //        {
+                //            DataTable temp_Accounts_dt = Acc.Select_Accounts_With_Same_TillType(TillType, Account_ID, -1);
+
+
+                //            List<int> User_Subprojects_ID = new List<int>();
+                //            List<int> User_Accounts_ID = new List<int>();
+
+                //            if (Settings.Default.Role == "Financial Manager")
+                //            {
+                //                User_Subprojects_ID = Settings.Default.User_Subprojects.ToString().Split(',').Select(int.Parse).ToList();
+
+                //                string filterExpression = string.Join(" OR ", User_Subprojects_ID.Select(id => "subproject_ID = " + id));
+
+                //                System.Data.DataRow[] temprows = temp_Accounts_dt.Select(filterExpression);
+                //                DataTable selected_dt = new DataTable();
+                //                if (temprows.Length != 0)
+                //                {
+                //                    selected_dt = temprows.CopyToDataTable();
+                //                    Accounts_dt = selected_dt;
+                //                }
+                //            }
+                //            else if (Settings.Default.Role == "Accountant")
+                //            {
+                //                User_Accounts_ID = Settings.Default.User_Accounts.ToString().Split(',').Select(int.Parse).ToList();
+
+                //                string filterExpression = string.Join(" OR ", User_Accounts_ID.Select(id => "account_id = " + id));
+
+                //                System.Data.DataRow[] temprows = temp_Accounts_dt.Select(filterExpression);
+                //                DataTable selected_dt = new DataTable();
+                //                if (temprows.Length != 0)
+                //                {
+                //                    selected_dt = temprows.CopyToDataTable();
+                //                    Accounts_dt = selected_dt;
+                //                }
+                //            }
+                //            else
+                //            {
+                //                Accounts_dt = temp_Accounts_dt;
+                //            }
+                //            if (Accounts_dt != null && Accounts_dt.Rows.Count > 0)
+                //            {
+                //                DestinationTill_comboBox.ItemsSource = Accounts_dt.DefaultView;
+                //            }
+                //        }
+                //        else
+                //        {
+                //            // تتم العملية بعد تحديد الممول
+                //        }
+                //    }
+                //    else
+                //    {
+                //        DestinationTill_lable.Content = "Corresponding till:";
+                //        DestinationTill_help.Visibility = Visibility.Collapsed;
+                //        DestinationTill_comboBox.ItemsSource = null;
+                //        DataTable temp_dt1 = t.Select(Account_ID.ToString(), Till_ID, "");
+                //        if (TillType.ToLower() == "syr")
+                //        {
+                //            t_dt = temp_dt1;
+                //        }
+                //        else
+
+                //        {
+                //            if (ExchangeToForeign_privileges)
+                //            {
+                //                t_dt = temp_dt1;
+                //            }
+                //            else
+                //            {
+                //                System.Data.DataRow[] rows = temp_dt1.Select("Type = 'Syr'");
+                //                DataTable selected_dt = new DataTable();
+                //                if (rows.Length != 0)
+                //                {
+                //                    selected_dt = rows.CopyToDataTable();
+                //                    t_dt = selected_dt;
+                //                }
+                //            }
+                //        }
+
+                //        if (t_dt != null && t_dt.Rows.Count > 0)
+                //        {
+                //            DestinationTill_comboBox.ItemsSource = t_dt.DefaultView;
+                //        }
+                //    }
+
                 if (Type_ComboBox_Move_Item.IsSelected)
                 {
-                    DestinationTill_lable.Content = "Corresponding account:";
-                    DestinationTill_help.Visibility = Visibility.Visible;
-                    DestinationTill_comboBox.ItemsSource = null;
-
-
-                    if (TillType.ToLower() == "syr")
-                    {
-                        DataTable temp_Accounts_dt = Acc.Select_Accounts_With_Same_TillType(TillType, Account_ID, -1);
-
-
-                        List<int> User_Subprojects_ID = new List<int>();
-                        List<int> User_Accounts_ID = new List<int>();
-
-                        if (Settings.Default.Role == "Financial Manager")
-                        {
-                            User_Subprojects_ID = Settings.Default.User_Subprojects.ToString().Split(',').Select(int.Parse).ToList();
-
-                            string filterExpression = string.Join(" OR ", User_Subprojects_ID.Select(id => "subproject_ID = " + id));
-
-                            System.Data.DataRow[] temprows = temp_Accounts_dt.Select(filterExpression);
-                            DataTable selected_dt = new DataTable();
-                            if (temprows.Length != 0)
-                            {
-                                selected_dt = temprows.CopyToDataTable();
-                                Accounts_dt = selected_dt;
-                            }
-                        }
-                        else if (Settings.Default.Role == "Accountant")
-                        {
-                            User_Accounts_ID = Settings.Default.User_Accounts.ToString().Split(',').Select(int.Parse).ToList();
-
-                            string filterExpression = string.Join(" OR ", User_Accounts_ID.Select(id => "account_id = " + id));
-
-                            System.Data.DataRow[] temprows = temp_Accounts_dt.Select(filterExpression);
-                            DataTable selected_dt = new DataTable();
-                            if (temprows.Length != 0)
-                            {
-                                selected_dt = temprows.CopyToDataTable();
-                                Accounts_dt = selected_dt;
-                            }
-                        }
-                        else
-                        {
-                            Accounts_dt = temp_Accounts_dt;
-                        }
-                        if (Accounts_dt != null && Accounts_dt.Rows.Count > 0)
-                        {
-                            DestinationTill_comboBox.ItemsSource = Accounts_dt.DefaultView;
-                        }
-                    }
-                    else
-                    {
-                        // تتم العملية بعد تحديد الممول
-                    }
+                    
+                    SyncDestinationTillWithMainTill();
                 }
                 else
                 {
-                    DestinationTill_lable.Content = "Corresponding till:";
+                  
                     DestinationTill_help.Visibility = Visibility.Collapsed;
+                    DestinationTill_comboBox.IsEnabled = true;
+                    DestinationTill_clear_btn.IsEnabled = true;
+
                     DestinationTill_comboBox.ItemsSource = null;
                     DataTable temp_dt1 = t.Select(Account_ID.ToString(), Till_ID, "");
                     if (TillType.ToLower() == "syr")
@@ -1548,7 +1784,6 @@ namespace Financial_WPF_App
                         t_dt = temp_dt1;
                     }
                     else
-
                     {
                         if (ExchangeToForeign_privileges)
                         {
@@ -1565,12 +1800,13 @@ namespace Financial_WPF_App
                             }
                         }
                     }
-
                     if (t_dt != null && t_dt.Rows.Count > 0)
                     {
                         DestinationTill_comboBox.ItemsSource = t_dt.DefaultView;
                     }
                 }
+
+
             }
 
             ExchangeAcc_comboBox.ItemsSource = null;
@@ -1607,26 +1843,35 @@ namespace Financial_WPF_App
                     Type_comboBox.SelectedIndex = 0; //وارد
                     //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Income"));
                     Amount_txtBox.Text = dt.Rows[0].Field<Double>("Income").ToString();
+                    currency_comboBox.SelectedIndex = 0;
+                }
+
+            if (dt.Rows[0]["Incomeusd"] != DBNull.Value)
+                if (dt.Rows[0].Field<Double>("Incomeusd") != 0)
+                {
+                    Type_comboBox.SelectedIndex = 0; //وارد
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Incomeusd"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Incomeusd").ToString();
+                    currency_comboBox.SelectedIndex = 1;
                 }
 
             if (dt.Rows[0]["Outcome"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Outcome") != 0)
                 {
-                    Type_comboBox.SelectedIndex = 1; //سلفة
+                    Type_comboBox.SelectedIndex = 1; //سلفة أو TRANSFER
                     //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Outcome"));
                     Amount_txtBox.Text = dt.Rows[0].Field<Double>("Outcome").ToString();
 
                 }
 
-            if (dt.Rows[0]["Returned"] != DBNull.Value)
-                if (dt.Rows[0].Field<Double>("Returned") != 0)
-                {
-                    Type_comboBox.SelectedIndex = 2; //مرتجع
-                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Returned"));
-                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Returned").ToString();
+            //if (dt.Rows[0]["Returned"] != DBNull.Value)
+            //    if (dt.Rows[0].Field<Double>("Returned") != 0)
+            //    {
+            //        Type_comboBox.SelectedIndex = 2; //مرتجع
+            //        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Returned"));
+            //        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Returned").ToString();
+            //      }
 
-
-                }
             if (dt.Rows[0]["Exchange"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Exchange") != 0)
                 {
@@ -1636,31 +1881,49 @@ namespace Financial_WPF_App
 
 
                 }
+            //if (dt.Rows[0]["Expand"] != DBNull.Value)
+            //    if (dt.Rows[0].Field<Double>("Expand") != 0)
+            //    {
+            //        if (dt.Rows[0]["ObserveAcion_ID"] != DBNull.Value)
+            //        {
+            //            Type_comboBox.SelectedIndex = 5; //نقل
+            //            //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+            //            Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+
+            //        }
+            //        else
+            //        {
+            //            Type_comboBox.SelectedIndex = 4; //فاتورة
+            //            //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+            //            Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+
+            //        }
+
+            //    }
             if (dt.Rows[0]["Expand"] != DBNull.Value)
                 if (dt.Rows[0].Field<Double>("Expand") != 0)
                 {
-                    if (dt.Rows[0]["ObserveAcion_ID"] != DBNull.Value)
-                    {
-                        Type_comboBox.SelectedIndex = 5; //نقل
-                        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
-                        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
-
-                    }
-                    else
-                    {
-                        Type_comboBox.SelectedIndex = 4; //فاتورة
-                        //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
-                        Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
-
-                    }
-
+                    Type_comboBox.SelectedIndex = 4; //فاتورة
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expand"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expand").ToString();
+                    currency_comboBox.SelectedIndex = 0;
                 }
+
+            if (dt.Rows[0]["Expandusd"] != DBNull.Value)
+                if (dt.Rows[0].Field<Double>("Expandusd") != 0)
+                {
+                    Type_comboBox.SelectedIndex = 4; //فاتورة
+                    //Amount_txtBox.Text = string.Format("{0:N2}", dt.Rows[0].Field<Double>("Expandusd"));
+                    Amount_txtBox.Text = dt.Rows[0].Field<Double>("Expandusd").ToString();
+                    currency_comboBox.SelectedIndex = 1;
+                }
+
             UserMode = true;
             ActionDate_datepicker.SelectedDate = Convert.ToDateTime(dt.Rows[0].Field<DateTime>("ActionDate").ToString());
             UserMode = false;
 
             Notes_txtBox.Text = dt.Rows[0].Field<string>("Note").ToString();
-            E_Notes_txtBox.Text = dt.Rows[0].Field<string>("E_Note").ToString();
+            E_Notes_txtBox.Text = dt.Rows[0].Field<string>("E_Note") ?? "";
             // ObserveTill_ID //
             if (dt.Rows[0]["ObserveTill_ID"] != DBNull.Value)
             {
@@ -2182,6 +2445,21 @@ namespace Financial_WPF_App
             }
         }
 
+        private void SyncDestinationTillWithMainTill()
+        {
+         
+            DestinationTill_comboBox.ItemsSource = Till_comboBox.ItemsSource;
+            DestinationTill_comboBox.DisplayMemberPath = Till_comboBox.DisplayMemberPath;
+            DestinationTill_comboBox.SelectedValuePath = Till_comboBox.SelectedValuePath;
+
+            DestinationTill_comboBox.SelectedValue = Till_comboBox.SelectedValue;
+
+            DestinationTill_comboBox.IsEnabled = false;
+            DestinationTill_clear_btn.IsEnabled = false;
+
+            DestinationTill_help.Visibility = Visibility.Visible;
+        }
+
         private void Apply_Color_Theme()
         {
 
@@ -2314,7 +2592,18 @@ namespace Financial_WPF_App
 
                     Clear_Boxes();
                     Show_Hide_Components();
+                    if (Till_ID == 2 && Till_ID == 3)
+                    {
+                        currency_comboBox.SelectedIndex = -1;
+                    }
+                    else
+                    {
+
+                    }
                 }
+
+                if (Type_ComboBox_Move_Item.IsSelected)
+                    Bind_DestinationAccount_ComboBox();
             }
             catch (Exception ex)
             {
@@ -2400,6 +2689,45 @@ namespace Financial_WPF_App
                     throw;
             }
         }
+
+        private void currency_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+
+                if (currency_comboBox.SelectedValue != null &&
+                   (int)currency_comboBox.SelectedValue == 4)
+                {
+                    Original_AvgRate_lable.IsEnabled = true;
+                    Original_AvgRate_comboBox.IsEnabled = true;
+                    Original_AvgRate_clear_btn.IsEnabled = true;
+                    Original_AvgRate_help.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Original_AvgRate_lable.IsEnabled = false;
+                    Original_AvgRate_comboBox.IsEnabled = false;
+                    Original_AvgRate_clear_btn.IsEnabled = false;
+                    Original_AvgRate_help.Visibility = Visibility.Hidden;
+                }
+                //Show_Hide_Components();
+
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+                if (PassException)
+                    throw;
+            }
+        }
+        
 
         private void IsReceipt_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -2530,7 +2858,11 @@ namespace Financial_WPF_App
                     }
                     else
                     {
+                        if (t_dt == null || DestinationTill_comboBox.SelectedValue == null)
+                            return;
+
                         DataRow[] row = t_dt.Select("ID=" + Convert.ToInt32(DestinationTill_comboBox.SelectedValue));
+
 
                         if (ExchangeAcc_comboBox.IsEnabled == true)
                         {
@@ -2762,6 +3094,9 @@ namespace Financial_WPF_App
                 {
                     Show_Hide_Components();
 
+                    if (Type_ComboBox_Move_Item.IsSelected)
+                        Bind_DestinationAccount_ComboBox();
+
                     Fill_ComboBoxes();
                 }
             }
@@ -2778,6 +3113,13 @@ namespace Financial_WPF_App
                     throw;
             }
         }
+
+        private void DestinationProjectl_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Bind_DestinationAccount_ComboBox();
+
+        }
+
 
         private void Calc_USDValue()
         {
@@ -2842,6 +3184,18 @@ namespace Financial_WPF_App
 
                 double rate = 0;
 
+
+                bool isNewAction = (Action_ID == -1);
+                bool isExpense = (inserted_value == "E");
+                bool isSyrTill = !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr";
+
+                bool isUsdCurrency = false;
+                if (currency_comboBox.SelectedValue != null)
+                {
+                    int currId = Convert.ToInt32(currency_comboBox.SelectedValue);
+                    isUsdCurrency = (currId == 2);  
+                }
+
                 #region Check and get data
 
                 if (Type_comboBox.Text == "")
@@ -2866,6 +3220,14 @@ namespace Financial_WPF_App
                     else if (Type_comboBox.SelectedItem.ToString().Contains("Expenses"))
                     {
                         inserted_value = "E";
+                        if (currency_comboBox.SelectedValue == null ||
+                           Convert.ToInt32(currency_comboBox.SelectedValue) <= 0)
+                        {
+                            MessageBox.Show("Please make sure to select the currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                            currency_comboBox.Focus();
+                            return;
+                        }
+
                     }
                     else if (Type_comboBox.SelectedItem.ToString().Contains("Exchange"))
                     {
@@ -3121,19 +3483,27 @@ namespace Financial_WPF_App
 
                 if (Action_ID != -1)//Edit
                 {
+                    int selectedCurrencyID = 0;
+                    if (currency_comboBox.SelectedValue != null)
+                    {
+                         selectedCurrencyID = (int)currency_comboBox.SelectedValue;
+                    }
+                    bool isUsdExpenseEdit = inserted_value == "E" && !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr" && selectedCurrencyID == 2;
                     if (Approved_Action)
                     {
+                        
                         if (inserted_value == "Ex" || inserted_value == "M")
                         {
                             a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
                                 , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window" , selectedCurrencyID);
                         }
                         else
                         {
-                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
+    
+                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
                             , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window" , selectedCurrencyID); ;
                         }
                     }
                     else
@@ -3142,13 +3512,13 @@ namespace Financial_WPF_App
                         {
                             a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
                                 , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window" , selectedCurrencyID);
                         }
                         else
                         {
-                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, false, false, false, amount, rate
+                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
                             , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window"); ;
+                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window" , selectedCurrencyID); ;
                         }
                     }
                     int success = 0;
@@ -3167,43 +3537,173 @@ namespace Financial_WPF_App
 
                     this.Close();
                 }
-                else//Add new
+                else // Add new
                 {
+
+                    bool _isExpense = (inserted_value == "E");
+
+                    bool _isSyrTill = !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr";
+
+                   
+                    bool _isUsdCurrency = false;
+                    if (currency_comboBox.SelectedItem is DataRowView curRow)
+                    {
+                        string curName = "";
+                        if (curRow.Row.Table.Columns.Contains("Name"))
+                            curName = curRow["Name"]?.ToString().Trim().ToLower() ?? "";
+                        else if (curRow.Row.Table.Columns.Contains("Tilltypes_Name"))
+                            curName = curRow["Tilltypes_Name"]?.ToString().Trim().ToLower() ?? "";
+                        _isUsdCurrency = (curName == "usd");
+                    }
+
+                    bool _isSpecialCase = _isExpense && _isSyrTill && _isUsdCurrency;
+
+                  
+                    if (_isSpecialCase)
+                    {
+                        int usdTillId = GetUsdTillIdForCurrentAccount();
+                        if (usdTillId == -1)
+                        {
+                            MessageBox.Show("There is no USD till associated with this account");
+                            return;
+                        }
+
+                     int expenseId  = a.Insert( Till_ID, "syr", usdTillId, "usd", Donor_ID, -1, true, false, false, "E", amount, rate, ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum,
+                                                Employee_Salary_ID, OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", 2 );
+
+                        //int outcomeId = a.Insert(
+                        //    usdTillId, "usd",
+                        //    -1, "",
+                        //    Donor_ID, -1,
+                        //    false, false, false,
+                        //    "O",
+                        //    amount, rate, ActionDate,
+                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
+                        //    Employee_Salary_ID,
+                        //    OriginalRate_ID,
+                        //    MicroProject_ID,
+                        //    budget_line_ID,
+                        //    -1,
+                        //    CashAccount_ID,
+                        //    ObserveCashAccount_ID,
+                        //    ExchangeCash_ID,
+                        //    -1,
+                        //    "AddAction_Window" , 2
+                        //);
+
+                        //// ========== (2) Income على SYP till ==========
+                        //int incomeId = a.Insert(
+                        //    Till_ID, TillType,
+                        //    usdTillId, "usd",
+                        //    Donor_ID, -1,
+                        //    false, false, false,
+                        //    "I",
+                        //    amount, rate, ActionDate,
+                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
+                        //    Employee_Salary_ID,
+                        //    OriginalRate_ID,
+                        //    MicroProject_ID,
+                        //    budget_line_ID,
+                        //    -1,
+                        //    CashAccount_ID,
+                        //    ObserveCashAccount_ID,
+                        //    ExchangeCash_ID,
+                        //    -1,
+                        //    "AddAction_Window" ,2
+                        //);
+
+                        //// ========== (3) Expense على SYP till ==========
+                        //int expenseId = a.Insert(
+                        //    Till_ID, TillType,
+                        //    Till_ID, TillType,
+                        //    Donor_ID, -1,
+                        //    false, false, false,
+                        //    "E",
+                        //    amount, rate, ActionDate,
+                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
+                        //    Employee_Salary_ID,
+                        //    OriginalRate_ID,
+                        //    MicroProject_ID,
+                        //    budget_line_ID,
+                        //    -1,
+                        //    CashAccount_ID,
+                        //    ObserveCashAccount_ID,
+                        //    ExchangeCash_ID,
+                        //    -1,
+                        //    "AddAction_Window" , 2
+                        //);
+
+                        //MessageBox.Show("Three USD-expense transactions have been successfully recorded");
+
+
+
+
+
+                        int success = 0;
+                        if (FullAttachNames != null && FullAttachNames.Length > 0)
+                        {
+                            foreach (var FullAttachName in FullAttachNames)
+                            {
+                                if (Save_Attachments(FullAttachName, expenseId)) success++;
+                            }
+                        }
+
+                        if (FullAttachNames != null && FullAttachNames.Length > 0)
+                            MessageBox.Show("Saved successfully." + Environment.NewLine +
+                                            "Attachments: Succeeded " + FullAttachNames.Length.ToString() +
+                                            "/" + success.ToString(),
+                                            "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        else
+                            MessageBox.Show("Saved successfully.", "Confirmation",
+                                            MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+
+                        UserMode = false;
+                        Clear_Boxes();
+                        UserMode = true;
+
+                        if (TW != null)
+                            TW.Load_Data();
+
+                      
+                        return;
+                    }
+
                     int A_id = -1;
                     if (inserted_value == "Ex" || inserted_value == "M")
                     {
                         A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, inserted_value, amount, rate, ActionDate
                         , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                       , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window");
+                       , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window", -1);
                     }
                     else
                     {
                         A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, -1, false, false, false, inserted_value, amount, rate, ActionDate
                         , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                        , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window");
+                        , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", -1);
                     }
-                    int success = 0;
+
+                    int success2 = 0;
                     if (FullAttachNames != null && FullAttachNames.Length > 0)
                     {
                         foreach (var FullAttachName in FullAttachNames)
                         {
-                            if (Save_Attachments(FullAttachName, A_id)) success++;
+                            if (Save_Attachments(FullAttachName, A_id)) success2++;
                         }
                     }
 
                     if (FullAttachNames != null && FullAttachNames.Length > 0)
-                        MessageBox.Show("Saved successfully." + Environment.NewLine + "Attachments: Succeeded" + FullAttachNames.Length.ToString() + "/" + success.ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        MessageBox.Show("Saved successfully." + Environment.NewLine + "Attachments: Succeeded" + FullAttachNames.Length.ToString() + "/" + success2.ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     else
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     UserMode = false;
                     Clear_Boxes();
                     UserMode = true;
+
+                    if (TW != null)
+                        TW.Load_Data();
                 }
-
-                if (TW != null)
-                    TW.Load_Data();
-
             }
+
             catch (Exception ex)
             {
                 if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
@@ -3241,6 +3741,122 @@ namespace Financial_WPF_App
                 { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
+        }
+
+        private int GetUsdTillIdForCurrentAccount()
+        {
+            if (tills_dt == null || tills_dt.Rows.Count == 0)
+                return -1;
+
+            if (Account_ID <= 0)
+                return -1;
+
+           
+            var row = tills_dt.AsEnumerable()
+                .FirstOrDefault(r =>
+                    !r.IsNull("Tilltypes_Name") &&
+                    r["Tilltypes_Name"].ToString().Equals("usd", StringComparison.OrdinalIgnoreCase) &&
+                    !r.IsNull("Account_ID") &&
+                    Convert.ToInt32(r["Account_ID"]) == Account_ID
+                );
+
+            if (row == null)
+                return -1;
+
+            return Convert.ToInt32(row["Till_ID"]);
+        }
+
+
+        private void Bind_DestinationAccount_ComboBox()
+        {
+            try
+            {
+                DestinationAccount_comboBox.ItemsSource = null;
+
+                var destDrv = DestinationProject_comboBox.SelectedItem as DataRowView;
+                if (destDrv == null)
+                    return;
+
+                int subprojectID = 0;
+                if (DestinationProject_comboBox.SelectedValue != null)
+                    int.TryParse(DestinationProject_comboBox.SelectedValue.ToString(), out subprojectID);
+
+                string tillName = Get_Selected_Till_Name();
+                if (string.IsNullOrWhiteSpace(tillName))
+                    return;
+
+                string displayName = destDrv.Row.Table.Columns.Contains("Display_Name")
+                                     ? (destDrv["Display_Name"] == DBNull.Value ? "" : destDrv["Display_Name"].ToString())
+                                     : "";
+                string originalName = destDrv.Row.Table.Columns.Contains("Subproject_Name")
+                                     ? (destDrv["Subproject_Name"] == DBNull.Value ? "" : destDrv["Subproject_Name"].ToString())
+                                     : "";
+
+                bool destinationIsPersonal =
+                       string.Equals(displayName, "Personal", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(originalName, "Personal / Exchange", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(originalName, "Personal/Exchange", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(originalName, "Exchange / Personal", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(originalName, "Exchange/Personal", StringComparison.OrdinalIgnoreCase)
+                    || subprojectID == 0;
+
+                DataTable dt = Acc.Select_Accounts_By_Subproject_And_TillType(
+                    tillName,
+                    subprojectID,
+                    destinationIsPersonal,
+                    Account_ID
+                );
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    DestinationAccount_comboBox.ItemsSource = dt.DefaultView;
+                    DestinationAccount_comboBox.DisplayMemberPath = "Account_Name";
+                    DestinationAccount_comboBox.SelectedValuePath = "Account_ID";
+                }
+                else
+                {
+                    DestinationAccount_comboBox.ItemsSource = null;
+                }
+
+                bool enabled = DestinationAccount_comboBox.Items.Count > 0;
+                DestinationAccount_comboBox.IsEnabled = enabled;
+              
+                DestinationAccount_lable.IsEnabled = enabled;
+            }
+            catch (Exception ex)
+            {
+                DestinationAccount_comboBox.IsEnabled = false;
+                
+                DestinationAccount_lable.IsEnabled = false;
+                MessageBox.Show("Bind_DestinationAccount error: " + ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+        private string Get_Selected_Till_Name()
+        {
+            try
+            {
+                if (Till_comboBox.SelectedItem is DataRowView drv)
+                {
+                    if (drv.Row.Table.Columns.Contains("Type") && drv["Type"] != DBNull.Value)
+                        return drv["Type"].ToString();
+
+                    if (drv.Row.Table.Columns.Contains("Tilltypes_Name") && drv["Tilltypes_Name"] != DBNull.Value)
+                        return drv["Tilltypes_Name"].ToString();
+
+                    if (drv.Row.Table.Columns.Contains("Name") && drv["Name"] != DBNull.Value)
+                        return drv["Name"].ToString();
+                }
+            }
+            catch { }
+
+            return string.Empty;
         }
 
         private void Add_Attachment_btn_Click(object sender, RoutedEventArgs e)

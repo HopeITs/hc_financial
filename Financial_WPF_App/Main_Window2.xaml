@@ -400,7 +400,7 @@
                 <syncfusion:TabControlExt Grid.Row="1" Grid.Column="1" SelectionChanged="TabControl_SelectionChanged"  x:Name="main_tabControl"
                         BorderThickness="0,0,0,0" CloseButtonType="Both" CloseTabOnMiddleClick="True" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Rubik" CloseMode="Delete" EnableLabelEdit="False" mah:HeaderedControlHelper.HeaderFontFamily="Rubik" TabPanelBackground="{StaticResource LightGray1}" TabItemSelectedBorderBrush="{x:Null}" TabItemHoverBorderBrush="{x:Null}" BorderBrush="Black" TabItemHoverForeground="Gray" Margin="0,19,28,20" TabItemSelectedBackground="{StaticResource LightGray1}" Panel.ZIndex="-2" TabItemSelectedForeground="{x:Null}" OnCloseAllTabs="main_tabControl_OnCloseAllTabs" OnCloseOtherTabs="main_tabControl_OnCloseOtherTabs" OnCloseButtonClick="main_tabControl_OnCloseButtonClick" >
                     <syncfusion:TabControlExt.Background>
-                        <ImageBrush ImageSource="/Images/MainForm/Home_Background2_new.png" Stretch="UniformToFill">
+                        <ImageBrush ImageSource="/Images/MainForm/Home_Background2_new.jpg" Stretch="UniformToFill">
                             <ImageBrush.RelativeTransform>
                                 <TransformGroup>
                                     <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.05" ScaleY="1.05"/>
@@ -466,6 +466,7 @@
                                 <MenuItem Header="All Budget Lines Report" Click="All_Budget_Lines_Report_MenuItemAdv_Click"/>
                                 <MenuItem Header="Revenue/Exchange Report" Click="Revenue_Exchange_Report_MenuItemAdv_Click"/>
                                 <MenuItem Header="Fixed Assets Report" Click="Fixed_Assets_Report_MenuItemAdv_Click"/>
+                                <MenuItem Header="Download All Attachments" Click="Download_All_Attachments_Click"/>
                             </MenuItem>
 
                             <MenuItem x:Name="Approval_MenuItem" Header="Approval" Style="{StaticResource MenuItemStyle}" DataContext="{Binding Source={StaticResource MenuIcon4}}" VerticalAlignment="Bottom"/>

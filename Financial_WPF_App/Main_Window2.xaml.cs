@@ -272,7 +272,7 @@ namespace Financial_WPF_App
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            defaultBackground.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/MainForm/Home_Background2_new.png"));
+            defaultBackground.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/MainForm/Home_Background2_new.jpg"));
             defaultBackground.Stretch = Stretch.UniformToFill;
             TransformGroup transformGroup = new TransformGroup();
             ScaleTransform scaleTransform = new ScaleTransform
@@ -2210,6 +2210,25 @@ namespace Financial_WPF_App
             {
                 Fixed_Assets_Report_Window Fixed_Assets_Report_Window = new Fixed_Assets_Report_Window(this);
                 Create_tabItem(Fixed_Assets_Report_Window, "Fixed Assets Report", (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Download_All_Attachments_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Window _AttachmentWindow = new Attachments();
+                _AttachmentWindow.ShowDialog();
             }
             catch (Exception ex)
             {

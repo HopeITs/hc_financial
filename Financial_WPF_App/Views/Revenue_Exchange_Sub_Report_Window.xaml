@@ -34,12 +34,16 @@
                 <Border Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
                 </Border>
+                <Label x:Name="Incomeusd_Label" Content="Income(USD):" Style="{DynamicResource statistic_lableStyle}"/>
+                <Border Style="{StaticResource BorderStackPanelStyle}">
+                    <TextBlock x:Name="Incomeusd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                </Border>
                 <Label x:Name="Exchange_Label" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
                 <Border x:Name="Exchange_Border" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Exchange_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
                 </Border>
 
-                <Label x:Name="Exchpand_Label" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                <Label x:Name="Exchpand_Label" Content="Transfer:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border x:Name="Exchpand_Border" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Exchpand_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
                 </Border>
@@ -60,12 +64,16 @@
                 <Border Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Income_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
                 </Border>
+                <Label x:Name="Incomeusd_Label1" Content="Income(USD):" Style="{DynamicResource statistic_lableStyle}"/>
+                <Border Style="{StaticResource BorderStackPanelStyle}">
+                    <TextBlock x:Name="Incomeusd_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
+                </Border>
                 <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border x:Name="Exchange_Border1" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Exchange_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
                 </Border>
 
-                <Label x:Name="Exchpand_Label1" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
+                <Label x:Name="Exchpand_Label1" Content="Transfer:" Style="{DynamicResource statistic_lableStyle}" />
                 <Border x:Name="Exchpand_Border1" Style="{StaticResource BorderStackPanelStyle}">
                     <TextBlock x:Name="Exchpand_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
                 </Border>
@@ -233,12 +241,22 @@ PopupAnimation="Fade">
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
                         NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
+                <syncfusion:GridNumericColumn  x:Name="Incomeusd_DataGridColumn" HeaderText="Income(USD)"  MappingName="Incomeusd" 
+           NumberDecimalDigits="2"
+           NumberDecimalSeparator="."
+           NumberGroupSizes="3" 
+           NumberGroupSeparator=","/>
+                <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
                         NumberDecimalDigits="2"
                         NumberDecimalSeparator="."
                         NumberGroupSizes="3"
                         NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="Expand_DataGridColumn" HeaderText="Expenses"  MappingName="Expand" 
+                <syncfusion:GridNumericColumn  x:Name="Transfer_DataGridColumn" HeaderText="Transfer"  MappingName="Outcome"
+                       NumberDecimalDigits="2"
+                       NumberDecimalSeparator="."
+                       NumberGroupSizes="3" 
+                       NumberGroupSeparator=","/>
+                <syncfusion:GridNumericColumn  x:Name="Expand_DataGridColumn" HeaderText="Expenses"  MappingName="Expand" 
                      NumberDecimalDigits="2"
                      NumberDecimalSeparator="."
                      NumberGroupSizes="3"
@@ -297,11 +315,19 @@ PopupAnimation="Fade">
                                      Format="'{Sum:N2}'"
                                      MappingName="Income"
                                      SummaryType="DoubleAggregate" />
-                            <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
+                        <syncfusion:GridSummaryColumn Name="Total_I_USD"                                                      
+                                     Format="'{Sum:N2}'"
+                                     MappingName="Incomeusd"
+                                     SummaryType="DoubleAggregate" />
+                        <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
                                      Format="'{Sum:N2}'"
                                      MappingName="Exchange"
                                      SummaryType="DoubleAggregate" />
-                            <syncfusion:GridSummaryColumn Name="Total_E"                                                      
+                        <syncfusion:GridSummaryColumn Name="Total_O"                                                      
+             Format="'{Sum:N2}'"
+             MappingName="Outcome"
+             SummaryType="DoubleAggregate" />
+                        <syncfusion:GridSummaryColumn Name="Total_E"                                                      
                                      Format="'{Sum:N2}'"
                                      MappingName="Expand"
                                      SummaryType="DoubleAggregate" />
@@ -325,11 +351,19 @@ PopupAnimation="Fade">
                                         Format="'{Sum:N2}'"
                                         MappingName="Income"
                                         SummaryType="DoubleAggregate" />
-                            <syncfusion:GridSummaryColumn Name="Total_E"                                                      
+                        <syncfusion:GridSummaryColumn Name="Total_I_USD"                                                      
+                                        Format="'{Sum:N2}'"
+                                        MappingName="Incomeusd"
+                                        SummaryType="DoubleAggregate" />
+                        <syncfusion:GridSummaryColumn Name="Total_E"                                                      
                                               Format="'{Sum:N2}'"
                                               MappingName="Expand"
                                               SummaryType="DoubleAggregate" />
-                            <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
+                        <syncfusion:GridSummaryColumn Name="Total_O"                                                      
+Format="'{Sum:N2}'"
+MappingName="Outcome"
+SummaryType="DoubleAggregate" />
+                        <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
                                               Format="'{Sum:N2}'"
                                               MappingName="Exchange"
                                               SummaryType="DoubleAggregate" />

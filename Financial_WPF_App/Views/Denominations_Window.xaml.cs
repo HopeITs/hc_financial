@@ -32,7 +32,7 @@ namespace Financial_WPF_App.Views
         }
 
         private Denominations d;
-        private TillType t;
+        private Till t;
         private DataTable dt, denominations_dt, curruncy_dt;
         Main_Window_2 main_Window;
         private int ID = -1, Currency_ID = -1;
@@ -53,7 +53,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 d = new Denominations();
-                t = new TillType();
+                t = new Till();
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
@@ -97,7 +97,7 @@ namespace Financial_WPF_App.Views
 
         private void Load_Comboboxes_Data()
         {
-            curruncy_dt = t.SelectTillTypes();
+            curruncy_dt = t.Select_All_TillTypes_Currency();
             if (curruncy_dt != null && curruncy_dt.Rows.Count > 0)
             {
                 Currency_comboBox.ItemsSource = curruncy_dt.DefaultView;

@@ -189,6 +189,8 @@ PopupAnimation="Fade">
                         <syncfusion:GridTextColumn x:Name="Project_DataGridColumn" MappingName="Project_Name" HeaderText="Program"/>
                         <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="Subproject_Name" HeaderText="Project"/>
                         <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="Account_Name" HeaderText="Account"/>
+                        <syncfusion:GridTextColumn x:Name="MicroProjectID_DataGridColumn" MappingName="MicroProject_ID" HeaderText="MicroProject_ID"/>
+                        <syncfusion:GridTextColumn x:Name="Beneficiary_DataGridColumn" MappingName="Beneficiary" HeaderText="Beneficiary"/>
                         <syncfusion:GridTextColumn x:Name="Budget_DataGridColumn" HeaderText="Budget"  MappingName="Budget" />
                         <syncfusion:GridTextColumn x:Name="Donor_DataGridColumn" HeaderText="Donor"  MappingName="Donor" />
 
@@ -198,17 +200,22 @@ PopupAnimation="Fade">
                 CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
                         <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>
                         <syncfusion:GridTextColumn x:Name="ActionYear_DataGridColumn" MappingName="ActionYear" HeaderText="Operation Year"/>
-
-                        <syncfusion:GridNumericColumn  x:Name="Expand_DataGridColumn" HeaderText="Export/Expense"  MappingName="Expand"
+                        <syncfusion:GridTextColumn x:Name="Currency_DataGridColumn" MappingName="Currency" HeaderText="Currency"/>
+                        <syncfusion:GridNumericColumn  x:Name="Expensesyr_DataGridColumn" HeaderText="Expense(SYR)"  MappingName="ExpenseSYR"
                 NumberDecimalDigits="2"
                 NumberDecimalSeparator="."
                 NumberGroupSizes="3"
                 NumberGroupSeparator=","/>
-                        <syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
+                        <syncfusion:GridNumericColumn  x:Name="Expenseusd_DataGridColumn" HeaderText="Expense(USD)"  MappingName="ExpenseUSD"
+NumberDecimalDigits="2"
+NumberDecimalSeparator="."
+NumberGroupSizes="3"
+NumberGroupSeparator=","/>
+                        <!--<syncfusion:GridNumericColumn  x:Name="Exchange_DataGridColumn" HeaderText="Exchange"  MappingName="Exchange" 
                                           NumberDecimalDigits="2"
                                        NumberDecimalSeparator="."
                                        NumberGroupSizes="3"
-                                       NumberGroupSeparator=","/>
+                                       NumberGroupSeparator=","/>-->
 
                         <syncfusion:GridTextColumn x:Name="Note_DataGridColumn" HeaderText="Description (Ar)"  MappingName="Note"  />
                         <syncfusion:GridTextColumn x:Name="E_Note_DataGridColumn" HeaderText="Description (Eng)"  MappingName="E_Note"  />
@@ -262,7 +269,11 @@ PopupAnimation="Fade">
                             <syncfusion:GridSummaryRow.SummaryColumns>
                                 <syncfusion:GridSummaryColumn Name="Total_E"                                                      
                            Format="'{Sum:N2}'"
-                           MappingName="Expand"
+                           MappingName="ExpenseSYR"
+                           SummaryType="DoubleAggregate" />
+                                <syncfusion:GridSummaryColumn Name="Total_Exp_USD"                                                      
+                           Format="'{Sum:N2}'"
+                           MappingName="ExpenseUSD"
                            SummaryType="DoubleAggregate" />
                                 <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
                            Format="'{Sum:N2}'"
@@ -286,7 +297,11 @@ PopupAnimation="Fade">
                             <syncfusion:GridSummaryRow.SummaryColumns>
                                 <syncfusion:GridSummaryColumn Name="Total_E"                                                      
                                     Format="'{Sum:N2}'"
-                                    MappingName="Expand"
+                                    MappingName="ExpenseSYR"
+                                    SummaryType="DoubleAggregate" />
+                                <syncfusion:GridSummaryColumn Name="Total_Exp_USD"                                                      
+                                    Format="'{Sum:N2}'"
+                                    MappingName="ExpenseUSD"
                                     SummaryType="DoubleAggregate" />
                                 <syncfusion:GridSummaryColumn Name="Total_Ex"                                                      
                                     Format="'{Sum:N2}'"

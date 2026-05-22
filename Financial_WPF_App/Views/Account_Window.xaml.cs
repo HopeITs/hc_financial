@@ -98,7 +98,7 @@ namespace Financial_WPF_App
         private Models.Account a;
         private Till t; SubProject_Donor sd;
         private City c;
-        private TillType tt;
+        private Till tt;
         private DataTable dt, t_dt, sub_dt, donor_dt, p_dt, Amount_dt, PersonalAcc_dt, ExchangeAcc_dt, Cities_dt,TillType_dt;
         int IsClosed = 0;
         bool UserMode;
@@ -168,7 +168,7 @@ namespace Financial_WPF_App
                 t = new Till();
                 sd = new SubProject_Donor();
                 c = new City();
-                tt = new TillType();
+                tt = new Till();
                 Original_objDonorList = new List<SubProject_Donor>();
                 Original_SubProjectList = new List<Local_SubProject>();
                 Original_PersonalAccList = new List<Local_PersonalAcc>();
@@ -1154,7 +1154,7 @@ namespace Financial_WPF_App
                 }
 
                 Currency_comboBox.ItemsSource = null;
-                TillType_dt = tt.SelectTillTypes();
+                TillType_dt = tt.Select_All_TillTypes_Currency();
                 if(TillType_dt != null && TillType_dt.Rows.Count > 0)
                     {
                     Currency_comboBox.ItemsSource = TillType_dt.DefaultView;

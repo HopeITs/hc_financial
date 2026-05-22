@@ -106,17 +106,33 @@ namespace Financial_WPF_App.Views
             {
                 Exchange_Label.Visibility = Exchange_Border.Visibility = Exchpand_Label.Visibility = Exchpand_Border.Visibility = Net_lable.Visibility = Net_Border.Visibility =
                 Exchange_Label1.Visibility = Exchange_Border1.Visibility = Exchpand_Label1.Visibility = Exchpand_Border1.Visibility = Net_lable1.Visibility = Net_Border1.Visibility = Visibility.Collapsed;
-
-
+                
+                Income_Label.Content = "Income(SYR):";
+                Income_Label1.Content = "Income(SYR):";
                 foreach (var C in myDataGrid.Columns)
-                    if (C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Expenses"
+                    if (C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Expenses" || C.HeaderText.ToString() == "Transfer"
                         || C.HeaderText.ToString() == "Balance" || C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount"
                         || C.HeaderText.ToString() == "Value" || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchanged")
                     {
                         C.IsHidden = true;
                         Originally_HiddenColumns.Add(C.HeaderText.ToString());
                     }
+                var colIncome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Income");
+                if (colIncome != null)
+                    colIncome.HeaderText = "Income(SYR)";
 
+            }
+            if (TillType_Name.ToLower() == "eur" || TillType_Name.ToLower() == "usd")
+            {
+                Incomeusd_Label.Visibility = Incomeusd_Label1.Visibility = Incomeusd_textBlock.Visibility = Incomeusd_textBlock1.Visibility = Visibility.Collapsed;
+                Income_Label.Content = "Income:";
+                Income_Label1.Content = "Income:";
+                foreach (var C in myDataGrid.Columns)
+                    if (C.HeaderText.ToString() == "Income(USD)" || C.HeaderText.ToString() == "Expenses")
+                    {
+                        C.IsHidden = true;
+                        Originally_HiddenColumns.Add(C.HeaderText.ToString());
+                    }
             }
         }
 
@@ -185,8 +201,9 @@ namespace Financial_WPF_App.Views
         {
             int count = 0;
             double incomes = 0;
+            double incomesusd = 0;
             double Exchange = 0;
-            double expaned = 0;
+            double Transfer = 0;
             double Balance = 0;
 
             DataTable Filtered_dt = null;
@@ -209,15 +226,17 @@ namespace Financial_WPF_App.Views
                 count = Filtered_dt.Rows.Count;
 
                 incomes = Convert.ToDouble(Filtered_dt.Compute("Sum(Income)", string.Empty).ToString());
+                incomesusd = Convert.ToDouble(Filtered_dt.Compute("Sum(Incomeusd)", string.Empty).ToString());
                 Exchange = Convert.ToDouble(Filtered_dt.Compute("Sum(Exchange)", string.Empty).ToString());
-                expaned = Convert.ToDouble(Filtered_dt.Compute("Sum(Expand)", string.Empty).ToString());
+                Transfer = Convert.ToDouble(Filtered_dt.Compute("Sum(Outcome)", string.Empty).ToString());
                 Balance = Convert.ToDouble(Filtered_dt.Compute("Sum(Balance)", string.Empty).ToString());
             }
 
             All_textBlock.Text = count.ToString("N0");
             Income_textBlock.Text = Login.ConvertToDouble(incomes.ToString());
+            Incomeusd_textBlock.Text = Login.ConvertToDouble(incomesusd.ToString());
             Exchange_textBlock.Text = Login.ConvertToDouble(Exchange.ToString());
-            Exchpand_textBlock.Text = Login.ConvertToDouble(expaned.ToString());
+            Exchpand_textBlock.Text = Login.ConvertToDouble(Transfer.ToString());
             Net_textBlock.Text = Login.ConvertToDouble(Balance.ToString());
 
         }
@@ -230,8 +249,9 @@ namespace Financial_WPF_App.Views
                 Selected_textBlock.Text = count.ToString("N0");
 
                 double selected_incomes = 0;
+                double selected_incomesusd = 0;
                 double selected_Exchange = 0;
-                double selected_expaned = 0;
+                double selected_transfer = 0;
                 double selected_Balance = 0;
 
                 for (var i = 0; i < count; i++)
@@ -241,13 +261,17 @@ namespace Financial_WPF_App.Views
                     {
                         selected_incomes += double.Parse(SelectedDataRow["Income"].ToString());
                     }
+                    if (double.Parse(SelectedDataRow["Incomeusd"].ToString()) != 0)
+                    {
+                        selected_incomesusd += double.Parse(SelectedDataRow["Incomeusd"].ToString());
+                    }
                     else if (double.Parse(SelectedDataRow["Exchange"].ToString()) != 0)
                     {
                         selected_Exchange += double.Parse(SelectedDataRow["Exchange"].ToString());
                     }
-                    else if (double.Parse(SelectedDataRow["Expand"].ToString()) != 0)
+                    else if (double.Parse(SelectedDataRow["Outcome"].ToString()) != 0)
                     {
-                        selected_expaned += double.Parse(SelectedDataRow["Expand"].ToString());
+                        selected_transfer += double.Parse(SelectedDataRow["Outcome"].ToString());
                     }
 
                     if (double.Parse(SelectedDataRow["Balance"].ToString()) != 0)
@@ -256,8 +280,9 @@ namespace Financial_WPF_App.Views
                     }
                 }
                 Income_textBlock1.Text = selected_incomes.ToString("N2");
+                Incomeusd_textBlock1.Text = selected_incomesusd.ToString("N2");
                 Exchange_textBlock1.Text = selected_Exchange.ToString("N2");
-                Exchpand_textBlock1.Text = selected_expaned.ToString("N2");
+                Exchpand_textBlock1.Text = selected_transfer.ToString("N2");
                 Net_textBlock1.Text = selected_Balance.ToString("N2");
             }
             catch (Exception ex)

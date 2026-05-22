@@ -29,6 +29,8 @@ namespace Financial_WPF_App.Helper
         string _Partners = "";
         int _MicroProject_ID = -1;
         string _Project_Name = "";
+        string _Currency = "";
+        Double _Exchange_Rate = 0;
         Double _Amount = 0;
         string _Date = "";
         string _FirstPaymentDate = "";
@@ -121,6 +123,8 @@ namespace Financial_WPF_App.Helper
             _Partners = "";
             _MicroProject_ID = -1;
             _Project_Name = "";
+            _Currency = "";
+            _Exchange_Rate = 0;
             _Amount = 0;
             _Date = "";
             _FirstPaymentDate = "";
@@ -236,6 +240,30 @@ namespace Financial_WPF_App.Helper
             else if (e.Column.ColumnName == "Mobile number")
             {
                 _Mobile = e.ProposedValue.ToString();
+            }
+            else if (e.Column.ColumnName == "Currency")
+            {
+                if (string.IsNullOrWhiteSpace(e.ProposedValue.ToString()))
+                {
+                    Login.MultiBeneficiary_AnyError = true;
+                    e.Row.SetColumnError(e.Column.ColumnName, "This cell can not be empty.");
+                    e.Row.RowError = "There are errors in this row.";
+                }
+                else
+                {
+                    _Currency = e.ProposedValue.ToString();
+                }
+            }
+            else if (e.Column.ColumnName == "Exchange Rate")
+            {
+                bool isNumber = Double.TryParse(e.ProposedValue.ToString(), out _Exchange_Rate);
+
+                if (!isNumber)
+                {
+                    Login.MultiBeneficiary_AnyError = true;
+                    e.Row.SetColumnError(e.Column.ColumnName, "This column only accepts numbers.");
+                    e.Row.RowError = "There are errors in this row.";
+                }
             }
             else if (e.Column.ColumnName == "Loan amount")
             {
@@ -507,6 +535,8 @@ namespace Financial_WPF_App.Helper
             Login.MultiBeneficiary_sc.Parameters.AddWithValue("@Partners" + k, _Partners);
             Login.MultiBeneficiary_sc.Parameters.AddWithValue("@MicroProject_ID" + k, _MicroProject_ID);
             Login.MultiBeneficiary_sc.Parameters.AddWithValue("@Project_Name" + k, _Project_Name);
+            Login.MultiBeneficiary_sc.Parameters.AddWithValue("@Currency" + k, _Currency);
+            Login.MultiBeneficiary_sc.Parameters.AddWithValue("@Exchange_Rate" + k, _Exchange_Rate);
             Login.MultiBeneficiary_sc.Parameters.AddWithValue("@Amount" + k, _Amount);
             if (_Date == "")
             {
@@ -541,8 +571,8 @@ namespace Financial_WPF_App.Helper
 
 
             temp_query += @"INSERT INTO `beneficiary`(`FirstName`, `LastName`, `FatherName`, `NationalNumber`, `Mobile`, `Partners`,
-                            `MicroProject_ID`, `Project_Name`, `Amount`, `Date`,`FirstPaymentDate`, `ToReturn_Amount`, `payment`, `Payment_Interval`, `Notes`, `ReceiptNumber`, `OrderNumber`, `Account_ID`)
-                            VALUES(@FirstName" + k + ", @LastName" + k + ", @FatherName" + k + ", @NationalNumber" + k + ", @Mobile" + k + ", @Partners" + k + ", @MicroProject_ID" + k + ", @Project_Name" + k + "," +
+                            `MicroProject_ID`, `Project_Name`,`currency_tilltype_id`,`ExchangeRate`, `Amount`, `Date`,`FirstPaymentDate`, `ToReturn_Amount`, `payment`, `Payment_Interval`, `Notes`, `ReceiptNumber`, `OrderNumber`, `Account_ID`)
+                            VALUES(@FirstName" + k + ", @LastName" + k + ", @FatherName" + k + ", @NationalNumber" + k + ", @Mobile" + k + ", @Partners" + k + ", @MicroProject_ID" + k + ", @Project_Name" + k + ",(SELECT id FROM tilltypes WHERE UPPER(Name)=UPPER(@Currency" + k + ") LIMIT 1) ,@Exchange_Rate" + k + " , " +
                             "@Amount" + k + ", @Date" + k + ", @FirstPaymentDate" + k + ", @ToReturn_Amount" + k + ", @payment" + k + ", @Payment_Interval" + k + "," +
                             "@Notes" + k + ", @ReceiptNumber" + k + ", @OrderNumber" + k + ", @Account_ID" + k + ");";
 

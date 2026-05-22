@@ -75,10 +75,11 @@ namespace Financial_WPF_App.Views
                 }
 
                 myExpander_Collapsed(this, new RoutedEventArgs());
-                myExpander.IsExpanded = false;
+                //myExpander.IsExpanded = false;
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
+                
                 return true;
             }
             catch (Exception ex)
@@ -108,9 +109,9 @@ namespace Financial_WPF_App.Views
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
 
-            Cash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
-            Cash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
-            Cash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
+            //Cash_DataGrid.HeaderStyle = (Style)Application.Current.Resources[HeaderStyle_Name];
+            //Cash_DataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
+            //Cash_DataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
 
         private void Load_Data()
@@ -118,6 +119,7 @@ namespace Financial_WPF_App.Views
             Set_privileges();
             Show_Hide();
             Fill_ComboBoxes();
+            
             //LoadGrid();
         }
 
@@ -168,14 +170,36 @@ namespace Financial_WPF_App.Views
                 }
 
 
-                Amount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amount)", string.Empty).ToString());
-                ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amount)", string.Empty).ToString());
+                Amount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amountsyr)", string.Empty).ToString());
+                ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amountsyr)", string.Empty).ToString());
                 PaidAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamount)", string.Empty).ToString());
+                ReturnedAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(returnedamount)", string.Empty).ToString());
+
+                Amountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amountusd)", string.Empty).ToString());
+                ToPayAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amountusd)", string.Empty).ToString());
+                PaidAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamountusd)", string.Empty).ToString());
+                ReturnedAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(returnedamountusd)", string.Empty).ToString());
+
                 if (PaidAmount_textBlock.Text == "")
                 {
                     PaidAmount_textBlock.Text = "0.00";
                 }
+                if (ReturnedAmount_textBlock.Text == "")
+                {
+                    ReturnedAmount_textBlock.Text = "0.00";
+                }
+                if (PaidAmountusd_textBlock.Text == "")
+                {
+                    PaidAmountusd_textBlock.Text = "0.00";
+                }
+                if (ReturnedAmountusd_textBlock.Text == "")
+                {
+                    ReturnedAmountusd_textBlock.Text = "0.00";
+                }
+
+
                 RemainingAmount_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmount_textBlock.Text) - double.Parse(PaidAmount_textBlock.Text)).ToString());
+                RemainingAmountusd_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmountusd_textBlock.Text) - double.Parse(PaidAmountusd_textBlock.Text)).ToString());
             }
         }
         private void Set_privileges()
@@ -330,18 +354,20 @@ namespace Financial_WPF_App.Views
 
             Bind_Show_Hide_Menu();
 
-            cash_dt = p.Select_Cash_Payments(SubProject_ID);
-            if (cash_dt != null && cash_dt.Rows.Count > 0)
-            {
-                Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
+            UpdateAllCounters();
 
-                Cash_Export_btn.CommandTarget = Cash_DataGrid;
+            //cash_dt = p.Select_Cash_Payments(SubProject_ID);
+            //if (cash_dt != null && cash_dt.Rows.Count > 0)
+            //{
+            //    Cash_DataGrid.ItemsSource = cash_dt.DefaultView;
 
-            }
-            else
-            {
-                Cash_DataGrid.ItemsSource = null;
-            }
+            //    Cash_Export_btn.CommandTarget = Cash_DataGrid;
+
+            //}
+            //else
+            //{
+            //    Cash_DataGrid.ItemsSource = null;
+            //}
         }
 
         private void Set_myDataGrid_ItemSource()
@@ -380,6 +406,7 @@ namespace Financial_WPF_App.Views
                     if (HOffset != 0)
                         this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
                 }
+                UpdateAllCounters();
             }
             catch (Exception ex)
             {
@@ -590,6 +617,7 @@ namespace Financial_WPF_App.Views
                     Action_ID = -1;
                     Approved_Action = false;
                     LoadGrid();
+                    
                 }
             }
             catch (Exception ex)
@@ -640,18 +668,18 @@ namespace Financial_WPF_App.Views
 
         private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
-                All_textBlock.MinWidth = Selected_textBlock.ActualWidth;
+            if (Allusd_textBlock.ActualWidth > All_textBlock.ActualWidth)
+                All_textBlock.MinWidth = Allusd_textBlock.ActualWidth;
             else
-                Selected_textBlock.MinWidth = All_textBlock.ActualWidth;
+                Allusd_textBlock.MinWidth = All_textBlock.ActualWidth;
         }
 
         private void Amount_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Amount_textBlock.ActualWidth > PaidAmount_textBlock1.ActualWidth)
-                PaidAmount_textBlock1.MinWidth = Amount_textBlock.ActualWidth;
+            if (Amount_textBlock.ActualWidth > Amountusd_textBlock.ActualWidth)
+                Amount_textBlock.MinWidth = Amount_textBlock.ActualWidth;
             else
-                Amount_textBlock.MinWidth = PaidAmount_textBlock1.ActualWidth;
+                Amount_textBlock.MinWidth = Amount_textBlock.ActualWidth;
         }
 
         private void Cash_DataGrid_AutoGeneratingColumn(object sender, AutoGeneratingColumnArgs e)
@@ -685,30 +713,19 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void Cash_DataGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Cash_DataGrid.View != null)
-            {
-                Cash_Export_btn.CommandTarget = Cash_DataGrid;
-            }
-        }
+        //private void Cash_DataGrid_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    if (Cash_DataGrid.View != null)
+        //    {
+        //        Cash_Export_btn.CommandTarget = Cash_DataGrid;
+        //    }
+        //}
 
         private void myExpander_Expanded(object sender, RoutedEventArgs e)
         {
             try
             {
-                myExpander.Width = double.NaN;
-                //if (_currentWindowState == WindowState.Normal && myExpander.IsExpanded)
-                //{
-                //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
-                //}
-                //else
-                //{
-                //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
-                //}
-
+                //myExpander.Width = double.NaN;
             }
             catch (Exception ex)
             {
@@ -726,17 +743,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                myExpander.Width = 30;
-                //if (_currentWindowState == WindowState.Normal && !myExpander.IsExpanded)
-                //{
-                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(8, GridUnitType.Star);
-                //}
-                //else if (_currentWindowState == WindowState.Maximized)
-                //{
-                //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
-                //}
+                //myExpander.Width = 30;
 
             }
             catch (Exception ex)
@@ -753,27 +760,27 @@ namespace Financial_WPF_App.Views
 
         private void OnMainWindowStateChanged(WindowState newState)
         {
-            _currentWindowState = newState;
-            if (newState == WindowState.Normal && myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(30, GridUnitType.Star);
-                Expander_col.Width = new GridLength(50, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Maximized && myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(50, GridUnitType.Star);
-                Expander_col.Width = new GridLength(30, GridUnitType.Star);
-            }
-            else if (newState == WindowState.Normal && !myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(7, GridUnitType.Star);
-            }
-            else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
-            {
-                Grid_col.Width = new GridLength(130, GridUnitType.Star);
-                Expander_col.Width = new GridLength(6, GridUnitType.Star);
-            }
+            //_currentWindowState = newState;
+            //if (newState == WindowState.Normal && myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(30, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(50, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Maximized && myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(50, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(30, GridUnitType.Star);
+            //}
+            //else if (newState == WindowState.Normal && !myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(7, GridUnitType.Star);
+            //}
+            //else if (_currentWindowState == WindowState.Maximized && !myExpander.IsExpanded)
+            //{
+            //    Grid_col.Width = new GridLength(130, GridUnitType.Star);
+            //    Expander_col.Width = new GridLength(6, GridUnitType.Star);
+            //}
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
@@ -801,13 +808,41 @@ namespace Financial_WPF_App.Views
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
 
-                //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
-
-                int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
 
                 Export_btn.CommandTarget = myDataGrid;
+               
             }
+            
+        }
+
+
+        private void UpdateAllCounters()
+        {
+            if (myDataGrid.View == null)
+                return;
+
+           
+            All_textBlock.Text = myDataGrid.View.Records.Count().ToString("N0");
+               
+
+            int allUSD = 0;
+            int allSYR = 0;
+
+            foreach (var record in myDataGrid.View.Records)
+            {
+                if (record.Data is DataRowView rowView)
+                {
+                    string currency = rowView["Currency"]?.ToString();
+
+                    if (string.Equals(currency, "USD", StringComparison.OrdinalIgnoreCase))
+                        allUSD++;
+                    else
+                        allSYR++;
+                }
+            }
+
+            Allusd_textBlock.Text = allUSD.ToString("N0");
+            All_textBlock.Text = allSYR.ToString("N0");
         }
 
         private void myDataGrid_FilterChanged(object sender, GridFilterEventArgs e)
@@ -1039,35 +1074,7 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
-        {
-            try
-            {
-                int count = myDataGrid.SelectedItems.Count;
-                Selected_textBlock.Text = count.ToString("N0");
-
-                double selected_amount = 0;
-                for (var i = 0; i < count; i++)
-                {
-                    DataRowView SelectedDataRow = (DataRowView)myDataGrid.SelectedItems[i];
-                    if (double.Parse(SelectedDataRow["Income"].ToString()) != 0)
-                    {
-                        selected_amount += double.Parse(SelectedDataRow["Income"].ToString());
-                    }
-                }
-                PaidAmount_textBlock1.Text = selected_amount.ToString("N2");
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
+        
 
         private void Bind_Show_Hide_Menu()
         {
@@ -1201,6 +1208,25 @@ namespace Financial_WPF_App.Views
                 }
 
                 MircoProject_ID_autoSuggestionUserControl.CloseAutoSuggestionBox();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        private void Balances_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Till_Balances _Window = new Till_Balances(SubProject_ID);
+                _Window.ShowDialog();
             }
             catch (Exception ex)
             {

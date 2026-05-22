@@ -119,6 +119,8 @@ namespace Financial_WPF_App.Views
 
             dt.Columns.Add("Micro Project number");
             dt.Columns.Add("Payment amount");
+            dt.Columns.Add("Returned amount");
+            dt.Columns.Add("Currency");
             dt.Columns.Add("Description");
             dt.Columns.Add("Cash till");
             dt.Columns.Add("Date");
@@ -207,6 +209,7 @@ namespace Financial_WPF_App.Views
                     if (Login.MultiPayments_List.Count > 0)
                     {
 
+                        copyPasteHandler?.AppendDeferredRegenerationQueries();
                         p.Insert_Multi_payments();
 
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);

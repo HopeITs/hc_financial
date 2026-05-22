@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Financial_WPF_App.Models
 {
@@ -484,6 +486,229 @@ namespace Financial_WPF_App.Models
 
             return Account_ID;
         }
+
+        public DataTable get_attachments(List<int> Account_IDs, int? Action_ID, int? Beneficiary_ID, string FromDate, string ToDate)
+        {
+            string query = "";
+            var accParams = Account_IDs
+            .Select((id, i) => $"@acc{i}")
+            .ToArray();
+            query = @"SELECT action_attachments.id, action_attachments.action_id, action_attachments.attach_name
+                      FROM `action_attachments` 
+                      LEFT JOIN action on action.ID = action_attachments.action_id
+                      LEFT JOIN till on till.ID = action.Till_ID
+                      LEFT JOIN account on account.ID = till.Account_ID where 1";
+
+            if (Account_IDs != null && Account_IDs.Count > 0)
+            {
+                query += $" AND account.ID IN ({string.Join(",", accParams)})";
+
+                
+            }
+            if (FromDate != "" && ToDate != "" && Action_ID == 0) {
+                query += " AND date(action.ActionDate) BETWEEN @FromDate and @ToDate ";
+            }
+            if (Action_ID != 0)
+            {
+                query += " and action_id = @Action_ID;";
+            }
+            if (Beneficiary_ID != -1 && Beneficiary_ID != 0)
+            {
+                query = " SELECT * FROM beneficiary_attachments WHERE beneficiary_id = @beneficiary_id;";
+            }
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                
+                for (int i = 0; i < Account_IDs.Count; i++)
+                    sc.Parameters.AddWithValue(accParams[i], Account_IDs[i]);
+                sc.Parameters.AddWithValue("@FromDate", FromDate);
+                sc.Parameters.AddWithValue("@ToDate", ToDate);
+                sc.Parameters.AddWithValue("@Action_ID", Action_ID);
+                sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        public DataTable get_user_cities(int UserId,string UserRole)
+        {
+            string query = "";
+            if(UserRole != "Head Office" && UserRole != "Financial Manager")
+            {
+                query = @"SELECT DISTINCT c.id, c.name
+                            FROM city c
+                            JOIN subproject sp ON sp.city_id = c.id
+                            JOIN user_accounts ua ON ua.subproject_id = sp.id
+                            WHERE ua.user_id = @UserId;";
+            }
+            else
+            {
+                query = @"SELECT DISTINCT c.id, c.name from city c;";
+            }
+
+
+                DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@UserId", UserId);
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        public DataTable get_user_projects(int UserId, int CityId, string UserRole)
+        {
+            string query = "";
+            if (UserRole != "Head Office" && UserRole != "Financial Manager")
+            {
+                query = @"SELECT DISTINCT sp.id, sp.name
+                            FROM subproject sp
+                            JOIN user_accounts ua ON ua.subproject_id = sp.id
+                            WHERE ua.user_id = @UserId
+                            AND sp.city_id = @CityId;";
+            }
+            else
+            {
+                query = @"SELECT DISTINCT sp.id, sp.name
+                  FROM subproject sp
+                  WHERE sp.city_id = @CityId";
+            }
+
+                DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@UserId", UserId);
+                sc.Parameters.AddWithValue("@CityId", CityId);
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        public DataTable get_user_accounts(int UserId,int SubProjectId , string UserRole)
+        {
+            string query = "";
+            if (UserRole != "Head Office" && UserRole != "Financial Manager")
+            {
+                query = @"SELECT DISTINCT a.id, a.name
+                            FROM account a
+                            JOIN user_accounts ua ON ua.account_id = a.id
+                            WHERE ua.user_id = @UserId
+                            AND ua.subproject_id = @SubProjectId;";
+            }
+            else {
+                query = @"SELECT DISTINCT a.id, a.name
+                  FROM account a
+                  WHERE a.subproject_id = @SubProjectId;";
+            }
+
+                DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@UserId", UserId);
+                sc.Parameters.AddWithValue("@SubProjectId", SubProjectId);
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        public DataTable Select_Accounts_By_Subproject_And_TillType(
+            string tillName,
+            int subprojectId,
+            bool destinationIsPersonal,
+            int? excludeAccountId = null
+        )
+        {
+            string excludeClause = excludeAccountId.HasValue ? " AND a.ID <> @ExcludeAccountID " : "";
+
+            
+            string wherePersonal = @"
+              TRIM(LOWER(tt.Name)) = @TillName
+          AND atp.id = 2
+          AND (a.IsClosed = 0 OR a.IsClosed IS NULL)";
+
+           
+            string whereProject = @"
+              TRIM(LOWER(tt.Name)) = @TillName
+          AND atp.id = 1
+          AND a.SubProject_ID = @Subproject_ID
+          AND (a.IsClosed = 0 OR a.IsClosed IS NULL)";
+
+            string sql = @"
+            SELECT DISTINCT 
+                   a.ID   AS Account_ID,
+                   a.Name AS Account_Name
+            FROM account a
+            INNER JOIN accounttype atp ON a.Accounttype_id = atp.id
+            INNER JOIN till t          ON t.Account_ID     = a.ID
+            INNER JOIN tilltypes tt    ON tt.ID            = t.Type_ID
+            WHERE " + (destinationIsPersonal ? wherePersonal : whereProject) + excludeClause + @"
+            ORDER BY a.Name;";
+
+            var dt = new DataTable();
+
+            if (Login.BuildConnection())
+            {
+                using (var cmd = new MySqlCommand(sql, Login.MyConn))
+                {
+                    cmd.Parameters.AddWithValue("@TillName", (tillName ?? "").Trim().ToLower());
+                    cmd.Parameters.AddWithValue("@Subproject_ID", subprojectId);
+                    if (excludeAccountId.HasValue)
+                        cmd.Parameters.AddWithValue("@ExcludeAccountID", excludeAccountId.Value);
+
+                    cmd.CommandTimeout = 120;
+                    using (var da = new MySqlDataAdapter(cmd))
+                        da.Fill(dt);
+                }
+                Login.CloseAndClearConnection();
+            }
+
+            return dt;
+        }
+
+
+
+
+
+
+
+
 
         public int Insert_Administrative_Account(int Account_ID, List<string> Add_donors, List<string> Auto_Tills, string Form_Name)
         {

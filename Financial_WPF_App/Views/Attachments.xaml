@@ -4,24 +4,86 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Financial_WPF_App"
+        xmlns:helper="clr-namespace:Financial_WPF_App.helper"
         xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d" Tag="Attachments Window"
-        Title="Attachments" Style="{StaticResource smallWindowPopupStyle}" WindowStartupLocation="CenterScreen">
+        Title="Attachments" Style="{StaticResource smallWindowPopupStyle}" Width="600" WindowStartupLocation="CenterScreen">
     <Grid  Margin="5">
 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
+                <RowDefinition x:Name="FilterRow1" Height="Auto"/>
+                <RowDefinition x:Name="FilterRow2" Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="355*"/>
             </Grid.RowDefinitions>
             <DockPanel Background="{StaticResource LightGray1}" DockPanel.Dock="Top" MouseDown="TitleBar_MouseDown" Grid.Row="0">
                 <local:WindowControlBar_Popup x:Name="ControlBar"/>
             </DockPanel>
-            <DockPanel Grid.Row="1">
+            <WrapPanel x:Name="FilterPane11" Background="{StaticResource LightGray1}" DockPanel.Dock="Top" Grid.Row="1" Orientation="Vertical" Width="Auto" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Height="50">
+                    <Label x:Name="City_Label" Style="{DynamicResource statistic_lableStyle}" Content="City:" Margin="0,2,1,2" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70"  />
+                    <ComboBox Grid.Row="0" Grid.Column="5" x:Name="City_comboBox" TabIndex="2" Style="{StaticResource ActionComboboxStyle}"
+DisplayMemberPath="City_Name" SelectedValuePath="City_ID" 
+HorizontalContentAlignment="Left" 
+VerticalAlignment="Stretch" SelectionChanged="City_comboBox_SelectionChanged" >
+
+                    </ComboBox>
+
+                    <Label x:Name="Project_Label" Style="{DynamicResource statistic_lableStyle}"  Content="Project:"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70" Margin="14,2,1,2"  />
+                    <ComboBox Grid.Row="0" x:Name="Subproject_comboBox" TabIndex="1" Grid.Column="2" DisplayMemberPath="Subproject_Name" SelectedValuePath="Subproject_ID" 
+    Style="{DynamicResource ActionComboboxStyle}" IsEnabled="False"
+    SelectionChanged="Subproject_comboBox_SelectionChanged" >
+                        <i:Interaction.Behaviors>
+                            <helper:MouseClickComboBoxBehavior />
+                        </i:Interaction.Behaviors>
+                    </ComboBox>
+
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="50">
+
+                    <Label x:Name="Account_Label" Style="{DynamicResource statistic_lableStyle}" Content="Account:" Margin="0,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70" />
+                    <ComboBox Grid.Row="0" Grid.Column="5" x:Name="Account_comboBox" TabIndex="2" Style="{StaticResource ActionComboboxStyle}"
+                          IsEnabled="False"  PreviewTextInput="comboBox_PreviewTextInput" PreviewKeyDown="comboBox_PreviewKeyDown" 
+                        HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Width="437">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox x:Name="Account_comboBox" Width="427" 
+                    Click="Account_Checkbox_Item_Clicked"
+                    Style="{DynamicResource CheckBoxStyle}"
+                    Content="{Binding AccName}" 
+                    IsChecked="{Binding Acc_Check_Status}" 
+                    CommandParameter="{Binding AccID}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </WrapPanel>
+            <WrapPanel x:Name="FilterPanel2" Background="{StaticResource LightGray1}" DockPanel.Dock="Top" Grid.Row="2" Orientation="Horizontal" Width="Auto" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Height="50">
+
+                    <Label x:Name="ActionDate_Label_Copy" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="0,2,1,2" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70"  />
+
+                    <DatePicker SelectedDateChanged="ValidateDates" Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker"  Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175" Height="30"/>
+
+                    <Label x:Name="ActionDate_Label_Copy1" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="10,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" Width="70" />
+
+                    <DatePicker SelectedDateChanged="ValidateDates" Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175" Height="30"/>
+
+                    <Button Style="{DynamicResource AddButtonStyle}" x:Name="Apply_btn" Click="Apply_btn_Click" TabIndex="20"  Margin="2,0,0,0" VerticalAlignment="Center" Height="25" Width="55" Cursor="Hand" >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/apply.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" />
+            </WrapPanel>
+            <DockPanel Grid.Row="3">
                 <StackPanel Orientation="Horizontal"  Height="40">
-                    <Image Source="/Images/Icons/attachement.png" Width="15" Height="15"/>
+                    <Image Source="/Images/Icons/attachement.png" Width="15" Height="15" Margin="5,0,0,0"/>
                     <Label  Style="{DynamicResource statistic_lableStyle}" FontSize="11" Content="Attachments:" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <Label x:Name="All_Label" FontSize="11"  Style="{DynamicResource statistic_lableStyle}" Content="0" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                 </StackPanel>
@@ -37,25 +99,54 @@ x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" Verti
                             <ImageBrush ImageSource="/Images/Icons/add_attach.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
+                    <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Download Selected Attachments" Visibility="Hidden" ToolTipService.InitialShowDelay="100" Cursor="Hand"
+x:Name="DownloadAttachments_btn" TabIndex="15" Click="DownloadSelected_Button_Click" VerticalAlignment="Stretch" Height="23" Width="5" Margin="5,0,1,0">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Buttons/Download.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
                 </StackPanel>
             </DockPanel>
-
-
-            <syncfusion:SfDataGrid x:Name="myDataGrid"                                           
+            <syncfusion:SfDataGrid x:Name="myDataGrid"                              
       Style="{DynamicResource SfDataGrid_body}"
       HeaderStyle="{DynamicResource SfDataGrid_header}"
       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
       AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-       Grid.Row="2" Margin="0,0,0,0" Loaded="myDataGrid_Loaded" >
+       Grid.Row="4" Margin="0,0,0,0" Loaded="myDataGrid_Loaded" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged">
 
                 <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridCheckBoxColumn x:Name="Selected_DataGridColumn" HeaderText="Select" Width="50" MappingName="IsSelected" AllowEditing="True" AllowFiltering="False" AllowGrouping="False">
+                        <syncfusion:GridCheckBoxColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <CheckBox x:Name="chkHeader" Loaded="chkHeader_Loaded" Click="chkHeader_Click"/>
+                            </DataTemplate>
+                        </syncfusion:GridCheckBoxColumn.HeaderTemplate>
+                        <syncfusion:GridCheckBoxColumn.CellStyle>
+                            <Style>
+                                <Style.Resources>
+                                    <Style TargetType="CheckBox">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelected}" Value="1">
+                                                <Setter Property="Background" Value="{StaticResource LightGray1}" />
+                                                <Setter Property="FlowDirection" Value="LeftToRight" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding IsSelected}" Value="0">
+                                                <Setter Property="Background" Value="Transparent" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Style.Resources>
+                            </Style>
+                        </syncfusion:GridCheckBoxColumn.CellStyle>
+                    </syncfusion:GridCheckBoxColumn>
                     <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="id"  MappingName="id" IsHidden="True"/>
-                    <syncfusion:GridTextColumn x:Name="ActionID_DataGridColumn" HeaderText="action_id"  MappingName="action_id" IsHidden="True"/>
+                    <syncfusion:GridTextColumn x:Name="ActionID_DataGridColumn" HeaderText="Operation ID"  MappingName="action_id"/>
 
                     <syncfusion:GridTextColumn x:Name="Attachment_DataGridColumn"  HeaderText="Attachment"  MappingName="attach_name" />
 
-                    <syncfusion:GridTemplateColumn x:Name="View_DataGridColumn" MappingName =" " HeaderText="View" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="View_DataGridColumn" MappingName =" " Width="50" HeaderText="View" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource View_Style}" Click="View_Button_Click"/>
@@ -63,7 +154,7 @@ x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" Verti
                         </syncfusion:GridTemplateColumn.CellTemplate>
                     </syncfusion:GridTemplateColumn>
 
-                    <syncfusion:GridTemplateColumn x:Name="Download_DataGridColumn" MappingName =" " HeaderText="Download" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Download_DataGridColumn" MappingName =" " Width="100" HeaderText="Download" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Download_Style}" Click="Download_Button_Click"/>
@@ -71,7 +162,7 @@ x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" Verti
                         </syncfusion:GridTemplateColumn.CellTemplate>
                     </syncfusion:GridTemplateColumn>
 
-                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" MappingName =" " HeaderText="Delete" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
+                    <syncfusion:GridTemplateColumn x:Name="Delete_DataGridColumn" MappingName =" " HeaderText="Delete" Width="100" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
                         <syncfusion:GridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource Delete_Style}" Click="DeleteButton_Click"/>
@@ -80,11 +171,6 @@ x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" Verti
                     </syncfusion:GridTemplateColumn>
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-
-
-
-
         </Grid>
-
     </Grid>
 </Window>

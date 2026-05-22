@@ -36,7 +36,7 @@
                 <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
                     <WrapPanel  Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="61" Margin="10,0,13,0"/>
+                            <Label Content="All(SYR):" Style="{DynamicResource statistic_lableStyle}" Width="70" Margin="10,0,13,0"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
                                 <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
                             </Border>
@@ -69,6 +69,15 @@
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount returned:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ReturnedAmount_textBlock"
+Text="0.00"
+Style="{DynamicResource statistic_textBlockStyle}" 
+OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
                             <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
                                 <TextBlock x:Name="RemainingAmount_textBlock"
@@ -83,19 +92,56 @@
                 <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1">
                     <WrapPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Label Width="81" Content="All(USD):" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                                <TextBlock x:Name="Allusd_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
-                            <Border Style="{StaticResource BorderStackPanelStyle}" >
-                                <TextBlock x:Name="PaidAmount_textBlock1" Text="0.00" 
-                        Style="{DynamicResource statistic_textBlockStyle}" FontSize="15" SizeChanged="Amount_textBlock_SizeChanged" />
+                            <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="Amountusd_textBlock" Text="0.00" 
+                    Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Amount_textBlock_SizeChanged" />
                             </Border>
                         </StackPanel>
 
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ToPayAmountusd_textBlock"
+                        Text="0.00"
+                        Style="{DynamicResource statistic_textBlockStyle}" 
+                        OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="PaidAmountusd_textBlock"
+                    Text="0.00"
+                    Style="{DynamicResource statistic_textBlockStyle}" 
+                    OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Amount returned:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ReturnedAmountusd_textBlock"
+                                    Text="0.00"
+                                    Style="{DynamicResource statistic_textBlockStyle}" 
+                                    OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
+                                <TextBlock x:Name="RemainingAmountusd_textBlock"
+                        Text="0.00"
+                        Style="{DynamicResource statistic_textBlockStyle}" 
+                        OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
                     </WrapPanel>
                 </Border>
                 <Grid Grid.Row="2" Margin="0,5,0,5">
@@ -110,33 +156,37 @@
                         x:Name="MircoProject_ID_autoSuggestionUserControl" 
                         LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus"
                          VerticalAlignment="Center" Width="175" Margin="14,0,6,0" />
-                           
-                                <Label x:Name="ActionDate_Label" Style="{DynamicResource statistic_lableStyle}" Content="Operation date:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                        
-                                <Label x:Name="ActionDate_Label_Copy" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="2,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                          
-                                <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker"  Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175" Height="30"/>
-                          
-                                <Label x:Name="ActionDate_Label_Copy1" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
-                         
-                                <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
-                          
-                                <Button ToolTip="Show Payments" ToolTipService.InitialShowDelay="100"
+
+                            <Label x:Name="ActionDate_Label" Style="{DynamicResource statistic_lableStyle}" Content="Operation date:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+
+                            <Label x:Name="ActionDate_Label_Copy" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="2,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+
+                            <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker"  Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175" Height="30"/>
+
+                            <Label x:Name="ActionDate_Label_Copy1" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="14,2,1,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right"  />
+
+                            <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="175"/>
+
+                            <Button ToolTip="Show Payments" ToolTipService.InitialShowDelay="100"
                             Style="{DynamicResource AddButtonStyle}"
-                            x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="11,0,0,0" VerticalAlignment="Center" Height="25" Width="25" >
-                                    <Button.Background>
-                                        <ImageBrush ImageSource="/Images/Buttons/save_payment.png" Stretch="Uniform"/>
-                                    </Button.Background>
-                                </Button>
+                            x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="2,0,0,0" VerticalAlignment="Center" Height="25" Width="55" >
+                                <Button.Background>
+                                    <ImageBrush ImageSource="/Images/Buttons/Apply.png" Stretch="Uniform"/>
+                                </Button.Background>
+                            </Button>
                         </WrapPanel>
                     </DockPanel>
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,0,0,5" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="403*"/>
+                        <ColumnDefinition Width="237*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" VerticalAlignment="Center" Height="40">
+                    <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" VerticalAlignment="Center" Height="40" Grid.ColumnSpan="2">
                         <WrapPanel Orientation="Horizontal" Width="Auto">
                             <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                                 <Menu.Resources>
@@ -284,6 +334,14 @@
                                     </Button.Background>
                                 </Button>
                             </StackPanel>
+                            <StackPanel x:Name="Balances" Margin="5,8,5,8" Orientation="Horizontal" FlowDirection="LeftToRight">
+                                <Button ToolTip="Show Balances" ToolTipService.InitialShowDelay="100" Style="{DynamicResource AddButtonStyle}" 
+                                    x:Name="Balances_Selected_btn" TabIndex="15" Height="22" Width="30" Margin="0,2,1,0"  Click="Balances_btn_Click">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/Images/Buttons/show_balances.png" Stretch="Uniform"/>
+                                    </Button.Background>
+                                </Button>
+                            </StackPanel>
                         </WrapPanel>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,10,0">
                             <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Tag="False" Click="NotApproved_RadioButton_Click"/>
@@ -302,15 +360,30 @@
             HeaderStyle="{DynamicResource SfDataGrid_header}"
             RowStyle="{DynamicResource SfDataGrid_RowStyle}"
             AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"                              
-            SelectionChanged="myDataGrid_SelectionChanged" Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" Margin="2,5,10,5">
+            Loaded="myDataGrid_Loaded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FilterChanged="myDataGrid_FilterChanged" MouseDoubleClick="myDataGrid_MouseDoubleClick" Margin="2,5,10,5">
 
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
-                            <syncfusion:GridNumericColumn  HeaderText="Payment amount"  MappingName="Income"
+                            <syncfusion:GridNumericColumn  HeaderText="Payment amount(SYR)" Width="200"  MappingName="Incomesyr"
                     NumberDecimalDigits="2"
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
                     NumberGroupSeparator=","/>
+                            <syncfusion:GridNumericColumn  HeaderText="Payment amount(USD)" Width="200"  MappingName="Incomeusd"
+NumberDecimalDigits="2"
+NumberDecimalSeparator="."
+NumberGroupSizes="3"
+NumberGroupSeparator=","/>
+                            <syncfusion:GridNumericColumn  HeaderText="Returned amount(SYR)" Width="200"  MappingName="Outcomesyr"
+NumberDecimalDigits="2"
+NumberDecimalSeparator="."
+NumberGroupSizes="3"
+NumberGroupSeparator=","/>
+                            <syncfusion:GridNumericColumn  HeaderText="Returned amount(USD)" Width="200" MappingName="Outcomeusd"
+NumberDecimalDigits="2"
+NumberDecimalSeparator="."
+NumberGroupSizes="3"
+NumberGroupSeparator=","/>
                             <syncfusion:GridTextColumn MappingName="MicroProject_ID" HeaderText="Micro Project number"/>
                             <syncfusion:GridTextColumn MappingName="Name" HeaderText="Beneficiary Name"/>
                             <syncfusion:GridTextColumn MappingName="beneficiary_ID" HeaderText="beneficiary_ID" IsHidden="True"/>
@@ -381,7 +454,7 @@
 
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
-                    <Expander x:Name="myExpander" FlowDirection="RightToLeft" Grid.Column="0" IsExpanded="True" Margin="5"
+                    <!--<Expander x:Name="myExpander" FlowDirection="RightToLeft" Grid.Column="0" IsExpanded="True" Margin="5"
 ExpandDirection="Left" Style="{StaticResource AccountExpander}"
 Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#FF30323E">
 
@@ -423,7 +496,9 @@ Expanded="myExpander_Expanded" Collapsed="myExpander_Collapsed" HorizontalConten
                             <Grid Grid.Row="0" Margin="0,5,0,5" Height="25">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <!-- For the button -->
+                                    -->
+                    <!-- For the button -->
+                    <!--
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Button Style="{DynamicResource AddButtonStyle}" x:Name="Cash_Export_btn" Command="local:Commands.ExportToExcel"  Width="22" Height="22" ToolTip="Export to Excel" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,0,1,1" Grid.Column="1">
@@ -438,7 +513,7 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
  Margin="1,0,1,0" VerticalAlignment="Stretch" />
                             </Grid>
                         </Grid>
-                    </Expander>
+                    </Expander>-->
                 </Grid>
             </Grid>
         </Grid>

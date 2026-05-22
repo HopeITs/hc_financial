@@ -27,18 +27,36 @@ namespace Financial_WPF_App.Models
             string query = "SELECT beneficiary.`ID`"
                                 + ", `FirstName`, `LastName`, CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) as 'Name' "
                                 + ", `FatherName`, `NationalNumber`, `Mobile`, `Partners`"
-                                + ", `MicroProject_ID`, `Project_Name`, `Amount`"
-                                + ", `Date`,`FirstPaymentDate`, (`ToReturn_Amount`/`Amount`)*100 as 'rate', `ToReturn_Amount`"
+                                + ", `MicroProject_ID`, `Project_Name`,`currency_tilltype_id` as 'Currency'"
+                                + ", `Date`,`FirstPaymentDate`, (`ToReturn_Amount`/`Amount`)*100 as 'rate'"
+                                
+                                + ", beneficiary.Amount AS 'Amount'"
+                                + ", (CASE WHEN Lower(tilltypes.Name) = 'syr' THEN beneficiary.Amount ELSE 0 END) AS 'Amountsyr'"
+                                + ", (CASE WHEN Lower(tilltypes.Name) = 'usd' THEN beneficiary.Amount ELSE 0 END) AS 'Amountusd'"
+
+                                + ", beneficiary.ToReturn_Amount AS 'ToReturn_Amount'"
+                                + ", (CASE WHEN Lower(tilltypes.Name) = 'syr' THEN beneficiary.ToReturn_Amount ELSE 0 END) AS 'ToReturn_Amountsyr'"
+                                + ", (CASE WHEN Lower(tilltypes.Name) = 'usd' THEN beneficiary.ToReturn_Amount ELSE 0 END) AS 'ToReturn_Amountusd'"
                                 + ", (select sum(action.amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID`) as 'paidamount'"
+                                + ", (select sum(action.amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID` and lower(tilltypes.Name) = 'syr') as 'paidamountsyr'"
+                                + ", (select sum(action.amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID` and lower(tilltypes.Name) = 'usd') as 'paidamountusd'"
+                                + ", (select sum(action.Returned_Amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID`) as 'returnedamount'"
+                                + ", (select sum(action.Returned_Amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID` and lower(tilltypes.Name) = 'syr') as 'returnedamountsyr'"
+                                + ", (select sum(action.Returned_Amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action on action.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID` and lower(tilltypes.Name) = 'usd') as 'returnedamountusd'"
                                 + ", (select sum(action_not_approved.amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action_not_approved on action_not_approved.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID`) as 'NotApproved_paidamount'"
+                                + ", (select sum(action_not_approved.Returned_Amount) from action_payment left join payment on payment.id = action_payment.payment_id left join action_not_approved on action_not_approved.id = action_payment.action_id  where payment.Beneficiary_ID = beneficiary.`ID`) as 'NotApproved_returnedamount'"
                                 + ", `payment`, `Payment_interval`, `Notes`"
                                 + ", `ReceiptNumber`, `OrderNumber`, beneficiary.`Account_ID` "
                                 + ", account.SubProject_ID "
                                 + ", (select account.Name from account left join account_donor on account.id = account_donor.account_id where account_donor.account_id = beneficiary.Account_ID) as 'account' "
                                 + ", account_donor.Donor_ID as 'Donor_ID'"
+                                + ", tilltypes.Name as 'Currency_Name'"
+                                + ", beneficiary.ExchangeRate as 'ExchangeRate'"
+                                + ", IFNULL(Round(CASE WHEN tilltypes.Name = 'SYR' THEN Amount / ExchangeRate WHEN tilltypes.Name = 'USD' THEN Amount * ExchangeRate END,2),0) AS 'CorrespondingLoan'"
 
                                 + " FROM `beneficiary` left join `account` on account.ID = beneficiary.Account_ID"
-                                + " LEFT JOIN account_donor ON account_donor.account_ID = account.ID";
+                                + " LEFT JOIN account_donor ON account_donor.account_ID = account.ID"
+                                + " LEFT JOIN tilltypes ON tilltypes.id = beneficiary.currency_tilltype_id";
 
             string condition = " where 1 ";
 
@@ -72,7 +90,7 @@ namespace Financial_WPF_App.Models
         }
 
         public int Insert(string FirstName, string LastName, string FatherName, string NationalNumber, string Mobile, string Partners
-            , int MicroProject_ID, string Project_Name, Double Amount, string Date, string FirstPaymentDate, Double ToReturn_Amount, float payment, int Payment_Interval
+            , int MicroProject_ID, string Project_Name, int Currency, Decimal ExchangeRate, Double Amount, string Date, string FirstPaymentDate, Double ToReturn_Amount, float payment, int Payment_Interval
             , string Notes, string ReceiptNumber, string OrderNumber, int Account_ID, bool RegeneratePayments, string Form_Name)
         {
             string query = "";
@@ -100,6 +118,8 @@ namespace Financial_WPF_App.Models
                 }
 
                 sc.Parameters.AddWithValue("@Project_Name", Project_Name);
+                sc.Parameters.AddWithValue("@Currency", Currency);
+                sc.Parameters.AddWithValue("@ExchangeRate", ExchangeRate);
                 sc.Parameters.AddWithValue("@Amount", Amount);
                 if (Date == "")
                 {
@@ -141,8 +161,8 @@ namespace Financial_WPF_App.Models
                 query = "START TRANSACTION;";
 
                 query += @"INSERT INTO `beneficiary`(`FirstName`, `LastName`, `FatherName`, `NationalNumber`, `Mobile`, `Partners`,
-                            `MicroProject_ID`, `Project_Name`, `Amount`, `Date`,`FirstPaymentDate`, `ToReturn_Amount`, `payment`, `Payment_Interval`, `Notes`, `ReceiptNumber`, `OrderNumber`, `Account_ID`)
-                            VALUES(@FirstName, @LastName, @FatherName, @NationalNumber , @Mobile , @Partners , @MicroProject_ID , @Project_Name ,
+                            `MicroProject_ID`, `Project_Name`,`currency_tilltype_id`, `ExchangeRate` ,`Amount`, `Date`,`FirstPaymentDate`, `ToReturn_Amount`, `payment`, `Payment_Interval`, `Notes`, `ReceiptNumber`, `OrderNumber`, `Account_ID`)
+                            VALUES(@FirstName, @LastName, @FatherName, @NationalNumber , @Mobile , @Partners , @MicroProject_ID , @Project_Name , @Currency, @ExchangeRate,
                             @Amount , @Date , @FirstPaymentDate , @ToReturn_Amount , @payment , @Payment_Interval,
                             @Notes , @ReceiptNumber , @OrderNumber , @Account_ID);";
 
@@ -179,7 +199,7 @@ namespace Financial_WPF_App.Models
         }
 
         public void Update(int Beneficiary_ID, string FirstName, string LastName, string FatherName, string NationalNumber, string Mobile, string Partners
-            , int MicroProject_ID, string Project_Name, Double Amount, string Date, string FirstPaymentDate, Double ToReturn_Amount, float payment, int Payment_Interval
+            , int MicroProject_ID, string Project_Name, int Currency, Decimal ExchangeRate , Double Amount, string Date, string FirstPaymentDate, Double ToReturn_Amount, float payment, int Payment_Interval
             , string Notes, string ReceiptNumber, string OrderNumber, int Account_ID, int Original_MicroProject_ID, int SubProject_ID, bool RegeneratePayments, bool DeleteSchedualedPayments, string Form_Name)
         {
 
@@ -215,6 +235,8 @@ namespace Financial_WPF_App.Models
                 }
 
                 sc.Parameters.AddWithValue("@Project_Name", Project_Name);
+                sc.Parameters.AddWithValue("@Currency", Currency);
+                sc.Parameters.AddWithValue("@ExchangeRate", ExchangeRate);
                 sc.Parameters.AddWithValue("@Amount", Amount);
                 if (Date == "")
                 {
@@ -262,7 +284,7 @@ namespace Financial_WPF_App.Models
                 query = "START TRANSACTION;";
 
                 query += @"UPDATE `beneficiary` SET  `FirstName`= @FirstName ,`LastName`= @LastName ,`FatherName`=@FatherName ,`NationalNumber`= @NationalNumber 
-                       ,`Mobile`= @Mobile ,`Partners`= @Partners,`MicroProject_ID`=@MicroProject_ID ,`Project_Name`= @Project_Name ,`Amount`= @Amount 
+                       ,`Mobile`= @Mobile ,`Partners`= @Partners,`MicroProject_ID`=@MicroProject_ID ,`Project_Name`= @Project_Name ,`currency_tilltype_id`= @Currency , `ExchangeRate` = @ExchangeRate ,`Amount`= @Amount 
                        ,`Date`=  @Date  ,`FirstPaymentDate`=   @FirstPaymentDate ,`ToReturn_Amount`=  @ToReturn_Amount ,`payment`=  @payment, `Payment_Interval` = @Payment_Interval
                        ,`Notes`=  @Notes ,`ReceiptNumber`=  @ReceiptNumber ,`OrderNumber`=  @OrderNumber ,`Account_ID` = @Account_ID 
                        WHERE ID = @Beneficiary_ID;";
@@ -404,22 +426,36 @@ namespace Financial_WPF_App.Models
 
         public DataTable Select_account_view(string Account_IDs)
         {
-            string query = @"SELECT * from account_view ";
-            string condition = " where 1 ";
-
-            if (Account_IDs != "")
-            {
-                condition += " and account_view.ID in (" + Account_IDs + ")";
-            }
-            query += condition;
-
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                sc.Parameters.AddWithValue("@t", 600);
+                sc.CommandText = "CALL beneficiary_financial_summary(@p_level, @p_account_ids, @p_subproject_ids);";
+                sc.Parameters.AddWithValue("@p_level", "account");
+                sc.Parameters.AddWithValue("@p_account_ids", Account_IDs ?? "");
+                sc.Parameters.AddWithValue("@p_subproject_ids", "");
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+
+            }
+            return dt;
+        }
+
+        public DataTable Select_subproject_view(string Subproject_IDs)
+        {
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120;
+                sc.CommandText = "CALL beneficiary_financial_summary(@p_level, @p_account_ids, @p_subproject_ids);";
+                sc.Parameters.AddWithValue("@p_level", "subproject");
+                sc.Parameters.AddWithValue("@p_account_ids", "");
+                sc.Parameters.AddWithValue("@p_subproject_ids", Subproject_IDs ?? "");
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
