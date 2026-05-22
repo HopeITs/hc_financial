@@ -426,22 +426,15 @@ namespace Financial_WPF_App.Models
 
         public DataTable Select_account_view(string Account_IDs)
         {
-            string query = @"SELECT * from account_view ";
-            string condition = " where 1 ";
-
-            if (Account_IDs != "")
-            {
-                condition += " and account_view.ID in (" + Account_IDs + ")";
-            }
-            query += condition;
-
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                sc.Parameters.AddWithValue("@t", 600);
+                sc.CommandText = "CALL beneficiary_financial_summary(@p_level, @p_account_ids, @p_subproject_ids);";
+                sc.Parameters.AddWithValue("@p_level", "account");
+                sc.Parameters.AddWithValue("@p_account_ids", Account_IDs ?? "");
+                sc.Parameters.AddWithValue("@p_subproject_ids", "");
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);
@@ -454,22 +447,15 @@ namespace Financial_WPF_App.Models
 
         public DataTable Select_subproject_view(string Subproject_IDs)
         {
-            string query = @"SELECT * from subproject_view ";
-            string condition = " where 1 ";
-
-            if (Subproject_IDs != "")
-            {
-                condition += " and subproject_view.ID in (" + Subproject_IDs + ")";
-            }
-            query += condition;
-
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                sc.Parameters.AddWithValue("@t", 600);
+                sc.CommandText = "CALL beneficiary_financial_summary(@p_level, @p_account_ids, @p_subproject_ids);";
+                sc.Parameters.AddWithValue("@p_level", "subproject");
+                sc.Parameters.AddWithValue("@p_account_ids", "");
+                sc.Parameters.AddWithValue("@p_subproject_ids", Subproject_IDs ?? "");
                 sc.Connection = Login.MyConn;
 
                 MySqlDataAdapter da = new MySqlDataAdapter(sc);

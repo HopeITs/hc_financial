@@ -35,7 +35,7 @@ namespace Financial_WPF_App.Models
                 actiontype.`Name` as 'AType', action.`Amount`, action.`IsApproved`, approved_byuser.`Username` as 'approved_by', action.`Approved_at`, created_byuser.`Username` as 'created_by', created_byuser.`ID` as 'created_byuser_ID', edited_byuser.username as 'edited_by',
                 (CASE   WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
                 AND actiontype.shortname = 'I' THEN action.Amount  ELSE 0 END) AS 'Income',
-                (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action.Amount
+                (CASE WHEN (tilltypes.Name = 'SYR' OR tilltypes.Name = 'PAY') AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action.Amount
                 ELSE 0 END) AS 'Incomeusd',
                 (CASE WHEN actiontype.shortname = 'O' THEN action.Amount ELSE 0 END) AS 'Outcome',
                 (CASE WHEN actiontype.shortname = 'R' THEN action.Amount ELSE 0 END) AS 'Returned',

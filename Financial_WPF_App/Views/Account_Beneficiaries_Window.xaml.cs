@@ -308,46 +308,52 @@ namespace Financial_WPF_App.Views
             if (account_dt != null && account_dt.Rows.Count > 0)
             {
                 if (account_dt.Rows[0]["Total income"] != DBNull.Value)
-                    sum_imports_lbl.Content = account_dt.Rows[0].Field<double>("Total income").ToString("N", new CultureInfo("en-US"));
+                    sum_imports_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total income"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total loans amount"] != DBNull.Value)
-                    sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
+                    sum_BAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total loans amount"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total returned amount"] != DBNull.Value)
-                    sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
+                    sum_ReturnedAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total returned amount"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
-                    sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
+                    sum_RAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total invoices amount"]).ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Total action income"] != DBNull.Value)
+                    sum_IAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total action income"]).ToString("N", new CultureInfo("en-US"));
 
                 //if (account_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
                 //    sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Net account"] != DBNull.Value)
-                    sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
+                    sum_NetAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Net account"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Average micro project cost"] != DBNull.Value)
-                    avg_amounts_lbl.Content = account_dt.Rows[0].Field<double>("Average micro project cost").ToString("N", new CultureInfo("en-US"));
+                    avg_amounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Average micro project cost"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total income usd"] != DBNull.Value)
-                    usd_sum_imports_lbl.Content = account_dt.Rows[0].Field<double>("Total income usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_imports_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total income usd"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
-                    usd_sum_BAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_BAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total loans amount usd"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
-                    usd_sum_ReturnedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_ReturnedAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total returned amount usd"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
-                    usd_sum_RAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_RAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total invoices amount usd"]).ToString("N", new CultureInfo("en-US"));
+
+                if (account_dt.Rows[0]["Total action income usd"] != DBNull.Value)
+                    usd_sum_IAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Total action income usd"]).ToString("N", new CultureInfo("en-US"));
 
                 //if (account_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
                 //    usd_sum_RemainedAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Net account usd"] != DBNull.Value)
-                    usd_sum_NetAmounts_lbl.Content = account_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_NetAmounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Net account usd"]).ToString("N", new CultureInfo("en-US"));
 
                 if (account_dt.Rows[0]["Average micro project cost usd"] != DBNull.Value)
-                    usd_avg_amounts_lbl.Content = account_dt.Rows[0].Field<double>("Average micro project cost usd").ToString("N", new CultureInfo("en-US"));
+                    usd_avg_amounts_lbl.Content = ToReportDouble(account_dt.Rows[0]["Average micro project cost usd"]).ToString("N", new CultureInfo("en-US"));
             }
         }
 
@@ -357,48 +363,61 @@ namespace Financial_WPF_App.Views
             if (subproject_dt != null && subproject_dt.Rows.Count > 0)
             {
                 if (subproject_dt.Rows[0]["Total income"] != DBNull.Value)
-                    sum_imports_lbl.Content = subproject_dt.Rows[0].Field<double>("Total income").ToString("N", new CultureInfo("en-US"));
+                    sum_imports_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total income"]).ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Total loans amount"] != DBNull.Value)
-                    sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount").ToString("N", new CultureInfo("en-US"));
+                    sum_BAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total loans amount"]).ToString("N", new CultureInfo("en-US"));
 
 
                 if (subproject_dt.Rows[0]["Total returned amount"] != DBNull.Value)
-                    sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount").ToString("N", new CultureInfo("en-US"));
+                    sum_ReturnedAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total returned amount"]).ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Total invoices amount"] != DBNull.Value)
-                    sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount").ToString("N", new CultureInfo("en-US"));
+                    sum_RAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total invoices amount"]).ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total action income"] != DBNull.Value)
+                    sum_IAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total action income"]).ToString("N", new CultureInfo("en-US"));
 
                 //if (subproject_dt.Rows[0]["Total unbilled amounts"] != DBNull.Value)
                 //    sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Net account"] != DBNull.Value)
-                    sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account").ToString("N", new CultureInfo("en-US"));
+                    sum_NetAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Net account"]).ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Average micro project cost"] != DBNull.Value)
-                    avg_amounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Average micro project cost").ToString("N", new CultureInfo("en-US"));
+                    avg_amounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Average micro project cost"]).ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Total income usd"] != DBNull.Value)
-                    usd_sum_imports_lbl.Content = subproject_dt.Rows[0].Field<double>("Total income usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_imports_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total income usd"]).ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Total loans amount usd"] != DBNull.Value)
-                    usd_sum_BAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total loans amount usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_BAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total loans amount usd"]).ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Total returned amount usd"] != DBNull.Value)
-                    usd_sum_ReturnedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total returned amount usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_ReturnedAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total returned amount usd"]).ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Total invoices amount usd"] != DBNull.Value)
-                    usd_sum_RAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total invoices amount usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_RAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total invoices amount usd"]).ToString("N", new CultureInfo("en-US"));
+
+                if (subproject_dt.Rows[0]["Total action income usd"] != DBNull.Value)
+                    usd_sum_IAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Total action income usd"]).ToString("N", new CultureInfo("en-US"));
 
                 //if (subproject_dt.Rows[0]["Total unbilled amounts usd"] != DBNull.Value)
                 //    usd_sum_RemainedAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Total unbilled amounts usd").ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Net account usd"] != DBNull.Value)
-                    usd_sum_NetAmounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Net account usd").ToString("N", new CultureInfo("en-US"));
+                    usd_sum_NetAmounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Net account usd"]).ToString("N", new CultureInfo("en-US"));
 
                 if (subproject_dt.Rows[0]["Average micro project cost usd"] != DBNull.Value)
-                    usd_avg_amounts_lbl.Content = subproject_dt.Rows[0].Field<double>("Average micro project cost usd").ToString("N", new CultureInfo("en-US"));
+                    usd_avg_amounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Average micro project cost usd"]).ToString("N", new CultureInfo("en-US"));
             }
+        }
+
+        private static double ToReportDouble(object value)
+        {
+            return value == null || value == DBNull.Value
+                ? 0
+                : Convert.ToDouble(value, CultureInfo.InvariantCulture);
         }
 
         public void Fill_Grid()
