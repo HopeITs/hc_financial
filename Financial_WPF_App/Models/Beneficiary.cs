@@ -431,7 +431,7 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.CommandTimeout = 120;
-                sc.CommandText = "CALL get_financial_summary(@p_level, @p_account_ids, @p_subproject_ids);";
+                sc.CommandText = "CALL beneficiary_financial_summary(@p_level, @p_account_ids, @p_subproject_ids);";
                 sc.Parameters.AddWithValue("@p_level", "account");
                 sc.Parameters.AddWithValue("@p_account_ids", Account_IDs ?? "");
                 sc.Parameters.AddWithValue("@p_subproject_ids", "");
@@ -452,7 +452,7 @@ namespace Financial_WPF_App.Models
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.CommandTimeout = 120;
-                sc.CommandText = "CALL get_financial_summary(@p_level, @p_account_ids, @p_subproject_ids);";
+                sc.CommandText = "CALL beneficiary_financial_summary(@p_level, @p_account_ids, @p_subproject_ids);";
                 sc.Parameters.AddWithValue("@p_level", "subproject");
                 sc.Parameters.AddWithValue("@p_account_ids", "");
                 sc.Parameters.AddWithValue("@p_subproject_ids", Subproject_IDs ?? "");
