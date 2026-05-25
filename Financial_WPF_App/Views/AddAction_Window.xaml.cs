@@ -965,7 +965,8 @@ namespace Financial_WPF_App
 
                                     Document_Label.IsEnabled = IsReceipt_comboBox.IsEnabled = ReceiptNum_txtBox.IsEnabled = true;
 
-                                //Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
+                                //enabled in syr expense by judy
+                                Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled = Original_AvgRate_clear_btn.IsEnabled = true;
 
                                 USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
 
@@ -1537,10 +1538,10 @@ namespace Financial_WPF_App
         {
             DataTable dtCurrency = t.Select_All_TillTypes_Currency();
             if (dtCurrency != null && dtCurrency.Rows.Count > 0)
-            { 
-                currency_comboBox.ItemsSource = dtCurrency.DefaultView; 
+            {
+                currency_comboBox.ItemsSource = dtCurrency.DefaultView;
             }
-
+         
             if (Original_AvgRate_comboBox.IsEnabled == true)
             {
                 Original_AvgRate_comboBox.ItemsSource = null;
