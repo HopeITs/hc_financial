@@ -1347,7 +1347,7 @@ END AS `USD_Value`,
                     }
 
                     query += @" UPDATE action SET 
-                                Amount= @Amount, rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID,Donor_ID = @Donor_ID,
+                                Amount= @ConvertedAmount, rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, CashAccount_ID = @ObserveCashAccount_ID, ObserveCashAccount_ID = @CashAccount_ID,Donor_ID = @Donor_ID,
                                 updated_at= @Todaydate, `edited_by` = @Uesr_ID  WHERE action.ID = @ObserveAcion_ID;";
 
 
