@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="Financial_WPF_App.Controls.UC_IncomeOperation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Financial_WPF_App"
+             xmlns:uc ="clr-namespace:Financial_WPF_App.Controls"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:helper="clr-namespace:Financial_WPF_App.helper"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" >
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="175"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="30"/>
+
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+     
+        
+        <!-- Donor -->
+        <Label Grid.Column="1" Grid.Row="0" x:Name="Donor_lable" Style="{DynamicResource statistic_lableStyle}" Content="Donor:" Margin="10,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" />
+        <Grid Height="30" Grid.Row="0" x:Name="Donor_panel"  Grid.Column="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="Donor_comboBox" TabIndex="1" Style="{StaticResource FloatingComboboxStyle}"
+            DisplayMemberPath="Name" SelectedValuePath="ID" 
+            SelectionChanged="Donor_comboBox_SelectionChanged"/>
+            <Button Grid.Column="1" x:Name="Donor_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}" Click="Donor_comboBox_clear_btn_Click" Margin="5,0,0,0" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+
+        <!-- Cash Till -->
+        <Label Grid.Column="4" Grid.Row="0" x:Name="CashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Cash till:"  HorizontalContentAlignment="Left" />
+        <Grid Height="30" Grid.Row="0" x:Name="CashAccount_panel"  Grid.Column="5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="CashAccount_comboBox" TabIndex="2"
+            DisplayMemberPath="Name" SelectedValuePath="ID" Style="{StaticResource FloatingComboboxStyle}"
+            VerticalContentAlignment="Center"/>
+            <Button Grid.Column="1" x:Name="CashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}"  Click="CashAccount_clear_btn_Click" Margin="5,0,0,0" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+
+    </Grid>
+</UserControl>

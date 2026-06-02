@@ -475,6 +475,7 @@
                                 <MenuItem Header="Single Entry" Click="Single_Entry_MenuItemAdv_Click"/>
                                 <MenuItem Header="Multi Entry (From Excel)" Click="Multi_Entry_MenuItemAdv_Click"/>
                                 <MenuItem Header="Multi Attachments (From Excel)" Click="MenuItemAdv_Click"/>
+                                <MenuItem Header="New Single Entry" Click="NEW_SINGLE_ENTRY_Click"/>
                             </MenuItem>
 
                             <!-- Regular MenuItem -->

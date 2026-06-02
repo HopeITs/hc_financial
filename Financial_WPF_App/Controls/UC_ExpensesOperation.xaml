@@ -1,0 +1,195 @@
+﻿<UserControl x:Class="Financial_WPF_App.Controls.UC_ExpensesOperation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Financial_WPF_App"
+             xmlns:WPFTextBoxAutoComplete="clr-namespace:WPFTextBoxAutoComplete;assembly=WPFTextBoxAutoComplete" 
+             xmlns:uc ="clr-namespace:Financial_WPF_App.Controls"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:helper="clr-namespace:Financial_WPF_App.helper"
+             mc:Ignorable="d" 
+             d:DesignHeight="280">
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="175"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="30"/>
+
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Currency -->
+        <Label x:Name="Currency_Label" Grid.Column="1" Grid.Row="0" Style="{DynamicResource statistic_lableStyle}" Content="Currency:"  HorizontalContentAlignment="Left" Margin="10,0,1,0"  />
+        <ComboBox x:Name="currency_comboBox" TabIndex="1" Grid.Column="2" Grid.Row="0"  Style="{StaticResource FloatingComboboxStyle}" 
+        HorizontalContentAlignment="Left"  Margin="1,3,1,7"  DisplayMemberPath="Name"  SelectedValuePath="ID"  SelectionChanged="currency_comboBox_SelectionChanged" />
+
+        <!-- Cash Till -->
+        <Label Grid.Column="4" Grid.Row="0" x:Name="CashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Cash till:"  HorizontalContentAlignment="Left" />
+        <Grid Height="30" Grid.Row="0" x:Name="CashAccount_panel"  Grid.Column="5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="CashAccount_comboBox" TabIndex="2"
+            DisplayMemberPath="Name" SelectedValuePath="ID" Style="{StaticResource FloatingComboboxStyle}"
+            VerticalContentAlignment="Center"/>
+            <Button Grid.Column="1" x:Name="CashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}"  Click="CashAccount_clear_btn_Click" Margin="5,0,0,0" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+
+        <!-- MircoProject Number -->
+        <Label x:Name="MircoProject_ID_lable" Grid.Column="1" Grid.Row="1" 
+        Style="{DynamicResource statistic_lableStyle}" Content="Micro Project number:" HorizontalContentAlignment="Left" />
+        <uc:AutoCompleteTextBoxUserControl TextBoxStyle="{StaticResource FloatingTextBoxStyle}"
+        x:Name="MircoProject_ID_autoSuggestionUserControl" 
+        Grid.Column="2" Grid.Row="1" TabIndex="3" 
+        LostFocus="MircoProject_ID_autoSuggestionUserControl_LostFocus" />
+
+        <!-- Beneficiary Name -->
+        <Label x:Name="BeneficiaryName_lable" Grid.Column="4" Grid.Row="1" 
+        Style="{DynamicResource statistic_lableStyle}" Content="Beneficiary Name:" HorizontalContentAlignment="Left" />
+        <uc:AutoCompleteTextBoxUserControl Grid.Column="5" TextBoxStyle="{StaticResource FloatingTextBoxStyle}"
+        x:Name="BeneficiaryName_txtBox" TabIndex="4" 
+        LostFocus="BeneficiaryName_autoSuggestionUserControl_LostFocus"  Grid.Row="1" />
+
+        <!-- Budget -->
+        <Label Grid.Column="1" Grid.Row="2" x:Name="Budget_lable" Style="{DynamicResource statistic_lableStyle}" Content="Budget:" HorizontalContentAlignment="Left" />
+        <Grid Grid.Column="2" Height="30" Grid.Row="2" x:Name="Budget_panel">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="Budget_comboBox" TabIndex="5" Style="{StaticResource FloatingComboboxStyle}"
+    DisplayMemberPath="budget_Name" SelectedValuePath="budget_ID" 
+     SelectionChanged="Budget_comboBox_SelectionChanged"/>
+            <Button Grid.Column="1" x:Name="Budget_comboBox_clear" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}"  Click="Budget_comboBox_clear_Click" Margin="5,0,0,0" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+
+        </Grid>
+        <Button Grid.Row="2" Grid.Column="3" x:Name="Budget_help" ToolTipService.InitialShowDelay="100" Margin="5,0,0,0" Width="25" Height="25" BorderBrush="{x:Null}" HorizontalAlignment="Left">
+
+            <Button.Background>
+                <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.ToolTip>
+                <ToolTip Content="The budget only appears if Lines have been added to it."/>
+            </Button.ToolTip>
+        </Button>
+
+        <!-- Category -->
+        <Label Grid.Column="4" Grid.Row="2" x:Name="Category_lable" Style="{DynamicResource statistic_lableStyle}" Content="Category:"/>
+        <Grid Grid.Row="2" Height="30" x:Name="Category_panel" Grid.Column="5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="Category_comboBox" TabIndex="6" Style="{StaticResource FloatingComboboxStyle}"
+        DisplayMemberPath="linecategory_Name" SelectedValuePath="linecategory_ID" 
+        SelectionChanged="Category_comboBox_SelectionChanged"/>
+            <Button Grid.Column="1" x:Name="Category_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}" Click="Category_comboBox_clear_btn_Click" Margin="5,0,0,0" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+
+        <!-- Budget Line -->
+        <Label Grid.Column="1" Grid.Row="3" x:Name="Line_lable" Style="{DynamicResource statistic_lableStyle}" Content="Budget Line:" Margin="10,0,2,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Left" />
+        <Grid Height="30" Grid.Column="2" Grid.Row="3" x:Name="Line_panel" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="Line_comboBox" TabIndex="7" Style="{StaticResource FloatingComboboxStyle}"
+            DisplayMemberPath="line_Name" SelectedValuePath="budget_line_ID"  />
+            <Button Grid.Column="1" x:Name="Line_comboBox_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}" Click="Line_comboBox_clear_btn_Click" Margin="5,0,0,0" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+        
+        <!-- Document -->
+        <Label x:Name="Document_Label" Grid.Column="4" Grid.Row="3" Style="{DynamicResource statistic_lableStyle}" Content="Document:" HorizontalContentAlignment="Left" />
+
+        <Grid Height="30"  Grid.Row="3"  x:Name="Document_panel" Grid.Column="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" Style="{StaticResource FloatingComboboxStyle}" x:Name="IsReceipt_comboBox" TabIndex="8"
+                IsEditable="True"
+                    HorizontalContentAlignment="Left" VerticalAlignment="Stretch" SelectionChanged="IsReceipt_comboBox_SelectionChanged" >
+                <ComboBoxItem x:Name="invoice_ComboBoxItem" Content="invoice" />
+                <ComboBoxItem x:Name="receipt_ComboBoxItem" Content="receipt"/>
+                <ComboBoxItem x:Name="payslip_ComboBoxItem" Content="payslip"/>
+            </ComboBox>
+
+            <TextBox Grid.Column="1" x:Name="ReceiptNum_txtBox" TextChanged="ReceiptNum_txtBox_TextChanged"   Style="{StaticResource FloatingTextBoxStyle}"  Tag="Document Number"
+           TabIndex="9" Padding="40,2,2,2" />
+        </Grid>
+
+  <!-- Original_AvgRate -->
+        <Label Grid.Column="1" Grid.Row="4" x:Name="Original_AvgRate_lable" Style="{DynamicResource statistic_lableStyle}" Content="Origin Avg Rate:" HorizontalContentAlignment="Left"  />
+        
+        <Grid Grid.Column="2" Grid.Row="4" Height="30" x:Name="Line_panel_Copy">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="Original_AvgRate_comboBox" TabIndex="10"  
+            	DisplayMemberPath="Name" SelectedValuePath="ID" Style="{StaticResource FloatingComboboxStyle}"
+            	VerticalContentAlignment="Center" SelectionChanged="Original_AvgRate_comboBox_SelectionChanged"/>
+            <Button Grid.Column="1" x:Name="Original_AvgRate_clear_btn" Click="Avgrate_clear_btn_Click" Style="{StaticResource DeleteButtonStyle}" Margin="5,0,0,0">
+            </Button>
+        </Grid>
+        
+        <Button Grid.Row="4" Grid.Column="3" x:Name="Original_AvgRate_help" Width="25" Height="25" ToolTipService.InitialShowDelay="100" Margin="5,0,0,0" BorderBrush="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Left">
+            <Button.Background>
+                <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.ToolTip>
+                <TextBlock>
+                Avg Rate only appears if it includes the operation date implicitly or if there is a remainder in it.
+                <LineBreak /> 
+                In case of having a budget, Avg Rate only appears from the selected budget currency to the local currency (Syr).
+                </TextBlock>
+            </Button.ToolTip>
+        </Button>
+
+        <!-- Value -->
+        <Label Grid.Column="1" Grid.Row="6" x:Name="USD_Value_lable" Style="{DynamicResource statistic_lableStyle}" Content="Value:" HorizontalContentAlignment="Left"  />
+        <Label x:Name="USD_Value_TxtBox"  Style="{DynamicResource statistic_lableStyle}" 
+      Grid.Column="2" Grid.Row="6" TabIndex="100" Height="30"  />
+        
+    </Grid>
+</UserControl>

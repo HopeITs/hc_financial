@@ -303,6 +303,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\UC_ExchangeOperation.xaml.cs">
+      <DependentUpon>UC_ExchangeOperation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UC_ExpensesOperation.xaml.cs">
+      <DependentUpon>UC_ExpensesOperation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UC_IncomeOperation.xaml.cs">
+      <DependentUpon>UC_IncomeOperation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UC_TransferOperation.xaml.cs">
+      <DependentUpon>UC_TransferOperation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Design\tagItemInfo.cs" />
     <Compile Include="Design\TextToVisibilityConverter.cs" />
     <Compile Include="Design\WindowControlBar_Popup.xaml.cs">
@@ -353,6 +365,9 @@
     </Compile>
     <Compile Include="Views\Account_Budgets_Window.xaml.cs">
       <DependentUpon>Account_Budgets_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddAction_Window2.xaml.cs">
+      <DependentUpon>AddAction_Window2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Add_Account_Budget_Window.xaml.cs">
       <DependentUpon>Add_Account_Budget_Window.xaml</DependentUpon>
@@ -535,6 +550,7 @@
     <Compile Include="Views\SubProject_Window.xaml.cs">
       <DependentUpon>SubProject_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UC_ExpensesOperation.xaml.cs" />
     <Compile Include="Views\User_Window.xaml.cs">
       <DependentUpon>User_Window.xaml</DependentUpon>
     </Compile>
@@ -543,6 +559,22 @@
     </Compile>
     <Compile Include="Design\WindowUtils.cs" />
     <Page Include="Controls\AutoCompleteTextBoxUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UC_ExchangeOperation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UC_ExpensesOperation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UC_IncomeOperation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UC_TransferOperation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -555,6 +587,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Account_Budgets_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AddAction_Window2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -2299,6 +2299,24 @@ namespace Financial_WPF_App
             }
         }
 
+        private void NEW_SINGLE_ENTRY_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                AddAction_Window2 _Window = new AddAction_Window2(this);
+                _Window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
         //private void Minimize_Click(object sender, RoutedEventArgs e)
         //{
         //    WindowUtils.MinimizeWindow(this); // Calls the WindowUtils method
@@ -2411,6 +2429,16 @@ namespace Financial_WPF_App
                 Top = (SystemParameters.WorkArea.Height - Height) / 2 + SystemParameters.WorkArea.Top;
                 Resize_btn.Background = (Brush)System.Windows.Application.Current.Resources["ButtonImageRestore"];
             }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
