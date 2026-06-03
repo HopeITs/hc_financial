@@ -3,24 +3,130 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Financial_WPF_App.Controls"
+             xmlns:local="clr-namespace:Financial_WPF_App"
+             xmlns:uc ="clr-namespace:Financial_WPF_App.Controls"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:helper="clr-namespace:Financial_WPF_App.helper"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="700">
+             d:DesignHeight="120" >
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="175"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="30"/>
+
+
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Destination Till:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-        <ComboBox x:Name="Combo_TransferDestTill" Grid.Row="0" Grid.Column="1" Margin="5" Height="30"/>
+        <!-- Cash Till -->
+        <Label Grid.Column="1" Grid.Row="0" x:Name="CashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Cash till:"  HorizontalContentAlignment="Left" />
+        <Grid Height="30" Grid.Row="0" x:Name="CashAccount_panel"  Grid.Column="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="CashAccount_comboBox" TabIndex="1"
+                DisplayMemberPath="Name" SelectedValuePath="ID" Style="{StaticResource FloatingComboboxStyle}"
+                VerticalContentAlignment="Center"/>
+            <Button Grid.Column="1" x:Name="CashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}"  Click="CashAccount_clear_btn_Click" Margin="5,0,0,0" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </Grid>
 
-        <Label Content="Transfer Amount:" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,0,0"/>
-        <TextBox x:Name="Txt_TransferAmount" Grid.Row="0" Grid.Column="3" Margin="5" Height="30"/>
+        <!-- Corresponding project -->
+        <Label Grid.Column="1" Grid.Row="1" x:Name="DestinationProject_lable" Style="{DynamicResource statistic_lableStyle}" Content="Corresponding Project: " HorizontalContentAlignment="Left" />
+        <Grid Grid.Column="2" Grid.Row="1" x:Name="DestinationProject_panel" Height="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="DestinationProject_comboBox" TabIndex="2" Grid.Column="0" Style="{DynamicResource FloatingComboboxStyle}"
+                DisplayMemberPath="Type" SelectedValuePath="ID" 
+                SelectionChanged="DestinationProjectl_comboBox_SelectionChanged"/>
+
+
+        </Grid>
+        <Button Grid.Row="1" Grid.Column="3" x:Name="DestinationProject_help" Width="25" Height="25" ToolTipService.InitialShowDelay="100" BorderBrush="{x:Null}" Margin="5,0,0,0" HorizontalAlignment="Left">
+            <Button.Background>
+                <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.ToolTip>
+                <TextBlock><Run Text="The account only appears if it contains a till of the same currency."/><LineBreak /><Run Text="In foreign currency till, The account only appears if it contains a till of the same currency and the account has the selected donor"/></TextBlock>
+            </Button.ToolTip>
+        </Button>
+
+        <!-- Corresponding Account -->
+        <Label Grid.Column="4" Grid.Row="1" x:Name="DestinationAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Corresponding Account: "  Margin="10,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" />
+        <Grid Grid.Row="1" Height="30" x:Name="DestinationAccount_panel" Grid.Column="5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="DestinationAccount_comboBox" TabIndex="3" Style="{StaticResource FloatingComboboxStyle}"
+    DisplayMemberPath="Name" SelectedValuePath="ID" />
+        </Grid>
+
+        <!-- Corresponding till -->
+        <Label Grid.Column="1" Grid.Row="2" x:Name="DestinationTill_lable" Style="{DynamicResource statistic_lableStyle}" Content="Corresponding till:" HorizontalContentAlignment="Left" />
+        <Grid Grid.Column="2" Grid.Row="2" x:Name="DestinationTill_panel" Height="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="DestinationTill_comboBox" TabIndex="4" Grid.Column="0" Style="{DynamicResource FloatingComboboxStyle}"
+                DisplayMemberPath="Type" SelectedValuePath="ID" 
+                SelectionChanged="DestinationTill_comboBox_SelectionChanged"/>
+            <Button Grid.Column="1" x:Name="DestinationTill_clear_btn" HorizontalAlignment="Left" Style="{StaticResource DeleteButtonStyle}"
+         Click="DestinationTill_clear_btn_Click" Margin="5,0,0,0" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+
+        <Button Grid.Row="2" Grid.Column="3" x:Name="DestinationTill_help" Width="25" Height="25" ToolTipService.InitialShowDelay="100" BorderBrush="{x:Null}" Margin="5,0,0,0" HorizontalAlignment="Left">
+            <Button.Background>
+                <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.ToolTip>
+                <TextBlock><Run Text="The account only appears if it contains a till of the same currency."/><LineBreak /><Run Text="In foreign currency till, The account only appears if it contains a till of the same currency and the account has the selected donor"/></TextBlock>
+            </Button.ToolTip>
+        </Button>
+
+        <!-- Corresponding cash till -->
+        <Label Grid.Column="4" Grid.Row="2" x:Name="ObserveCashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Corresponding cash till:"  Margin="10,0,1,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" />
+        <Grid Grid.Row="2" Height="30" x:Name="ObserveCashAccount_panel" Grid.Column="5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- TextBox will stretch -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="ObserveCashAccount_comboBox" TabIndex="5" Style="{StaticResource FloatingComboboxStyle}"
+         DisplayMemberPath="Name" SelectedValuePath="ID" />
+            <Button Grid.Column="1" x:Name="ObserveCashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center"  Click="ObserveCashAccount_clear_btn_Click" Style="{StaticResource DeleteButtonStyle}" Margin="5,0,0,0">
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+
     </Grid>
 </UserControl>

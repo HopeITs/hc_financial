@@ -24,5 +24,32 @@ namespace Financial_WPF_App.Controls
         {
             InitializeComponent();
         }
+
+        private void CashAccount_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            CashAccount_comboBox.SelectedItem = null;
+        }
+
+        private void ObserveCashAccount_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            // Clear the selection of the ObserveCashAccount_comboBox
+            ObserveCashAccount_comboBox.SelectedIndex = -1;
+        }
+
+        private void DestinationTill_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            // Clear the selection of the DestinationTill_comboBox
+            DestinationTill_comboBox.SelectedIndex = -1;
+        }
+
+        private void DestinationProjectl_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            // TODO: Implement logic for when the DestinationProject_comboBox selection changes
+        }
+
+        private void DestinationTill_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            // TODO: Add your logic here for when the selection changes in DestinationTill_comboBox
+        }
     }
 }
