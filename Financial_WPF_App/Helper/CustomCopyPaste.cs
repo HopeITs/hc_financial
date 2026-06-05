@@ -914,7 +914,7 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
 
-                string currency = e.Row["Currency"]?.ToString(); 
+                string currency = e.Row.Table.Columns.Contains("Currency") ? e.Row["Currency"]?.ToString() : null;
                 if (!string.IsNullOrEmpty(currency) && currency.ToUpper() == "USD")
                 {
                     exists = true; // إذا العملة USD → السماح بأي قيمة أو فارغة
