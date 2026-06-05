@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,16 @@ namespace Financial_WPF_App.Controls
         public UC_TransferOperation()
         {
             InitializeComponent();
+        }
+
+        public void FillDestinationProjects(DataView destinationData)
+        {
+            if (DestinationProject_comboBox != null)
+            {
+                DestinationProject_comboBox.ItemsSource = destinationData;
+                DestinationProject_comboBox.DisplayMemberPath = "Display_Name";
+                DestinationProject_comboBox.SelectedValuePath = "Subproject_ID";
+            }
         }
 
         private void CashAccount_clear_btn_Click(object sender, RoutedEventArgs e)
