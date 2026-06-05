@@ -360,6 +360,7 @@ namespace Financial_WPF_App.Helper
                 bool exists = false;
                 _ImportedAccountName = e.ProposedValue?.ToString() ?? "";
 
+                // 1. البحث عن Account_ID
                 if (_Account_Type == "Project")
                 {
                     _Account_ID = _all_Tills_dt.AsEnumerable()
@@ -378,10 +379,13 @@ namespace Financial_WPF_App.Helper
                         .FirstOrDefault();
                 }
 
-
+                // 2. محاولة إيجاد الـ Till_ID فوراً من البيانات المحملة (لغرض الفلترة السريع)
                 if (_Account_ID != -1)
                 {
+                    // نحتفظ بهذا السطر من الكود الجديد لتسجيل النوع
                     _SelectedTillType_ID = ResolveTillTypeIdFromLoadedData(_Till_Type);
+
+                    // استعادة منطق البحث عن Till_ID كما في الكود القديم (لكن باستخدام دالة التطبيع الجديدة للأفضل)
                     _Till_ID = _all_Tills_dt.AsEnumerable()
                         .Where(row => row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true
                         && NormalizeLookupName(row.Field<string>("Name")) == NormalizeLookupName(_Till_Type))
@@ -392,102 +396,64 @@ namespace Financial_WPF_App.Helper
 
                 LogTillResolution("Account column validation");
 
+                // 3. (هذا هو الجزء المفقود) الفلترة الفورية للجداول المساعدة إذا تم العثور على Till
                 if (_Till_ID != -1)
                 {
                     exists = true;
-                }
 
-                if (exists)
-                {
                     System.Data.DataRow[] rows = null;
+
+                    // فلترة جداول الأسعار
                     if (_all_Original_AvgRate_dt.Rows.Count > 0)
                     {
                         rows = _all_Original_AvgRate_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Original_AvgRate_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Original_AvgRate_dt = rows.CopyToDataTable();
                     }
 
                     if (_all_AvgRate_dt.Rows.Count > 0)
                     {
                         rows = _all_AvgRate_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _AvgRate_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _AvgRate_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة المشاريع الصغيرة
                     if (_all_b_dt.Rows.Count > 0)
                     {
                         rows = _all_b_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _b_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _b_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة الصناديق الأخرى (Tills)
                     if (_all_t_dt.Rows.Count > 0)
                     {
                         rows = _all_t_dt.Select("Account_ID = '" + _Account_ID + "' AND ID <> " + _Till_ID + "");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _t_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _t_dt = rows.CopyToDataTable();
                     }
-
 
                     _ExAcc_dt = _all_ExAcc_dt.Copy();
 
+                    // فلترة الحسابات الأخرى
                     if (_all_Accounts_dt.Rows.Count > 0)
                     {
                         rows = _all_Accounts_dt.Select("account_id <> '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Accounts_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Accounts_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة البنود (Lines)
                     if (_all_Lines_dt.Rows.Count > 0)
                     {
                         rows = _all_Lines_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Lines_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Lines_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة الميزانيات (Budgets)
                     if (_all_budgets_dt.Rows.Count > 0)
                     {
                         rows = _all_budgets_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _budgets_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _budgets_dt = rows.CopyToDataTable();
                     }
 
-
+                    // فلترة حسابات الصندوق النقدية (Cash Accounts) بناءً على النوع
                     if (_all_cashAccounts_dt.Rows.Count > 0)
                     {
                         if (_Account_Type == "Project")
@@ -502,42 +468,26 @@ namespace Financial_WPF_App.Helper
                         {
                             rows = _all_cashAccounts_dt.Select("PersonalAccount_ID like '" + _Account_ID + ",%' or PersonalAccount_ID like '%," + _Account_ID + ",%' or PersonalAccount_ID like '%," + _Account_ID + "' or PersonalAccount_ID like '" + _Account_ID + "'");
                         }
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _cashAccounts_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _cashAccounts_dt = rows.CopyToDataTable();
                     }
 
-
+                    // فلترة المانحين (Donors)
                     if (_all_Donors_dt.Rows.Count > 0)
                     {
                         rows = _all_Donors_dt.Select("account_id = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Donors_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Donors_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة الموظفين (Employees)
                     if (_all_Employee_dt.Rows.Count > 0)
                     {
                         rows = _all_Employee_dt.Select("subproject_id = '" + _Subproject_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Employee_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Employee_dt = rows.CopyToDataTable();
                     }
-
                 }
-                else
+
+                // إذا لم يتم العثور على الـ Till
+                if (!exists)
                 {
                     Login.MultiAction_AnyError = true;
                     e.Row.SetColumnError(e.Column.ColumnName, "This Account does not exist or does not contains a match till.");
@@ -648,16 +598,6 @@ namespace Financial_WPF_App.Helper
                 }
 
 
-                if (isDate)
-                {
-                    _ActionDate = Adate.ToString("yyyy/MM/dd");
-                }
-                else
-                {
-                    Login.MultiAction_AnyError = true;
-                    e.Row.SetColumnError(e.Column.ColumnName, "This column only accepts Dates.");
-                    e.Row.RowError = "There are errors in this row.";
-                }
             }
             else if (e.Column.ColumnName == "Description (AR)")
             {
