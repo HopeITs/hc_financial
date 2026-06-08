@@ -638,13 +638,13 @@ namespace Financial_WPF_App.Models
                         all_avgrates.Name as `AvgRateName`,
                         all_avgrates.value as `AvgRateValue`, 
                         CASE 
-    WHEN actiontype.shortname = 'E' 
-         AND LOWER(Currency_Tilltype.Name) = LOWER('Syr') 
-        THEN action.Amount / NULLIF(all_avgrates.value,0)
+                       WHEN actiontype.shortname = 'E' 
+                       AND LOWER(Currency_Tilltype.Name) = LOWER('Syr') 
+                       THEN action.Amount / NULLIF(all_avgrates.value,0)
 
-    WHEN actiontype.shortname = 'E' 
-         AND LOWER(Currency_Tilltype.Name) = LOWER('Usd') 
-        THEN action.Amount
+                       WHEN actiontype.shortname = 'E' 
+                       AND LOWER(Currency_Tilltype.Name) = LOWER('Usd') 
+                       THEN action.Amount
 
     ELSE NULL
 END AS `USD_Value`,
@@ -706,10 +706,10 @@ END AS `USD_Value`,
                                 subproject.Name AS `Subproject_Name`,
                                 account.Name as `Account_Name`,
                                 action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
-                                (CASE WHEN (Currency_Tilltype.Name = 'SYR')
-                                AND actiontype.shortname = 'I' THEN action.Amount  ELSE 0 END) AS 'Income',
-                               (CASE WHEN (Currency_Tilltype.Name = 'USD')
-                                AND actiontype.shortname = 'I' THEN action.Amount  ELSE 0 END) AS 'Incomeusd',
+                                (CASE WHEN (Currency_Tilltype.Name = 'SYR' OR Currency_Tilltype.Name IS NULL OR Currency_Tilltype.Name = '')
+                                AND actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Income', 
+                                (CASE WHEN tilltypes.Name = 'SYR' AND Currency_Tilltype.Name = 'USD' AND actiontype.shortname = 'I' THEN action.Amount
+                                ELSE 0 END) AS 'Incomeusd',
                                 (CASE WHEN actiontype.shortname = 'O'  THEN action.Amount ELSE 0 END) AS 'Outcome',
                                 (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
                                 (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
