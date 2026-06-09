@@ -163,7 +163,7 @@ namespace Financial_WPF_App.Helper
         private string NormalizeBeneficiaryCurrency(string value)
         {
             value = (value ?? "").Trim().ToUpperInvariant();
-            return value == "SYR" ? "SYP" : value;
+            return value == "SYP" ? "SYR" : value;
         }
 
         private int GetBeneficiaryId(int microProjectId)
@@ -268,9 +268,9 @@ namespace Financial_WPF_App.Helper
                     MarkRowError(e.Row, "Returned amount", "Enter either Payment amount or Returned amount, not both or neither.");
                 }
 
-                if (currencyText != "USD" && currencyText != "SYP")
+                if (currencyText != "USD" && currencyText != "SYR")
                 {
-                    MarkRowError(e.Row, "Currency", "Currency must be USD or SYP.");
+                    MarkRowError(e.Row, "Currency", "Currency must be USD or SYR.");
                 }
                 else
                 {
