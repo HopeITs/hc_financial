@@ -608,6 +608,8 @@ namespace Financial_WPF_App.Models
 
         public DataTable SelectLines_Report()
         {
+            //هنا جلب الأسماء مجمعة من المسارين دون تكرار
+            //Group_Concat(donor.Name) as `Donor`,
 
             string query = @"SELECT  action.id AS `ID`,
                         city.Name AS `City_Name`,
@@ -617,7 +619,9 @@ namespace Financial_WPF_App.Models
                         action.MicroProject_ID,
                         CONCAT(b.FirstName,' ',b.FatherName,' ',b.LastName) as 'Beneficiary', 
                         budget.Name as `Budget`,
-                        Group_Concat(donor.Name) as `Donor`,
+
+    GROUP_CONCAT(DISTINCT COALESCE(`d_budget`.`Name`, `d_account`.`Name`) SEPARATOR ', ') AS `Donor`,
+
                         linecategory.Name as `Line Type`, 
                         line.Name as `Line`,
                         action.ActionDate,
@@ -655,12 +659,15 @@ END AS `USD_Value`,
                         action.created_at, action.updated_at, COUNT(DISTINCT att.id) AS Attachments_count
 
 
-                        FROM action LEFT JOIN actiontype on actiontype.id = action.atype_id
+                        FROM action 
+                        LEFT JOIN actiontype on actiontype.id = action.atype_id
                         LEFT JOIN budget_line on action.BudgetLine_ID = budget_line.id
                         LEFT JOIN line on line.id = budget_line.line_id
                         LEFT JOIN budget on budget.id = budget_line.budget_id
                         LEFT JOIN budget_donor on budget_donor.budget_id = budget.id
-                        LEFT JOIN donor on donor.id = budget_donor.donor_id
+
+                        LEFT JOIN donor `d_budget` ON budget_donor.donor_id = `d_budget`.id
+
                         LEFT JOIN linecategory on linecategory.id = line.Category_ID
                         LEFT JOIN cashaccount on cashaccount.id = action.CashAccount_ID
                         LEFT JOIN cashaccount obs_cashaccount on obs_cashaccount.id = action.ObserveCashAccount_ID
@@ -669,6 +676,10 @@ END AS `USD_Value`,
                         LEFT join tilltypes on tilltypes.ID = till.Type_ID
                         LEFT join tilltypes Currency_Tilltype on action.currency_tilltype_id = Currency_Tilltype.ID
                         LEFT join account on account.ID = till.Account_ID
+                        
+                        LEFT JOIN account_donor ON account.id = account_donor.Account_ID
+                        LEFT JOIN donor `d_account` ON account_donor.Donor_ID = `d_account`.id
+
                         LEFT JOIN subproject ON account.SubProject_ID = subproject.ID
                         LEFT JOIN project ON subproject.Project_ID = project.ID
                         LEFT JOIN category ON project.Category_ID = category.ID
@@ -679,6 +690,7 @@ END AS `USD_Value`,
 
                         where actiontype.shortname IN ('E','Ex') AND LOWER(tilltypes.Name) = LOWER('Syr') AND category.Name in('Budget','Micro Projects')
                         Group by action.id;";
+            // LEFT JOIN donor on donor.id = budget_donor.donor_id
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
