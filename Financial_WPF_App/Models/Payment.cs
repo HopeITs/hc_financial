@@ -97,7 +97,7 @@ namespace Financial_WPF_App.Models
 
         public DataTable Select_All_Payments(string SubProject_ID, int Action_ID, string FromDate, string ToDate, int Microproject_ID)
         {
-            string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
+            string query = @"SELECT  subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName', currency_tilltype.Name as 'Currency',
                  action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType',action.Amount as 'Income',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action.Amount
@@ -132,8 +132,7 @@ namespace Financial_WPF_App.Models
                  FROM `action` LEFT JOIN actiontype on actiontype.id = action.atype_id
                  LEFT join `till` on action.Till_ID = till.ID 
                  LEFT join `tilltypes` on tilltypes.ID = till.Type_ID
-                 LEFT join `beneficiary` on  beneficiary.MicroProject_ID = action.MicroProject_ID
-                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = beneficiary.currency_tilltype_id
+                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = action.currency_tilltype_id
                  LEFT join `account` on account.ID = till.Account_ID
                  LEFT join `subproject` on account.SubProject_ID = subproject.ID
                  LEFT join `cashaccount` on action.cashaccount_id = cashaccount.id
@@ -192,7 +191,7 @@ namespace Financial_WPF_App.Models
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
                  action_not_approved.`ID` as 'ID' ,action_not_approved.`Till_ID`, actiontype.`Name` as 'AType',
                 action_not_approved.Amount as 'Income',
-               (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_not_approved.Amount
+                (CASE WHEN Lower(currency_tilltype.Name) = 'syr' THEN action_not_approved.Amount
                 ELSE 0 END) AS 'Incomesyr',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_not_approved.Amount
                 ELSE 0 END) AS 'Incomeusd',action_not_approved.Returned_Amount as 'Outcome',
@@ -225,8 +224,7 @@ namespace Financial_WPF_App.Models
 
                  FROM `action_not_approved` LEFT JOIN actiontype on actiontype.id = action_not_approved.atype_id
                  LEFT join `till` on action_not_approved.Till_ID = till.ID LEFT join `tilltypes` on tilltypes.ID = till.Type_ID
-                 LEFT join `beneficiary` on  beneficiary.MicroProject_ID = action_not_approved.MicroProject_ID
-                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = beneficiary.currency_tilltype_id
+                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = action_not_approved.currency_tilltype_id
                  LEFT join `account` on account.ID = till.Account_ID
                  LEFT join `subproject` on account.SubProject_ID = subproject.ID
                  LEFT join `cashaccount` on action_not_approved.cashaccount_id = cashaccount.id
@@ -327,8 +325,7 @@ action_deleted.`note` as 'Note',
 
                  FROM `action_deleted` LEFT JOIN actiontype on actiontype.id = action_deleted.atype_id
                  LEFT join `till` on action_deleted.Till_ID = till.ID LEFT join `tilltypes` on tilltypes.ID = till.Type_ID
-                 LEFT join `beneficiary` on  beneficiary.MicroProject_ID = action_deleted.MicroProject_ID
-                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = beneficiary.currency_tilltype_id
+                 LEFT JOIN `tilltypes` as currency_tilltype on currency_tilltype.id = action_deleted.currency_tilltype_id
                  LEFT join `account` on account.ID = till.Account_ID
                  LEFT join `subproject` on account.SubProject_ID = subproject.ID
                  LEFT join `cashaccount` on action_deleted.cashaccount_id = cashaccount.id
@@ -397,7 +394,7 @@ action_deleted.`note` as 'Note',
 
         public void Insert_Payment(double Amount, double Returned_Amount, string Date, string Note,
                 int MicroProject_ID, int SubProject_ID, int Beneficiary_ID,
-                DataTable payments, int CashAccount_ID, string Form_Name)
+                DataTable payments, int CashAccount_ID, int Currency_TillType_ID, string Form_Name)
         {
             if (!Login.BuildConnection()) return;
             string sql = "";
@@ -412,6 +409,7 @@ action_deleted.`note` as 'Note',
                 sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
                 sc.Parameters.AddWithValue("@Returned_Amount", Returned_Amount);
                 sc.Parameters.AddWithValue("@CashAccount_ID", CashAccount_ID);
+                sc.Parameters.AddWithValue("@Currency_TillType_ID", Currency_TillType_ID);
                 sc.Parameters.AddWithValue("@Form_Name", Form_Name);
                 sc.Parameters.AddWithValue("@User_ID", Settings.Default.User_ID);
                 sc.Parameters.AddWithValue("@Note", Note);
@@ -469,8 +467,7 @@ action_deleted.`note` as 'Note',
                     sql += @"SET @payId = Last_Insert_ID() ;";
                     sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
                                    "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
-                                   actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='R' LIMIT 1), " +
-                                   "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID), " +
+                                   actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='R' LIMIT 1), @Currency_TillType_ID, " +
                                    " 0," + Returned_Amount + ", 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @User_ID);";
                     sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ",@payId);";
 
@@ -527,7 +524,7 @@ action_deleted.`note` as 'Note',
                         sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
                                "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
                                actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='I' LIMIT 1), " +
-                               "(SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID), " +
+                              " @Currency_TillType_ID, " +
                                apply + ", 0, 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @User_ID);";
 
                         
@@ -568,7 +565,7 @@ action_deleted.`note` as 'Note',
             }
         }
 
-        public void Update_Payment(int Action_ID, int Till_ID, Double Amount, Double ReturnedAmount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, string Form_Name)
+        public void Update_Payment(int Action_ID, int Till_ID, Double Amount, Double ReturnedAmount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, int Currency_TillType_ID, string Form_Name)
         {
             string query = "";
             string log_query = "";
@@ -604,6 +601,8 @@ action_deleted.`note` as 'Note',
                 sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
                 sc.Parameters.AddWithValue("@CashAccount_ID", CashAccount_ID);
 
+                sc.Parameters.AddWithValue("@Currency_TillType_ID", Currency_TillType_ID);
+
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
                 sc.Parameters.AddWithValue("@Todaydate", Todaydate);
                 sc.Parameters.AddWithValue("@User_ID", Settings.Default.User_ID);
@@ -612,7 +611,7 @@ action_deleted.`note` as 'Note',
                 query = "START TRANSACTION;";
 
                 query += @"UPDATE`action` SET `Amount` = @Amount,`Returned_Amount` = @ReturnedAmount,
-                            `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id =@CashAccount_ID , updated_at =  @Todaydate, `edited_by` = @User_ID  
+                            `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id =@CashAccount_ID, `currency_tilltype_id` = @Currency_TillType_ID, updated_at =  @Todaydate, `edited_by` = @User_ID  
                             WHERE action.ID = @Action_ID;";
 
 
@@ -655,7 +654,7 @@ action_deleted.`note` as 'Note',
             }
         }
 
-        public void Update_Not_Approved_Payment(int Action_ID, int Till_ID, Double Amount, Double ReturnedAmount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, string Form_Name)
+        public void Update_Not_Approved_Payment(int Action_ID, int Till_ID, Double Amount, Double ReturnedAmount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, int Currency_TillType_ID, string Form_Name)
         {
             string query = "";
             string log_query = "";
@@ -665,9 +664,8 @@ action_deleted.`note` as 'Note',
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@Action_ID", Action_ID);
                 sc.Parameters.AddWithValue("@Till_ID", Till_ID);
-
                 sc.Parameters.AddWithValue("@Amount", Amount);
-                sc.Parameters.AddWithValue("@Returned_Amount", ReturnedAmount);
+                sc.Parameters.AddWithValue("@ReturnedAmount", ReturnedAmount); // تم توحيد المسمى هنا
 
                 if (Date == "Null")
                 {
@@ -690,6 +688,7 @@ action_deleted.`note` as 'Note',
                 }
                 sc.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
                 sc.Parameters.AddWithValue("@CashAccount_ID", CashAccount_ID);
+                sc.Parameters.AddWithValue("@Currency_TillType_ID", Currency_TillType_ID);
 
                 string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
                 sc.Parameters.AddWithValue("@Todaydate", Todaydate);
@@ -698,22 +697,13 @@ action_deleted.`note` as 'Note',
 
                 query = "START TRANSACTION;";
 
-                query += @"UPDATE`action_not_approved` SET `Amount` = @Amount,Returned_Amount = @Returned_Amount,
-                            `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id =@CashAccount_ID , updated_at =  @Todaydate, `edited_by` = @User_ID  
-                            WHERE action_not_approved.ID = @Action_ID;";
+                // تعديل البارامتر هنا ليتوافق مع الإدخال @ReturnedAmount
+                query += @"UPDATE `action_not_approved` SET `Amount` = @Amount, `Returned_Amount` = @ReturnedAmount,
+                     `ActionDate` = @Date, `Note` = @Note, `MicroProject_ID` = @MicroProject_ID, cashaccount_id = @CashAccount_ID, `currency_tilltype_id` = @Currency_TillType_ID, updated_at = @Todaydate, `edited_by` = @User_ID  
+                     WHERE action_not_approved.ID = @Action_ID;";
 
-
-                query += "UPDATE `action_not_approved` SET " +
-                        " `IsApproved`= 0" +
-                        " ,`Approved_at`= null" +
-                        " ,`Approved_by`= null" +
-                        " WHERE ID = @Action_ID;";
-
-                query += "UPDATE `action_not_approved` SET " +
-                        " `IsApproved`= 0" +
-                        " ,`Approved_at`= null" +
-                        " ,`Approved_by`= null" +
-                       " WHERE ObserveAcion_ID = @Action_ID;";
+                query += "UPDATE `action_not_approved` SET `IsApproved` = 0, `Approved_at` = null, `Approved_by` = null WHERE ID = @Action_ID;";
+                query += "UPDATE `action_not_approved` SET `IsApproved` = 0, `Approved_at` = null, `Approved_by` = null WHERE ObserveAcion_ID = @Action_ID;";
 
                 log_query = Regex.Replace(query, "'", "''");
 
@@ -723,8 +713,6 @@ action_deleted.`note` as 'Note',
                 }
 
                 query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'action_not_approved', @Action_ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
-
                 query += " COMMIT;";
 
                 sc.CommandTimeout = 120;
@@ -738,7 +726,6 @@ action_deleted.`note` as 'Note',
 
         public void Delete_Payment(int ID, int Beneficiary_ID, bool Approved_Action, string Form_Name)
         {
-
             string query = "";
             string log_query = "";
 
@@ -756,42 +743,36 @@ action_deleted.`note` as 'Note',
 
                 query += "START TRANSACTION;";
 
+                // خطوة حماية هامة جداً: إذا كانت الدفعة عبارة عن عملية مرتجع (Returned_Amount > 0)، يجب حذف سجل الـ payment السالب المرتبط بها
+                string targetTable = Approved_Action ? "action" : "action_not_approved";
+
+                query += $@"   DELETE FROM payment 
+                       WHERE id IN (
+                           SELECT payment_id FROM action_payment WHERE action_id = @ID
+                       ) AND Amount < 0 AND EXISTS (
+                           SELECT 1 FROM {targetTable} WHERE id = @ID AND Returned_Amount > 0
+                       );";
+
+                // تنظيف جدول الربط بشكل دائم لمنع السجلات اليتيمة
+                query += "DELETE FROM action_payment WHERE action_id = @ID OR action_id IN (SELECT id FROM action WHERE ObserveAcion_ID = @ID);";
+
                 if (Approved_Action)
                 {
                     query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID OR action.ObserveAcion_ID = @ID;";
-
-                    query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @User_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
-
+                    query += "UPDATE action_deleted SET `deleted_at` = @Todaydate, `deleted_by` = @User_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
                     query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID;";
-
-                    query += "DELETE FROM action WHERE action.id  = @ID;";
-
-
-                    //query += "DELETE FROM `action` WHERE action.ObserveAcion_ID = @ID;";
-
-                    //query += "DELETE FROM `action` WHERE action.ID = @ID;";
-
-                    //query += "DELETE FROM action_payment WHERE action_id = @ID;";
-
+                    query += "DELETE FROM action WHERE action.id = @ID;";
                 }
                 else
                 {
                     query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID OR action_not_approved.ObserveAcion_ID = @ID;";
-
-                    query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @User_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
-
+                    query += "UPDATE action_deleted SET `deleted_at` = @Todaydate, `deleted_by` = @User_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
                     query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID;";
-
-                    query += "DELETE FROM action_not_approved WHERE action_not_approved.id  = @ID;";
-
-                    //query += "DELETE FROM `action_not_approved` WHERE action_not_approved.ObserveAcion_ID = @ID;";
-
-                    //query += "DELETE FROM `action_not_approved` WHERE action_not_approved.ID = @ID;";
-
-                    //query += "DELETE FROM action_payment WHERE action_id = @ID;";
-
+                    query += "DELETE FROM action_not_approved WHERE action_not_approved.id = @ID;";
                 }
 
+                // إعادة تشغيل دالة الاحتساب التراكمية لإعادة المبالغ المطلوبة إلى وضعها الصحيح بعد الحذف
+                query += "CALL ReGenerate_AllPayments(@Beneficiary_ID);";
 
                 log_query = Regex.Replace(query, "'", "''");
 
@@ -800,14 +781,7 @@ action_deleted.`note` as 'Note',
                     log_query = Regex.Replace(log_query, p.ParameterName, p.Value == null ? "" : Regex.Replace(Regex.Replace(p.Value.ToString(), "'", "''"), "'", "''"));
                 }
 
-                //if(Approved_Action)
-                //{
-                //    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'action', @ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-                //}
-                //else
-                //{
-                //    query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', 'action_not_approved', @ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-                //}
+                query += $" INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'DELETE', '{targetTable}', @ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                 query += " COMMIT;";
 
                 sc.CommandTimeout = 120;
@@ -818,7 +792,6 @@ action_deleted.`note` as 'Note',
 
                 Login.CloseAndClearConnection();
             }
-
         }
 
         public void Delay_Payments(int Monthes, List<int> Beneficiary_IDs)

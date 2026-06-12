@@ -346,12 +346,12 @@ namespace Financial_WPF_App.Helper
             }
             Login.MultiPayments_sc.Parameters.AddWithValue("@CashAccount_ID" + k, _CashAccount_ID);
 
-            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
+            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"); // تم تعديل HH لتكون بنظام 24 ساعة لضمان دقة التوقيت المسائي
             Login.MultiPayments_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
-
             Login.MultiPayments_sc.Parameters.AddWithValue("@Form_Name" + k, _Form_Name);
 
-            Login.MultiPayments_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
+            // تصحيح الخطأ المطبعي من @Uesr_ID إلى @User_ID
+            Login.MultiPayments_sc.Parameters.AddWithValue("@User_ID" + k, Settings.Default.User_ID);
 
             temp_query += @"SET @Till_ID" + k + " = (SELECT till.ID" +
                             " FROM account LEFT JOIN till ON till.Account_ID = account.ID" +
@@ -362,33 +362,31 @@ namespace Financial_WPF_App.Helper
                             " account.SubProject_ID = SubProjectID" +
                             " AND tilltypes.Name = 'pay'); ";
 
-
-
             int Beneficiary_ID = _Beneficiaries_dt.AsEnumerable()
                      .Where(row => row.Field<int>("MicroProject_ID").ToString()?.Equals(_MicroProject_ID.ToString()) == true)
                      .Select(row => row.Field<int>("ID"))
                      .DefaultIfEmpty(-1)
                      .FirstOrDefault();
 
-
             Login.MultiPayments_sc.Parameters.AddWithValue("@Beneficiary_ID" + k, Beneficiary_ID);
+
+            // حلقة جلب معرّف المعاملة الأحدث (Action_ID) الموحد لجميع الأسطر لمنع تكرار المفاتيح الأساسية
+            if (!_ActionIdVariableInitialized)
+            {
+                temp_query += @"SET @Action_ID = (
+                            SELECT IFNULL(MAX(max_id), 0) + 1 AS next_id
+                            FROM (
+                                SELECT MAX(ID) AS max_id FROM action
+                                UNION ALL
+                                SELECT MAX(ID) FROM action_not_approved
+                                UNION ALL
+                                SELECT MAX(ID) FROM action_deleted
+                            ) AS combined_max_ids);";
+                _ActionIdVariableInitialized = true;
+            }
 
             if (_IsReturnedPayment)
             {
-                if (!_ActionIdVariableInitialized)
-                {
-                    temp_query += @"SET @Action_ID = (
-                                SELECT IFNULL(MAX(max_id), 0) + 1 AS next_id
-                                FROM (
-                                    SELECT MAX(ID) AS max_id FROM action
-                                    UNION ALL
-                                    SELECT MAX(ID) FROM action_not_approved
-                                    UNION ALL
-                                    SELECT MAX(ID) FROM action_deleted
-                                ) AS combined_max_ids);";
-                    _ActionIdVariableInitialized = true;
-                }
-
                 temp_query += @"SET @num" + k + @" = (
                        SELECT p.Num
                        FROM payment p
@@ -405,11 +403,11 @@ namespace Financial_WPF_App.Helper
                 temp_query += " SET @Action_ID" + k + " = @Action_ID;";
 
                 temp_query += " INSERT INTO `action_not_approved`(`id`,`Till_ID`, `AType_ID`, `currency_tilltype_id`, `Amount`, `Returned_Amount`, `rate`,"
-                        + " `ActionDate`, `Note`, `IsReceipt`, `MicroProject_ID`,cashaccount_id, created_at, User_ID)"
+                        + " `ActionDate`, `Note`, `IsReceipt`, `MicroProject_ID`, cashaccount_id, created_at, User_ID)"
                         + " VALUES (@Action_ID" + k + ", @Till_ID" + k + ", (Select id from actiontype where shortname = 'R'),"
                         + " (SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID" + k + "),"
                         + " 0, @ReturnedAmount" + k + ", 0, @Date" + k + ", @Note" + k + ", -1,"
-                        + " @MicroProject_ID" + k + ", @CashAccount_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ");";
+                        + " @MicroProject_ID" + k + ", @CashAccount_ID" + k + ", @Todaydate" + k + ", @User_ID" + k + ");"; // تعديل اسم البارامتر هنا
 
                 temp_query += " INSERT INTO payment(Amount, DueDate, Beneficiary_ID, Num) VALUES(-@ReturnedAmount" + k + ", @Date" + k + ", @Beneficiary_ID" + k + ", IFNULL(@num" + k + ", 0) + 1);";
                 temp_query += " INSERT INTO action_payment (action_id, payment_id) VALUES (@Action_ID" + k + ", LAST_INSERT_ID());";
@@ -423,7 +421,6 @@ namespace Financial_WPF_App.Helper
             }
 
             DataTable selected_rows_dt = new DataTable();
-
             System.Data.DataRow[] My_rows = _Payments_dt.Select("(payment_state is null OR payment_state <> 'Done') and Beneficiary_ID = " + Beneficiary_ID + "");
 
             selected_rows_dt = _Payments_dt.Copy();
@@ -439,7 +436,6 @@ namespace Financial_WPF_App.Helper
                     if (_Amount > 0)
                     {
                         int payment_id = selected_rows_dt.Rows[i].Field<Int32>("ID");
-
                         Double Payment_Amount = Double.Parse(selected_rows_dt.Rows[i].Field<Single>("Amount").ToString());
                         Double Paid_Amount = selected_rows_dt.Rows[i].Field<Double>("Paid_Amount");
                         Double Current_Payment;
@@ -481,38 +477,21 @@ namespace Financial_WPF_App.Helper
                             }
                         }
 
-
                         Login.MultiPayments_sc.Parameters.AddWithValue("@payment_id" + i + "_" + k, payment_id);
                         Login.MultiPayments_sc.Parameters.AddWithValue("@Amount" + i + "_" + k, Current_Payment);
 
-
-                        if (!_ActionIdVariableInitialized)
-                        {
-                            temp_query += @"SET @Action_ID = (
-                                SELECT MAX(max_id) + 1 AS next_id
-                                FROM (
-                                    SELECT MAX(ID) AS max_id FROM action
-                                    UNION ALL
-                                    SELECT MAX(ID) FROM action_not_approved
-                                    UNION ALL
-                                    SELECT MAX(ID) FROM action_deleted
-                                ) AS combined_max_ids);";
-                            _ActionIdVariableInitialized = true;
-                        }
-
                         temp_query += "SET @Action_ID" + i + "_" + k + " = @Action_ID;";
 
+                        // إصلاح خطأ نقص حقل الـ currency_tilltype_id وتصحيح اسم بارامتر المستخدم @User_ID
+                        temp_query += "INSERT INTO `action_not_approved`(`id`,`Till_ID`, `AType_ID`, `currency_tilltype_id`, `Amount`, `rate`,"
+                                    + " `ActionDate`, `Note`, `IsReceipt`, `MicroProject_ID`, cashaccount_id, created_at, User_ID)"
+                                    + " VALUES (@Action_ID" + i + "_" + k + ", @Till_ID" + k + ", (Select id from actiontype where shortname = 'I'),"
+                                    + " (SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID" + k + "),"
+                                    + " @Amount" + i + "_" + k + ", 0, @Date" + k + ", @Note" + k + ", -1,"
+                                    + " @MicroProject_ID" + k + ", @CashAccount_ID" + k + ", @Todaydate" + k + ", @User_ID" + k + ");";
 
-                        temp_query += "INSERT INTO `action_not_approved`(`id`,`Till_ID`, `AType_ID`, `Amount`, `rate`,"
-                                + " `ActionDate`, `Note`, `IsReceipt`, `MicroProject_ID`,cashaccount_id, created_at, User_ID)"
-                                + " VALUES (@Action_ID" + i + "_" + k + ", @Till_ID" + k + ", (Select id from actiontype where shortname = 'I'), @Amount" + i + "_" + k + ", 0, @Date" + k + ", @Note" + k + ", -1,"
-                                + " @MicroProject_ID" + k + ", @CashAccount_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ");";
-
-
-                        temp_query += "SET @Action_ID = @Action_ID" + i + "_" + k + " +1;";
-
-
-                        temp_query += " INSERT INTO action_payment (action_id, payment_id) VALUES (@Action_ID" + i + "_" + k + ",@payment_id" + i + "_" + k + ");";
+                        temp_query += "SET @Action_ID = @Action_ID" + i + "_" + k + " + 1;";
+                        temp_query += " INSERT INTO action_payment (action_id, payment_id) VALUES (@Action_ID" + i + "_" + k + ", @payment_id" + i + "_" + k + ");";
 
                         _Amount = _Amount - Current_Payment;
                         numofinserts++;
@@ -526,30 +505,25 @@ namespace Financial_WPF_App.Helper
             }
             else
             {
-                temp_query += "SET @Action_ID0" + k + "  = (SELECT CASE WHEN IFNULL(MAX(action.ID),0) > (SELECT IFNULL(MAX(action_not_approved.ID),0) FROM action_not_approved) THEN IFNULL(MAX(action.ID),0)+1 ELSE (SELECT IFNULL(MAX(action_not_approved.ID),0)+1 FROM action_not_approved) END FROM action);";
+                // تم ربطها بـ @Action_ID لتجنب الكتابة فوق معرّفات المعاملات السابقة المدرجة بالـ Bulk
+                temp_query += "SET @Action_ID0" + k + " = @Action_ID;";
 
+                // إصلاح حقل الـ currency_tilltype_id وتصحيح اسم بارامتر المستخدم @User_ID هنا أيضاً
+                temp_query += " INSERT INTO `action_not_approved`(`id`,`Till_ID`, `AType_ID`, `currency_tilltype_id`, `Amount`, `rate`,"
+                            + " `ActionDate`, `Note`, `IsReceipt`, `MicroProject_ID`, cashaccount_id, created_at, User_ID)"
+                            + " VALUES (@Action_ID0" + k + ", @Till_ID" + k + ", (Select id from actiontype where shortname = 'I'),"
+                            + " (SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID" + k + "),"
+                            + " @Amount" + k + ", 0, @Date" + k + ", @Note" + k + ", -1,"
+                            + " @MicroProject_ID" + k + ", @CashAccount_ID" + k + ", @Todaydate" + k + ", @User_ID" + k + ");";
 
-                temp_query += " INSERT INTO `action_not_approved`(`id`,`Till_ID`, `AType_ID`, `Amount`, `rate`,"
-                    + " `ActionDate`, `Note`, `IsReceipt`, `MicroProject_ID`,cashaccount_id, created_at, User_ID)"
-                    + " VALUES (@Action_ID0" + k + ", @Till_ID" + k + ", (Select id from actiontype where shortname = 'I'), @Amount" + k + ", 0, @Date" + k + ", @Note" + k + ", -1,"
-                    + " @MicroProject_ID" + k + ", @CashAccount_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ");";
-
-
-                temp_query += "SET @Action_ID = @Action_ID0" + k + "  +1;";
-
-
-                temp_query += " INSERT INTO action_payment (action_id, payment_id) VALUES (@Action_ID0" + k + ",(select ID from payment where payment.Beneficiary_ID = @Beneficiary_ID" + k + " and payment.Num = (select Max(num) from payment where payment.Beneficiary_ID = @Beneficiary_ID" + k + ")));";
-
-
+                temp_query += "SET @Action_ID = @Action_ID0" + k + " + 1;";
+                temp_query += " INSERT INTO action_payment (action_id, payment_id) VALUES (@Action_ID0" + k + ", (select ID from payment where payment.Beneficiary_ID = @Beneficiary_ID" + k + " and payment.Num = (select Max(num) from payment where payment.Beneficiary_ID = @Beneficiary_ID" + k + ")));";
                 temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @Action_ID0" + k + ", 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID" + k + ") , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-
             }
 
-
-
+            _BeneficiaryIdsToRegenerate.Add(Beneficiary_ID);
             Login.MultiPayments_List.Add(temp_query);
             temp_query = "";
-
         }
 
         public void AppendDeferredRegenerationQueries()
