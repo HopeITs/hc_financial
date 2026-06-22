@@ -620,7 +620,7 @@ namespace Financial_WPF_App.Models
                         CONCAT(b.FirstName,' ',b.FatherName,' ',b.LastName) as 'Beneficiary', 
                         budget.Name as `Budget`,
 
-    GROUP_CONCAT(DISTINCT COALESCE(`d_budget`.`Name`, `d_account`.`Name`) SEPARATOR ', ') AS `Donor`,
+                       GROUP_CONCAT(DISTINCT COALESCE(`d_budget`.`Name`, `d_account`.`Name`) SEPARATOR ', ') AS `Donor`,
 
                         linecategory.Name as `Line Type`, 
                         line.Name as `Line`,
@@ -629,7 +629,7 @@ namespace Financial_WPF_App.Models
                         DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         Currency_Tilltype.Name as 'Currency',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
-                        (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Syr') THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
+                        (CASE WHEN actiontype.shortname = 'E' and (LOWER(Currency_Tilltype.Name) = LOWER('Syr') OR Currency_Tilltype.Name IS NULL) THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
                         (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Usd') THEN action.Amount ELSE 0 END) AS 'ExpenseUSD',
                         action.Note,
                         action.E_Note,
@@ -643,7 +643,7 @@ namespace Financial_WPF_App.Models
                         all_avgrates.value as `AvgRateValue`, 
                         CASE 
                        WHEN actiontype.shortname = 'E' 
-                       AND LOWER(Currency_Tilltype.Name) = LOWER('Syr') 
+                       AND (LOWER(Currency_Tilltype.Name) = LOWER('Syr') OR Currency_Tilltype.Name IS NULL)
                        THEN action.Amount / NULLIF(all_avgrates.value,0)
 
                        WHEN actiontype.shortname = 'E' 
