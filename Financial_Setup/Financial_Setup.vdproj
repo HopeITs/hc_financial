@@ -1708,7 +1708,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:v4.6.1                                                                                                "
+                "FrameworkVersion" = "8:v4.6.1                                                                                                 "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=671728"
                 }
@@ -3993,15 +3993,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Financial"
-        "ProductCode" = "8:{FC3F7428-5DC1-43D5-9A16-220B889B9FC1}"
-        "PackageCode" = "8:{903C8A1F-41A0-4C3C-A1EC-2CAEA7B367DE}"
+        "ProductCode" = "8:{1E80C021-8D59-4613-84F2-F4479D671953}"
+        "PackageCode" = "8:{F0ABA2C1-D806-4A0A-93DE-D77714DD66F7}"
         "UpgradeCode" = "8:{FA8ACE2C-C0BE-462F-933D-A47742515111}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:3.1.06"
+        "ProductVersion" = "8:3.1.07"
         "Manufacturer" = "8:Hope Center"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
