@@ -1003,8 +1003,8 @@ END AS `USD_Value`,
                     else if (WithObserveAcion_ID && isUsdExpenseFromSyr)
                     {
                     //  Outcome من USD till
-                    query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, Amount, rate, ActionDate, Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote, CashAccount_ID, Donor_ID, BudgetLine_ID, created_at, User_ID, SourceAction) 
-                               VALUES (@ObserveTill_ID, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'O'), @Amount, @rate, @ActionDate, @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @CashAccount_ID, @Donor_ID, @BudgetLine_ID, @Todaydate, @Uesr_ID, '0'); ";
+                    query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, currency_tilltype_id, Amount, rate, ActionDate, Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote, CashAccount_ID, Donor_ID, BudgetLine_ID, created_at, User_ID, SourceAction)
+                               VALUES (@ObserveTill_ID, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'O'), @Currency_tilltype_id, @Amount, @rate, @ActionDate, @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @CashAccount_ID, @Donor_ID, @BudgetLine_ID, @Todaydate, @Uesr_ID, '0'); ";
 
                     query += " SET @UsdOutcome_ID = Last_Insert_ID(); ";
 

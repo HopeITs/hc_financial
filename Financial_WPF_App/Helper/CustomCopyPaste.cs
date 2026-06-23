@@ -16,6 +16,9 @@ namespace Financial_WPF_App.Helper
 {
     public class CustomCopyPaste : GridCutCopyPaste
     {
+        private const int UsdCurrencyTilltypeId = 2;
+        private const int SyrCurrencyTilltypeId = 4;
+
         public event EventHandler PasteCompleted;
         private DataTable _all_Original_AvgRate_dt, _all_AvgRate_dt, _all_b_dt, _all_t_dt, _all_ExAcc_dt, _all_Accounts_dt, _all_Lines_dt, _all_budgets_dt, _all_cashAccounts_dt, _all_Donors_dt, _all_Employee_dt, _all_Tills_dt, _currency_dt;
         public int TotalPastedRows { get; private set; } = 0;
@@ -220,6 +223,17 @@ namespace Financial_WPF_App.Helper
         private static string NormalizeLookupName(string value)
         {
             return (value ?? "").Trim().ToLowerInvariant();
+        }
+
+        private void ApplyDefaultCurrencyTilltypeForExpenseFromSyr()
+        {
+            if (_inserted_value == "E" &&
+                !string.IsNullOrEmpty(_Till_Type) &&
+                _Till_Type.Equals("syr", StringComparison.OrdinalIgnoreCase) &&
+                _currency_tilltype_id == -1)
+            {
+                _currency_tilltype_id = SyrCurrencyTilltypeId;
+            }
         }
 
         private int ResolveTillTypeIdFromLoadedData(string tillTypeName)
@@ -498,7 +512,12 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
 
-                if (_currency_dt.Rows.Count > 0)
+                if (e.ProposedValue == null || e.ProposedValue.ToString().IsNullOrWhiteSpace())
+                {
+                    ApplyDefaultCurrencyTilltypeForExpenseFromSyr();
+                    exists = _currency_tilltype_id != -1;
+                }
+                else if (_currency_dt.Rows.Count > 0)
                 {
                     _currency_tilltype_id = _currency_dt.AsEnumerable()
                     .Where(row => row.Field<string>("Name")?.ToLower().Trim()
@@ -512,7 +531,7 @@ namespace Financial_WPF_App.Helper
                 {
                     exists = true;
                     if (_Till_Type.ToLower() == "syr" &&
-                     e.ProposedValue.ToString().ToLower().Trim() == "usd" &&
+                     _currency_tilltype_id == UsdCurrencyTilltypeId &&
                     _inserted_value == "E")
                     {
                         isUsdExpenseFromSyr = true;
@@ -1358,6 +1377,7 @@ namespace Financial_WPF_App.Helper
         public void build_insert_query()
         {
             ValidateTillResolutionBeforeInsert();
+            ApplyDefaultCurrencyTilltypeForExpenseFromSyr();
 
             // =========================================================================
             // 1. [VALIDATION & DEBUGGING] التحقق والطباعة قبل البدء ببناء الاستعلام
