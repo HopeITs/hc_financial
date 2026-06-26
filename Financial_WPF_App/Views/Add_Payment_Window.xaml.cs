@@ -485,7 +485,7 @@ namespace Financial_WPF_App.Views
                         DataTable selected_rows_dt = new DataTable();
                         DataTable returned_rows_dt = new DataTable();
 
-                        System.Data.DataRow[] My_rows = p_dt.Select("payment_state is null OR payment_state <> 'Done'");
+                        System.Data.DataRow[] My_rows = p_dt.Select("payment_state = 'Unpaid' OR payment_state = 'Incomplete'", "Num ASC, DueDate ASC, ID ASC");
                         
                         selected_rows_dt = p_dt.Copy();
                         selected_rows_dt.Rows.Clear();

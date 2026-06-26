@@ -56,8 +56,6 @@ namespace Financial_WPF_App.Models
                                 SELECT *, 'action' AS Source FROM action
                                 UNION ALL
                                 SELECT *, 'action_not_approved' AS Source FROM action_not_approved
-                                UNION ALL
-                                SELECT *, 'action_deleted' AS Source FROM action_deleted
                             ) AS combined_action 
                                 ON combined_action.ID = action_payment.action_id
                             LEFT JOIN beneficiary ON payment.beneficiary_id = beneficiary.id
@@ -72,7 +70,7 @@ namespace Financial_WPF_App.Models
             {
                 query += " and account.Subproject_ID = @Subproject_ID";
             }
-            query += " GROUP BY payment.ID;";
+            query += " GROUP BY payment.ID ORDER BY payment.Num, payment.DueDate, payment.ID;";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -92,6 +90,64 @@ namespace Financial_WPF_App.Models
                 da.Fill(dt);
                 Login.CloseAndClearConnection();
             }
+            return dt;
+        }
+
+        private bool IsPayablePayment(DataRow row)
+        {
+            string paymentState = row["payment_state"]?.ToString();
+            return paymentState == "Unpaid" || paymentState == "Incomplete";
+        }
+
+        private double GetPaymentNeed(DataRow row)
+        {
+            return Math.Max(0, Convert.ToDouble(row["Amount"]) - Convert.ToDouble(row["Paid_Amount"]));
+        }
+
+        private DateTime GetPaymentDueDate(DataRow row)
+        {
+            return row["DueDate"] == DBNull.Value ? DateTime.MaxValue : Convert.ToDateTime(row["DueDate"]);
+        }
+
+        private DataTable SelectPayablePaymentsForUpdate(MySqlConnection connection, int Beneficiary_ID)
+        {
+            string query = @"SELECT 
+                                payment.ID,
+                                payment.Amount,
+                                payment.DueDate,
+                                payment.Beneficiary_ID,
+                                payment.Num,
+                                IFNULL(SUM(combined_action.Amount),0) - IFNULL(SUM(combined_action.Returned_Amount),0) AS 'Paid_Amount',
+                                CASE
+                                    WHEN payment.Amount < 0 THEN 'Returned'
+                                    WHEN (IFNULL(SUM(combined_action.Amount),0) - IFNULL(SUM(combined_action.Returned_Amount),0)) <= 0 THEN 'Unpaid'
+                                    WHEN (IFNULL(SUM(combined_action.Amount),0) - IFNULL(SUM(combined_action.Returned_Amount),0)) < payment.Amount THEN 'Incomplete'
+                                    ELSE 'Done'
+                                END AS 'payment_state'
+                            FROM payment
+                            LEFT JOIN action_payment ON payment.ID = action_payment.payment_id
+                            LEFT JOIN (
+                                SELECT ID, Amount, Returned_Amount FROM action
+                                UNION ALL
+                                SELECT ID, Amount, Returned_Amount FROM action_not_approved
+                            ) AS combined_action ON combined_action.ID = action_payment.action_id
+                            WHERE payment.Beneficiary_ID = @Beneficiary_ID
+                            GROUP BY payment.ID
+                            HAVING payment_state IN ('Unpaid', 'Incomplete')
+                            ORDER BY payment.Num, payment.DueDate, payment.ID
+                            FOR UPDATE;";
+
+            DataTable dt = new DataTable();
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
+                cmd.CommandTimeout = 120;
+                using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                {
+                    da.Fill(dt);
+                }
+            }
+
             return dt;
         }
 
@@ -500,49 +556,89 @@ action_deleted.`note` as 'Note',
 
                 else if (Amount > 0 && Returned_Amount == 0)
                 {
-                    sql = "START TRANSACTION;";
-                    foreach (DataRow r in payments.Rows)
-                    {
-                        if (Amount <= 0) break; 
-
-                        int payId = Convert.ToInt32(r["ID"]); 
-                        double scheduled = Convert.ToDouble(r["Amount"]); 
-                        double paidAmount = Convert.ToDouble(r["Paid_Amount"]); 
-                        string paymentState = r["payment_state"].ToString();
-                        
-                       
-                        double netPaid = paidAmount;
-                        double need = scheduled - netPaid;
-
-                        
-                        if (need <= 0 || paymentState == "paid") continue;
-
-                        
-                        double apply = Math.Min(Amount, need); // Apply the minimum of remaining amount and available funds
-
-                        
-                        sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
-                               "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
-                               actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='I' LIMIT 1), " +
-                              " @Currency_TillType_ID, " +
-                               apply + ", 0, 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @User_ID);";
-
-                        
-                        sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ", " + payId + ");";
-
-                        actionID++;
-                        numofinserts++;
-                        Amount -= apply; // Decrease the amount by the applied value
-
-                        // If no more amount is left to apply, break the loop
-                        if (Amount <= 0) break;
-                    }
-
-                    sql += "COMMIT;";
-
-                    sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
-                    sc.Parameters.AddWithValue("@t", 600);
+                    sc.CommandText = "START TRANSACTION;";
                     sc.ExecuteNonQuery();
+
+                    try
+                    {
+                        DataTable currentPayablePayments = SelectPayablePaymentsForUpdate(sc.Connection, Beneficiary_ID);
+
+                        List<DataRow> payablePayments = currentPayablePayments.AsEnumerable()
+                            .Where(IsPayablePayment)
+                            .OrderBy(r => Convert.ToInt32(r["Num"]))
+                            .ThenBy(GetPaymentDueDate)
+                            .ThenBy(r => Convert.ToInt32(r["ID"]))
+                            .ToList();
+
+                        double remainingScheduledAmount = payablePayments
+                            .Select(GetPaymentNeed)
+                            .Sum();
+
+                        if (remainingScheduledAmount <= 0)
+                        {
+                            sc.CommandText = "ROLLBACK;";
+                            sc.ExecuteNonQuery();
+                            Login.CloseAndClearConnection();
+                            throw new Exception("This beneficiary has no unpaid scheduled payments to receive this amount.");
+                        }
+
+                        if (Amount > remainingScheduledAmount)
+                        {
+                            sc.CommandText = "ROLLBACK;";
+                            sc.ExecuteNonQuery();
+                            Login.CloseAndClearConnection();
+                            throw new Exception("The entered payment amount exceeds the beneficiary's remaining scheduled payments.");
+                        }
+
+                        sql = "";
+                        foreach (DataRow r in payablePayments)
+                        {
+                            if (Amount <= 0) break; 
+
+                            int payId = Convert.ToInt32(r["ID"]);
+                            double scheduled = Convert.ToDouble(r["Amount"]);
+                            double paidAmount = Convert.ToDouble(r["Paid_Amount"]);
+                            double need = Math.Max(0, scheduled - paidAmount);
+
+                            if (need <= 0 || !IsPayablePayment(r)) continue;
+
+                            double apply = Math.Min(Amount, need);
+
+                            sql += "INSERT INTO action_not_approved(id, Till_ID, AType_ID, currency_tilltype_id, Amount, Returned_Amount, rate, ActionDate, Note, " +
+                                   "IsReceipt, MicroProject_ID, cashaccount_id, created_at, User_ID) VALUES (" +
+                                   actionID + ", " + tillID + ", (SELECT id FROM actiontype WHERE shortname='I' LIMIT 1), " +
+                                  " @Currency_TillType_ID, " +
+                                   apply + ", 0, 0, @Date, @Note, -1, @MicroProject_ID, @CashAccount_ID, @Todaydate, @User_ID);";
+
+                            sql += "INSERT INTO action_payment(action_id, payment_id) VALUES(" + actionID + ", " + payId + ");";
+
+                            actionID++;
+                            numofinserts++;
+                            Amount -= apply;
+
+                            if (Amount <= 0) break;
+                        }
+
+                        sql += "COMMIT;";
+
+                        sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
+                        sc.Parameters.AddWithValue("@t", 600);
+                        sc.ExecuteNonQuery();
+                    }
+                    catch
+                    {
+                        if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
+                        {
+                            try
+                            {
+                                sc.CommandText = "ROLLBACK;";
+                                sc.ExecuteNonQuery();
+                            }
+                            catch { }
+                        }
+
+                        throw;
+                    }
 
                     int firstInsertedActionIdLog = actionID - numofinserts;
                     string escapedSql = Regex.Replace(sql, "'", "''");

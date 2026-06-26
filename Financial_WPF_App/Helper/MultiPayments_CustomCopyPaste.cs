@@ -196,6 +196,24 @@ namespace Financial_WPF_App.Helper
                 && _Payments_dt.AsEnumerable().Any(row => row.Field<int>("Beneficiary_ID") == beneficiaryId);
         }
 
+        private bool IsPayablePayment(System.Data.DataRow row)
+        {
+            string paymentState = row["payment_state"]?.ToString();
+            return paymentState == "Unpaid" || paymentState == "Incomplete";
+        }
+
+        private double GetRemainingScheduledAmount(int beneficiaryId)
+        {
+            if (beneficiaryId == -1 || _Payments_dt.Rows.Count <= 0)
+                return 0;
+
+            return _Payments_dt.AsEnumerable()
+                .Where(row => row.Field<int>("Beneficiary_ID") == beneficiaryId)
+                .Where(IsPayablePayment)
+                .Sum(row => Math.Max(0,
+                    Convert.ToDouble(row["Amount"]) - Convert.ToDouble(row["Paid_Amount"])));
+        }
+
         private void MarkRowError(System.Data.DataRow row, string columnName, string message)
         {
             Login.MultiPayments_AnyError = true;
@@ -286,6 +304,18 @@ namespace Financial_WPF_App.Helper
                 if (hasPaymentAmount && beneficiaryId != -1 && !HasGeneratedPayments(beneficiaryId))
                 {
                     MarkRowError(e.Row, "Micro Project number", "No payments have been generated for this beneficiary.");
+                }
+                else if (hasPaymentAmount && beneficiaryId != -1)
+                {
+                    double remainingScheduledAmount = GetRemainingScheduledAmount(beneficiaryId);
+                    if (remainingScheduledAmount <= 0)
+                    {
+                        MarkRowError(e.Row, "Payment amount", "This beneficiary has no unpaid scheduled payments.");
+                    }
+                    else if (_Amount > remainingScheduledAmount)
+                    {
+                        MarkRowError(e.Row, "Payment amount", "Payment amount exceeds the beneficiary's remaining scheduled payments.");
+                    }
                 }
 
                 _IsReturnedPayment = hasReturnedAmount && !hasPaymentAmount;
@@ -421,7 +451,7 @@ namespace Financial_WPF_App.Helper
             }
 
             DataTable selected_rows_dt = new DataTable();
-            System.Data.DataRow[] My_rows = _Payments_dt.Select("(payment_state is null OR payment_state <> 'Done') and Beneficiary_ID = " + Beneficiary_ID + "");
+            System.Data.DataRow[] My_rows = _Payments_dt.Select("(payment_state = 'Unpaid' OR payment_state = 'Incomplete') and Beneficiary_ID = " + Beneficiary_ID + "", "Num ASC, DueDate ASC, ID ASC");
 
             selected_rows_dt = _Payments_dt.Copy();
             selected_rows_dt.Rows.Clear();
@@ -436,13 +466,17 @@ namespace Financial_WPF_App.Helper
                     if (_Amount > 0)
                     {
                         int payment_id = selected_rows_dt.Rows[i].Field<Int32>("ID");
-                        Double Payment_Amount = Double.Parse(selected_rows_dt.Rows[i].Field<Single>("Amount").ToString());
+                        Double Payment_Amount = Convert.ToDouble(selected_rows_dt.Rows[i]["Amount"]);
                         Double Paid_Amount = selected_rows_dt.Rows[i].Field<Double>("Paid_Amount");
                         Double Current_Payment;
+                        Double Payment_Need = Payment_Amount - Paid_Amount;
 
-                        if (i < selected_rows_dt.Rows.Count - 1 && _Amount > Payment_Amount - Paid_Amount)
+                        if (Payment_Need <= 0)
+                            continue;
+
+                        if (_Amount > Payment_Need)
                         {
-                            Current_Payment = Payment_Amount - Paid_Amount;
+                            Current_Payment = Payment_Need;
 
                             System.Data.DataRow[] selectedRows = _Payments_dt.Select("ID = " + payment_id);
                             if (selectedRows.Length > 0)
@@ -482,10 +516,60 @@ namespace Financial_WPF_App.Helper
 
                         temp_query += "SET @Action_ID" + i + "_" + k + " = @Action_ID;";
 
+                        temp_query += "SELECT Amount, Num, DueDate INTO @PaymentAmount" + i + "_" + k + ", @PaymentNum" + i + "_" + k + ", @PaymentDueDate" + i + "_" + k +
+                                      " FROM payment WHERE ID = @payment_id" + i + "_" + k + " FOR UPDATE;";
+
+                        temp_query += @"SET @CurrentPaid" + i + "_" + k + @" = (
+                            SELECT IFNULL(SUM(combined_action.Amount),0) - IFNULL(SUM(combined_action.Returned_Amount),0)
+                            FROM payment
+                            LEFT JOIN action_payment ON payment.ID = action_payment.payment_id
+                            LEFT JOIN (
+                                SELECT ID, Amount, Returned_Amount FROM action
+                                UNION ALL
+                                SELECT ID, Amount, Returned_Amount FROM action_not_approved
+                            ) AS combined_action ON combined_action.ID = action_payment.action_id
+                            WHERE payment.ID = @payment_id" + i + "_" + k + @");";
+
+                        temp_query += @"SET @EarlierPayableCount" + i + "_" + k + @" = (
+                            SELECT COUNT(*)
+                            FROM (
+                                SELECT prior_payment.ID,
+                                       prior_payment.Amount,
+                                       IFNULL(SUM(combined_action.Amount),0) - IFNULL(SUM(combined_action.Returned_Amount),0) AS PaidAmount
+                                FROM payment prior_payment
+                                LEFT JOIN action_payment ON prior_payment.ID = action_payment.payment_id
+                                LEFT JOIN (
+                                    SELECT ID, Amount, Returned_Amount FROM action
+                                    UNION ALL
+                                    SELECT ID, Amount, Returned_Amount FROM action_not_approved
+                                ) AS combined_action ON combined_action.ID = action_payment.action_id
+                                WHERE prior_payment.Beneficiary_ID = @Beneficiary_ID" + k + @"
+                                  AND prior_payment.Amount > 0
+                                  AND (
+                                      prior_payment.Num < @PaymentNum" + i + "_" + k + @"
+                                      OR (
+                                          prior_payment.Num = @PaymentNum" + i + "_" + k + @"
+                                          AND COALESCE(prior_payment.DueDate, '9999-12-31') < COALESCE(@PaymentDueDate" + i + "_" + k + @", '9999-12-31')
+                                      )
+                                      OR (
+                                          prior_payment.Num = @PaymentNum" + i + "_" + k + @"
+                                          AND COALESCE(prior_payment.DueDate, '9999-12-31') = COALESCE(@PaymentDueDate" + i + "_" + k + @", '9999-12-31')
+                                          AND prior_payment.ID < @payment_id" + i + "_" + k + @"
+                                      )
+                                  )
+                                GROUP BY prior_payment.ID, prior_payment.Amount
+                                HAVING PaidAmount < prior_payment.Amount
+                            ) AS earlier_payable
+                        );";
+
                         // إصلاح خطأ نقص حقل الـ currency_tilltype_id وتصحيح اسم بارامتر المستخدم @User_ID
                         temp_query += "INSERT INTO `action_not_approved`(`id`,`Till_ID`, `AType_ID`, `currency_tilltype_id`, `Amount`, `rate`,"
                                     + " `ActionDate`, `Note`, `IsReceipt`, `MicroProject_ID`, cashaccount_id, created_at, User_ID)"
-                                    + " VALUES (@Action_ID" + i + "_" + k + ", @Till_ID" + k + ", (Select id from actiontype where shortname = 'I'),"
+                                    + " VALUES ((SELECT CASE WHEN @PaymentAmount" + i + "_" + k + " > 0"
+                                    + " AND @CurrentPaid" + i + "_" + k + " < @PaymentAmount" + i + "_" + k
+                                    + " AND @Amount" + i + "_" + k + " <= (@PaymentAmount" + i + "_" + k + " - @CurrentPaid" + i + "_" + k + ")"
+                                    + " AND @EarlierPayableCount" + i + "_" + k + " = 0"
+                                    + " THEN @Action_ID" + i + "_" + k + " ELSE NULL END), @Till_ID" + k + ", (Select id from actiontype where shortname = 'I'),"
                                     + " (SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID" + k + "),"
                                     + " @Amount" + i + "_" + k + ", 0, @Date" + k + ", @Note" + k + ", -1,"
                                     + " @MicroProject_ID" + k + ", @CashAccount_ID" + k + ", @Todaydate" + k + ", @User_ID" + k + ");";
@@ -495,30 +579,20 @@ namespace Financial_WPF_App.Helper
 
                         _Amount = _Amount - Current_Payment;
                         numofinserts++;
+                        if (_Amount <= 0)
+                            break;
                     }
                 }
-
-                for (int i = 0; i < numofinserts; i++)
-                {
-                    temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @Action_ID" + i + "_" + k + ", 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID" + k + ") , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-                }
             }
-            else
+
+            if (numofinserts == 0)
             {
-                // تم ربطها بـ @Action_ID لتجنب الكتابة فوق معرّفات المعاملات السابقة المدرجة بالـ Bulk
-                temp_query += "SET @Action_ID0" + k + " = @Action_ID;";
+                return;
+            }
 
-                // إصلاح حقل الـ currency_tilltype_id وتصحيح اسم بارامتر المستخدم @User_ID هنا أيضاً
-                temp_query += " INSERT INTO `action_not_approved`(`id`,`Till_ID`, `AType_ID`, `currency_tilltype_id`, `Amount`, `rate`,"
-                            + " `ActionDate`, `Note`, `IsReceipt`, `MicroProject_ID`, cashaccount_id, created_at, User_ID)"
-                            + " VALUES (@Action_ID0" + k + ", @Till_ID" + k + ", (Select id from actiontype where shortname = 'I'),"
-                            + " (SELECT `tilltypes`.`id` FROM `tilltypes` LEFT JOIN `beneficiary` ON `beneficiary`.`currency_tilltype_id` = `tilltypes`.ID WHERE beneficiary.id = @Beneficiary_ID" + k + "),"
-                            + " @Amount" + k + ", 0, @Date" + k + ", @Note" + k + ", -1,"
-                            + " @MicroProject_ID" + k + ", @CashAccount_ID" + k + ", @Todaydate" + k + ", @User_ID" + k + ");";
-
-                temp_query += "SET @Action_ID = @Action_ID0" + k + " + 1;";
-                temp_query += " INSERT INTO action_payment (action_id, payment_id) VALUES (@Action_ID0" + k + ", (select ID from payment where payment.Beneficiary_ID = @Beneficiary_ID" + k + " and payment.Num = (select Max(num) from payment where payment.Beneficiary_ID = @Beneficiary_ID" + k + ")));";
-                temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @Action_ID0" + k + ", 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID" + k + ") , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+            for (int i = 0; i < numofinserts; i++)
+            {
+                temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @Action_ID" + i + "_" + k + ", 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID" + k + ") , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
             }
 
             _BeneficiaryIdsToRegenerate.Add(Beneficiary_ID);
