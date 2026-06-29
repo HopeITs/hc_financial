@@ -99,11 +99,6 @@ namespace Financial_WPF_App.Models
             return paymentState == "Unpaid" || paymentState == "Incomplete";
         }
 
-        private double GetPaymentNeed(DataRow row)
-        {
-            return Math.Max(0, Convert.ToDouble(row["Amount"]) - Convert.ToDouble(row["Paid_Amount"]));
-        }
-
         private DateTime GetPaymentDueDate(DataRow row)
         {
             return row["DueDate"] == DBNull.Value ? DateTime.MaxValue : Convert.ToDateTime(row["DueDate"]);
@@ -569,26 +564,6 @@ action_deleted.`note` as 'Note',
                             .ThenBy(GetPaymentDueDate)
                             .ThenBy(r => Convert.ToInt32(r["ID"]))
                             .ToList();
-
-                        double remainingScheduledAmount = payablePayments
-                            .Select(GetPaymentNeed)
-                            .Sum();
-
-                        if (remainingScheduledAmount <= 0)
-                        {
-                            sc.CommandText = "ROLLBACK;";
-                            sc.ExecuteNonQuery();
-                            Login.CloseAndClearConnection();
-                            throw new Exception("This beneficiary has no unpaid scheduled payments to receive this amount.");
-                        }
-
-                        if (Amount > remainingScheduledAmount)
-                        {
-                            sc.CommandText = "ROLLBACK;";
-                            sc.ExecuteNonQuery();
-                            Login.CloseAndClearConnection();
-                            throw new Exception("The entered payment amount exceeds the beneficiary's remaining scheduled payments.");
-                        }
 
                         sql = "";
                         foreach (DataRow r in payablePayments)

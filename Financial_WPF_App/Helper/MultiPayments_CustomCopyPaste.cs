@@ -202,18 +202,6 @@ namespace Financial_WPF_App.Helper
             return paymentState == "Unpaid" || paymentState == "Incomplete";
         }
 
-        private double GetRemainingScheduledAmount(int beneficiaryId)
-        {
-            if (beneficiaryId == -1 || _Payments_dt.Rows.Count <= 0)
-                return 0;
-
-            return _Payments_dt.AsEnumerable()
-                .Where(row => row.Field<int>("Beneficiary_ID") == beneficiaryId)
-                .Where(IsPayablePayment)
-                .Sum(row => Math.Max(0,
-                    Convert.ToDouble(row["Amount"]) - Convert.ToDouble(row["Paid_Amount"])));
-        }
-
         private void MarkRowError(System.Data.DataRow row, string columnName, string message)
         {
             Login.MultiPayments_AnyError = true;
@@ -304,18 +292,6 @@ namespace Financial_WPF_App.Helper
                 if (hasPaymentAmount && beneficiaryId != -1 && !HasGeneratedPayments(beneficiaryId))
                 {
                     MarkRowError(e.Row, "Micro Project number", "No payments have been generated for this beneficiary.");
-                }
-                else if (hasPaymentAmount && beneficiaryId != -1)
-                {
-                    double remainingScheduledAmount = GetRemainingScheduledAmount(beneficiaryId);
-                    if (remainingScheduledAmount <= 0)
-                    {
-                        MarkRowError(e.Row, "Payment amount", "This beneficiary has no unpaid scheduled payments.");
-                    }
-                    else if (_Amount > remainingScheduledAmount)
-                    {
-                        MarkRowError(e.Row, "Payment amount", "Payment amount exceeds the beneficiary's remaining scheduled payments.");
-                    }
                 }
 
                 _IsReturnedPayment = hasReturnedAmount && !hasPaymentAmount;
