@@ -10,8 +10,8 @@ namespace Financial_WPF_App.Helper
     internal class Document
     {
         //public string OnlineRoot = "ftp://hcsyria.org/financial_test_attachments/";
-        //Tuple<string, string> OnlineserversCredentials = new Tuple<string, string>("judy", "DAda1994@");
-        Tuple<string, string> OnlineserversCredentials = new Tuple<string, string>("f_user", "ZxcAsdQwe@123");
+        Tuple<string, string> OnlineserversCredentials = new Tuple<string, string>("donor", "Q^RQ-,vx6*S]%eb}cCVJ");
+        //Tuple<string, string> OnlineserversCredentials = new Tuple<string, string>("f_user", "ZxcAsdQwe@123");
 
         public void GetNameFromPath(string FullName, out string name, out string Type)
         {
