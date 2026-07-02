@@ -448,11 +448,26 @@ action_deleted.`note` as 'Note',
                 DataTable payments, int CashAccount_ID, int Currency_TillType_ID, string Form_Name)
         {
             if (!Login.BuildConnection()) return;
-            string sql = "";
-            using (MySqlCommand sc = new MySqlCommand())
+            try
             {
-                sc.Connection = Login.MyConn;
-                sc.CommandTimeout = 120;
+                using (MySqlCommand sc = new MySqlCommand())
+                {
+                    sc.Connection = Login.MyConn;
+                    sc.CommandTimeout = 120;
+                    InsertPaymentCore(sc, Amount, Returned_Amount, Date, Note, MicroProject_ID, SubProject_ID, Beneficiary_ID, CashAccount_ID, Currency_TillType_ID, Form_Name, true);
+                }
+            }
+            finally
+            {
+                Login.CloseAndClearConnection();
+            }
+        }
+
+        private int InsertPaymentCore(MySqlCommand sc, double Amount, double Returned_Amount, string Date, string Note,
+                int MicroProject_ID, int SubProject_ID, int Beneficiary_ID,
+                int CashAccount_ID, int Currency_TillType_ID, string Form_Name, bool manageTransaction)
+        {
+                string sql = "";
 
                 sc.Parameters.Clear();
                 sc.Parameters.AddWithValue("@MicroProject_ID", MicroProject_ID == -1 ? (object)DBNull.Value : MicroProject_ID);
@@ -480,7 +495,6 @@ action_deleted.`note` as 'Note',
                 object tillObj = sc.ExecuteScalar();
                 if (tillObj == null || tillObj == DBNull.Value)
                 {
-                    Login.CloseAndClearConnection();
                     throw new Exception("No Till exists for this SubProject. Please create a Till with type 'pay' first.");
                 }
                 int tillID = Convert.ToInt32(tillObj);
@@ -499,7 +513,7 @@ action_deleted.`note` as 'Note',
 
                 if (Amount == 0 && Returned_Amount > 0)
                 {
-                    sql = "START TRANSACTION;";
+                    sql = manageTransaction ? "START TRANSACTION;" : "";
 
                     sql += @"SET @num = (
                        SELECT p.Num
@@ -524,7 +538,8 @@ action_deleted.`note` as 'Note',
 
                     
                     sql += "CALL ReGenerate_AllPayments("+ Beneficiary_ID + ");";
-                    sql += "COMMIT;";
+                    if (manageTransaction)
+                        sql += "COMMIT;";
                     numofinserts++;
                     // Execute the SQL commands
                     sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
@@ -545,14 +560,16 @@ action_deleted.`note` as 'Note',
                         sc.ExecuteNonQuery();
                     }
 
-                    Login.CloseAndClearConnection();
-                    return;
+                    return numofinserts;
                 }
 
                 else if (Amount > 0 && Returned_Amount == 0)
                 {
-                    sc.CommandText = "START TRANSACTION;";
-                    sc.ExecuteNonQuery();
+                    if (manageTransaction)
+                    {
+                        sc.CommandText = "START TRANSACTION;";
+                        sc.ExecuteNonQuery();
+                    }
 
                     try
                     {
@@ -594,7 +611,8 @@ action_deleted.`note` as 'Note',
                             if (Amount <= 0) break;
                         }
 
-                        sql += "COMMIT;";
+                        if (manageTransaction)
+                            sql += "COMMIT;";
 
                         sc.CommandText = "SET SESSION wait_timeout = @t;" + sql;
                         sc.Parameters.AddWithValue("@t", 600);
@@ -602,7 +620,7 @@ action_deleted.`note` as 'Note',
                     }
                     catch
                     {
-                        if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
+                        if (manageTransaction && Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
                         {
                             try
                             {
@@ -628,12 +646,10 @@ action_deleted.`note` as 'Note',
                         sc.ExecuteNonQuery();
                     }
 
-                    Login.CloseAndClearConnection();
-                    return;
+                    return numofinserts;
                 }
 
                 throw new Exception("Please enter either Amount (income) or Returned Amount (refund), not both or none.");
-            }
         }
 
         public void Update_Payment(int Action_ID, int Till_ID, Double Amount, Double ReturnedAmount, string Date, string Note, int MicroProject_ID, int Beneficiary_ID, int CashAccount_ID, int Currency_TillType_ID, string Form_Name)
@@ -814,23 +830,13 @@ action_deleted.`note` as 'Note',
 
                 query += "START TRANSACTION;";
 
-                // خطوة حماية هامة جداً: إذا كانت الدفعة عبارة عن عملية مرتجع (Returned_Amount > 0)، يجب حذف سجل الـ payment السالب المرتبط بها
                 string targetTable = Approved_Action ? "action" : "action_not_approved";
-
-                query += $@"   DELETE FROM payment 
-                       WHERE id IN (
-                           SELECT payment_id FROM action_payment WHERE action_id = @ID
-                       ) AND Amount < 0 AND EXISTS (
-                           SELECT 1 FROM {targetTable} WHERE id = @ID AND Returned_Amount > 0
-                       );";
-
-                // تنظيف جدول الربط بشكل دائم لمنع السجلات اليتيمة
-                query += "DELETE FROM action_payment WHERE action_id = @ID OR action_id IN (SELECT id FROM action WHERE ObserveAcion_ID = @ID);";
 
                 if (Approved_Action)
                 {
                     query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID OR action.ObserveAcion_ID = @ID;";
                     query += "UPDATE action_deleted SET `deleted_at` = @Todaydate, `deleted_by` = @User_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
+                    query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@ID");
                     query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID;";
                     query += "DELETE FROM action WHERE action.id = @ID;";
                 }
@@ -838,6 +844,7 @@ action_deleted.`note` as 'Note',
                 {
                     query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID OR action_not_approved.ObserveAcion_ID = @ID;";
                     query += "UPDATE action_deleted SET `deleted_at` = @Todaydate, `deleted_by` = @User_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
+                    query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@ID");
                     query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID;";
                     query += "DELETE FROM action_not_approved WHERE action_not_approved.id = @ID;";
                 }
@@ -862,6 +869,102 @@ action_deleted.`note` as 'Note',
                 sc.ExecuteScalar();
 
                 Login.CloseAndClearConnection();
+            }
+        }
+
+        public bool Restore_Deleted_Payment_Action(int DeletedAction_ID, string Form_Name)
+        {
+            DataTable deletedAction = new DataTable();
+
+            if (!Login.BuildConnection())
+                return false;
+
+            using (MySqlCommand sc = new MySqlCommand())
+            {
+                sc.Connection = Login.MyConn;
+                sc.CommandTimeout = 120;
+
+                try
+                {
+                    sc.CommandText = "START TRANSACTION;";
+                    sc.ExecuteNonQuery();
+
+                    sc.Parameters.Clear();
+                    sc.Parameters.AddWithValue("@DeletedAction_ID", DeletedAction_ID);
+                    sc.CommandText = @"SELECT ad.ID, ad.Amount, ad.Returned_Amount, ad.ActionDate, ad.Note,
+                                               ad.MicroProject_ID, ad.cashaccount_id, ad.currency_tilltype_id,
+                                               beneficiary.ID AS Beneficiary_ID, account.SubProject_ID
+                                        FROM action_deleted ad
+                                        LEFT JOIN till ON till.ID = ad.Till_ID
+                                        LEFT JOIN account ON account.ID = till.Account_ID
+                                        LEFT JOIN beneficiary ON beneficiary.MicroProject_ID = ad.MicroProject_ID
+                                        LEFT JOIN account beneficiary_account ON beneficiary_account.ID = beneficiary.Account_ID
+                                        WHERE ad.ID = @DeletedAction_ID
+                                          AND ad.MicroProject_ID IS NOT NULL
+                                          AND ad.AType_ID IN (1, 3)
+                                          AND (beneficiary_account.SubProject_ID = account.SubProject_ID OR account.SubProject_ID IS NULL)
+                                        LIMIT 1
+                                        FOR UPDATE;";
+
+                    MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                    da.Fill(deletedAction);
+
+                    if (deletedAction.Rows.Count == 0)
+                    {
+                        sc.CommandText = "ROLLBACK;";
+                        sc.ExecuteNonQuery();
+                        return false;
+                    }
+
+                    DataRow row = deletedAction.Rows[0];
+                    if (row["Beneficiary_ID"] == DBNull.Value)
+                        throw new Exception("Cannot restore this payment action because no beneficiary was found for its microproject.");
+                    if (row["SubProject_ID"] == DBNull.Value)
+                        throw new Exception("Cannot restore this payment action because no subproject was found for its till.");
+
+                    double amount = row["Amount"] == DBNull.Value ? 0 : Convert.ToDouble(row["Amount"]);
+                    double returnedAmount = row["Returned_Amount"] == DBNull.Value ? 0 : Convert.ToDouble(row["Returned_Amount"]);
+                    string actionDate = row["ActionDate"] == DBNull.Value ? "Null" : Convert.ToDateTime(row["ActionDate"]).ToString("yyyy/MM/dd");
+                    string note = row["Note"] == DBNull.Value ? "" : row["Note"].ToString();
+                    int microProjectId = Convert.ToInt32(row["MicroProject_ID"]);
+                    int subProjectId = Convert.ToInt32(row["SubProject_ID"]);
+                    int beneficiaryId = Convert.ToInt32(row["Beneficiary_ID"]);
+                    int cashAccountId = row["cashaccount_id"] == DBNull.Value ? -1 : Convert.ToInt32(row["cashaccount_id"]);
+                    int currencyTillTypeId = row["currency_tilltype_id"] == DBNull.Value ? -1 : Convert.ToInt32(row["currency_tilltype_id"]);
+
+                    int insertedActions = InsertPaymentCore(sc, amount, returnedAmount, actionDate, note, microProjectId, subProjectId, beneficiaryId, cashAccountId, currencyTillTypeId, Form_Name, false);
+                    if (insertedActions <= 0)
+                        throw new Exception("Cannot restore this payment action because no payable installment is available in the current schedule.");
+
+                    sc.Parameters.Clear();
+                    sc.Parameters.AddWithValue("@DeletedAction_ID", DeletedAction_ID);
+                    sc.Parameters.AddWithValue("@Form_Name", Form_Name);
+                    sc.CommandText = Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@DeletedAction_ID") + @"
+                                      DELETE FROM action_attachments WHERE action_id = @DeletedAction_ID;
+                                      DELETE FROM action_deleted WHERE ObserveAcion_ID = @DeletedAction_ID;
+                                      DELETE FROM action_deleted WHERE ID = @DeletedAction_ID;
+                                      INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user)
+                                      VALUES (@Form_Name, 'RESTORE', 'action_deleted', @DeletedAction_ID, 'payment action restored as new pending action', '', '', DATE(NOW()), '" + Properties.Settings.Default.username + @"');
+                                      COMMIT;";
+                    sc.ExecuteNonQuery();
+
+                    return true;
+                }
+                catch
+                {
+                    try
+                    {
+                        sc.CommandText = "ROLLBACK;";
+                        sc.ExecuteNonQuery();
+                    }
+                    catch { }
+
+                    throw;
+                }
+                finally
+                {
+                    Login.CloseAndClearConnection();
+                }
             }
         }
 

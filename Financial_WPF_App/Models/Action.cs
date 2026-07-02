@@ -20,6 +20,15 @@ namespace Financial_WPF_App.Models
 
         }
 
+        public static string DeleteActionPaymentForDeletedInstallmentActionsSql(string actionIdParameter)
+        {
+            return @"DELETE ap FROM action_payment ap
+                    JOIN action_deleted ad ON ad.ID = ap.action_id
+                    WHERE (ad.ID = " + actionIdParameter + @" OR ad.ObserveAcion_ID = " + actionIdParameter + @")
+                    AND ad.MicroProject_ID IS NOT NULL
+                    AND ad.AType_ID IN (1, 3);";
+        }
+
         public DataTable Select(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed)
         {
 
@@ -1933,6 +1942,8 @@ END AS `USD_Value`,
 
                     query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
 
+                    query += DeleteActionPaymentForDeletedInstallmentActionsSql("@ID");
+
                     query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID;";
 
                     query += "DELETE FROM action WHERE action.id  = @ID;";
@@ -1948,6 +1959,8 @@ END AS `USD_Value`,
                     query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID OR action_not_approved.ObserveAcion_ID = @ID;";
 
                     query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
+
+                    query += DeleteActionPaymentForDeletedInstallmentActionsSql("@ID");
 
                     query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID;";
 

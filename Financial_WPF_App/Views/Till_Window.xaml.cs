@@ -1560,6 +1560,8 @@ namespace Financial_WPF_App.Views
 
                             temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
 
+                            temp_query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@ID" + k);
+
                             temp_query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID" + k + ";";
 
                             temp_query += "DELETE FROM action WHERE action.id  = @ID" + k + ";";
@@ -1630,6 +1632,8 @@ namespace Financial_WPF_App.Views
                             temp_query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID" + k + " OR action_not_approved.ObserveAcion_ID = @ID" + k + ";";
 
                             temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
+
+                            temp_query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@ID" + k);
 
                             temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID" + k + ";";
 
