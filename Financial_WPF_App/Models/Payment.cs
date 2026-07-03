@@ -146,6 +146,116 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        private DataTable SelectInstallmentPaymentActionsForReallocation(MySqlConnection connection, int Beneficiary_ID)
+        {
+            string query = @"SELECT active_action.ID,
+                                active_action.Amount,
+                                active_action.ActionDate
+                            FROM (
+                                SELECT ID, Amount, Returned_Amount, ActionDate, MicroProject_ID, AType_ID
+                                FROM action
+                                UNION ALL
+                                SELECT ID, Amount, Returned_Amount, ActionDate, MicroProject_ID, AType_ID
+                                FROM action_not_approved
+                            ) AS active_action
+                            JOIN actiontype ON actiontype.ID = active_action.AType_ID
+                            JOIN beneficiary ON beneficiary.MicroProject_ID = active_action.MicroProject_ID
+                            WHERE beneficiary.ID = @Beneficiary_ID
+                            AND actiontype.shortname = 'I'
+                            AND active_action.Amount > 0
+                            AND IFNULL(active_action.Returned_Amount, 0) = 0
+                            ORDER BY active_action.ActionDate, active_action.ID;";
+
+            DataTable dt = new DataTable();
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
+                cmd.CommandTimeout = 120;
+                using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                {
+                    da.Fill(dt);
+                }
+            }
+
+            return dt;
+        }
+
+        private void DeleteInstallmentPaymentAllocations(MySqlConnection connection, int Beneficiary_ID)
+        {
+            string query = @"DELETE ap
+                            FROM action_payment ap
+                            JOIN payment ON payment.ID = ap.payment_id
+                            JOIN (
+                                SELECT ID, MicroProject_ID, AType_ID FROM action
+                                UNION ALL
+                                SELECT ID, MicroProject_ID, AType_ID FROM action_not_approved
+                            ) AS active_action ON active_action.ID = ap.action_id
+                            JOIN actiontype ON actiontype.ID = active_action.AType_ID
+                            JOIN beneficiary ON beneficiary.MicroProject_ID = active_action.MicroProject_ID
+                            WHERE beneficiary.ID = @Beneficiary_ID
+                            AND payment.Beneficiary_ID = @Beneficiary_ID
+                            AND actiontype.shortname = 'I';";
+
+            using (MySqlCommand cmd = new MySqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@Beneficiary_ID", Beneficiary_ID);
+                cmd.CommandTimeout = 120;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private int InsertInstallmentPaymentAllocation(MySqlConnection connection, int Action_ID, int Beneficiary_ID, double Amount)
+        {
+            DataTable currentPayablePayments = SelectPayablePaymentsForUpdate(connection, Beneficiary_ID);
+
+            DataRow payablePayment = currentPayablePayments.AsEnumerable()
+                .Where(IsPayablePayment)
+                .OrderBy(r => Convert.ToInt32(r["Num"]))
+                .ThenBy(GetPaymentDueDate)
+                .ThenBy(r => Convert.ToInt32(r["ID"]))
+                .FirstOrDefault();
+
+            if (payablePayment == null)
+                return 0;
+
+            double scheduled = Convert.ToDouble(payablePayment["Amount"]);
+            double paidAmount = Convert.ToDouble(payablePayment["Paid_Amount"]);
+            double need = Math.Max(0, scheduled - paidAmount);
+
+            if (need <= 0 || Amount > need)
+                return 0;
+
+            using (MySqlCommand cmd = new MySqlCommand("INSERT INTO action_payment(action_id, payment_id) VALUES(@Action_ID, @Payment_ID);", connection))
+            {
+                cmd.Parameters.AddWithValue("@Action_ID", Action_ID);
+                cmd.Parameters.AddWithValue("@Payment_ID", Convert.ToInt32(payablePayment["ID"]));
+                cmd.CommandTimeout = 120;
+                cmd.ExecuteNonQuery();
+            }
+
+            return 1;
+        }
+
+        private int ReallocateInstallmentPaymentActions(MySqlConnection connection, int Beneficiary_ID)
+        {
+            DeleteInstallmentPaymentAllocations(connection, Beneficiary_ID);
+
+            int allocations = 0;
+            DataTable actions = SelectInstallmentPaymentActionsForReallocation(connection, Beneficiary_ID);
+            foreach (DataRow action in actions.Rows)
+            {
+                int actionId = Convert.ToInt32(action["ID"]);
+                double amount = Convert.ToDouble(action["Amount"]);
+                int inserted = InsertInstallmentPaymentAllocation(connection, actionId, Beneficiary_ID, amount);
+                if (inserted == 0)
+                    throw new Exception("Cannot reallocate payment action " + actionId + " because no matching payable installment can accept the full action amount.");
+
+                allocations += inserted;
+            }
+
+            return allocations;
+        }
+
         public DataTable Select_All_Payments(string SubProject_ID, int Action_ID, string FromDate, string ToDate, int Microproject_ID)
         {
             string query = @"SELECT  subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
@@ -730,14 +840,32 @@ action_deleted.`note` as 'Note',
                 query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'action', @Action_ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
 
-                query += " COMMIT;";
-
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
                 sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
-                sc.ExecuteScalar();
-                Login.CloseAndClearConnection();
+                try
+                {
+                    sc.ExecuteNonQuery();
+                    ReallocateInstallmentPaymentActions(sc.Connection, Beneficiary_ID);
+                    sc.CommandText = "COMMIT;";
+                    sc.ExecuteNonQuery();
+                }
+                catch
+                {
+                    try
+                    {
+                        sc.CommandText = "ROLLBACK;";
+                        sc.ExecuteNonQuery();
+                    }
+                    catch { }
+
+                    throw;
+                }
+                finally
+                {
+                    Login.CloseAndClearConnection();
+                }
             }
         }
 
@@ -800,14 +928,32 @@ action_deleted.`note` as 'Note',
                 }
 
                 query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'action_not_approved', @Action_ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
-                query += " COMMIT;";
-
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
                 sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
-                sc.ExecuteScalar();
-                Login.CloseAndClearConnection();
+                try
+                {
+                    sc.ExecuteNonQuery();
+                    ReallocateInstallmentPaymentActions(sc.Connection, Beneficiary_ID);
+                    sc.CommandText = "COMMIT;";
+                    sc.ExecuteNonQuery();
+                }
+                catch
+                {
+                    try
+                    {
+                        sc.CommandText = "ROLLBACK;";
+                        sc.ExecuteNonQuery();
+                    }
+                    catch { }
+
+                    throw;
+                }
+                finally
+                {
+                    Login.CloseAndClearConnection();
+                }
             }
         }
 
