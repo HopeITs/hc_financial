@@ -79,7 +79,7 @@ namespace Financial_WPF_App.Models
         {
             //Should Change Before Publishing database, online user, online root
             test_database = "hcsyria_financial_test"; 
-            onlineserver  = "mysql.s807.sureserver.com";             
+            onlineserver  = "mysql.s1893.sureserver.com";             
             string localserver = "localhost";         
 
             ConStr_Online = @"Server=" + onlineserver + ";Port=3308;Database=" + test_database +
