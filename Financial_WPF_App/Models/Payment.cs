@@ -256,6 +256,21 @@ namespace Financial_WPF_App.Models
             return allocations;
         }
 
+        private int ReallocateInstallmentPaymentActions(int Beneficiary_ID)
+        {
+            if (!Login.BuildConnection())
+                return 0;
+
+            try
+            {
+                return ReallocateInstallmentPaymentActions(Login.MyConn, Beneficiary_ID);
+            }
+            finally
+            {
+                Login.CloseAndClearConnection();
+            }
+        }
+
         public DataTable Select_All_Payments(string SubProject_ID, int Action_ID, string FromDate, string ToDate, int Microproject_ID)
         {
             string query = @"SELECT  subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
@@ -840,32 +855,16 @@ action_deleted.`note` as 'Note',
                 query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'action', @Action_ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
 
+                query += " COMMIT;";
+
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
                 sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
-                try
-                {
-                    sc.ExecuteNonQuery();
-                    ReallocateInstallmentPaymentActions(sc.Connection, Beneficiary_ID);
-                    sc.CommandText = "COMMIT;";
-                    sc.ExecuteNonQuery();
-                }
-                catch
-                {
-                    try
-                    {
-                        sc.CommandText = "ROLLBACK;";
-                        sc.ExecuteNonQuery();
-                    }
-                    catch { }
+                sc.ExecuteScalar();
+                Login.CloseAndClearConnection();
 
-                    throw;
-                }
-                finally
-                {
-                    Login.CloseAndClearConnection();
-                }
+                ReallocateInstallmentPaymentActions(Beneficiary_ID);
             }
         }
 
@@ -928,32 +927,16 @@ action_deleted.`note` as 'Note',
                 }
 
                 query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name, 'UPDATE', 'action_not_approved', @Action_ID, 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID) , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
+                query += " COMMIT;";
+
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
                 sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
-                try
-                {
-                    sc.ExecuteNonQuery();
-                    ReallocateInstallmentPaymentActions(sc.Connection, Beneficiary_ID);
-                    sc.CommandText = "COMMIT;";
-                    sc.ExecuteNonQuery();
-                }
-                catch
-                {
-                    try
-                    {
-                        sc.CommandText = "ROLLBACK;";
-                        sc.ExecuteNonQuery();
-                    }
-                    catch { }
+                sc.ExecuteScalar();
+                Login.CloseAndClearConnection();
 
-                    throw;
-                }
-                finally
-                {
-                    Login.CloseAndClearConnection();
-                }
+                ReallocateInstallmentPaymentActions(Beneficiary_ID);
             }
         }
 
