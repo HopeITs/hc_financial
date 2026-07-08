@@ -10,15 +10,18 @@ namespace Financial_WPF_App.Models
         public DataTable Select(string ids)
         {
             //check user from database
-            string query = "select ID, Name" +
-                ", case Type when 0 then 'Equipping the place' else 'Running cost' end as 'Type'" +
-                ", case Kind when 0 then 'Profit' else 'Budget' end as 'Kind' from `linecategory`";
+            string query = "select linecategory.ID, linecategory.Name" +
+                ", linecategorytype.Name as 'Type'" +
+                ", linecategory.Type_ID" +
+                ", case Kind when 0 then 'Profit' else 'Budget' end as 'Kind'" +
+                ", linecategory.Kind as 'Kind_ID' from `linecategory`" +
+                " left join linecategorytype on linecategorytype.ID = linecategory.Type_ID";
 
             string condition = " where 1 ";
 
             if (ids != "")
             {
-                condition += " and ID in (" + ids + ") ";
+                condition += " and linecategory.ID in (" + ids + ") ";
             }
             query += condition;
             DataTable dt = new DataTable();
@@ -56,7 +59,7 @@ namespace Financial_WPF_App.Models
 
                 query = "START TRANSACTION;";
 
-                query += @"INSERT INTO `linecategory`(`Name`,`Type`,`Kind`) VALUES (@name,@type,@kind);";
+                query += @"INSERT INTO `linecategory`(`Name`,`Type_ID`,`Kind`) VALUES (@name,@type,@kind);";
 
                 query += " SET @LineCat_ID = Last_Insert_ID();";
 
@@ -102,7 +105,7 @@ namespace Financial_WPF_App.Models
 
                 query = "START TRANSACTION;";
 
-                query += @"UPDATE `linecategory` SET `Name` = @name , Type = @type , Kind = @kind WHERE ID = @LineCat_ID;";
+                query += @"UPDATE `linecategory` SET `Name` = @name , Type_ID = @type , Kind = @kind WHERE ID = @LineCat_ID;";
 
                 log_query = Regex.Replace(query, "'", "''");
 

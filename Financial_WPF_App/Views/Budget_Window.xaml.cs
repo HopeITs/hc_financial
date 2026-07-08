@@ -1,5 +1,4 @@
 ﻿using Financial_WPF_App.Models;
-using Financial_WPF_App.Views;
 using Syncfusion.UI.Xaml.Grid;
 using System;
 using System.Collections.Generic;
@@ -331,39 +330,6 @@ namespace Financial_WPF_App
                     }
                 }
 
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
-        }
-
-        private void EditCategory_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Line_Window line_Window = new Line_Window(main_Window);
-                bool? dialogResult = line_Window.ShowDialog();
-                switch (dialogResult)
-                {
-                    case true:
-                        // User accepted dialog box
-                        { LoadGrid(); }
-                        break;
-                    case false:
-                        // User canceled dialog box
-                        break;
-                    default:
-                        // Indeterminate
-                        { LoadGrid(); }
-                        break;
-                }
             }
             catch (Exception ex)
             {

@@ -143,12 +143,13 @@ namespace Financial_WPF_App.Models
         {
 
             string query = @"SELECT line.id as 'line_ID', line.Name as 'Line', linecategory.id as 'Category_ID', linecategory.Name as 'Category', '0' as 'Unit', '0' as 'Timing', '0' as 'Price',
-                case linecategory.Type when 0 then 'Equipping the place' else 'Running Cost' end as 'Type',
+                linecategorytype.Name as 'Type',
                 case linecategory.Kind when 0 then 'Profit' else 'Budget' end as 'Kind'
                             FROM line LEFT JOIN
                             (SELECT budget_line.Budget_ID, budget_line.Line_ID FROM budget_line WHERE budget_line.Budget_ID = @Budget_ID) t1 ON line.ID = t1.Line_ID
                             left join line_project on line.id = line_project.line_id     
                             left join linecategory on line.Category_id = linecategory.id
+                            left join linecategorytype on linecategory.Type_ID = linecategorytype.ID
                             WHERE t1.Budget_ID IS null and line_project.project_id = @Project_ID;";
 
 

@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Financial_WPF_App"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Budget_Window" 
-        mc:Ignorable="d" Tag="Budget Window"
-        Title="Budget_Window"  
+        mc:Ignorable="d" Tag="Budget Line Window"
+        Title="Budget Line"  
         WindowStartupLocation="CenterScreen" KeyDown="ProjectWindow_KeyDown"
         Style="{StaticResource WindowPopupStyle}">
     <Window.ContextMenu>
@@ -35,12 +35,6 @@
                     <Label  Style="{DynamicResource statistic_lableStyle}" Content="Category:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,2,0" />
                     <ComboBox x:Name="Category_comboBox" Style="{StaticResource ActionComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID" 
                         TabIndex="2" />
-                    <Button x:Name="EditCategory_btn" Grid.Column="1"  BorderBrush="{x:Null}" Style="{StaticResource AddButtonStyle}"
-                        Click="EditCategory_btn_Click"  VerticalAlignment="Top" Height="30" Margin="5,0,1,0">
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Icons/dg_edit.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" >
                     <Label Style="{DynamicResource statistic_lableStyle}" Content="Name:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />

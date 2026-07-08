@@ -36,6 +36,12 @@
                 <StackPanel Orientation="Horizontal" Height="30">
                     <Label  Style="{DynamicResource statistic_lableStyle}" Content="Type:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,2,0" />
                     <ComboBox x:Name="Type_comboBox" Style="{StaticResource ActionComboboxStyle}" DisplayMemberPath="Name" SelectedValuePath="ID"  Width="175"/>
+                    <Button x:Name="EditType_btn" BorderBrush="{x:Null}" Style="{StaticResource AddButtonStyle}"
+                        Click="EditType_btn_Click" VerticalAlignment="Top" Height="30" Margin="5,0,1,0">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Images/Icons/dg_edit.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2"  Height="30" Margin="0,5,0,0">
                     <Label  Style="{DynamicResource statistic_lableStyle}" Content="Kind:" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,0,2,0" />
@@ -89,7 +95,9 @@
                 <syncfusion:GridTextColumn x:Name="ID_DataGridColumn" HeaderText="#"  MappingName="ID" IsHidden="True"/>
                 <syncfusion:GridTextColumn x:Name="Name_DataGridColumn" HeaderText="Name"  MappingName="Name" />
                 <syncfusion:GridTextColumn x:Name="Type_DataGridColumn" HeaderText="Type"  MappingName="Type" />
+                <syncfusion:GridTextColumn x:Name="Type_ID_DataGridColumn" HeaderText="Type_ID"  MappingName="Type_ID" IsHidden="True"/>
                 <syncfusion:GridTextColumn x:Name="Kind_DataGridColumn" HeaderText="Kind"  MappingName="Kind" />
+                <syncfusion:GridTextColumn x:Name="Kind_ID_DataGridColumn" HeaderText="Kind_ID"  MappingName="Kind_ID" IsHidden="True"/>
 
 
                 <syncfusion:GridTemplateColumn x:Name="Edit_DataGridColumn" MappingName =" " HeaderText="Edit" AllowSorting="False" AllowFiltering="False" AllowGrouping="False">
