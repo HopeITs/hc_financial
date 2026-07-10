@@ -1042,39 +1042,15 @@ namespace Financial_WPF_App.Views
                             return;
                         }
 
+                        List<int> actionIds = new List<int>();
+                        List<int> beneficiaryIds = new List<int>();
                         for (int k = 0; k < newView.Count; k++)
                         {
-                            string temp_query = "";
-                            string log_query = "";
-
-                            var Action_ID = newView[k]["ID"];
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Payment_Window");
-
-                            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
-
-
-                            temp_query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID" + k + " OR action.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@ID" + k);
-
-                            temp_query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action WHERE action.id  = @ID" + k + ";";
-
-
-                            Login.DeleteMultiActions_List.Add(temp_query);
-                            temp_query = "";
-
+                            actionIds.Add(Convert.ToInt32(newView[k]["ID"]));
+                            beneficiaryIds.Add(Convert.ToInt32(newView[k]["beneficiary_ID"]));
                         }
 
-                        a.Delete_Multi_Actions();
+                        p.Delete_Multi_Payments(actionIds, beneficiaryIds, true, "Payment_Window");
 
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         LoadGrid();
@@ -1090,39 +1066,15 @@ namespace Financial_WPF_App.Views
                             return;
                         }
 
+                        List<int> actionIds = new List<int>();
+                        List<int> beneficiaryIds = new List<int>();
                         for (int k = 0; k < newView.Count; k++)
                         {
-                            string temp_query = "";
-                            string log_query = "";
-
-                            var Action_ID = newView[k]["ID"];
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Payment_Window");
-
-                            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
-
-
-                            temp_query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID" + k + " OR action_not_approved.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@ID" + k);
-
-                            temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.id  = @ID" + k + ";";
-
-
-                            Login.DeleteMultiActions_List.Add(temp_query);
-                            temp_query = "";
-
+                            actionIds.Add(Convert.ToInt32(newView[k]["ID"]));
+                            beneficiaryIds.Add(Convert.ToInt32(newView[k]["beneficiary_ID"]));
                         }
 
-                        a.Delete_Multi_Actions();
+                        p.Delete_Multi_Payments(actionIds, beneficiaryIds, false, "Payment_Window");
 
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         LoadGrid();

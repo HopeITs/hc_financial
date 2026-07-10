@@ -1902,14 +1902,33 @@ END AS `USD_Value`,
             query += " COMMIT;";
             if (Login.BuildConnection())
             {
-                Login.ActionApproval_sc.CommandTimeout = 120;
-                Login.ActionApproval_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                Login.ActionApproval_sc.Parameters.AddWithValue("@t", 600);
-                Login.ActionApproval_sc.Connection = Login.MyConn;
+                try
+                {
+                    Login.ActionApproval_sc.CommandTimeout = 120;
+                    Login.ActionApproval_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                    Login.ActionApproval_sc.Parameters.AddWithValue("@t", 600);
+                    Login.ActionApproval_sc.Connection = Login.MyConn;
 
-                Login.ActionApproval_sc.ExecuteScalar();
+                    Login.ActionApproval_sc.ExecuteNonQuery();
+                }
+                catch
+                {
+                    try
+                    {
+                        using (MySqlCommand cmd = new MySqlCommand("ROLLBACK;", Login.MyConn))
+                        {
+                            cmd.CommandTimeout = 120;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch { }
 
-                Login.CloseAndClearConnection();
+                    throw;
+                }
+                finally
+                {
+                    Login.CloseAndClearConnection();
+                }
             }
         }
 
@@ -2056,14 +2075,33 @@ END AS `USD_Value`,
             query += " COMMIT;";
             if (Login.BuildConnection())
             {
-                Login.DeleteMultiActions_sc.CommandTimeout = 120; 
-                Login.DeleteMultiActions_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                Login.DeleteMultiActions_sc.Parameters.AddWithValue("@t", 600);
-                Login.DeleteMultiActions_sc.Connection = Login.MyConn;
+                try
+                {
+                    Login.DeleteMultiActions_sc.CommandTimeout = 120;
+                    Login.DeleteMultiActions_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                    Login.DeleteMultiActions_sc.Parameters.AddWithValue("@t", 600);
+                    Login.DeleteMultiActions_sc.Connection = Login.MyConn;
 
-                Login.DeleteMultiActions_sc.ExecuteScalar();
+                    Login.DeleteMultiActions_sc.ExecuteNonQuery();
+                }
+                catch
+                {
+                    try
+                    {
+                        using (MySqlCommand cmd = new MySqlCommand("ROLLBACK;", Login.MyConn))
+                        {
+                            cmd.CommandTimeout = 120;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch { }
 
-                Login.CloseAndClearConnection();
+                    throw;
+                }
+                finally
+                {
+                    Login.CloseAndClearConnection();
+                }
             }
         }
 

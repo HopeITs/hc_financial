@@ -398,11 +398,15 @@ namespace Financial_WPF_App.Helper
                        FROM payment p
                        WHERE p.Beneficiary_ID = @Beneficiary_ID" + k + @"
                        ORDER BY (
-                           SELECT MAX(a3.ID)
-                           FROM action_not_approved a3
-                           JOIN action_payment ap3 ON ap3.action_id = a3.ID
+                           SELECT MAX(active_action.ID)
+                           FROM (
+                               SELECT ID, AType_ID FROM action
+                               UNION ALL
+                               SELECT ID, AType_ID FROM action_not_approved
+                           ) AS active_action
+                           JOIN action_payment ap3 ON ap3.action_id = active_action.ID
                            WHERE ap3.payment_id = p.ID
-                           AND a3.AType_ID = (SELECT ID FROM actiontype WHERE shortname = 'I' LIMIT 1)
+                           AND active_action.AType_ID = (SELECT ID FROM actiontype WHERE shortname = 'I' LIMIT 1)
                        ) DESC, p.ID ASC
                        LIMIT 1);";
 

@@ -506,6 +506,7 @@ namespace Financial_WPF_App.Views
                             temp_query += "Delete from action_deleted where ObserveAcion_ID = @Action_ID" + k + ";";
                             temp_query += "Delete from action_deleted where ID = @Action_ID" + k + ";";
                             temp_query += "Delete from action_attachments where action_id = @Action_ID" + k + ";";
+                            temp_query += "CALL ReGenerate_AllPayments(@Beneficiary_ID" + k + ");";
 
                             temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'DELETE', 'action', @Action_ID" + k + ", 'action Type = payment - I', CONCAT('beneficiary ID = ',@Beneficiary_ID" + k + "), '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
