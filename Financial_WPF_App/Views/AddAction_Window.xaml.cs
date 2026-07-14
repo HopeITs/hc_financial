@@ -22,6 +22,9 @@ namespace Financial_WPF_App
     /// </summary>
     public partial class AddAction_Window : Window
     {
+        private const int UsdCurrencyTilltypeId = 2;
+        private const int SyrCurrencyTilltypeId = 4;
+
         public AddAction_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int Till_ID, string TillType, int SubProject_ID, bool FromTillForm, Main_Window_2 main_Window, Till_Window TW)
         {
             InitializeComponent();
@@ -347,12 +350,12 @@ namespace Financial_WPF_App
                 {
                     Type_ComboBox_Income_Item.Visibility = Visibility.Collapsed;
 
-                    if (!Outcome_privileges)
+                   // if (!Outcome_privileges)
                         Type_ComboBox_Outcome_Item.Visibility = Visibility.Collapsed;
 
-                    if (!Returned_privileges)
+                   // if (!Returned_privileges)
                         Type_ComboBox_Returned_Item.Visibility = Visibility.Collapsed;
-
+                    
                     // تم إيقاف هذه العملية لحين دراستها
                     //if (Exchange_privileges)
                     //    Type_ComboBox_Exchange_Item.Visibility = Visibility.Visible;
@@ -365,10 +368,10 @@ namespace Financial_WPF_App
 
 
                     // تم إيقاف هذه العملية لحين دراستها
-                    if (!Move_privileges)
-                        Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                   // if (!Move_privileges)
+                     //   Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
 
-                    //Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -389,7 +392,7 @@ namespace Financial_WPF_App
                     //if (Move_privileges &&  TillType.ToLower() == "usd")
                     //    Type_ComboBox_Move_Item.Visibility = Visibility.Visible;
                     //else
-                    //    Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
+                       Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
                 }
             }
             else if (Account_Type == "Exchange")
@@ -421,7 +424,7 @@ namespace Financial_WPF_App
                 if (!Expand_privileges)
                     Type_ComboBox_Expand_Item.Visibility = Visibility.Collapsed;
 
-                if (!Move_privileges || TillType.ToLower() == "eur")
+                //if (!Move_privileges || TillType.ToLower() == "eur")
                     Type_ComboBox_Move_Item.Visibility = Visibility.Collapsed;
             }
             else
@@ -1447,60 +1450,11 @@ namespace Financial_WPF_App
             {
                 if (UserMode)
                 {
-                    Original_AvgRate_comboBox.ItemsSource = null;
                     Employee_comboBox.ItemsSource = null;
 
                     if (Original_AvgRate_comboBox.IsEnabled == true)
                     {
-                        if (rate_dt != null && rate_dt.Rows.Count > 0)
-                        {
-                            string Date = ((DateTime)ActionDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                            DataRow[] rows = null;
-
-                            if (Budget_comboBox.IsEnabled == true)
-                            {
-                                if (Budget_comboBox.SelectedIndex != -1)
-                                {
-                                    DataRow[] budgetrow = Lines_dt.Select("budget_ID = '" + Selected_budgetID + "'");
-
-                                    int BudgetType_ID = Convert.ToInt32(budgetrow[0]["BudgetType_ID"].ToString());
-
-                                    if (Action_ID > 0 && dt.Rows[0]["Rate_ID"] != DBNull.Value)
-                                    {
-                                        int Current_RateID = dt.Rows[0].Field<Int32>("Rate_ID");
-                                        rows = rate_dt.Select("((BeginDate <= '" + Date + "' and EndDate >= '" + Date + "') or Expenditures < Exchanged_Value or ID = '" + Current_RateID + "') and fromtp_id = '" + BudgetType_ID + "'");
-                                    }
-                                    else
-                                    {
-                                        rows = rate_dt.Select("((BeginDate <= '" + Date + "' and EndDate >= '" + Date + "') or Expenditures < Exchanged_Value) and fromtp_id = '" + BudgetType_ID + "'");
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (Action_ID > 0 && dt.Rows[0]["Rate_ID"] != DBNull.Value)
-                                {
-                                    int Current_RateID = dt.Rows[0].Field<Int32>("Rate_ID");
-                                    if (rate_dt != null)
-                                        rows = rate_dt.Select("(BeginDate <= '" + Date + "' and EndDate >= '" + Date + "') or Expenditures < Exchanged_Value or ID = '" + Current_RateID + "'");
-                                }
-                                else
-                                {
-                                    if (rate_dt != null)
-                                        rows = rate_dt.Select("(BeginDate <= '" + Date + "' and EndDate >= '" + Date + "') or Expenditures < Exchanged_Value");
-                                }
-                            }
-
-                            DataTable selected_dt = new DataTable();
-                            if (rows != null && rows.Length != 0)
-                            {
-                                selected_dt = rows.CopyToDataTable();
-                                if (selected_dt != null && selected_dt.Rows.Count > 0)
-                                    Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
-                            }
-                            else
-                                USD_Value_TxtBox.Content = "";
-                        }
+                        LoadOriginalAvgRateComboBox(false);
                     }
                     if (Employee_comboBox.IsEnabled == true)
                     {
@@ -1534,6 +1488,100 @@ namespace Financial_WPF_App
             }
         }
 
+        private void LoadOriginalAvgRateComboBox(bool reloadRatesFromDatabase)
+        {
+            Original_AvgRate_comboBox.ItemsSource = null;
+
+            string currency = currency_comboBox.Text;
+            string actionDate = ActionDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)ActionDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+
+            int ratesReturned = 0;
+            int ratesAfterDateFilter = 0;
+
+            try
+            {
+                if (Original_AvgRate_comboBox.IsEnabled != true || Account_ID <= 0 || TillType.IsNullOrWhiteSpace() || actionDate == "")
+                {
+                    return;
+                }
+
+                if (reloadRatesFromDatabase || rate_dt == null)
+                    rate_dt = r.Select_AllAvilableRates(Account_ID.ToString(), TillType, true);
+
+                ratesReturned = rate_dt == null ? 0 : rate_dt.Rows.Count;
+
+                if (rate_dt != null && rate_dt.Rows.Count > 0)
+                {
+                    DataRow[] rows = null;
+
+                    if (Budget_comboBox.IsEnabled == true)
+                    {
+                        if (Budget_comboBox.SelectedIndex != -1)
+                        {
+                            DataRow[] budgetrow = Lines_dt.Select("budget_ID = '" + Selected_budgetID + "'");
+
+                            if (budgetrow.Length > 0)
+                            {
+                                int BudgetType_ID = Convert.ToInt32(budgetrow[0]["BudgetType_ID"].ToString());
+
+                                if (Action_ID > 0 && dt.Rows[0]["Rate_ID"] != DBNull.Value)
+                                {
+                                    int Current_RateID = dt.Rows[0].Field<Int32>("Rate_ID");
+                                    rows = rate_dt.Select("((BeginDate <= '" + actionDate + "' and EndDate >= '" + actionDate + "') or Expenditures < Exchanged_Value or ID = '" + Current_RateID + "') and fromtp_id = '" + BudgetType_ID + "'");
+                                }
+                                else
+                                {
+                                    rows = rate_dt.Select("((BeginDate <= '" + actionDate + "' and EndDate >= '" + actionDate + "') or Expenditures < Exchanged_Value) and fromtp_id = '" + BudgetType_ID + "'");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Action_ID > 0 && dt.Rows[0]["Rate_ID"] != DBNull.Value)
+                        {
+                            int Current_RateID = dt.Rows[0].Field<Int32>("Rate_ID");
+                            rows = rate_dt.Select("(BeginDate <= '" + actionDate + "' and EndDate >= '" + actionDate + "') or Expenditures < Exchanged_Value or ID = '" + Current_RateID + "'");
+                        }
+                        else
+                        {
+                            rows = rate_dt.Select("(BeginDate <= '" + actionDate + "' and EndDate >= '" + actionDate + "') or Expenditures < Exchanged_Value");
+                        }
+                    }
+
+                    ratesAfterDateFilter = rows == null ? 0 : rows.Length;
+
+                    if (rows != null && rows.Length != 0)
+                    {
+                        DataTable selected_dt = rows.CopyToDataTable();
+                        if (selected_dt != null && selected_dt.Rows.Count > 0)
+                            Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
+                    }
+                    else
+                    {
+                        USD_Value_TxtBox.Content = "";
+                    }
+                }
+            }
+            finally
+            {
+                LogOriginalAvgRateLoad(currency, actionDate, ratesReturned, ratesAfterDateFilter);
+            }
+        }
+
+        private void LogOriginalAvgRateLoad(string currency, string actionDate, int ratesReturned, int ratesAfterDateFilter)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                "[Origin Avg Rate Load] " +
+                $"Account_ID={Account_ID}, " +
+                $"Currency={currency}, " +
+                $"ActionDate={actionDate}, " +
+                $"RatesReturned={ratesReturned}, " +
+                $"RatesAfterDateFilter={ratesAfterDateFilter}");
+        }
+
         private void Fill_ComboBoxes()
         {
             DataTable dtCurrency = t.Select_All_TillTypes_Currency();
@@ -1544,32 +1592,7 @@ namespace Financial_WPF_App
          
             if (Original_AvgRate_comboBox.IsEnabled == true)
             {
-                Original_AvgRate_comboBox.ItemsSource = null;
-                rate_dt = r.Select_AllAvilableRates(Account_ID.ToString(), TillType, true);
-                if (rate_dt != null && rate_dt.Rows.Count > 0)
-                {
-                    string Date = ((DateTime)ActionDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                    DataRow[] rows;
-                    if (Action_ID > 0 && dt.Rows[0]["Rate_ID"] != DBNull.Value)
-                    {
-                        int Current_RateID = dt.Rows[0].Field<Int32>("Rate_ID");
-                        rows = rate_dt.Select("(BeginDate <= '" + Date + "' and EndDate >= '" + Date + "') or Expenditures < Exchanged_Value or ID = '" + Current_RateID + "'");
-                    }
-                    else
-                    {
-                        rows = rate_dt.Select("(BeginDate <= '" + Date + "' and EndDate >= '" + Date + "') or Expenditures < Exchanged_Value");
-                    }
-                    DataTable selected_dt = new DataTable();
-                    if (rows.Length != 0)
-                    {
-                        selected_dt = rows.CopyToDataTable();
-                        if (selected_dt != null && selected_dt.Rows.Count > 0)
-                            Original_AvgRate_comboBox.ItemsSource = selected_dt.DefaultView;
-                    }
-                    else
-                        USD_Value_TxtBox.Content = "";
-                }
-
+                LoadOriginalAvgRateComboBox(true);
             }
 
             if (Budget_comboBox.IsEnabled == true)
@@ -2695,6 +2718,7 @@ namespace Financial_WPF_App
         {
             try
             {
+                bool wasOriginalAvgRateEnabled = Original_AvgRate_comboBox.IsEnabled;
 
                 if (currency_comboBox.SelectedValue != null &&
                    (int)currency_comboBox.SelectedValue == 4)
@@ -2703,6 +2727,9 @@ namespace Financial_WPF_App
                     Original_AvgRate_comboBox.IsEnabled = true;
                     Original_AvgRate_clear_btn.IsEnabled = true;
                     Original_AvgRate_help.Visibility = Visibility.Visible;
+
+                    if (!wasOriginalAvgRateEnabled)
+                        LoadOriginalAvgRateComboBox(true);
                 }
                 else
                 {
@@ -2710,6 +2737,11 @@ namespace Financial_WPF_App
                     Original_AvgRate_comboBox.IsEnabled = false;
                     Original_AvgRate_clear_btn.IsEnabled = false;
                     Original_AvgRate_help.Visibility = Visibility.Hidden;
+                    Original_AvgRate_comboBox.ItemsSource = null;
+
+                    LogOriginalAvgRateLoad(currency_comboBox.Text, ActionDate_datepicker.SelectedDate == null
+                        ? ""
+                        : ((DateTime)ActionDate_datepicker.SelectedDate).ToString("yyyy/MM/dd"), 0, 0);
                 }
                 //Show_Hide_Components();
 
@@ -3095,8 +3127,8 @@ namespace Financial_WPF_App
                 {
                     Show_Hide_Components();
 
-                    if (Type_ComboBox_Move_Item.IsSelected)
-                        Bind_DestinationAccount_ComboBox();
+                    //if (Type_ComboBox_Move_Item.IsSelected)
+                     //   Bind_DestinationAccount_ComboBox();
 
                     Fill_ComboBoxes();
                 }
@@ -3194,7 +3226,7 @@ namespace Financial_WPF_App
                 if (currency_comboBox.SelectedValue != null)
                 {
                     int currId = Convert.ToInt32(currency_comboBox.SelectedValue);
-                    isUsdCurrency = (currId == 2);  
+                    isUsdCurrency = (currId == UsdCurrencyTilltypeId);
                 }
 
                 #region Check and get data
@@ -3221,8 +3253,8 @@ namespace Financial_WPF_App
                     else if (Type_comboBox.SelectedItem.ToString().Contains("Expenses"))
                     {
                         inserted_value = "E";
-                        if (currency_comboBox.SelectedValue == null ||
-                           Convert.ToInt32(currency_comboBox.SelectedValue) <= 0)
+                        int selectedCurrencyId = GetSelectedCurrencyTilltypeId();
+                        if (selectedCurrencyId <= 0 && !IsExpenseFromSyrTill(inserted_value, TillType))
                         {
                             MessageBox.Show("Please make sure to select the currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                             currency_comboBox.Focus();
@@ -3545,17 +3577,9 @@ namespace Financial_WPF_App
 
                     bool _isSyrTill = !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr";
 
-                   
-                    bool _isUsdCurrency = false;
-                    if (currency_comboBox.SelectedItem is DataRowView curRow)
-                    {
-                        string curName = "";
-                        if (curRow.Row.Table.Columns.Contains("Name"))
-                            curName = curRow["Name"]?.ToString().Trim().ToLower() ?? "";
-                        else if (curRow.Row.Table.Columns.Contains("Tilltypes_Name"))
-                            curName = curRow["Tilltypes_Name"]?.ToString().Trim().ToLower() ?? "";
-                        _isUsdCurrency = (curName == "usd");
-                    }
+                    int selectedCurrencyID = GetSelectedCurrencyTilltypeId();
+                    int currencyTilltypeID = GetCurrencyTilltypeIdForAddActionSave(inserted_value, TillType, selectedCurrencyID);
+                    bool _isUsdCurrency = selectedCurrencyID == UsdCurrencyTilltypeId;
 
                     bool _isSpecialCase = _isExpense && _isSyrTill && _isUsdCurrency;
 
@@ -3570,7 +3594,7 @@ namespace Financial_WPF_App
                         }
 
                      int expenseId  = a.Insert( Till_ID, "syr", usdTillId, "usd", Donor_ID, -1, true, false, false, "E", amount, rate, ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum,
-                                                Employee_Salary_ID, OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", 2 );
+                                                Employee_Salary_ID, OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", currencyTilltypeID );
 
                         //int outcomeId = a.Insert(
                         //    usdTillId, "usd",
@@ -3680,7 +3704,7 @@ namespace Financial_WPF_App
                     {
                         A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, -1, false, false, false, inserted_value, amount, rate, ActionDate
                         , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                        , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", -1);
+                        , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", currencyTilltypeID);
                     }
 
                     int success2 = 0;
@@ -3765,6 +3789,36 @@ namespace Financial_WPF_App
                 return -1;
 
             return Convert.ToInt32(row["Till_ID"]);
+        }
+
+        private int GetSelectedCurrencyTilltypeId()
+        {
+            if (currency_comboBox.SelectedValue == null)
+                return -1;
+
+            int selectedCurrencyID;
+            if (int.TryParse(currency_comboBox.SelectedValue.ToString(), out selectedCurrencyID))
+                return selectedCurrencyID;
+
+            return -1;
+        }
+
+        private int GetCurrencyTilltypeIdForAddActionSave(string actionType, string tillType, int selectedCurrencyID)
+        {
+            if (IsExpenseFromSyrTill(actionType, tillType))
+            {
+                if (selectedCurrencyID <= 0)
+                    return SyrCurrencyTilltypeId;
+            }
+
+            return selectedCurrencyID;
+        }
+
+        private bool IsExpenseFromSyrTill(string actionType, string tillType)
+        {
+            return actionType == "E" &&
+                   !string.IsNullOrEmpty(tillType) &&
+                   tillType.Equals("syr", StringComparison.OrdinalIgnoreCase);
         }
 
 

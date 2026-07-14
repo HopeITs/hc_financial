@@ -30,6 +30,7 @@ namespace Financial_WPF_App.Views
 
         private int Cat_ID = -1;
         private LineCategory cat;
+        private LineCategoryType lineCategoryType;
         private DataTable cat_dt;
         Main_Window_2 main_Window;
 
@@ -45,6 +46,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 cat = new LineCategory();
+                lineCategoryType = new LineCategoryType();
 
                 Load_Data();
                 Apply_Color_Theme();
@@ -85,9 +87,6 @@ namespace Financial_WPF_App.Views
         private void Load_Data()
         {
             cat_dt = new DataTable();
-            Type_dt.Columns.AddRange(new System.Data.DataColumn[] {
-                        new System.Data.DataColumn("ID", typeof(string)),
-                        new System.Data.DataColumn("Name", typeof(string))});
 
             Kind_comboBox.ItemsSource = null;
             Kind_dt.Columns.AddRange(new System.Data.DataColumn[] {
@@ -100,22 +99,19 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Comboboxs()
         {
-            Type_comboBox.ItemsSource = null;
-
-
-
-            Type_dt.Rows.Add("Running_cost_Item", "Running cost");
-            Type_dt.Rows.Add("Equipping_the_place_Item", "Equipping the place");
-
-            Type_comboBox.ItemsSource = Type_dt.DefaultView;
-
-
-
+            Load_Type_Combobox();
 
             Kind_dt.Rows.Add("Budget_Item", "Budget");
             Kind_dt.Rows.Add("Profit_Item", "Profit");
             Kind_comboBox.ItemsSource = Kind_dt.DefaultView;
 
+        }
+
+        private void Load_Type_Combobox()
+        {
+            Type_comboBox.ItemsSource = null;
+            Type_dt = lineCategoryType.Select();
+            Type_comboBox.ItemsSource = Type_dt != null && Type_dt.Rows.Count > 0 ? Type_dt.DefaultView : null;
         }
 
         private void LoadGrid_Category()
@@ -177,17 +173,8 @@ namespace Financial_WPF_App.Views
                     return;
                 }
                 string CName = Login.ReplaceQuotation(CategoryName_txtBox.Text);
-                int Type = -1, Kind = -1;
-
-
-                if (Type_comboBox.SelectedValue.ToString() == "Equipping_the_place_Item")
-                {
-                    Type = 0;
-                }
-                else if (Type_comboBox.SelectedValue.ToString() == "Running_cost_Item")
-                {
-                    Type = 1;
-                }
+                int Type = Convert.ToInt32(Type_comboBox.SelectedValue);
+                int Kind = -1;
 
 
                 if (Kind_comboBox.SelectedValue.ToString() == "Budget_Item")
@@ -240,20 +227,16 @@ namespace Financial_WPF_App.Views
 
                 CategoryName_txtBox.Text = dataRow[1].ToString();
 
-                if (dataRow[2] != DBNull.Value || dataRow[2] != null)
+                if (dataRow["Type_ID"] != DBNull.Value && dataRow["Type_ID"] != null)
                 {
-                    if (dataRow[2].ToString() == "Equipping the place")
-                        Type_comboBox.SelectedValue = "Equipping_the_place_Item";
-                    else if (dataRow[2].ToString() == "Running cost")
-                        Type_comboBox.SelectedValue = "Running_cost_Item";
+                    Type_comboBox.SelectedValue = Convert.ToInt32(dataRow["Type_ID"].ToString());
                 }
 
-                if (dataRow[3] != DBNull.Value || dataRow[3] != null)
+                if (dataRow["Kind_ID"] != DBNull.Value && dataRow["Kind_ID"] != null)
                 {
-
-                    if (dataRow[3].ToString() == "Profit")
+                    if (dataRow["Kind_ID"].ToString() == "0")
                         Kind_comboBox.SelectedValue = "Profit_Item";
-                    else if (dataRow[3].ToString() == "Budget")
+                    else if (dataRow["Kind_ID"].ToString() == "1")
                         Kind_comboBox.SelectedValue = "Budget_Item";
                 }
             }
@@ -343,6 +326,27 @@ namespace Financial_WPF_App.Views
             Kind_comboBox.SelectedIndex = -1;
         }
 
+        private void EditType_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                BudgetLineType_Window budgetLineType_Window = new BudgetLineType_Window(main_Window);
+                budgetLineType_Window.ShowDialog();
+                Load_Type_Combobox();
+                LoadGrid_Category();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -379,19 +383,16 @@ namespace Financial_WPF_App.Views
 
                             CategoryName_txtBox.Text = rowview[1].ToString();
 
-                            if (rowview[2] != DBNull.Value || rowview[2] != null)
+                            if (rowview["Type_ID"] != DBNull.Value && rowview["Type_ID"] != null)
                             {
-                                if (rowview[2].ToString() == "Equipping the place")
-                                    Type_comboBox.SelectedValue = "Equipping_the_place_Item";
-                                else if (rowview[2].ToString() == "Running cost")
-                                    Type_comboBox.SelectedValue = "Running_cost_Item";
+                                Type_comboBox.SelectedValue = Convert.ToInt32(rowview["Type_ID"].ToString());
                             }
 
-                            if (rowview[3] != DBNull.Value || rowview[3] != null)
+                            if (rowview["Kind_ID"] != DBNull.Value && rowview["Kind_ID"] != null)
                             {
-                                if (rowview[3].ToString() == "Profit")
+                                if (rowview["Kind_ID"].ToString() == "0")
                                     Kind_comboBox.SelectedValue = "Profit_Item";
-                                else if (rowview[3].ToString() == "Budget")
+                                else if (rowview["Kind_ID"].ToString() == "1")
                                     Kind_comboBox.SelectedValue = "Budget_Item";
                             }
                         }

@@ -1,5 +1,6 @@
 ﻿using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
+using MySql.Data.MySqlClient;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.Windows.Shared;
 using System;
@@ -15,6 +16,9 @@ namespace Financial_WPF_App.Helper
 {
     public class CustomCopyPaste : GridCutCopyPaste
     {
+        private const int UsdCurrencyTilltypeId = 2;
+        private const int SyrCurrencyTilltypeId = 4;
+
         public event EventHandler PasteCompleted;
         private DataTable _all_Original_AvgRate_dt, _all_AvgRate_dt, _all_b_dt, _all_t_dt, _all_ExAcc_dt, _all_Accounts_dt, _all_Lines_dt, _all_budgets_dt, _all_cashAccounts_dt, _all_Donors_dt, _all_Employee_dt, _all_Tills_dt, _currency_dt;
         public int TotalPastedRows { get; private set; } = 0;
@@ -44,7 +48,11 @@ namespace Financial_WPF_App.Helper
         int _Till_ID = -1;
         int _Account_ID = -1;
         int _currency_tilltype_id = -1;
+        int _SelectedTillType_ID = -1;
+        int _FromExchangeTill_ID = -1;
+        int _ToExchangeTill_ID = -1;
         string _Form_Name = "Add_MultiActions_Window";
+        string _ImportedAccountName = "";
         double _Amount = 0;
         string _ActionDate = "";
         string _Note = "";
@@ -182,6 +190,10 @@ namespace Financial_WPF_App.Helper
             _Subproject_ID = -1;
             _Till_ID = -1;
             _Account_ID = -1;
+            _SelectedTillType_ID = -1;
+            _FromExchangeTill_ID = -1;
+            _ToExchangeTill_ID = -1;
+            _ImportedAccountName = "";
             _Amount = 0;
             _ActionDate = "";
             _Note = "";
@@ -206,6 +218,125 @@ namespace Financial_WPF_App.Helper
             _WithExchangeRate = false;
             _WithObserveAcion_ID = false;
             isUsdExpenseFromSyr = false;
+        }
+
+        private static string NormalizeLookupName(string value)
+        {
+            return (value ?? "").Trim().ToLowerInvariant();
+        }
+
+        private void ApplyDefaultCurrencyTilltypeForExpenseFromSyr()
+        {
+            if (_inserted_value == "E" &&
+                !string.IsNullOrEmpty(_Till_Type) &&
+                _Till_Type.Equals("syr", StringComparison.OrdinalIgnoreCase) &&
+                _currency_tilltype_id == -1)
+            {
+                _currency_tilltype_id = SyrCurrencyTilltypeId;
+            }
+        }
+
+        private int ResolveTillTypeIdFromLoadedData(string tillTypeName)
+        {
+            string normalizedTillType = NormalizeLookupName(tillTypeName);
+
+            return _all_Tills_dt.AsEnumerable()
+                .Where(row => NormalizeLookupName(row.Field<string>("Name")) == normalizedTillType)
+                .Select(row => row.Field<int>("ID"))
+                .DefaultIfEmpty(-1)
+                .FirstOrDefault();
+        }
+
+        private int ResolveTillIdFromDatabase(int accountId, string tillTypeName, out int typeId)
+        {
+            typeId = -1;
+            int tillId = -1;
+            string normalizedTillType = NormalizeLookupName(tillTypeName);
+
+            string query = @"SELECT till.ID AS Till_ID, till.Type_ID
+                             FROM till
+                             LEFT JOIN tilltypes ON tilltypes.ID = till.Type_ID
+                             WHERE till.Account_ID = @Account_ID
+                               AND LOWER(tilltypes.Name) = @TillTypeName
+                             LIMIT 1;";
+
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Parameters.AddWithValue("@Account_ID", accountId);
+                sc.Parameters.AddWithValue("@TillTypeName", normalizedTillType);
+                sc.Connection = Login.MyConn;
+
+                using (MySqlDataReader reader = sc.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        tillId = Convert.ToInt32(reader["Till_ID"]);
+                        typeId = Convert.ToInt32(reader["Type_ID"]);
+                    }
+                }
+
+                Login.CloseAndClearConnection();
+            }
+
+            return tillId;
+        }
+
+        private void LogTillResolution(string stage)
+        {
+            System.Diagnostics.Debug.WriteLine("==================================================");
+            System.Diagnostics.Debug.WriteLine("[Multi Action Import - Till Resolution]");
+            System.Diagnostics.Debug.WriteLine("Stage: " + stage);
+            System.Diagnostics.Debug.WriteLine("Imported Account Name: " + _ImportedAccountName);
+            System.Diagnostics.Debug.WriteLine("Account_ID: " + _Account_ID);
+            System.Diagnostics.Debug.WriteLine("Selected Till Type: " + _Till_Type);
+            System.Diagnostics.Debug.WriteLine("Type_ID: " + _SelectedTillType_ID);
+            System.Diagnostics.Debug.WriteLine("Resolved Till_ID: " + _Till_ID);
+            System.Diagnostics.Debug.WriteLine("Lookup criteria: till.Account_ID = " + _Account_ID + " AND LOWER(tilltypes.Name) = '" + NormalizeLookupName(_Till_Type) + "'");
+            if (_WithExAcc)
+            {
+                System.Diagnostics.Debug.WriteLine("Exchange Account_ID: " + _ExchangeAcc_ID);
+                System.Diagnostics.Debug.WriteLine("Exchange From Till criteria: till.Account_ID = " + _ExchangeAcc_ID + " AND LOWER(tilltypes.Name) = '" + NormalizeLookupName(_Till_Type) + "'");
+                System.Diagnostics.Debug.WriteLine("Exchange From Till_ID: " + _FromExchangeTill_ID);
+                System.Diagnostics.Debug.WriteLine("Exchange To Till criteria: till.Account_ID = " + _ExchangeAcc_ID + " AND LOWER(tilltypes.Name) = '" + NormalizeLookupName(_ObserveTill_Type) + "'");
+                System.Diagnostics.Debug.WriteLine("Exchange To Till_ID: " + _ToExchangeTill_ID);
+            }
+            System.Diagnostics.Debug.WriteLine("==================================================");
+        }
+
+        private void ValidateTillResolutionBeforeInsert()
+        {
+            _SelectedTillType_ID = ResolveTillTypeIdFromLoadedData(_Till_Type);
+
+            if (_Till_ID <= 0 && _Account_ID > 0)
+            {
+                int dbTypeId;
+                _Till_ID = ResolveTillIdFromDatabase(_Account_ID, _Till_Type, out dbTypeId);
+                if (_SelectedTillType_ID == -1)
+                    _SelectedTillType_ID = dbTypeId;
+            }
+
+            if (_WithExAcc)
+            {
+                int fromTypeId;
+                int toTypeId;
+                _FromExchangeTill_ID = ResolveTillIdFromDatabase(_ExchangeAcc_ID, _Till_Type, out fromTypeId);
+                _ToExchangeTill_ID = ResolveTillIdFromDatabase(_ExchangeAcc_ID, _ObserveTill_Type, out toTypeId);
+            }
+
+            LogTillResolution("Before build_insert_query");
+
+            if (_Till_ID <= 0)
+                throw new InvalidOperationException("No till found for Account_ID = " + _Account_ID + " and Type_ID = " + _SelectedTillType_ID);
+
+            if (_WithExAcc && _FromExchangeTill_ID <= 0)
+                throw new InvalidOperationException("No exchange-account till found for Account_ID = " + _ExchangeAcc_ID + " and Till Type = '" + _Till_Type + "'");
+
+            if (_WithExAcc && _ToExchangeTill_ID <= 0)
+                throw new InvalidOperationException("No exchange-account till found for Account_ID = " + _ExchangeAcc_ID + " and Till Type = '" + _ObserveTill_Type + "'");
         }
 
 
@@ -241,7 +372,9 @@ namespace Financial_WPF_App.Helper
             else if (e.Column.ColumnName == "Account")
             {
                 bool exists = false;
+                _ImportedAccountName = e.ProposedValue?.ToString() ?? "";
 
+                // 1. البحث عن Account_ID
                 if (_Account_Type == "Project")
                 {
                     _Account_ID = _all_Tills_dt.AsEnumerable()
@@ -260,113 +393,81 @@ namespace Financial_WPF_App.Helper
                         .FirstOrDefault();
                 }
 
-
+                // 2. محاولة إيجاد الـ Till_ID فوراً من البيانات المحملة (لغرض الفلترة السريع)
                 if (_Account_ID != -1)
                 {
+                    // نحتفظ بهذا السطر من الكود الجديد لتسجيل النوع
+                    _SelectedTillType_ID = ResolveTillTypeIdFromLoadedData(_Till_Type);
+
+                    // استعادة منطق البحث عن Till_ID كما في الكود القديم (لكن باستخدام دالة التطبيع الجديدة للأفضل)
                     _Till_ID = _all_Tills_dt.AsEnumerable()
                         .Where(row => row.Field<string>("Account_Name")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true
-                        && row.Field<string>("Name")?.Equals(_Till_Type.ToString()) == true)
+                        && NormalizeLookupName(row.Field<string>("Name")) == NormalizeLookupName(_Till_Type))
                         .Select(row => row.Field<int>("Till_ID"))
                         .DefaultIfEmpty(-1)
                         .FirstOrDefault();
                 }
 
+                LogTillResolution("Account column validation");
+
+                // 3. (هذا هو الجزء المفقود) الفلترة الفورية للجداول المساعدة إذا تم العثور على Till
                 if (_Till_ID != -1)
                 {
                     exists = true;
-                }
 
-                if (exists)
-                {
                     System.Data.DataRow[] rows = null;
+
+                    // فلترة جداول الأسعار
                     if (_all_Original_AvgRate_dt.Rows.Count > 0)
                     {
                         rows = _all_Original_AvgRate_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Original_AvgRate_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Original_AvgRate_dt = rows.CopyToDataTable();
                     }
 
                     if (_all_AvgRate_dt.Rows.Count > 0)
                     {
                         rows = _all_AvgRate_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _AvgRate_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _AvgRate_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة المشاريع الصغيرة
                     if (_all_b_dt.Rows.Count > 0)
                     {
                         rows = _all_b_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _b_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _b_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة الصناديق الأخرى (Tills)
                     if (_all_t_dt.Rows.Count > 0)
                     {
                         rows = _all_t_dt.Select("Account_ID = '" + _Account_ID + "' AND ID <> " + _Till_ID + "");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _t_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _t_dt = rows.CopyToDataTable();
                     }
-
 
                     _ExAcc_dt = _all_ExAcc_dt.Copy();
 
+                    // فلترة الحسابات الأخرى
                     if (_all_Accounts_dt.Rows.Count > 0)
                     {
                         rows = _all_Accounts_dt.Select("account_id <> '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Accounts_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Accounts_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة البنود (Lines)
                     if (_all_Lines_dt.Rows.Count > 0)
                     {
                         rows = _all_Lines_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Lines_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Lines_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة الميزانيات (Budgets)
                     if (_all_budgets_dt.Rows.Count > 0)
                     {
                         rows = _all_budgets_dt.Select("Account_ID = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _budgets_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _budgets_dt = rows.CopyToDataTable();
                     }
 
-
+                    // فلترة حسابات الصندوق النقدية (Cash Accounts) بناءً على النوع
                     if (_all_cashAccounts_dt.Rows.Count > 0)
                     {
                         if (_Account_Type == "Project")
@@ -381,42 +482,26 @@ namespace Financial_WPF_App.Helper
                         {
                             rows = _all_cashAccounts_dt.Select("PersonalAccount_ID like '" + _Account_ID + ",%' or PersonalAccount_ID like '%," + _Account_ID + ",%' or PersonalAccount_ID like '%," + _Account_ID + "' or PersonalAccount_ID like '" + _Account_ID + "'");
                         }
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _cashAccounts_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _cashAccounts_dt = rows.CopyToDataTable();
                     }
 
-
+                    // فلترة المانحين (Donors)
                     if (_all_Donors_dt.Rows.Count > 0)
                     {
                         rows = _all_Donors_dt.Select("account_id = '" + _Account_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Donors_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Donors_dt = rows.CopyToDataTable();
                     }
 
+                    // فلترة الموظفين (Employees)
                     if (_all_Employee_dt.Rows.Count > 0)
                     {
                         rows = _all_Employee_dt.Select("subproject_id = '" + _Subproject_ID + "'");
-                        if (rows != null)
-                        {
-                            if (rows.Length != 0)
-                            {
-                                _Employee_dt = rows.CopyToDataTable();
-                            }
-                        }
+                        if (rows != null && rows.Length != 0) _Employee_dt = rows.CopyToDataTable();
                     }
-
                 }
-                else
+
+                // إذا لم يتم العثور على الـ Till
+                if (!exists)
                 {
                     Login.MultiAction_AnyError = true;
                     e.Row.SetColumnError(e.Column.ColumnName, "This Account does not exist or does not contains a match till.");
@@ -427,7 +512,12 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
 
-                if (_currency_dt.Rows.Count > 0)
+                if (e.ProposedValue == null || e.ProposedValue.ToString().IsNullOrWhiteSpace())
+                {
+                    ApplyDefaultCurrencyTilltypeForExpenseFromSyr();
+                    exists = _currency_tilltype_id != -1;
+                }
+                else if (_currency_dt.Rows.Count > 0)
                 {
                     _currency_tilltype_id = _currency_dt.AsEnumerable()
                     .Where(row => row.Field<string>("Name")?.ToLower().Trim()
@@ -441,7 +531,7 @@ namespace Financial_WPF_App.Helper
                 {
                     exists = true;
                     if (_Till_Type.ToLower() == "syr" &&
-                     e.ProposedValue.ToString().ToLower().Trim() == "usd" &&
+                     _currency_tilltype_id == UsdCurrencyTilltypeId &&
                     _inserted_value == "E")
                     {
                         isUsdExpenseFromSyr = true;
@@ -527,16 +617,6 @@ namespace Financial_WPF_App.Helper
                 }
 
 
-                if (isDate)
-                {
-                    _ActionDate = Adate.ToString("yyyy/MM/dd");
-                }
-                else
-                {
-                    Login.MultiAction_AnyError = true;
-                    e.Row.SetColumnError(e.Column.ColumnName, "This column only accepts Dates.");
-                    e.Row.RowError = "There are errors in this row.";
-                }
             }
             else if (e.Column.ColumnName == "Description (AR)")
             {
@@ -914,7 +994,7 @@ namespace Financial_WPF_App.Helper
             {
                 bool exists = false;
 
-                string currency = e.Row["Currency"]?.ToString(); 
+                string currency = e.Row.Table.Columns.Contains("Currency") ? e.Row["Currency"]?.ToString() : null;
                 if (!string.IsNullOrEmpty(currency) && currency.ToUpper() == "USD")
                 {
                     exists = true; // إذا العملة USD → السماح بأي قيمة أو فارغة
@@ -1293,18 +1373,66 @@ namespace Financial_WPF_App.Helper
             }
         }
 
-        
+
         public void build_insert_query()
         {
+            ValidateTillResolutionBeforeInsert();
+            ApplyDefaultCurrencyTilltypeForExpenseFromSyr();
+
+            // =========================================================================
+            // 1. [VALIDATION & DEBUGGING] التحقق والطباعة قبل البدء ببناء الاستعلام
+            // =========================================================================
+
+            // طباعة تفاصيل المطابقة لمعاينة المشكلة في شاشة الـ Output/Console أثناء الفحص
+            System.Diagnostics.Debug.WriteLine($"==================================================");
+            System.Diagnostics.Debug.WriteLine($"[Exchange Import - Build Query Debug]");
+            System.Diagnostics.Debug.WriteLine($" - Account_ID (Input): {_Account_ID}");
+            System.Diagnostics.Debug.WriteLine($" - Till_Type (Input Name): {_Till_Type}");
+            System.Diagnostics.Debug.WriteLine($" - Till Type_ID: {_SelectedTillType_ID}");
+            System.Diagnostics.Debug.WriteLine($" - Resolved Till_ID (Main): {_Till_ID}");
+            System.Diagnostics.Debug.WriteLine($" - ObserveTill_ID: {_ObserveTill_ID}");
+            System.Diagnostics.Debug.WriteLine($" - ObserveTill_Type: {_ObserveTill_Type}");
+            System.Diagnostics.Debug.WriteLine($" - Exchange Account_ID: {_ExchangeAcc_ID}");
+            System.Diagnostics.Debug.WriteLine($" - From Exchange Till_ID: {_FromExchangeTill_ID}");
+            System.Diagnostics.Debug.WriteLine($" - To Exchange Till_ID: {_ToExchangeTill_ID}");
+            System.Diagnostics.Debug.WriteLine($" - Currency TillType ID: {_currency_tilltype_id}");
+            System.Diagnostics.Debug.WriteLine($" - Action Type (_inserted_value): {_inserted_value}");
+            System.Diagnostics.Debug.WriteLine($" - WithObserveAction: {_WithObserveAcion_ID}, WithExAcc: {_WithExAcc}");
+            System.Diagnostics.Debug.WriteLine($"==================================================");
+
+            // التحقق المنعي: إذا كان المعرف الرئيسي فارغاً أو غير صالح، نمنع العملية فوراً
+            // (ملاحظة: إذا كانت الدالة ترجع void، نستخدم throw أو MessageBox بناءً على تصميم الـ Architecture لديك)
+            if (_Till_ID <= 0)
+            {
+                string errorMsg = $"Validation Error in Exchange Import:\n" +
+                                  $"No matching till found in database for Account_ID = {_Account_ID} and Type_ID/Name = '{_Till_Type}'.\n\n" +
+                                  $"The insert operation was canceled to prevent saving a NULL Till_ID.";
+
+                System.Windows.MessageBox.Show(errorMsg, "Database Integrity Protection",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+
+                throw new InvalidOperationException($"Import Aborted: Till_ID cannot be null for Account_ID = {_Account_ID}");
+            }
+
+            // =========================================================================
+            // 2. الكود الأصلي بعد التأمين وإضافة المعاملات
+            // =========================================================================
             k++;
             string temp_query = "";
             string log_query = "";
 
             Login.MultiAction_sc.Parameters.AddWithValue("@Till_ID" + k, _Till_ID);
             Login.MultiAction_sc.Parameters.AddWithValue("@Till_Type" + k, _Till_Type);
+            Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_Type" + k, _ObserveTill_Type);
+            Login.MultiAction_sc.Parameters.AddWithValue("@FromExchangeTill_ID" + k, _FromExchangeTill_ID);
+            Login.MultiAction_sc.Parameters.AddWithValue("@ToExchangeTill_ID" + k, _ToExchangeTill_ID);
 
-            bool isUsdExpenseFromSyr = _inserted_value == "E" && _Till_Type.ToLower() == "syr" && _currency_tilltype_id == 2 && !_WithExAcc;
-            
+            // فحص دقيق لمنع التداخل العشوائي بين عمليات الـ Exchange العادية والـ Expense المخصصة للـ SYR
+            bool isUsdExpenseFromSyr = _inserted_value == "E" &&
+                                       _Till_Type.ToLower() == "syr" &&
+                                       _currency_tilltype_id == 2 &&
+                                       !_WithExAcc;
+
             if (_ObserveTill_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, DBNull.Value);
@@ -1313,7 +1441,6 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_ID" + k, _ObserveTill_ID);
             }
-            //Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_Type" + k, _ObserveTill_Type);
 
             if (_Donor_ID == -1)
             {
@@ -1346,12 +1473,12 @@ namespace Financial_WPF_App.Helper
             else
                 Login.MultiAction_sc.Parameters.AddWithValue("@ConvertedAmount" + k, _Amount * _rate);
 
-
             Login.MultiAction_sc.Parameters.AddWithValue("@Note" + k, _Note);
             Login.MultiAction_sc.Parameters.AddWithValue("@E_Note" + k, _E_Note);
 
             Login.MultiAction_sc.Parameters.AddWithValue("@IsReceipt" + k, _IsReceipt);
             Login.MultiAction_sc.Parameters.AddWithValue("@ReceiptNote" + k, _ReceiptNote);
+
             if (_Employee_Salary_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Employee_Salary_ID" + k, DBNull.Value);
@@ -1369,6 +1496,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Rate_ID" + k, _Rate_ID);
             }
+
             if (_ActionDate == "")
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@ActionDate" + k, DBNull.Value);
@@ -1377,6 +1505,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@ActionDate" + k, _ActionDate);
             }
+
             if (_MicroProject_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@MicroProject_ID" + k, DBNull.Value);
@@ -1385,6 +1514,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@MicroProject_ID" + k, _MicroProject_ID);
             }
+
             if (_BudgetLine_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@BudgetLine_ID" + k, DBNull.Value);
@@ -1393,6 +1523,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@BudgetLine_ID" + k, _BudgetLine_ID);
             }
+
             if (_IncomeType_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@IncomeType_ID" + k, DBNull.Value);
@@ -1401,6 +1532,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@IncomeType_ID" + k, _IncomeType_ID);
             }
+
             if (_CashAccount_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@CashAccount_ID" + k, DBNull.Value);
@@ -1409,6 +1541,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@CashAccount_ID" + k, _CashAccount_ID);
             }
+
             if (_ObserveCashAccount_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@ObserveCashAccount_ID" + k, DBNull.Value);
@@ -1417,6 +1550,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@ObserveCashAccount_ID" + k, _ObserveCashAccount_ID);
             }
+
             if (_Exchange_Cash_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Exchange_Cash_ID" + k, DBNull.Value);
@@ -1425,6 +1559,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Exchange_Cash_ID" + k, _Exchange_Cash_ID);
             }
+
             if (_Account_ID == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Account_ID" + k, DBNull.Value);
@@ -1433,6 +1568,7 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Account_ID" + k, _Account_ID);
             }
+
             if (_currency_tilltype_id == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, DBNull.Value);
@@ -1441,58 +1577,49 @@ namespace Financial_WPF_App.Helper
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, _currency_tilltype_id);
             }
-           
 
             string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
             Login.MultiAction_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
-
             Login.MultiAction_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
             Login.MultiAction_sc.Parameters.AddWithValue("@Form_Name" + k, _Form_Name);
-
 
             if (k == 0)
             {
                 temp_query += @"SET @Action_ID = (
-                                SELECT MAX(max_id) + 1 AS next_id
-                                FROM (
-                                    SELECT MAX(ID) AS max_id FROM action
-                                    UNION ALL
-                                    SELECT MAX(ID) FROM action_not_approved
-                                    UNION ALL
-                                    SELECT MAX(ID) FROM action_deleted
-                                ) AS combined_max_ids);";
+                        SELECT MAX(max_id) + 1 AS next_id
+                        FROM (
+                            SELECT MAX(ID) AS max_id FROM action
+                            UNION ALL
+                            SELECT MAX(ID) FROM action_not_approved
+                            UNION ALL
+                            SELECT MAX(ID) FROM action_deleted
+                        ) AS combined_max_ids);";
             }
 
             temp_query += "SET @Action_ID" + k + " = @Action_ID;";
 
             temp_query += @"INSERT INTO `action_not_approved`(`id`,`Till_ID`,`ObserveTill_ID`, `AType_ID`,`currency_tilltype_id`, `Amount`, `rate`, `ActionDate`
-                            ,  `Note`, `E_Note`, `IsReceipt`, `ReceiptNote`, `Employee_Salary_ID`, `Rate_ID`
-                            , `MicroProject_ID`, `BudgetLine_ID`, `IncomeType_ID`, `CashAccount_ID`, `ObserveCashAccount_ID`, `Exchange_Cash_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES (@Action_ID" + k + " ,@Till_ID" + k + " ,@ObserveTill_ID" + k + " ,(select id from actiontype where shortname = @AType" + k + "), @Currency_tilltype_id" + k + ", @Amount" + k + ", @rate" + k + ", @ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ",  @Employee_Salary_ID" + k + ",@Rate_ID" + k + ", "
+                    ,  `Note`, `E_Note`, `IsReceipt`, `ReceiptNote`, `Employee_Salary_ID`, `Rate_ID`
+                    , `MicroProject_ID`, `BudgetLine_ID`, `IncomeType_ID`, `CashAccount_ID`, `ObserveCashAccount_ID`, `Exchange_Cash_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
+                    VALUES (@Action_ID" + k + " ,@Till_ID" + k + " ,@ObserveTill_ID" + k + " ,(select id from actiontype where shortname = @AType" + k + "), @Currency_tilltype_id" + k + ", @Amount" + k + ", @rate" + k + ", @ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ",  @Employee_Salary_ID" + k + ",@Rate_ID" + k + ", "
                             + "@MicroProject_ID" + k + ", @BudgetLine_ID" + k + ", @IncomeType_ID" + k + ", @CashAccount_ID" + k + ", @ObserveCashAccount_ID" + k + ", @Exchange_Cash_ID" + k + ", @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '1');";
 
             temp_query += "SET @Action_ID = @Action_ID" + k + " +1;";
 
-           
-
-
             if (_WithObserveAcion_ID && !isUsdExpenseFromSyr)
             {
                 temp_query += @" INSERT INTO `action_not_approved`(`Till_ID`,`ObserveTill_ID`, `ObserveAcion_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
-                            ,  `Note`,`E_Note`, `IsReceipt`, `ReceiptNote`, `Employee_Salary_ID`, `CashAccount_ID`,`ObserveCashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES(@ObserveTill_ID" + k + ", @Till_ID" + k + ", @Action_ID" + k + ", (select id from actiontype where shortname = 'I'), @ConvertedAmount" + k + ",@rate" + k + ", @ActionDate" + k + ", @Note" + k + ",@E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ", @Employee_Salary_ID" + k + ",@ObserveCashAccount_ID" + k + ", @CashAccount_ID" + k + ", @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '0'); ";
+                        ,  `Note`,`E_Note`, `IsReceipt`, `ReceiptNote`, `Employee_Salary_ID`, `CashAccount_ID`,`ObserveCashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
+                        VALUES(@ObserveTill_ID" + k + ", @Till_ID" + k + ", @Action_ID" + k + ", (select id from actiontype where shortname = 'I'), @ConvertedAmount" + k + ",@rate" + k + ", @ActionDate" + k + ", @Note" + k + ",@E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ", @Employee_Salary_ID" + k + ",@ObserveCashAccount_ID" + k + ", @CashAccount_ID" + k + ", @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '0'); ";
 
                 temp_query += " SET @ObserveAcion_ID" + k + " = Last_Insert_ID();";
-
                 temp_query += " UPDATE action_not_approved SET ObserveAcion_ID = @ObserveAcion_ID" + k + " WHERE ID = @Action_ID" + k + ";";
-
                 temp_query += "SET @Action_ID = @Action_ID" + k + " +2;";
-
 
                 if (_WithExAcc)
                 {
-                    temp_query += " Set @From_id" + k + " = (select till.id from till left join account on till.account_id = account.id left join tilltypes on tilltypes.id = till.type_id where account.id = @ExchangeAcc_ID" + k + " and tilltypes.name = @Till_Type" + k + ");";
-                    temp_query += " Set @To_id" + k + " = (select till.id from till left join account on till.account_id = account.id left join tilltypes on tilltypes.id = till.type_id where account.id = @ExchangeAcc_ID" + k + " and tilltypes.name = @ObserveTill_Type" + k + ");";
+                    temp_query += " Set @From_id" + k + " = @FromExchangeTill_ID" + k + ";";
+                    temp_query += " Set @To_id" + k + " = @ToExchangeTill_ID" + k + ";";
 
                     temp_query += @" INSERT INTO `action_not_approved`(`Till_ID`,`ObserveTill_ID`, `ObserveAcion_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
                             , `Note`,`E_Note`, `IsReceipt`, `ReceiptNote`, `Employee_Salary_ID`, `CashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
@@ -1505,31 +1632,24 @@ namespace Financial_WPF_App.Helper
                             VALUES(@To_id" + k + ", @Till_ID" + k + ", @Action_ID" + k + ", (select id from actiontype where shortname = 'E'), @ConvertedAmount" + k + " ,@rate" + k + ", @ActionDate" + k + ", @Note" + k + ", @E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ", @Employee_Salary_ID" + k + ", (case when LOWER(@ObserveTill_Type" + k + ") = 'syr' then @Exchange_Cash_ID" + k + " else null end), @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '0'); ";
 
                     temp_query += " SET @ToExTill_Acc_ID" + k + " = Last_Insert_ID();";
-
                     temp_query += "SET @Action_ID = @Action_ID" + k + " +4;";
                 }
             }
             else if (_WithObserveAcion_ID && isUsdExpenseFromSyr)
-{
-                // Outcome من USD till
+            {
                 temp_query += @"INSERT INTO action_not_approved (`Till_ID`,`ObserveTill_ID`,`ObserveAcion_ID`,`AType_ID`,`currency_tilltype_id`,`Amount`,`rate`,`ActionDate`,`Note`,`E_Note`,`IsReceipt`,`ReceiptNote`,`Employee_Salary_ID`,`CashAccount_ID`,`Donor_ID`,`created_at`,`User_ID`,`SourceAction`,`BudgetLine_ID`) 
-                              VALUES (@ObserveTill_ID" + k + ",@Till_ID" + k + ",@Action_ID" + k + ",(select id from actiontype where shortname='O'),@Currency_tilltype_id" + k + ",@Amount" + k + ",@rate" + k + ",@ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ",@IsReceipt" + k + ",@ReceiptNote" + k + ",@Employee_Salary_ID" + k + ",@CashAccount_ID" + k + ",@Donor_ID" + k + ",@Todaydate" + k + ",@Uesr_ID" + k + ",'0',@BudgetLine_ID" + k + ");";
+                      VALUES (@ObserveTill_ID" + k + ",@Till_ID" + k + ",@Action_ID" + k + ",(select id from actiontype where shortname='O'),@Currency_tilltype_id" + k + ",@Amount" + k + ",@rate" + k + ",@ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ",@IsReceipt" + k + ",@ReceiptNote" + k + ",@Employee_Salary_ID" + k + ",@CashAccount_ID" + k + ",@Donor_ID" + k + ",@Todaydate" + k + ",@Uesr_ID" + k + ",'0',@BudgetLine_ID" + k + ");";
 
                 temp_query += "SET @UsdOutcome_ID" + k + " = Last_Insert_ID();";
 
-
-                temp_query += " SET @UsdOutcome_ID" + k + " = Last_Insert_ID();";
-
-                // Income على SYR till بعملة USD
                 temp_query += @"INSERT INTO action_not_approved (`Till_ID`,`ObserveTill_ID`,`ObserveAcion_ID`,`AType_ID`,`currency_tilltype_id`,`Amount`,`rate`,`ActionDate`,`Note`,`E_Note`,`IsReceipt`,`ReceiptNote`,`Employee_Salary_ID`,`CashAccount_ID`,`Donor_ID`,`created_at`,`User_ID`,`SourceAction`,`BudgetLine_ID`)
-                              VALUES (@Till_ID" + k + ",@ObserveTill_ID" + k + ",@Action_ID" + k + ",(select id from actiontype where shortname='I'),@Currency_tilltype_id" + k + ",@Amount" + k + ",@rate" + k + ",@ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ",@IsReceipt" + k + ",@ReceiptNote" + k + ",@Employee_Salary_ID" + k + ",@CashAccount_ID" + k + ",@Donor_ID" + k + ",@Todaydate" + k + ",@Uesr_ID" + k + ",'0',@BudgetLine_ID" + k + ");";
+                      VALUES (@Till_ID" + k + ",@ObserveTill_ID" + k + ",@Action_ID" + k + ",(select id from actiontype where shortname='I'),@Currency_tilltype_id" + k + ",@Amount" + k + ",@rate" + k + ",@ActionDate" + k + ",@Note" + k + ",@E_Note" + k + ",@IsReceipt" + k + ",@ReceiptNote" + k + ",@Employee_Salary_ID" + k + ",@CashAccount_ID" + k + ",@Donor_ID" + k + ",@Todaydate" + k + ",@Uesr_ID" + k + ",'0',@BudgetLine_ID" + k + ");";
 
                 temp_query += " SET @SyrIncome_ID" + k + " = LAST_INSERT_ID();";
-
                 temp_query += " SET @Action_ID = @Action_ID" + k + " + 3;";
             }
 
-
+            // بناء الـ Logs
             temp_query += " INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @Action_ID" + k + ", CONCAT('action Type = ', @AType" + k + "), CONCAT('till ID = ',@Till_ID" + k + ") , '" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
             if (_WithObserveAcion_ID && !isUsdExpenseFromSyr)
@@ -1543,26 +1663,19 @@ namespace Financial_WPF_App.Helper
             }
             if (_WithObserveAcion_ID && isUsdExpenseFromSyr)
             {
-                // Log USD Outcome
                 temp_query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
                               "VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @UsdOutcome_ID" + k + ", 'action Type = O', " +
                               "CONCAT('till ID = ', @ObserveTill_ID" + k + " ,' - Linked to action ID = ', @Action_ID" + k + "), " +
                               "'" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
 
-                // Log SYP Income
                 temp_query += "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) " +
                               "VALUES (@Form_Name" + k + ", 'INSERT', 'action_not_approved', @SyrIncome_ID" + k + ", 'action Type = I', " +
                               "CONCAT('till ID = ', @Till_ID" + k + " ,' - Linked to action ID = ', @Action_ID" + k + "), " +
                               "'" + log_query + "', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
             }
 
-
-
-
-
             Login.MultiAction_List.Add(temp_query);
             temp_query = "";
-
         }
 
 

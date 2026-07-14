@@ -423,11 +423,40 @@ namespace Financial_WPF_App.Views
                 Date = ((DateTime)(Date_datepicker.SelectedDate)).ToString("yyyy/MM/dd");
                 CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);
 
+                int currency_id = 0;
+                System.Data.DataRow[] rows = b_dt.Select("MicroProject_ID=" + MicroProject_ID);
+
+                if (rows.Length > 0 && rows[0]["Currency_Name"] != DBNull.Value)
+                {
+                  
+                    string currencyName = rows[0]["Currency_Name"].ToString().ToLower().Trim();
+
+                    if (currencyName.Contains("syr"))
+                    {
+                        currency_id = 4; 
+                    }
+                    else if (currencyName.Contains("usd"))
+                    {
+                        currency_id = 2; 
+                    }
+                    else
+                    {
+                       
+                        MessageBox.Show("Unknown currency type: " + rows[0]["Currency_Name"].ToString(), "Error");
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Could not find currency details for the selected beneficiary.", "Error");
+                    return;
+                }
+
                 if (Action_ID != -1)//Edit
                 {
                     if (Approved_Action)
                     {
-                        p.Update_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
+                        p.Update_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, currency_id, "Payment_Window");
                         if(returnedamount != 0.0)
                         {
                             MessageBox.Show("Payment updated!! The installment rescheduling has been completed based on the returned amount.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
@@ -439,7 +468,7 @@ namespace Financial_WPF_App.Views
                     }
                     else
                     {
-                        p.Update_Not_Approved_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, "Payment_Window");
+                        p.Update_Not_Approved_Payment(Action_ID, Till_ID, amount, returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, Beneficiary_ID, CashAccount_ID, currency_id, "Payment_Window");
                         if (returnedamount != 0.0)
                         {
                             MessageBox.Show("Payment updated!! The installment rescheduling has been completed based on the returned amount.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
@@ -456,14 +485,14 @@ namespace Financial_WPF_App.Views
                         DataTable selected_rows_dt = new DataTable();
                         DataTable returned_rows_dt = new DataTable();
 
-                        System.Data.DataRow[] My_rows = p_dt.Select("payment_state is null OR payment_state <> 'Done'");
+                        System.Data.DataRow[] My_rows = p_dt.Select("payment_state = 'Unpaid' OR payment_state = 'Incomplete'", "Num ASC, DueDate ASC, ID ASC");
                         
                         selected_rows_dt = p_dt.Copy();
                         selected_rows_dt.Rows.Clear();
                         foreach (System.Data.DataRow row in My_rows)
                             selected_rows_dt.ImportRow(row);
 
-                        p.Insert_Payment(amount,returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, SubProject_ID, Beneficiary_ID, selected_rows_dt, CashAccount_ID, "Payment_Window");
+                        p.Insert_Payment(amount,returnedamount, Date, Notes_txtBox.Text, MicroProject_ID, SubProject_ID, Beneficiary_ID, selected_rows_dt, CashAccount_ID, currency_id, "Payment_Window");
                         Fill_Calculations();
                         if (returnedamount != 0.0)
                         {
@@ -575,7 +604,7 @@ namespace Financial_WPF_App.Views
             UnpaidPaymentCount = Convert.ToInt32(p_dt.Select("payment_state='Unpaid'").Length.ToString());
             InCompletePaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Incomplete'").Length.ToString());
             ReturnedPaymentCont = Convert.ToInt32(p_dt.Select("payment_state='Returned'").Length.ToString());
-            DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(Approved <> 'Yes' and DueDate < '" + DateTime.Now + "') or (payment_state <> 'Done' and DueDate < '" + DateTime.Now + "')").Length.ToString());
+            DelayedPaymentCont = Convert.ToInt32(p_dt.Select("(payment_state = 'Unpaid' OR payment_state = 'Incomplete') AND DueDate < '" + DateTime.Today + "'").Length.ToString());
             NotApprovedPaymentCont = Convert.ToInt32(p_dt.Select("Approved = 'No'").Length.ToString());
 
             TotalPaymentCount_txtBox.Content = TotalPaymentCount.ToString();

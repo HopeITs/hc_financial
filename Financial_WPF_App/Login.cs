@@ -77,18 +77,18 @@ namespace Financial_WPF_App.Models
 
         public static void Set_ConnectionString(bool status)
         {
-            //Should Change Before Publishing
+            //Should Change Before Publishing database, online user, online root
             test_database = "hcsyria_financial_test"; 
-            onlineserver  = "45.9.62.87";             
+            onlineserver  = "mysql.s1893.sureserver.com";             
             string localserver = "localhost";         
 
-            ConStr_Online = @"Server=" + onlineserver + ";Port=3306;Database=" + test_database +
+            ConStr_Online = @"Server=" + onlineserver + ";Port=3308;Database=" + test_database +
                             ";Uid=hcfi;Password=}+&>CsWe6M1?3JtI;Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
             ConStr_Offline = @"Server=" + localserver + ";username=jj;password=pp;database=" + test_database +
                          ";Convert Zero Datetime=True;CHARSET=utf8;Connect Timeout=21600;AllowUserVariables=True;";
 
-            OnlineRoot = "sftp://45.9.62.87/files/test";
+            OnlineRoot = "ftp://hcsyria.org/financial/files/test";
 
             if (status) //online
                 ConnectionString = ConStr_Online;

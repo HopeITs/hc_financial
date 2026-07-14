@@ -36,6 +36,7 @@ namespace Financial_WPF_App.Views
 
 
         Models.Action a;
+        Payment p;
         private DataTable Actions_dt, Deleted_Actions_dt;
         bool Deleted_Actions;
 
@@ -55,6 +56,7 @@ namespace Financial_WPF_App.Views
             try
             {
                 a = new Models.Action();
+                p = new Payment();
 
                 for (int i = 0; i < myDataGrid.Columns.Count; i++)
                 {
@@ -582,6 +584,7 @@ namespace Financial_WPF_App.Views
                             Login.ActionApproval_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
                             Login.ActionApproval_sc.Parameters.AddWithValue("@Form_Name" + k, "Approval_Window");
 
+                            temp_query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@Action_ID" + k);
                             temp_query += "Delete from action_deleted where ObserveAcion_ID = @Action_ID" + k + ";";
                             temp_query += "Delete from action_deleted where ID = @Action_ID" + k + ";";
                             temp_query += "Delete from action_attachments where action_id = @Action_ID" + k + ";";
@@ -653,6 +656,9 @@ namespace Financial_WPF_App.Views
                         string log_query = "";
 
                         var Action_ID = newView[k]["ID"];
+
+                        if (p.Restore_Deleted_Payment_Action(Convert.ToInt32(Action_ID), "Approval_Window"))
+                            continue;
 
                         var Approved_Action = newView[k]["IsApproved"];
 

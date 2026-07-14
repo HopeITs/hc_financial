@@ -891,6 +891,8 @@ namespace Financial_WPF_App.Views
                     if (HOffset != 0)
                         this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
                 }
+
+                UpdateSelectedStatistics();
             }
             catch (Exception ex)
             {
@@ -984,6 +986,7 @@ namespace Financial_WPF_App.Views
               //  Returned_textBlock1.Text = selected_returned.ToString("N2");
               //  Exchange_textBlock1.Text = selected_Exchange.ToString("N2");
                // Exchpand_textBlock1.Text = selected_expaned.ToString("N2");
+                UpdateSelectedStatistics();
             }
             catch (Exception ex)
             {
@@ -1447,6 +1450,7 @@ namespace Financial_WPF_App.Views
                     {
                         row["IsSelected"] = Checked;
                     }
+                    UpdateSelectedStatistics();
                 }
             }
             catch (Exception ex)
@@ -1556,6 +1560,8 @@ namespace Financial_WPF_App.Views
 
                             temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
 
+                            temp_query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@ID" + k);
+
                             temp_query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID" + k + ";";
 
                             temp_query += "DELETE FROM action WHERE action.id  = @ID" + k + ";";
@@ -1627,6 +1633,8 @@ namespace Financial_WPF_App.Views
 
                             temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
 
+                            temp_query += Financial_WPF_App.Models.Action.DeleteActionPaymentForDeletedInstallmentActionsSql("@ID" + k);
+
                             temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID" + k + ";";
 
                             temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.id  = @ID" + k + ";";
@@ -1684,6 +1692,150 @@ namespace Financial_WPF_App.Views
         {
             if (HOffset != 0)
                 this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+        }
+
+        private void myDataGrid_CurrentCellValueChanged(object sender, CurrentCellValueChangedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new System.Action(UpdateSelectedStatistics), DispatcherPriority.Background);
+        }
+
+        private void UpdateSelectedStatistics()
+        {
+            List<DataRowView> selectedRows = GetUnifiedSelectedRows();
+            if (selectedRows.Count < 2)
+            {
+                ResetSelectedStatistics();
+                SelectedStatisticsPanel.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            ResetSelectedStatistics();
+            ConfigureSelectedStatisticsPanel();
+            SelectedStatisticsCountTextBlock.Text = selectedRows.Count.ToString("N0");
+
+            if (string.Equals(TillType_Name, "syr", StringComparison.OrdinalIgnoreCase))
+            {
+                SelectedIncomeSyrTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsSyrRow), "Income").ToString("N2");
+                SelectedExpensesSyrTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsSyrRow), "Expand").ToString("N2");
+                SelectedIncomeUsdTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsUsdRow), "Income").ToString("N2");
+                SelectedExpensesUsdTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsUsdRow), "Expand").ToString("N2");
+            }
+            else
+            {
+                SelectedIncomeSyrTextBlock.Text = SumSelectedColumn(selectedRows, "Income").ToString("N2");
+                SelectedExchangeTextBlock.Text = SumSelectedColumn(selectedRows, "Exchange").ToString("N2");
+
+                if (string.Equals(TillType_Name, "usd", StringComparison.OrdinalIgnoreCase))
+                {
+                    SelectedTransferTextBlock.Text = SumSelectedColumn(selectedRows, "Outcome").ToString("N2");
+                }
+            }
+
+            SelectedValueTextBlock.Text = SumSelectedColumn(selectedRows, "USD_Value").ToString("N2");
+            SelectedStatisticsPanel.Visibility = Visibility.Visible;
+        }
+
+        private List<DataRowView> GetUnifiedSelectedRows()
+        {
+            Dictionary<string, DataRowView> rowsById = new Dictionary<string, DataRowView>();
+            DataView currentView = myDataGrid.ItemsSource as DataView;
+
+            if (currentView != null)
+            {
+                foreach (DataRowView row in currentView)
+                {
+                    if (IsCheckedRow(row))
+                    {
+                        AddSelectedRow(rowsById, row);
+                    }
+                }
+            }
+
+            if (currentView == null)
+                return rowsById.Values.ToList();
+
+            foreach (object item in myDataGrid.SelectedItems)
+            {
+                DataRowView row = item as DataRowView;
+                if (row != null && row.Row.Table == currentView.Table)
+                {
+                    AddSelectedRow(rowsById, row);
+                }
+            }
+
+            return rowsById.Values.ToList();
+        }
+
+        private static void AddSelectedRow(IDictionary<string, DataRowView> rowsById, DataRowView row)
+        {
+            string id = row.Row.Table.Columns.Contains("ID")
+                ? Convert.ToString(row["ID"])
+                : row.Row.GetHashCode().ToString();
+
+            if (!rowsById.ContainsKey(id))
+            {
+                rowsById.Add(id, row);
+            }
+        }
+
+        private static bool IsCheckedRow(DataRowView row)
+        {
+            if (!row.Row.Table.Columns.Contains("IsSelected") || row["IsSelected"] == DBNull.Value)
+                return false;
+
+            object value = row["IsSelected"];
+            return value is bool ? (bool)value : Convert.ToInt32(value) == 1;
+        }
+
+        private static bool IsSyrRow(DataRowView row)
+        {
+            return !IsUsdRow(row);
+        }
+
+        private static bool IsUsdRow(DataRowView row)
+        {
+            return row.Row.Table.Columns.Contains("Currency")
+                && string.Equals(Convert.ToString(row["Currency"]), "USD", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static decimal SumSelectedColumn(IEnumerable<DataRowView> rows, string columnName)
+        {
+            decimal total = 0;
+
+            foreach (DataRowView row in rows)
+            {
+                if (row.Row.Table.Columns.Contains(columnName) && row[columnName] != DBNull.Value)
+                {
+                    total += Convert.ToDecimal(row[columnName]);
+                }
+            }
+
+            return total;
+        }
+
+        private void ConfigureSelectedStatisticsPanel()
+        {
+            bool isSyr = string.Equals(TillType_Name, "syr", StringComparison.OrdinalIgnoreCase);
+            bool isUsd = string.Equals(TillType_Name, "usd", StringComparison.OrdinalIgnoreCase);
+
+            SelectedIncomePrimaryLabel.Content = isSyr ? "Income(SYR):" : "Income:";
+            SelectedExpensesSyrPanel.Visibility = isSyr ? Visibility.Visible : Visibility.Collapsed;
+            SelectedIncomeUsdPanel.Visibility = isSyr ? Visibility.Visible : Visibility.Collapsed;
+            SelectedExpensesUsdPanel.Visibility = isSyr ? Visibility.Visible : Visibility.Collapsed;
+            SelectedExchangePanel.Visibility = isSyr ? Visibility.Collapsed : Visibility.Visible;
+            SelectedTransferPanel.Visibility = isUsd ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void ResetSelectedStatistics()
+        {
+            SelectedStatisticsCountTextBlock.Text = "0";
+            SelectedIncomeSyrTextBlock.Text = "0.00";
+            SelectedExpensesSyrTextBlock.Text = "0.00";
+            SelectedIncomeUsdTextBlock.Text = "0.00";
+            SelectedExpensesUsdTextBlock.Text = "0.00";
+            SelectedExchangeTextBlock.Text = "0.00";
+            SelectedTransferTextBlock.Text = "0.00";
+            SelectedValueTextBlock.Text = "0.00";
         }
 
         private void NotApproved_RadioButton_Click(object sender, RoutedEventArgs e)

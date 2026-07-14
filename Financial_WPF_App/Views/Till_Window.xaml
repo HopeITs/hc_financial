@@ -29,6 +29,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0" Padding="0,5,50,5">
             <WrapPanel  Orientation="Horizontal">
@@ -44,7 +45,7 @@
                         <TextBlock x:Name="Income_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
                     </Border>
                 </StackPanel>
-               <!-- <StackPanel Orientation="Horizontal">
+                <!-- <StackPanel Orientation="Horizontal">
                     <Label x:Name="Outcome_Label" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Outcome_Border" Style="{StaticResource BorderStackPanelStyle}" >
                         <TextBlock x:Name="Outcome_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
@@ -128,46 +129,6 @@
                 </StackPanel>
             </WrapPanel>
         </Border>
-        <!--  <Border Grid.Row="1" Style="{StaticResource MainBorderWrapPanelStyle}">
-            <WrapPanel  Orientation="Horizontal">
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
-                    <Border Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="Selected_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
-                    </Border>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Income_Label1" Content="Income:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="Income_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="Income_textBlock_SizeChanged"  />
-                    </Border>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Outcome_Label1" Content="Adv. Payment:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border x:Name="Outcome_Border2" Style="{StaticResource BorderStackPanelStyle}" >
-                        <TextBlock x:Name="Outcome_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Outcome_textBlock_SizeChanged" />
-                    </Border>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Returned_Label1" Content="Returned:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border x:Name="Returned_Border1" Style="{StaticResource BorderStackPanelStyle}" >
-                        <TextBlock x:Name="Returned_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Returned_textBlock_SizeChanged" />
-                    </Border>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Exchange_Label1" Content="Exchanged:" Style="{DynamicResource statistic_lableStyle}"/>
-                    <Border x:Name="Exchange_Border1" Style="{StaticResource BorderStackPanelStyle}" >
-                        <TextBlock x:Name="Exchange_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchange_textBlock_SizeChanged" />
-                    </Border>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Exchpand_Label1" Content="Expenses:" Style="{DynamicResource statistic_lableStyle}" />
-                    <Border x:Name="Exchpand_Border1" Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="Exchpand_textBlock1" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" HorizontalAlignment="Center" VerticalAlignment="Top" />
-                    </Border>
-                </StackPanel>
-            </WrapPanel >
-        </Border> -->
         <Grid Grid.Row="2"  Margin="0,5,0,0">
             <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}">
                 <WrapPanel Orientation="Horizontal" Width="355">
@@ -341,10 +302,18 @@
                             </Button.Background>
                         </Button>
                     </StackPanel>
-                    
                 </WrapPanel>
                 <StackPanel x:Name="Search_StackPanel" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right"  Margin="0,0,35,0">
-                    <RadioButton x:Name="NotApproved_RadioButton" Content="Show Not Approved" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Click="NotApproved_RadioButton_Click" Tag="False" Margin="0,9,0,9" VerticalAlignment="Stretch" Width="170"/>
+                    <RadioButton x:Name="NotApproved_RadioButton"
+                                 GroupName="NotApprovedMode"
+                                 Content="Show Not Approved"
+                                 IsChecked="False"
+                                 Style="{DynamicResource RadioButtonStyle}"
+                                 Click="NotApproved_RadioButton_Click"
+                                 Tag="False"
+                                 Margin="0,9,10,9"
+                                 VerticalAlignment="Stretch"
+                                 Width="170"/>
                     <!--<CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource ComboBoxActionStyle}" x:Name="ExactSearch_checkBox" Content="Full Match"  Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch" Width="89" Margin="0,0,10,0"/>-->
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TabIndex="10"/>
                 </StackPanel>
@@ -361,6 +330,7 @@
                 RowStyle="{DynamicResource SfDataGrid_RowStyle}"
                 AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"                   
                 SelectionChanged="myDataGrid_SelectionChanged" 
+                CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged"
                 MouseDoubleClick="myDataGrid_MouseDoubleClick" 
                 Loaded="myDataGrid_Loaded" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
@@ -378,12 +348,12 @@
                                NumberDecimalSeparator="."
                                NumberGroupSizes="3" 
                                NumberGroupSeparator=","/>
-                   <!-- <syncfusion:GridNumericColumn  x:Name="Outcome_DataGridColumn" HeaderText="Adv. Payment"  MappingName="Outcome"
+                    <!-- <syncfusion:GridNumericColumn  x:Name="Outcome_DataGridColumn" HeaderText="Adv. Payment"  MappingName="Outcome"
                                                    NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
                                                    NumberGroupSeparator=","/> -->
-                   <!-- <syncfusion:GridNumericColumn  x:Name="Returned_DataGridColumn" HeaderText="Returned"  MappingName="Returned" 
+                    <!-- <syncfusion:GridNumericColumn  x:Name="Returned_DataGridColumn" HeaderText="Returned"  MappingName="Returned"
                                                       NumberDecimalDigits="2"
                                                    NumberDecimalSeparator="."
                                                    NumberGroupSizes="3"
@@ -787,5 +757,62 @@ Margin="1,1,0,0" Grid.Row="1">
             </Grid>-->
 
         </Grid>
+        <Border x:Name="SelectedStatisticsPanel"
+                Grid.Row="4"
+                Style="{StaticResource MainBorderWrapPanelStyle}"
+                Visibility="Collapsed"
+                Padding="0,5,50,5"
+                ClipToBounds="True">
+            <WrapPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedStatisticsCountTextBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="SelectedIncomePrimaryPanel" Orientation="Horizontal">
+                    <Label x:Name="SelectedIncomePrimaryLabel" Content="Income(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedIncomeSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="SelectedExpensesSyrPanel" Orientation="Horizontal">
+                    <Label Content="Expenses(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedExpensesSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="SelectedIncomeUsdPanel" Orientation="Horizontal">
+                    <Label Content="Income(USD):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedIncomeUsdTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="SelectedExpensesUsdPanel" Orientation="Horizontal">
+                    <Label Content="Expenses(USD):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedExpensesUsdTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="SelectedExchangePanel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Label Content="Exchange:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedExchangeTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="SelectedTransferPanel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Label Content="Transfer:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedTransferTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Value:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedValueTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+            </WrapPanel>
+        </Border>
     </Grid>
 </Window>

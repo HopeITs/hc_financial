@@ -407,6 +407,7 @@ namespace Financial_WPF_App.Views
                         this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
                 }
                 UpdateAllCounters();
+                UpdateSelectedStatistics();
             }
             catch (Exception ex)
             {
@@ -849,6 +850,112 @@ namespace Financial_WPF_App.Views
         {
             if (HOffset != 0)
                 this.myDataGrid.GetVisualContainer().SetHorizontalOffset(HOffset);
+            UpdateSelectedStatistics();
+        }
+
+        private void myDataGrid_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
+        {
+            UpdateSelectedStatistics();
+        }
+
+        private void myDataGrid_CurrentCellValueChanged(object sender, CurrentCellValueChangedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new System.Action(UpdateSelectedStatistics), System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        private void UpdateSelectedStatistics()
+        {
+            List<DataRowView> selectedRows = GetUnifiedSelectedRows();
+            if (selectedRows.Count < 2)
+            {
+                ResetSelectedStatistics();
+                SelectedStatisticsPanel.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            ResetSelectedStatistics();
+            SelectedStatisticsCountTextBlock.Text = selectedRows.Count.ToString("N0");
+            SelectedPaymentAmountSyrTextBlock.Text = SumSelectedColumn(selectedRows, "Incomesyr").ToString("N2");
+            SelectedReturnedAmountSyrTextBlock.Text = SumSelectedColumn(selectedRows, "Outcomesyr").ToString("N2");
+            SelectedPaymentAmountUsdTextBlock.Text = SumSelectedColumn(selectedRows, "Incomeusd").ToString("N2");
+            SelectedReturnedAmountUsdTextBlock.Text = SumSelectedColumn(selectedRows, "Outcomeusd").ToString("N2");
+            SelectedStatisticsPanel.Visibility = Visibility.Visible;
+        }
+
+        private List<DataRowView> GetUnifiedSelectedRows()
+        {
+            Dictionary<string, DataRowView> rowsById = new Dictionary<string, DataRowView>();
+            DataView currentView = myDataGrid.ItemsSource as DataView;
+
+            if (currentView != null)
+            {
+                foreach (DataRowView row in currentView)
+                {
+                    if (IsCheckedRow(row))
+                    {
+                        AddSelectedRow(rowsById, row);
+                    }
+                }
+            }
+
+            if (currentView == null)
+                return rowsById.Values.ToList();
+
+            foreach (object item in myDataGrid.SelectedItems)
+            {
+                DataRowView row = item as DataRowView;
+                if (row != null && row.Row.Table == currentView.Table)
+                {
+                    AddSelectedRow(rowsById, row);
+                }
+            }
+
+            return rowsById.Values.ToList();
+        }
+
+        private static void AddSelectedRow(IDictionary<string, DataRowView> rowsById, DataRowView row)
+        {
+            string id = row.Row.Table.Columns.Contains("ID")
+                ? Convert.ToString(row["ID"])
+                : row.Row.GetHashCode().ToString();
+
+            if (!rowsById.ContainsKey(id))
+            {
+                rowsById.Add(id, row);
+            }
+        }
+
+        private static bool IsCheckedRow(DataRowView row)
+        {
+            if (!row.Row.Table.Columns.Contains("IsSelected") || row["IsSelected"] == DBNull.Value)
+                return false;
+
+            object value = row["IsSelected"];
+            return value is bool ? (bool)value : Convert.ToInt32(value) == 1;
+        }
+
+        private static decimal SumSelectedColumn(IEnumerable<DataRowView> rows, string columnName)
+        {
+            decimal total = 0;
+
+            foreach (DataRowView row in rows)
+            {
+                if (row.Row.Table.Columns.Contains(columnName) && row[columnName] != DBNull.Value)
+                {
+                    total += Convert.ToDecimal(row[columnName]);
+                }
+            }
+
+            return total;
+        }
+
+        private void ResetSelectedStatistics()
+        {
+            SelectedStatisticsCountTextBlock.Text = "0";
+            SelectedPaymentAmountSyrTextBlock.Text = "0.00";
+            SelectedReturnedAmountSyrTextBlock.Text = "0.00";
+            SelectedPaymentAmountUsdTextBlock.Text = "0.00";
+            SelectedReturnedAmountUsdTextBlock.Text = "0.00";
         }
 
         void ScrollOwner_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -897,6 +1004,7 @@ namespace Financial_WPF_App.Views
                     {
                         row["IsSelected"] = Checked;
                     }
+                    UpdateSelectedStatistics();
                 }
             }
             catch (Exception ex)
@@ -934,37 +1042,15 @@ namespace Financial_WPF_App.Views
                             return;
                         }
 
+                        List<int> actionIds = new List<int>();
+                        List<int> beneficiaryIds = new List<int>();
                         for (int k = 0; k < newView.Count; k++)
                         {
-                            string temp_query = "";
-                            string log_query = "";
-
-                            var Action_ID = newView[k]["ID"];
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Payment_Window");
-
-                            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
-
-
-                            temp_query += "INSERT INTO action_deleted SELECT * FROM action WHERE action.id = @ID" + k + " OR action.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action WHERE action.id  = @ID" + k + ";";
-
-
-                            Login.DeleteMultiActions_List.Add(temp_query);
-                            temp_query = "";
-
+                            actionIds.Add(Convert.ToInt32(newView[k]["ID"]));
+                            beneficiaryIds.Add(Convert.ToInt32(newView[k]["beneficiary_ID"]));
                         }
 
-                        a.Delete_Multi_Actions();
+                        p.Delete_Multi_Payments(actionIds, beneficiaryIds, true, "Payment_Window");
 
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         LoadGrid();
@@ -980,37 +1066,15 @@ namespace Financial_WPF_App.Views
                             return;
                         }
 
+                        List<int> actionIds = new List<int>();
+                        List<int> beneficiaryIds = new List<int>();
                         for (int k = 0; k < newView.Count; k++)
                         {
-                            string temp_query = "";
-                            string log_query = "";
-
-                            var Action_ID = newView[k]["ID"];
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@ID" + k, Action_ID);
-
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Form_Name" + k, "Payment_Window");
-
-                            string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Todaydate" + k, Todaydate);
-                            Login.DeleteMultiActions_sc.Parameters.AddWithValue("@Uesr_ID" + k, Settings.Default.User_ID);
-
-
-                            temp_query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID" + k + " OR action_not_approved.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "Update action_deleted set `deleted_at` = @Todaydate" + k + ", `deleted_by` = @Uesr_ID" + k + " WHERE action_deleted.id = @ID" + k + " OR action_deleted.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID" + k + ";";
-
-                            temp_query += "DELETE FROM action_not_approved WHERE action_not_approved.id  = @ID" + k + ";";
-
-
-                            Login.DeleteMultiActions_List.Add(temp_query);
-                            temp_query = "";
-
+                            actionIds.Add(Convert.ToInt32(newView[k]["ID"]));
+                            beneficiaryIds.Add(Convert.ToInt32(newView[k]["beneficiary_ID"]));
                         }
 
-                        a.Delete_Multi_Actions();
+                        p.Delete_Multi_Payments(actionIds, beneficiaryIds, false, "Payment_Window");
 
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         LoadGrid();
@@ -1060,6 +1124,7 @@ namespace Financial_WPF_App.Views
 
                     // Call the search method when text changes
                     searchHelper.Search(Search_txtBox.Text, myDataGrid);
+                    UpdateSelectedStatistics();
                 }
             }
             catch (Exception ex)

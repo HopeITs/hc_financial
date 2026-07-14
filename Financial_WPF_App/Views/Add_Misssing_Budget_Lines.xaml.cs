@@ -187,7 +187,7 @@ namespace Financial_WPF_App.Views
                         Login.MissingBudgetLines_sc.Parameters.AddWithValue("@Form_Name" + k, "Add_Misssing_Budget_Lines");
 
 
-                        temp_query += @"INSERT INTO budget_line(budget_line.Budget_ID, budget_line.Line_ID, budget_line.Unit ,budget_line.Timing ,budget_line.Price)
+                        temp_query += @"INSERT INTO budget_line(Budget_ID, Line_ID, Unit, Timing, Price)
                             VALUES (@Budget_ID" + k + ",@Line_ID" + k + ",@Unit" + k + ",@Timing" + k + ",@Price" + k + ");";
 
                         temp_query += " SET @budget_line_ID" + k + " = Last_Insert_ID();";

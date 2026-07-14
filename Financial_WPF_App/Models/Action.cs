@@ -20,6 +20,15 @@ namespace Financial_WPF_App.Models
 
         }
 
+        public static string DeleteActionPaymentForDeletedInstallmentActionsSql(string actionIdParameter)
+        {
+            return @"DELETE ap FROM action_payment ap
+                    JOIN action_deleted ad ON ad.ID = ap.action_id
+                    WHERE (ad.ID = " + actionIdParameter + @" OR ad.ObserveAcion_ID = " + actionIdParameter + @")
+                    AND ad.MicroProject_ID IS NOT NULL
+                    AND ad.AType_ID IN (1, 3);";
+        }
+
         public DataTable Select(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed)
         {
 
@@ -608,6 +617,8 @@ namespace Financial_WPF_App.Models
 
         public DataTable SelectLines_Report()
         {
+            //هنا جلب الأسماء مجمعة من المسارين دون تكرار
+            //Group_Concat(donor.Name) as `Donor`,
 
             string query = @"SELECT  action.id AS `ID`,
                         city.Name AS `City_Name`,
@@ -617,7 +628,9 @@ namespace Financial_WPF_App.Models
                         action.MicroProject_ID,
                         CONCAT(b.FirstName,' ',b.FatherName,' ',b.LastName) as 'Beneficiary', 
                         budget.Name as `Budget`,
-                        Group_Concat(donor.Name) as `Donor`,
+
+                       GROUP_CONCAT(DISTINCT COALESCE(`d_budget`.`Name`, `d_account`.`Name`) SEPARATOR ', ') AS `Donor`,
+
                         linecategory.Name as `Line Type`, 
                         line.Name as `Line`,
                         action.ActionDate,
@@ -625,7 +638,7 @@ namespace Financial_WPF_App.Models
                         DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         Currency_Tilltype.Name as 'Currency',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
-                        (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Syr') THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
+                        (CASE WHEN actiontype.shortname = 'E' and (LOWER(Currency_Tilltype.Name) = LOWER('Syr') OR Currency_Tilltype.Name IS NULL) THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
                         (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Usd') THEN action.Amount ELSE 0 END) AS 'ExpenseUSD',
                         action.Note,
                         action.E_Note,
@@ -638,13 +651,13 @@ namespace Financial_WPF_App.Models
                         all_avgrates.Name as `AvgRateName`,
                         all_avgrates.value as `AvgRateValue`, 
                         CASE 
-    WHEN actiontype.shortname = 'E' 
-         AND LOWER(Currency_Tilltype.Name) = LOWER('Syr') 
-        THEN action.Amount / NULLIF(all_avgrates.value,0)
+                       WHEN actiontype.shortname = 'E' 
+                       AND (LOWER(Currency_Tilltype.Name) = LOWER('Syr') OR Currency_Tilltype.Name IS NULL)
+                       THEN action.Amount / NULLIF(all_avgrates.value,0)
 
-    WHEN actiontype.shortname = 'E' 
-         AND LOWER(Currency_Tilltype.Name) = LOWER('Usd') 
-        THEN action.Amount
+                       WHEN actiontype.shortname = 'E' 
+                       AND LOWER(Currency_Tilltype.Name) = LOWER('Usd') 
+                       THEN action.Amount
 
     ELSE NULL
 END AS `USD_Value`,
@@ -655,12 +668,15 @@ END AS `USD_Value`,
                         action.created_at, action.updated_at, COUNT(DISTINCT att.id) AS Attachments_count
 
 
-                        FROM action LEFT JOIN actiontype on actiontype.id = action.atype_id
+                        FROM action 
+                        LEFT JOIN actiontype on actiontype.id = action.atype_id
                         LEFT JOIN budget_line on action.BudgetLine_ID = budget_line.id
                         LEFT JOIN line on line.id = budget_line.line_id
                         LEFT JOIN budget on budget.id = budget_line.budget_id
                         LEFT JOIN budget_donor on budget_donor.budget_id = budget.id
-                        LEFT JOIN donor on donor.id = budget_donor.donor_id
+
+                        LEFT JOIN donor `d_budget` ON budget_donor.donor_id = `d_budget`.id
+
                         LEFT JOIN linecategory on linecategory.id = line.Category_ID
                         LEFT JOIN cashaccount on cashaccount.id = action.CashAccount_ID
                         LEFT JOIN cashaccount obs_cashaccount on obs_cashaccount.id = action.ObserveCashAccount_ID
@@ -669,6 +685,10 @@ END AS `USD_Value`,
                         LEFT join tilltypes on tilltypes.ID = till.Type_ID
                         LEFT join tilltypes Currency_Tilltype on action.currency_tilltype_id = Currency_Tilltype.ID
                         LEFT join account on account.ID = till.Account_ID
+                        
+                        LEFT JOIN account_donor ON account.id = account_donor.Account_ID
+                        LEFT JOIN donor `d_account` ON account_donor.Donor_ID = `d_account`.id
+
                         LEFT JOIN subproject ON account.SubProject_ID = subproject.ID
                         LEFT JOIN project ON subproject.Project_ID = project.ID
                         LEFT JOIN category ON project.Category_ID = category.ID
@@ -679,6 +699,7 @@ END AS `USD_Value`,
 
                         where actiontype.shortname IN ('E','Ex') AND LOWER(tilltypes.Name) = LOWER('Syr') AND category.Name in('Budget','Micro Projects')
                         Group by action.id;";
+            // LEFT JOIN donor on donor.id = budget_donor.donor_id
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -699,51 +720,55 @@ END AS `USD_Value`,
 
         public DataTable Select_Revenue_Exchange_Report(int TillType_ID, string TillType_Name)
         {
-
             string query = @"SELECT 
-                                city.Name AS `City_Name`,
-                                project.Name AS `Project_Name`,
-                                subproject.Name AS `Subproject_Name`,
-                                account.Name as `Account_Name`,
-                                action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
-                                (CASE WHEN (Currency_Tilltype.Name = 'SYR')
-                                AND actiontype.shortname = 'I' THEN action.Amount  ELSE 0 END) AS 'Income',
-                               (CASE WHEN (Currency_Tilltype.Name = 'USD')
-                                AND actiontype.shortname = 'I' THEN action.Amount  ELSE 0 END) AS 'Incomeusd',
-                                (CASE WHEN actiontype.shortname = 'O'  THEN action.Amount ELSE 0 END) AS 'Outcome',
-                                (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
-                                (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
-                                ((CASE WHEN actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) - 
-                                 (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) - 
-                                 (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) - 
-                                 (CASE WHEN actiontype.shortname = 'O' THEN action.Amount ELSE 0 END)) AS 'Balance',
-                                action.Note,
-                                action.E_Note,
-                                action.`rate` as 'Rate',
-                                (Case when actiontype.shortname = 'Ex' then (action.Amount * action.rate) else 0 END) as `Exchanged`,
-                                all_avgrates.Name as `AvgRateName`,
-                                all_avgrates.value as `AvgRateValue`,
-                                (action.Amount/ all_avgrates.value) as `USD_Value`,
-                                (select tilltypes.Name from till left join tilltypes on tilltypes.ID = till.Type_ID where till.id = action.ObserveTill_ID) as `ObserveTill`,
-                                (select account.name from account left join till on till.account_id = account.id where till.id = action.ObserveTill_ID) as `ObserveAccount`,
-                                action.ID, action.`ObserveAcion_ID`, 
-                                (SELECT account.Name FROM action oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
-                                donor.name as 'Donor',
-                                action.created_at, action.updated_at, action.approved_at
+                        city.Name AS `City_Name`,
+                        project.Name AS `Project_Name`,
+                        subproject.Name AS `Subproject_Name`,
+                        account.Name as `Account_Name`,
+                        action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
+                        (CASE WHEN (Currency_Tilltype.Name = 'SYR' OR Currency_Tilltype.Name IS NULL OR Currency_Tilltype.Name = '')
+                        AND actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Income', 
+                        (CASE WHEN tilltypes.Name = 'SYR' AND Currency_Tilltype.Name = 'USD' AND actiontype.shortname = 'I' THEN action.Amount
+                        ELSE 0 END) AS 'Incomeusd',
+                        (CASE WHEN actiontype.shortname = 'O'  THEN action.Amount ELSE 0 END) AS 'Outcome',
+                        (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
+                        (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) AS 'Expand',
+                        ((CASE WHEN actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) - 
+                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) - 
+                         (CASE WHEN actiontype.shortname = 'E' THEN action.Amount ELSE 0 END) - 
+                         (CASE WHEN actiontype.shortname = 'O' THEN action.Amount ELSE 0 END)) AS 'Balance',
+                        action.Note,
+                        action.E_Note,
+                        action.`rate` as 'Rate',
+                        (Case when actiontype.shortname = 'Ex' then (action.Amount * action.rate) else 0 END) as `Exchanged`,
+                        all_avgrates.Name as `AvgRateName`,
+                        all_avgrates.value as `AvgRateValue`,
+                        (action.Amount/ all_avgrates.value) as `USD_Value`,
+                        (select tilltypes.Name from till left join tilltypes on tilltypes.ID = till.Type_ID where till.id = action.ObserveTill_ID) as `ObserveTill`,
+                        (select account.name from account left join till on till.account_id = account.id where till.id = action.ObserveTill_ID) as `ObserveAccount`,
+                        action.ID, action.`ObserveAcion_ID`, 
+                        (SELECT account.Name FROM action oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
+                        GROUP_CONCAT(DISTINCT COALESCE(`d_action`.`Name`, `d_budget`.`Name`, `d_account`.`Name`) SEPARATOR ', ') AS `Donor`,
+                        action.created_at, action.updated_at, action.approved_at
 
-                                FROM action LEFT JOIN actiontype on action.AType_ID = actiontype.id
-                                LEFT JOIN all_avgrates on action.Rate_ID = all_avgrates.id
-                                LEFT join till on action.Till_ID = till.ID 
-                                LEFT join tilltypes on tilltypes.ID = till.Type_ID
-                                LEFT join tilltypes Currency_Tilltype on Currency_Tilltype.ID = action.currency_tilltype_id
-                                LEFT JOIN donor on donor.id = action.`Donor_ID`
-                                LEFT join account on account.ID = till.Account_ID
-                                LEFT JOIN accounttype on account.Accounttype_id = accounttype.id
-                                LEFT JOIN `account_donor` ON account_donor.account_ID = account.ID
-                                LEFT JOIN subproject ON account.SubProject_ID = subproject.ID
-                                LEFT JOIN project ON subproject.Project_ID = project.ID
-                                LEFT JOIN category ON project.Category_ID = category.ID
-                                LEFT JOIN city ON subproject.City_ID = city.ID";
+                        FROM action LEFT JOIN actiontype on action.AType_ID = actiontype.id
+                        LEFT JOIN all_avgrates on action.Rate_ID = all_avgrates.id
+                        LEFT join till on action.Till_ID = till.ID 
+                        LEFT join tilltypes on tilltypes.ID = till.Type_ID
+                        LEFT join tilltypes Currency_Tilltype on Currency_Tilltype.ID = action.currency_tilltype_id
+                        LEFT JOIN donor `d_action` ON action.Donor_ID = `d_action`.id
+                        LEFT JOIN budget_line on action.BudgetLine_ID = budget_line.id
+                        LEFT JOIN budget on budget.id = budget_line.budget_id
+                        LEFT JOIN budget_donor on budget_donor.budget_id = budget.id
+                        LEFT JOIN donor `d_budget` ON budget_donor.donor_id = `d_budget`.id
+                        LEFT join account on account.ID = till.Account_ID
+                        LEFT JOIN accounttype on account.Accounttype_id = accounttype.id
+                        LEFT JOIN `account_donor` ON account_donor.account_id = account.id
+                        LEFT JOIN donor `d_account` ON account_donor.donor_id = `d_account`.id
+                        LEFT JOIN subproject ON account.SubProject_ID = subproject.ID
+                        LEFT JOIN project ON subproject.Project_ID = project.ID
+                        LEFT JOIN category ON project.Category_ID = category.ID
+                        LEFT JOIN city ON subproject.City_ID = city.ID";
 
             if (TillType_Name.ToLower() == "syr")
             {
@@ -753,7 +778,6 @@ END AS `USD_Value`,
             {
                 query += " where actiontype.shortname IN ('I','Ex','E','O') AND LOWER(accounttype.name) = 'project' AND tilltypes.ID = @TillType_ID";
             }
-
 
             query += " Group by action.id ORDER BY city.id, project.id, subproject.id, account.id, action.id;";
 
@@ -987,20 +1011,19 @@ END AS `USD_Value`,
 
                     else if (WithObserveAcion_ID && isUsdExpenseFromSyr)
                     {
-                        //  Outcome من USD till
-                        query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, Amount, rate, ActionDate, Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote,
-                                 CashAccount_ID, Donor_ID, created_at, User_ID, SourceAction, `BudgetLine_ID`) VALUES (@ObserveTill_ID, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'O'), @Amount, @rate, @ActionDate,
-                                @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @CashAccount_ID, @Donor_ID, @Todaydate, @Uesr_ID, '0', @BudgetLine_ID); ";
+                    //  Outcome من USD till
+                    query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, currency_tilltype_id, Amount, rate, ActionDate, Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote, CashAccount_ID, Donor_ID, BudgetLine_ID, created_at, User_ID, SourceAction)
+                               VALUES (@ObserveTill_ID, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'O'), @Currency_tilltype_id, @Amount, @rate, @ActionDate, @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @CashAccount_ID, @Donor_ID, @BudgetLine_ID, @Todaydate, @Uesr_ID, '0'); ";
 
-                        query += " SET @UsdOutcome_ID = Last_Insert_ID(); ";
+                    query += " SET @UsdOutcome_ID = Last_Insert_ID(); ";
 
-                        // Income على SYR till بعملة USD
-                        query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, currency_tilltype_id, Amount, rate, ActionDate,  Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote,
-                                 CashAccount_ID, Donor_ID, created_at, User_ID, SourceAction, `BudgetLine_ID`) VALUES (@Till_ID, @ObserveTill_ID, @Action_ID, (select id from actiontype where shortname = 'I'),@Currency_tilltype_id, @Amount, @rate, @ActionDate,
-                                 @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote,@CashAccount_ID, @Donor_ID, @Todaydate, @Uesr_ID, '0', @BudgetLine_ID);";
+                    // Income على SYR till بعملة USD 
+                    query += @" INSERT INTO action_not_approved (Till_ID, ObserveTill_ID, ObserveAcion_ID, AType_ID, currency_tilltype_id, Amount, rate, ActionDate, Note, E_Note, IsReceipt, Employee_Salary_ID, ReceiptNote, CashAccount_ID, Donor_ID, BudgetLine_ID, created_at, User_ID, SourceAction) 
+                             VALUES (@Till_ID, @ObserveTill_ID, @Action_ID, (select id from actiontype where shortname = 'I'), @Currency_tilltype_id, @Amount, @rate, @ActionDate, @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @CashAccount_ID, @Donor_ID, @BudgetLine_ID, @Todaydate, @Uesr_ID, '0');";
 
-                        query += " SET @SyrIncome_ID = Last_Insert_ID(); ";
-                    }  
+                    query += " SET @SyrIncome_ID = Last_Insert_ID(); ";
+                }
+              
 
                 
 
@@ -1879,14 +1902,33 @@ END AS `USD_Value`,
             query += " COMMIT;";
             if (Login.BuildConnection())
             {
-                Login.ActionApproval_sc.CommandTimeout = 120;
-                Login.ActionApproval_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                Login.ActionApproval_sc.Parameters.AddWithValue("@t", 600);
-                Login.ActionApproval_sc.Connection = Login.MyConn;
+                try
+                {
+                    Login.ActionApproval_sc.CommandTimeout = 120;
+                    Login.ActionApproval_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                    Login.ActionApproval_sc.Parameters.AddWithValue("@t", 600);
+                    Login.ActionApproval_sc.Connection = Login.MyConn;
 
-                Login.ActionApproval_sc.ExecuteScalar();
+                    Login.ActionApproval_sc.ExecuteNonQuery();
+                }
+                catch
+                {
+                    try
+                    {
+                        using (MySqlCommand cmd = new MySqlCommand("ROLLBACK;", Login.MyConn))
+                        {
+                            cmd.CommandTimeout = 120;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch { }
 
-                Login.CloseAndClearConnection();
+                    throw;
+                }
+                finally
+                {
+                    Login.CloseAndClearConnection();
+                }
             }
         }
 
@@ -1919,6 +1961,8 @@ END AS `USD_Value`,
 
                     query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
 
+                    query += DeleteActionPaymentForDeletedInstallmentActionsSql("@ID");
+
                     query += "DELETE FROM action WHERE action.ObserveAcion_ID = @ID;";
 
                     query += "DELETE FROM action WHERE action.id  = @ID;";
@@ -1934,6 +1978,8 @@ END AS `USD_Value`,
                     query += "INSERT INTO action_deleted SELECT * FROM action_not_approved WHERE action_not_approved.id = @ID OR action_not_approved.ObserveAcion_ID = @ID;";
 
                     query += "Update action_deleted set `deleted_at` = @Todaydate, `deleted_by` = @Uesr_ID WHERE action_deleted.id = @ID OR action_deleted.ObserveAcion_ID = @ID;";
+
+                    query += DeleteActionPaymentForDeletedInstallmentActionsSql("@ID");
 
                     query += "DELETE FROM action_not_approved WHERE action_not_approved.ObserveAcion_ID = @ID;";
 
@@ -2029,14 +2075,33 @@ END AS `USD_Value`,
             query += " COMMIT;";
             if (Login.BuildConnection())
             {
-                Login.DeleteMultiActions_sc.CommandTimeout = 120; 
-                Login.DeleteMultiActions_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                Login.DeleteMultiActions_sc.Parameters.AddWithValue("@t", 600);
-                Login.DeleteMultiActions_sc.Connection = Login.MyConn;
+                try
+                {
+                    Login.DeleteMultiActions_sc.CommandTimeout = 120;
+                    Login.DeleteMultiActions_sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                    Login.DeleteMultiActions_sc.Parameters.AddWithValue("@t", 600);
+                    Login.DeleteMultiActions_sc.Connection = Login.MyConn;
 
-                Login.DeleteMultiActions_sc.ExecuteScalar();
+                    Login.DeleteMultiActions_sc.ExecuteNonQuery();
+                }
+                catch
+                {
+                    try
+                    {
+                        using (MySqlCommand cmd = new MySqlCommand("ROLLBACK;", Login.MyConn))
+                        {
+                            cmd.CommandTimeout = 120;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch { }
 
-                Login.CloseAndClearConnection();
+                    throw;
+                }
+                finally
+                {
+                    Login.CloseAndClearConnection();
+                }
             }
         }
 

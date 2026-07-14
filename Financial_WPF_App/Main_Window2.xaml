@@ -445,7 +445,8 @@
                                 <MenuItem Header="City" Click="City_MenuItemAdv_Click"/>
                                 <MenuItem Header="Program" Click="Project_MenuItemAdv_Click"/>
                                 <MenuItem Header="Project" Click="Subproject_MenuItemAdv_Click"/>
-                                <MenuItem Header="Budget" Click="Budget_MenuItemAdv_Click"/>
+                                <MenuItem Header="Budget Line" Click="Budget_MenuItemAdv_Click"/>
+                                <MenuItem Header="Budget Line Category" Click="BudgetLineCategory_MenuItemAdv_Click"/>
                                 <MenuItem Header="Users" Click="User_MenuItemAdv_Click"/>
                                 <MenuItem Header="Approval Limits" Click="Approval_Limits_MenuItemAdv_Click"/>
                                 <MenuItem Header="Lines Lifetime" Click="Lines_Lifetime_MenuItemAdv_Click"/>

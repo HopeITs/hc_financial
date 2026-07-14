@@ -353,6 +353,7 @@
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\Budget_Lines.cs" />
     <Compile Include="Models\Denominations.cs" />
+    <Compile Include="Models\LineCategoryType.cs" />
     <Compile Include="Helper\Document.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\FiscalBond.cs" />
@@ -485,6 +486,9 @@
     </Compile>
     <Compile Include="Views\Budget_Window.xaml.cs">
       <DependentUpon>Budget_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BudgetLineType_Window.xaml.cs">
+      <DependentUpon>BudgetLineType_Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\TiltWheelHorizontalScroller.cs" />
     <Compile Include="Main_Window2.xaml.cs">
@@ -740,6 +744,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Budget_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BudgetLineType_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
