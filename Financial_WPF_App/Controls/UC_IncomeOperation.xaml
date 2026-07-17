@@ -33,7 +33,6 @@
         <Grid Height="30" Grid.Row="0" x:Name="Donor_panel"  Grid.Column="2" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <!-- TextBox will stretch -->
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" x:Name="Donor_comboBox" TabIndex="1" Style="{StaticResource FloatingComboboxStyle}"
@@ -47,17 +46,17 @@
         </Grid>
 
         <!-- Cash Till -->
-        <Label Grid.Column="4" Grid.Row="0" x:Name="CashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Cash till:"  HorizontalContentAlignment="Left" />
-        <Grid Height="30" Grid.Row="0" x:Name="CashAccount_panel"  Grid.Column="5" >
+        <Label Grid.Column="4" Grid.Row="0" x:Name="CashAccount_lable" Style="{DynamicResource statistic_lableStyle}" Content="Cash till:" HorizontalContentAlignment="Left" />
+        <Grid Height="30" Grid.Row="0" x:Name="CashAccount_panel" Grid.Column="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <!-- TextBox will stretch -->
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" x:Name="CashAccount_comboBox" TabIndex="2"
-            DisplayMemberPath="Name" SelectedValuePath="ID" Style="{StaticResource FloatingComboboxStyle}"
-            VerticalContentAlignment="Center"/>
-            <Button Grid.Column="1" x:Name="CashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource DeleteButtonStyle}"  Click="CashAccount_clear_btn_Click" Margin="5,0,0,0" >
+                DisplayMemberPath="Name" SelectedValuePath="ID" Style="{StaticResource FloatingComboboxStyle}"
+                VerticalContentAlignment="Center"/>
+            <Button Grid.Column="1" x:Name="CashAccount_clear_btn" HorizontalAlignment="Left" VerticalAlignment="Center"
+                Style="{StaticResource DeleteButtonStyle}" Click="CashAccount_clear_btn_Click" Margin="5,0,0,0">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Buttons/delete.png" Stretch="Uniform"/>
                 </Button.Background>

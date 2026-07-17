@@ -641,12 +641,11 @@
                     </Setter.Value>
                 </Setter>
 
-                <!-- ComboBox ControlTemplate -->
+                <!-- ComboBox ControlTemplate (supports IsEditable via PART_EditableTextBox) -->
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBox">
                             <Grid>
-                                <!-- Define the control template -->
                                 <Border Name="Border" 
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -654,17 +653,39 @@
                             Padding="{TemplateBinding Padding}"
                             Cursor="Hand">
                                     <Grid Background="{x:Null}">
-                                        <!-- Selected Item Display -->
+                                        <!-- Selected Item Display (non-editable) -->
                                         <ContentPresenter Name="ContentSite"
                                               Content="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
-                                              Margin="15,0,15,0"
-                                              VerticalAlignment="Center"/>
+                                              Margin="15,0,28,0"
+                                              VerticalAlignment="Center"
+                                              IsHitTestVisible="False"/>
+
+                                        <!-- Editable text box (required name for IsEditable ComboBox) -->
+                                        <TextBox x:Name="PART_EditableTextBox"
+                                                 Visibility="Hidden"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 Padding="0"
+                                                 Margin="15,0,28,0"
+                                                 VerticalAlignment="Center"
+                                                 VerticalContentAlignment="Center"
+                                                 FontFamily="{TemplateBinding FontFamily}"
+                                                 FontSize="{TemplateBinding FontSize}"
+                                                 FontWeight="{TemplateBinding FontWeight}"
+                                                 Foreground="{TemplateBinding Foreground}"
+                                                 CaretBrush="{TemplateBinding Foreground}"
+                                                 Focusable="True"
+                                                 IsReadOnly="{TemplateBinding IsReadOnly}"/>
 
                                         <!-- Dropdown Arrow -->
                                         <TextBlock Text="▼"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Margin="0,0,10,0"
                                       Foreground="{TemplateBinding Foreground}"
                                       FontSize="9"
-                                      FontWeight="Bold"/>
+                                      FontWeight="Bold"
+                                      IsHitTestVisible="False"/>
                                     </Grid>
                                 </Border>
 
@@ -685,8 +706,11 @@
                                 </Popup>
                             </Grid>
 
-                            <!-- Triggers for ComboBox Disabled State -->
                             <ControlTemplate.Triggers>
+                                <Trigger Property="IsEditable" Value="True">
+                                    <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                                    <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                                </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter TargetName="Border" Property="Background" Value="White"/>
                                     <Setter Property="BorderThickness" Value="1"/>

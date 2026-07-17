@@ -60,11 +60,16 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" Content="Project:" HorizontalContentAlignment="Left"  />
-                <ComboBox Grid.Row="0" x:Name="Subproject_comboBox" TabIndex="1" Grid.Column="2" DisplayMemberPath="Subproject_Name" SelectedValuePath="Subproject_ID" 
+                <ComboBox Grid.Row="0" x:Name="Subproject_comboBox" TabIndex="1" Grid.Column="2"
+            DisplayMemberPath="Subproject_Name" SelectedValuePath="Subproject_ID"
             Style="{DynamicResource FloatingComboboxStyle}"
+            IsEditable="True"
+            IsTextSearchEnabled="False"
+            StaysOpenOnEdit="True"
             SelectionChanged="Subproject_comboBox_SelectionChanged" >
                     <i:Interaction.Behaviors>
                         <helper:MouseClickComboBoxBehavior />
+                        <helper:DataViewContainsFilterComboBoxBehavior />
                     </i:Interaction.Behaviors>
                 </ComboBox>
 
@@ -85,12 +90,7 @@
                 <ComboBox x:Name="Type_comboBox" TabIndex="4" Grid.Column="5" Grid.Row="1" 
              Style="{StaticResource FloatingComboboxStyle}"
              HorizontalContentAlignment="Left" 
-             SelectionChanged="Type_comboBox_SelectionChanged" HorizontalAlignment="Right" Margin="0,5,1,5" Width="248">
-                    <ComboBoxItem x:Name="Type_ComboBox_Income_Item" Content="Income" />
-                    <ComboBoxItem x:Name="Type_ComboBox_Exchange_Item" Content="Exchange"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Expand_Item" Content="Expenses"/>
-                    <ComboBoxItem x:Name="Type_ComboBox_Move_Item" Content="Transfer"/>
-                </ComboBox>
+             SelectionChanged="Type_comboBox_SelectionChanged" HorizontalAlignment="Right" Margin="0,5,1,5" Width="248"/>
 
                 <Label x:Name="Amount_Label" Grid.Row="2" Grid.Column="1" Style="{DynamicResource statistic_lableStyle}" Content="Amount:" HorizontalContentAlignment="Left" />
                 <TextBox x:Name="Amount_txtBox" Style="{DynamicResource FloatingTextBoxStyle}" 

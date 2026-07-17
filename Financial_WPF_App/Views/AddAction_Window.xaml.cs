@@ -22,9 +22,6 @@ namespace Financial_WPF_App
     /// </summary>
     public partial class AddAction_Window : Window
     {
-        private const int UsdCurrencyTilltypeId = 2;
-        private const int SyrCurrencyTilltypeId = 4;
-
         public AddAction_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int Till_ID, string TillType, int SubProject_ID, bool FromTillForm, Main_Window_2 main_Window, Till_Window TW)
         {
             InitializeComponent();
@@ -2064,20 +2061,6 @@ namespace Financial_WPF_App
 
         }
 
-        private bool Check_AvgRate()
-        {
-
-            string Date = ((DateTime)ActionDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-
-            DataTable AvgRate_dt = r.Check_AvgRate_Availability(Account_ID.ToString(), Date, TillType, DestinationTill_comboBox.Text);
-            if (AvgRate_dt.Rows.Count == 0)
-            {
-                return false;
-            }
-            else
-                return true;
-        }
-
         private void Original_AvgRate_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -3189,546 +3172,112 @@ namespace Financial_WPF_App
             }
         }
 
+        private AddActionSaveContext BuildSaveContext()
+        {
+            return new AddActionSaveContext
+            {
+                ActionId = Action_ID,
+                ApprovedAction = Approved_Action,
+                OperationTypeText = Type_comboBox.Text == "" ? string.Empty : Type_comboBox.SelectedItem.ToString(),
+                AccountType = Account_Type,
+                TillType = TillType,
+                AccountId = Account_ID,
+                TillId = Till_ID,
+                SubprojectId = SubProject_ID,
+                AmountText = Amount_txtBox.Text,
+                ActionDate = ActionDate_datepicker.SelectedDate,
+                Notes = Notes_txtBox.Text,
+                ENotes = E_Notes_txtBox.Text,
+                Operation = BuildOperationFields(),
+                CorrespondingTills = t_dt,
+                Tills = tills_dt,
+                AttachmentPaths = FullAttachNames,
+                SourceFormName = "AddAction_Window",
+                ActionModel = a,
+                RateModel = r,
+                FocusCurrencySelection = () => currency_comboBox.Focus()
+            };
+        }
+
+        private AddActionOperationFields BuildOperationFields()
+        {
+            return new AddActionOperationFields
+            {
+                SelectedCurrencyId = GetSelectedCurrencyTilltypeId(),
+                CashAccountRequired = CashAccount_comboBox.IsEnabled,
+                CashAccountSelectedIndex = CashAccount_comboBox.SelectedIndex,
+                CashAccountId = CashAccount_comboBox.SelectedValue != null ? Convert.ToInt32(CashAccount_comboBox.SelectedValue) : -1,
+                MicroProjectRequired = MircoProject_ID_autoSuggestionUserControl.IsEnabled,
+                MicroProjectText = MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text,
+                BeneficiaryNameText = BeneficiaryName_txtBox.autoTextBox.Text,
+                BudgetLineRequired = Budget_comboBox.IsEnabled,
+                BudgetLineSelectedIndex = Line_comboBox.SelectedIndex,
+                BudgetLineId = Line_comboBox.SelectedValue != null ? Convert.ToInt32(Line_comboBox.SelectedValue) : -1,
+                DocumentTypeRequired = IsReceipt_comboBox.IsEnabled,
+                DocumentTypeSelectedIndex = IsReceipt_comboBox.SelectedIndex,
+                DocumentTypeItemText = IsReceipt_comboBox.SelectedItem != null ? IsReceipt_comboBox.SelectedItem.ToString() : string.Empty,
+                DocumentNumberRequired = ReceiptNum_txtBox.IsEnabled,
+                DocumentNumber = ReceiptNum_txtBox.Text,
+                EmployeeRequired = Employee_comboBox.IsEnabled,
+                EmployeeSelectedIndex = Employee_comboBox.SelectedIndex,
+                EmployeeSalaryId = Employee_comboBox.SelectedValue != null ? Convert.ToInt32(Employee_comboBox.SelectedValue) : -1,
+                OriginalAvgRateRequired = Original_AvgRate_comboBox.IsEnabled,
+                OriginalAvgRateSelectedIndex = Original_AvgRate_comboBox.SelectedIndex,
+                OriginalRateId = Original_AvgRate_comboBox.SelectedValue != null ? Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue) : -1,
+                DonorRequired = Donor_comboBox.IsEnabled,
+                DonorSelectedIndex = Donor_comboBox.SelectedIndex,
+                DonorId = Donor_comboBox.SelectedValue != null ? Convert.ToInt32(Donor_comboBox.SelectedValue) : -1,
+                RateRequired = Rate_txtBox.IsEnabled,
+                RateText = Rate_txtBox.Text,
+                DestinationTillRequired = DestinationTill_comboBox.IsEnabled,
+                DestinationTillSelectedIndex = DestinationTill_comboBox.SelectedIndex,
+                DestinationTillId = DestinationTill_comboBox.SelectedValue != null ? Convert.ToInt32(DestinationTill_comboBox.SelectedValue) : -1,
+                DestinationTillDisplayText = DestinationTill_comboBox.Text,
+                CorrespondingTillType = GetSelectedDestinationTillType(),
+                ObserveCashAccountRequired = ObserveCashAccount_comboBox.IsEnabled,
+                ObserveCashAccountSelectedIndex = ObserveCashAccount_comboBox.SelectedIndex,
+                ObserveCashAccountId = ObserveCashAccount_comboBox.SelectedValue != null ? Convert.ToInt32(ObserveCashAccount_comboBox.SelectedValue) : -1,
+                ExchangeAccountEnabled = ExchangeAcc_comboBox.IsEnabled,
+                ExchangeAccountSelectedIndex = ExchangeAcc_comboBox.SelectedIndex,
+                ExchangeAccountId = ExchangeAcc_comboBox.SelectedValue != null ? Convert.ToInt32(ExchangeAcc_comboBox.SelectedValue) : -1,
+                ExchangeCashRequired = ExchangeCash_comboBox.IsEnabled,
+                ExchangeCashSelectedIndex = ExchangeCash_comboBox.SelectedIndex,
+                ExchangeCashId = ExchangeCash_comboBox.SelectedValue != null ? Convert.ToInt32(ExchangeCash_comboBox.SelectedValue) : -1
+            };
+        }
+
         private void Save_btn_Click(object sender, RoutedEventArgs e)
         {
             Save_btn.IsEnabled = false;
             try
             {
-                string inserted_value = "";
-                double amount = 0;
-                string ActionDate = "";
-                string Notes = "";
-                string E_Notes = "";
-                string ObserveTill_Type = "";
-                int DestinationTill_ID = -1;
-                int ExchangeAcc_ID = -1;
-                int Donor_ID = -1;
-                int MicroProject_ID = -1;
-                int budget_line_ID = -1;
-                int CashAccount_ID = -1;
-                int ObserveCashAccount_ID = -1;
-                int ExchangeCash_ID = -1;
-                int IsReceipt = -1;
-                int OriginalRate_ID = -1;
-                string ReceiptNum = "";
-                int Employee_Salary_ID = -1;
-                bool WithExAcc = false;
-                bool WithExchangeRate = false;
-
-                double rate = 0;
-
-
-                bool isNewAction = (Action_ID == -1);
-                bool isExpense = (inserted_value == "E");
-                bool isSyrTill = !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr";
-
-                bool isUsdCurrency = false;
-                if (currency_comboBox.SelectedValue != null)
-                {
-                    int currId = Convert.ToInt32(currency_comboBox.SelectedValue);
-                    isUsdCurrency = (currId == UsdCurrencyTilltypeId);
-                }
-
-                #region Check and get data
-
                 if (Type_comboBox.Text == "")
                 {
                     MessageBox.Show("Please select the operation type.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     return;
                 }
-                else
-                {
-                    if (Type_comboBox.SelectedItem.ToString().Contains("Income"))
-                    {
-                        inserted_value = "I";
-                    }
-                    else if (Type_comboBox.SelectedItem.ToString().Contains("Adv. Payment"))
-                    {
-                        inserted_value = "O";
-                    }
-                    else if (Type_comboBox.SelectedItem.ToString().Contains("Returned"))
-                    {
-                        inserted_value = "R";
-                    }
-                    else if (Type_comboBox.SelectedItem.ToString().Contains("Expenses"))
-                    {
-                        inserted_value = "E";
-                        int selectedCurrencyId = GetSelectedCurrencyTilltypeId();
-                        if (selectedCurrencyId <= 0 && !IsExpenseFromSyrTill(inserted_value, TillType))
-                        {
-                            MessageBox.Show("Please make sure to select the currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            currency_comboBox.Focus();
-                            return;
-                        }
 
-                    }
-                    else if (Type_comboBox.SelectedItem.ToString().Contains("Exchange"))
-                    {
-                        inserted_value = "Ex";
-                        if (Account_Type == "Project")
-                        {
-                            if (!Check_AvgRate())
-                            {
-                                MessageBox.Show("Please ensure that there is at least one AvgRate that matches the conversion currency and extends for a period that includes the transaction date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                                return;
-                            }
-                        }
-                    }
-                    else if (Type_comboBox.SelectedItem.ToString().Contains("Move"))
-                    {
-                        inserted_value = "M";
-                    }
-                }
-
-                if (Amount_txtBox.Text == "")
-                {
-                    MessageBox.Show("Please make sure to enter the amount.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                var result = AddActionSaveService.Execute(BuildSaveContext());
+                if (result.ValidationFailed)
                     return;
 
-                }
-                else
+                if (result.Success)
                 {
-                    Double.TryParse(Amount_txtBox.Text, out amount);
-                }
-
-                if (ActionDate_datepicker.SelectedDate == null)
-                {
-                    MessageBox.Show("Please make sure to select the operation date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    return;
-
-                }
-                else
-                {
-                    ActionDate = ((DateTime)ActionDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-                }
-
-                if (CashAccount_comboBox.IsEnabled == true || (Action_ID > 0 && CashAccount_comboBox.SelectedIndex != -1))
-                {
-                    if (CashAccount_comboBox.SelectedIndex == -1)
+                    if (result.IsEditSave)
                     {
-                        MessageBox.Show("Please make sure to select the cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);
-                }
-
-                if (MircoProject_ID_autoSuggestionUserControl.IsEnabled == true)
-                {
-                    if (MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text != "" && BeneficiaryName_txtBox.autoTextBox.Text != "")
-                        int.TryParse(MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text, out MicroProject_ID);
-                    else MicroProject_ID = -1;
-
-                    if (MicroProject_ID == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the micro project.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-
-                    }
-                }
-
-                if (Budget_comboBox.IsEnabled == true)
-                {
-                    if (Line_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the budget, category and budget line.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        budget_line_ID = Convert.ToInt32(Line_comboBox.SelectedValue);
-                }
-                if (IsReceipt_comboBox.IsEnabled == true)
-                {
-                    if (IsReceipt_comboBox.SelectedIndex == -1 && Account_Type != "Personal")
-                    {
-                        MessageBox.Show("Please make sure to select the documet type and to specify its date", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
+                        this.Close();
                     }
                     else
                     {
-                        if (IsReceipt_comboBox.SelectedIndex != -1)
-                        {
-                            if (IsReceipt_comboBox.SelectedItem.ToString().Contains("invoice"))
-                            {
-                                IsReceipt = 1;
-                            }
-                            else if (IsReceipt_comboBox.SelectedItem.ToString().Contains("receipt"))
-                            {
-                                IsReceipt = 0;
-                            }
-                            else if (IsReceipt_comboBox.SelectedItem.ToString().Contains("payslip"))
-                            {
-                                IsReceipt = 2;
-                            }
-                        }
-                    }
-                }
-
-                if (ReceiptNum_txtBox.IsEnabled == true)
-                {
-                    if (ReceiptNum_txtBox.Text == "" && Account_Type != "Personal")
-                    {
-                        MessageBox.Show("Please make sure to enter the document number", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-
-                    }
-                    else
-                        ReceiptNum = ReceiptNum_txtBox.Text;
-                }
-
-                if (Employee_comboBox.IsEnabled == true)
-                {
-                    if (Employee_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the Volunteer.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                    {
-                        Employee_Salary_ID = Convert.ToInt32(Employee_comboBox.SelectedValue);
-                    }
-                }
-
-                if (Original_AvgRate_comboBox.IsEnabled == true)
-                {
-                    if (Original_AvgRate_comboBox.SelectedIndex == -1)
-                    {
-                        if (Account_Type == "Project" && TillType.ToLower() == "syr")
-                        {
-                            MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            return;
-
-                        }
-                    }
-                    else
-                        OriginalRate_ID = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue);
-                }
-
-                if (Donor_comboBox.IsEnabled == true)
-                {
-                    if (Donor_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the donor", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        Donor_ID = Convert.ToInt32(Donor_comboBox.SelectedValue);
-                }
-
-                if (Rate_txtBox.IsEnabled == true)
-                {
-                    if (Rate_txtBox.Text == "")
-                    {
-                        MessageBox.Show("Please make sure to enter the rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        Double.TryParse(Rate_txtBox.Text, out rate);
-                }
-
-                if (DestinationTill_comboBox.IsEnabled == true || (Action_ID > 0 && DestinationTill_comboBox.SelectedIndex != -1))
-                {
-                    if (Type_comboBox.SelectedItem.ToString().Contains("Exchange"))
-                    {
-                        if (DestinationTill_comboBox.SelectedIndex == -1)
-                        {
-                            MessageBox.Show("Please make sure to select the Corresponding till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            return;
-
-
-                        }
-                        else
-                        {
-                            DestinationTill_ID = Convert.ToInt32(DestinationTill_comboBox.SelectedValue);
-
-                            DataRow[] row = t_dt.Select("ID=" + Convert.ToInt32(DestinationTill_ID));
-
-                            ObserveTill_Type = row[0]["Type"].ToString();
-
-                            if (Account_Type == "Project" && ExchangeAcc_comboBox.SelectedIndex != -1)
-                                WithExAcc = true;
-
-                            if (Account_Type == "Exchange")
-                                WithExchangeRate = true;
-                        }
-                    }
-                    else if (Type_comboBox.SelectedItem.ToString().Contains("Move"))
-                    {
-                        if (DestinationTill_comboBox.SelectedIndex == -1)
-                        {
-                            MessageBox.Show("Please make sure to select the Corresponding account.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            return;
-
-                        }
-                        else
-                        {
-                            if (DestinationTill_comboBox.SelectedIndex != -1)
-                                DestinationTill_ID = Convert.ToInt32(DestinationTill_comboBox.SelectedValue);
-
-                            ObserveTill_Type = TillType;
-                        }
-                    }
-
-                }
-
-                if (ObserveCashAccount_comboBox.IsEnabled == true || (Action_ID > 0 && ObserveCashAccount_comboBox.SelectedIndex != -1))
-                {
-                    if (ObserveCashAccount_comboBox.SelectedIndex == -1)
-                    {
-                        MessageBox.Show("Please make sure to select the corresponding cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        return;
-                    }
-                    else
-                        ObserveCashAccount_ID = Convert.ToInt32(ObserveCashAccount_comboBox.SelectedValue);
-                }
-
-
-                if (ExchangeAcc_comboBox.IsEnabled == true || (Action_ID > 0 && ExchangeAcc_comboBox.SelectedIndex != -1))
-                {
-                    if (ExchangeAcc_comboBox.SelectedIndex == -1)
-                    {
-
-                    }
-                    else
-                    {
-                        ExchangeAcc_ID = Convert.ToInt32(ExchangeAcc_comboBox.SelectedValue);
-
-                        if (ExchangeCash_comboBox.IsEnabled == true || (Action_ID > 0 && ExchangeCash_comboBox.SelectedIndex != -1))
-                        {
-                            if (ExchangeCash_comboBox.SelectedIndex == -1)
-                            {
-                                MessageBox.Show("Please make sure to select the Exchange cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                                return;
-
-                            }
-                            else
-                            {
-                                ExchangeCash_ID = Convert.ToInt32(ExchangeCash_comboBox.SelectedValue);
-                            }
-                        }
-                    }
-                }
-
-                Notes = Notes_txtBox.Text;
-                E_Notes = E_Notes_txtBox.Text;
-                #endregion
-
-
-                if (Action_ID != -1)//Edit
-                {
-                    int selectedCurrencyID = 0;
-                    if (currency_comboBox.SelectedValue != null)
-                    {
-                         selectedCurrencyID = (int)currency_comboBox.SelectedValue;
-                    }
-                    bool isUsdExpenseEdit = inserted_value == "E" && !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr" && selectedCurrencyID == 2;
-                    if (Approved_Action)
-                    {
-                        
-                        if (inserted_value == "Ex" || inserted_value == "M")
-                        {
-                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
-                                , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window" , selectedCurrencyID);
-                        }
-                        else
-                        {
-    
-                            a.Update(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
-                            , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window" , selectedCurrencyID); ;
-                        }
-                    }
-                    else
-                    {
-                        if (inserted_value == "Ex" || inserted_value == "M")
-                        {
-                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, amount, rate
-                                , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window" , selectedCurrencyID);
-                        }
-                        else
-                        {
-                            a.Update_Not_Approved(Action_ID, inserted_value, Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, isUsdExpenseEdit, false, false, amount, rate
-                            , ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                                , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window" , selectedCurrencyID); ;
-                        }
-                    }
-                    int success = 0;
-                    if (FullAttachNames != null && FullAttachNames.Length > 0)
-                    {
-                        foreach (var FullAttachName in FullAttachNames)
-                        {
-                            if (Save_Attachments(FullAttachName, Action_ID)) success++;
-                        }
-                    }
-
-                    if (FullAttachNames != null && FullAttachNames.Length > 0)
-                        MessageBox.Show("Saved successfully." + Environment.NewLine + "Attachments: Succeeded" + FullAttachNames.Length.ToString() + "/" + success.ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    else
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
-                    this.Close();
-                }
-                else // Add new
-                {
-
-                    bool _isExpense = (inserted_value == "E");
-
-                    bool _isSyrTill = !string.IsNullOrEmpty(TillType) && TillType.ToLower() == "syr";
-
-                    int selectedCurrencyID = GetSelectedCurrencyTilltypeId();
-                    int currencyTilltypeID = GetCurrencyTilltypeIdForAddActionSave(inserted_value, TillType, selectedCurrencyID);
-                    bool _isUsdCurrency = selectedCurrencyID == UsdCurrencyTilltypeId;
-
-                    bool _isSpecialCase = _isExpense && _isSyrTill && _isUsdCurrency;
-
-                  
-                    if (_isSpecialCase)
-                    {
-                        int usdTillId = GetUsdTillIdForCurrentAccount();
-                        if (usdTillId == -1)
-                        {
-                            MessageBox.Show("There is no USD till associated with this account");
-                            return;
-                        }
-
-                     int expenseId  = a.Insert( Till_ID, "syr", usdTillId, "usd", Donor_ID, -1, true, false, false, "E", amount, rate, ActionDate, Notes, E_Notes, IsReceipt, ReceiptNum,
-                                                Employee_Salary_ID, OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", currencyTilltypeID );
-
-                        //int outcomeId = a.Insert(
-                        //    usdTillId, "usd",
-                        //    -1, "",
-                        //    Donor_ID, -1,
-                        //    false, false, false,
-                        //    "O",
-                        //    amount, rate, ActionDate,
-                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
-                        //    Employee_Salary_ID,
-                        //    OriginalRate_ID,
-                        //    MicroProject_ID,
-                        //    budget_line_ID,
-                        //    -1,
-                        //    CashAccount_ID,
-                        //    ObserveCashAccount_ID,
-                        //    ExchangeCash_ID,
-                        //    -1,
-                        //    "AddAction_Window" , 2
-                        //);
-
-                        //// ========== (2) Income على SYP till ==========
-                        //int incomeId = a.Insert(
-                        //    Till_ID, TillType,
-                        //    usdTillId, "usd",
-                        //    Donor_ID, -1,
-                        //    false, false, false,
-                        //    "I",
-                        //    amount, rate, ActionDate,
-                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
-                        //    Employee_Salary_ID,
-                        //    OriginalRate_ID,
-                        //    MicroProject_ID,
-                        //    budget_line_ID,
-                        //    -1,
-                        //    CashAccount_ID,
-                        //    ObserveCashAccount_ID,
-                        //    ExchangeCash_ID,
-                        //    -1,
-                        //    "AddAction_Window" ,2
-                        //);
-
-                        //// ========== (3) Expense على SYP till ==========
-                        //int expenseId = a.Insert(
-                        //    Till_ID, TillType,
-                        //    Till_ID, TillType,
-                        //    Donor_ID, -1,
-                        //    false, false, false,
-                        //    "E",
-                        //    amount, rate, ActionDate,
-                        //    Notes, E_Notes, IsReceipt, ReceiptNum,
-                        //    Employee_Salary_ID,
-                        //    OriginalRate_ID,
-                        //    MicroProject_ID,
-                        //    budget_line_ID,
-                        //    -1,
-                        //    CashAccount_ID,
-                        //    ObserveCashAccount_ID,
-                        //    ExchangeCash_ID,
-                        //    -1,
-                        //    "AddAction_Window" , 2
-                        //);
-
-                        //MessageBox.Show("Three USD-expense transactions have been successfully recorded");
-
-
-
-
-
-                        int success = 0;
-                        if (FullAttachNames != null && FullAttachNames.Length > 0)
-                        {
-                            foreach (var FullAttachName in FullAttachNames)
-                            {
-                                if (Save_Attachments(FullAttachName, expenseId)) success++;
-                            }
-                        }
-
-                        if (FullAttachNames != null && FullAttachNames.Length > 0)
-                            MessageBox.Show("Saved successfully." + Environment.NewLine +
-                                            "Attachments: Succeeded " + FullAttachNames.Length.ToString() +
-                                            "/" + success.ToString(),
-                                            "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        else
-                            MessageBox.Show("Saved successfully.", "Confirmation",
-                                            MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-
                         UserMode = false;
                         Clear_Boxes();
                         UserMode = true;
 
                         if (TW != null)
                             TW.Load_Data();
-
-                      
-                        return;
                     }
-
-                    int A_id = -1;
-                    if (inserted_value == "Ex" || inserted_value == "M")
-                    {
-                        A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, ExchangeAcc_ID, true, WithExAcc, WithExchangeRate, inserted_value, amount, rate, ActionDate
-                        , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                       , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, Account_ID, "AddAction_Window", -1);
-                    }
-                    else
-                    {
-                        A_id = a.Insert(Till_ID, TillType, DestinationTill_ID, ObserveTill_Type, Donor_ID, -1, false, false, false, inserted_value, amount, rate, ActionDate
-                        , Notes, E_Notes, IsReceipt, ReceiptNum, Employee_Salary_ID
-                        , OriginalRate_ID, MicroProject_ID, budget_line_ID, -1, CashAccount_ID, ObserveCashAccount_ID, ExchangeCash_ID, -1, "AddAction_Window", currencyTilltypeID);
-                    }
-
-                    int success2 = 0;
-                    if (FullAttachNames != null && FullAttachNames.Length > 0)
-                    {
-                        foreach (var FullAttachName in FullAttachNames)
-                        {
-                            if (Save_Attachments(FullAttachName, A_id)) success2++;
-                        }
-                    }
-
-                    if (FullAttachNames != null && FullAttachNames.Length > 0)
-                        MessageBox.Show("Saved successfully." + Environment.NewLine + "Attachments: Succeeded" + FullAttachNames.Length.ToString() + "/" + success2.ToString(), "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    else
-                        MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    UserMode = false;
-                    Clear_Boxes();
-                    UserMode = true;
-
-                    if (TW != null)
-                        TW.Load_Data();
                 }
             }
-
             catch (Exception ex)
             {
                 if (Login.MyConn != null && Login.MyConn.State == ConnectionState.Open)
@@ -3768,29 +3317,6 @@ namespace Financial_WPF_App
             }
         }
 
-        private int GetUsdTillIdForCurrentAccount()
-        {
-            if (tills_dt == null || tills_dt.Rows.Count == 0)
-                return -1;
-
-            if (Account_ID <= 0)
-                return -1;
-
-           
-            var row = tills_dt.AsEnumerable()
-                .FirstOrDefault(r =>
-                    !r.IsNull("Tilltypes_Name") &&
-                    r["Tilltypes_Name"].ToString().Equals("usd", StringComparison.OrdinalIgnoreCase) &&
-                    !r.IsNull("Account_ID") &&
-                    Convert.ToInt32(r["Account_ID"]) == Account_ID
-                );
-
-            if (row == null)
-                return -1;
-
-            return Convert.ToInt32(row["Till_ID"]);
-        }
-
         private int GetSelectedCurrencyTilltypeId()
         {
             if (currency_comboBox.SelectedValue == null)
@@ -3803,22 +3329,10 @@ namespace Financial_WPF_App
             return -1;
         }
 
-        private int GetCurrencyTilltypeIdForAddActionSave(string actionType, string tillType, int selectedCurrencyID)
+        private string GetSelectedDestinationTillType()
         {
-            if (IsExpenseFromSyrTill(actionType, tillType))
-            {
-                if (selectedCurrencyID <= 0)
-                    return SyrCurrencyTilltypeId;
-            }
-
-            return selectedCurrencyID;
-        }
-
-        private bool IsExpenseFromSyrTill(string actionType, string tillType)
-        {
-            return actionType == "E" &&
-                   !string.IsNullOrEmpty(tillType) &&
-                   tillType.Equals("syr", StringComparison.OrdinalIgnoreCase);
+            var row = DestinationTill_comboBox.SelectedItem as DataRowView;
+            return row == null ? string.Empty : Convert.ToString(row["Type"]);
         }
 
 
@@ -3984,31 +3498,6 @@ namespace Financial_WPF_App
             {
                 FullAttachNames = new string[] { };
             }
-        }
-
-        private bool Save_Attachments(string FullAttachName, int Action_id)
-        {
-            bool sucess = false;
-
-            //Added By Maher 
-            string t;
-            d.GetNameFromPath(FullAttachName, out t, out _);
-            //FilePicName = MicroProject_ID + "_img" + DateTime.Now.ToString("yyyyMMddhhmmss") + "." + t;
-
-            while (d.file_Exist("Action_id_" + Action_ID.ToString() + "_" + t))
-            {
-                t = "(1)" + t;
-            }
-
-            ////////////////// Upload Image to server ////////////////////
-            if (d.SaveDocument(FullAttachName, "Action_id_" + Action_id.ToString() + "_" + t))
-            {
-                d.AddAttachmentToDatabase(Action_id, -1, t, false, "AddAction_Window");
-                sucess = true;
-            }
-
-            return sucess;
-
         }
 
         private void Minimize_Click(object sender, RoutedEventArgs e)

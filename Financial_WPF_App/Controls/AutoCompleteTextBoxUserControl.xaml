@@ -8,7 +8,7 @@
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         
             <!-- Text Box -->
-            <TextBox x:Name="autoTextBox"  Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            <TextBox x:Name="autoTextBox" HorizontalAlignment="Stretch"
                     TextChanged="AutoTextBox_TextChanged"  
                    Style="{Binding TextBoxStyle, RelativeSource={RelativeSource AncestorType=UserControl}}" Tag="{Binding TextBoxTag, RelativeSource={RelativeSource AncestorType=UserControl}}" />
  

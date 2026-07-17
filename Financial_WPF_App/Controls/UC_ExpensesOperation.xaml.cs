@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,13 @@ namespace Financial_WPF_App.Controls
     /// </summary>
     public partial class UC_ExpensesOperation : UserControl
     {
+        private System.Data.DataTable _budgetLines;
+        private System.Data.DataTable _beneficiaries;
+        private bool _isConfiguring;
+        private bool _isMicroProject;
+        private bool _isPersonalMode;
+        public event EventHandler CurrencyChanged;
+
         public UC_ExpensesOperation()
         {
             InitializeComponent();
@@ -32,17 +40,230 @@ namespace Financial_WPF_App.Controls
 
         private void currency_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            // TODO: Add your logic here for when the currency selection changes.
+            if (_isConfiguring || _isPersonalMode)
+                return;
+
+            ClearCurrencyDependents();
+            var selectedRow = currency_comboBox.SelectedItem as DataRowView;
+            string selectedCurrency = selectedRow == null ? string.Empty : Convert.ToString(selectedRow["Name"]);
+            bool hasCurrency = selectedRow != null;
+            bool isSyr = string.Equals(selectedCurrency, "SYR", StringComparison.OrdinalIgnoreCase);
+            SetExpenseInputsEnabled(hasCurrency);
+            SetOriginAverageRateEnabled(isSyr);
+            CurrencyChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public int SelectedCurrencyId
+        {
+            get
+            {
+                int id;
+                return currency_comboBox.SelectedValue != null && int.TryParse(currency_comboBox.SelectedValue.ToString(), out id) ? id : -1;
+            }
+        }
+
+        public void Configure(bool isMicroProject, object currencies, System.Data.DataTable budgetLines, object cashTills,
+            object averageRates, System.Data.DataTable beneficiaries)
+        {
+            _isConfiguring = true;
+            _isPersonalMode = false;
+            _isMicroProject = isMicroProject;
+            _beneficiaries = beneficiaries;
+            currency_comboBox.ItemsSource = currencies as System.Collections.IEnumerable;
+            _budgetLines = budgetLines;
+            Budget_comboBox.ItemsSource = null;
+            Category_comboBox.ItemsSource = null;
+            Line_comboBox.ItemsSource = null;
+            if (_budgetLines != null && _budgetLines.Rows.Count > 0)
+                Budget_comboBox.ItemsSource = new System.Data.DataView(_budgetLines).ToTable(true, "budget_ID", "budget_Name").DefaultView;
+            CashAccount_comboBox.ItemsSource = cashTills as System.Collections.IEnumerable;
+            Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
+
+            var microProjectNumbers = new List<string>();
+            var beneficiaryNames = new List<string>();
+            if (_beneficiaries != null && _beneficiaries.Rows.Count > 0)
+            {
+                for (int i = 0; i < _beneficiaries.Rows.Count; i++)
+                {
+                    if (_beneficiaries.Rows[i]["MicroProject_ID"] != DBNull.Value)
+                        microProjectNumbers.Add(_beneficiaries.Rows[i].Field<int>("MicroProject_ID").ToString());
+                    if (_beneficiaries.Rows[i]["Name"] != DBNull.Value)
+                        beneficiaryNames.Add(_beneficiaries.Rows[i].Field<string>("Name"));
+                }
+            }
+
+            MircoProject_ID_autoSuggestionUserControl.AutoSuggestionList = microProjectNumbers;
+            BeneficiaryName_txtBox.AutoSuggestionList = beneficiaryNames;
+
+            ResetSelectionsAndText();
+            currency_comboBox.IsEnabled = true;
+            SetExpenseInputsEnabled(false);
+            SetOriginAverageRateEnabled(false);
+            _isConfiguring = false;
+        }
+
+        public void ConfigureForPersonal(bool enableCashTill, object cashTills)
+        {
+            _isConfiguring = true;
+            _isPersonalMode = true;
+            _isMicroProject = false;
+            _beneficiaries = null;
+
+            ResetSelectionsAndText();
+
+            currency_comboBox.ItemsSource = null;
+            currency_comboBox.IsEnabled = false;
+            Currency_Label.IsEnabled = false;
+
+            Budget_lable.IsEnabled = Budget_panel.IsEnabled = Budget_help.IsEnabled = false;
+            Category_lable.IsEnabled = Category_panel.IsEnabled = false;
+            Line_lable.IsEnabled = Line_panel.IsEnabled = false;
+            MircoProject_ID_lable.IsEnabled = MircoProject_ID_autoSuggestionUserControl.IsEnabled = false;
+            BeneficiaryName_lable.IsEnabled = BeneficiaryName_txtBox.IsEnabled = false;
+            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled =
+                Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled = false;
+            USD_Value_lable.IsEnabled = false;
+
+            CashAccount_comboBox.ItemsSource = cashTills as System.Collections.IEnumerable;
+            CashAccount_comboBox.SelectedIndex = -1;
+            CashAccount_lable.IsEnabled = CashAccount_panel.IsEnabled = CashAccount_clear_btn.IsEnabled = enableCashTill;
+
+            Document_Label.IsEnabled = Document_panel.IsEnabled = true;
+            IsReceipt_comboBox.SelectedIndex = -1;
+            ReceiptNum_txtBox.Clear();
+
+            _isConfiguring = false;
+        }
+
+        public void SetCashTills(object cashTills)
+        {
+            CashAccount_comboBox.ItemsSource = cashTills as System.Collections.IEnumerable;
+            CashAccount_comboBox.SelectedIndex = -1;
+        }
+
+        public void SetAverageRates(object averageRates)
+        {
+            Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
+            Original_AvgRate_comboBox.SelectedIndex = -1;
+        }
+
+        public void ResetAll()
+        {
+            _isConfiguring = true;
+            _isPersonalMode = false;
+            ResetSelectionsAndText();
+            SetAllControlsEnabled(false);
+            _isConfiguring = false;
+        }
+
+        private void SetAllControlsEnabled(bool enabled)
+        {
+            Currency_Label.IsEnabled = currency_comboBox.IsEnabled = enabled;
+            CashAccount_lable.IsEnabled = CashAccount_panel.IsEnabled = CashAccount_clear_btn.IsEnabled = enabled;
+            Document_Label.IsEnabled = Document_panel.IsEnabled = enabled;
+            Budget_lable.IsEnabled = Budget_panel.IsEnabled = Budget_help.IsEnabled = enabled;
+            Category_lable.IsEnabled = Category_panel.IsEnabled = enabled;
+            Line_lable.IsEnabled = Line_panel.IsEnabled = enabled;
+            MircoProject_ID_lable.IsEnabled = MircoProject_ID_autoSuggestionUserControl.IsEnabled = enabled;
+            BeneficiaryName_lable.IsEnabled = BeneficiaryName_txtBox.IsEnabled = enabled;
+            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled =
+                Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled = enabled;
+            USD_Value_lable.IsEnabled = enabled;
+        }
+
+        private void SetExpenseInputsEnabled(bool currencySelected)
+        {
+            CashAccount_lable.IsEnabled = CashAccount_panel.IsEnabled = CashAccount_clear_btn.IsEnabled = currencySelected;
+            Document_Label.IsEnabled = Document_panel.IsEnabled = currencySelected;
+
+            bool budgetEnabled = currencySelected && !_isMicroProject;
+            Budget_lable.IsEnabled = Budget_panel.IsEnabled = Budget_help.IsEnabled = budgetEnabled;
+            Category_lable.IsEnabled = Category_panel.IsEnabled = budgetEnabled && Budget_comboBox.SelectedValue != null;
+            Line_lable.IsEnabled = Line_panel.IsEnabled = budgetEnabled && Category_comboBox.SelectedValue != null;
+
+            bool microEnabled = currencySelected && _isMicroProject;
+            MircoProject_ID_lable.IsEnabled = MircoProject_ID_autoSuggestionUserControl.IsEnabled = microEnabled;
+            BeneficiaryName_lable.IsEnabled = BeneficiaryName_txtBox.IsEnabled = microEnabled;
+        }
+
+        private void ClearCurrencyDependents()
+        {
+            _isConfiguring = true;
+            CashAccount_comboBox.SelectedIndex = -1;
+            Original_AvgRate_comboBox.SelectedIndex = -1;
+            Budget_comboBox.SelectedIndex = -1;
+            Category_comboBox.SelectedIndex = -1;
+            Line_comboBox.SelectedIndex = -1;
+            IsReceipt_comboBox.SelectedIndex = -1;
+            ReceiptNum_txtBox.Clear();
+            MircoProject_ID_autoSuggestionUserControl.autoTextBox.Clear();
+            BeneficiaryName_txtBox.autoTextBox.Clear();
+            USD_Value_TxtBox.Content = string.Empty;
+            Category_comboBox.ItemsSource = null;
+            Line_comboBox.ItemsSource = null;
+            _isConfiguring = false;
+        }
+
+        private void ResetSelectionsAndText()
+        {
+            currency_comboBox.SelectedIndex = -1;
+            ClearCurrencyDependents();
+        }
+
+        private void SetOriginAverageRateEnabled(bool enabled)
+        {
+            Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled =
+                Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled = enabled;
+            if (!enabled)
+                Original_AvgRate_comboBox.SelectedIndex = -1;
         }
 
         private void MircoProject_ID_autoSuggestionUserControl_LostFocus(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                if (MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text == "")
+                {
+                    BeneficiaryName_txtBox.autoTextBox.Text = "";
+                }
+                else if (_beneficiaries != null)
+                {
+                    string microProjectId = MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text;
+                    DataRow[] rows = _beneficiaries.Select("MicroProject_ID=" + microProjectId);
+                    if (rows.Length != 0)
+                    {
+                        BeneficiaryName_txtBox.autoTextBox.Text = rows[0].Field<string>("Name");
+                        BeneficiaryName_txtBox.CloseAutoSuggestionBox();
+                    }
+                    else
+                    {
+                        BeneficiaryName_txtBox.autoTextBox.Text = "";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowDataError(ex);
+            }
         }
 
         private void Budget_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            // TODO: Add your logic here for when the Budget_comboBox selection changes.
+            if (_isConfiguring)
+                return;
+            Category_comboBox.ItemsSource = null;
+            Line_comboBox.ItemsSource = null;
+            Category_comboBox.SelectedIndex = -1;
+            Line_comboBox.SelectedIndex = -1;
+            Original_AvgRate_comboBox.SelectedIndex = -1;
+            USD_Value_TxtBox.Content = string.Empty;
+            SetExpenseInputsEnabled(currency_comboBox.SelectedValue != null);
+            if (_budgetLines == null || Budget_comboBox.SelectedValue == null)
+                return;
+
+            var rows = _budgetLines.Select("budget_ID = " + Convert.ToInt32(Budget_comboBox.SelectedValue));
+            if (rows.Length > 0)
+                Category_comboBox.ItemsSource = rows.CopyToDataTable().DefaultView.ToTable(true, "linecategory_ID", "linecategory_Name").DefaultView;
         }
 
         private void Budget_comboBox_clear_Click(object sender, RoutedEventArgs e)
@@ -52,7 +273,18 @@ namespace Financial_WPF_App.Controls
 
         private void Category_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            // TODO: Add your logic here for when the Category ComboBox selection changes.
+            if (_isConfiguring)
+                return;
+            Line_comboBox.ItemsSource = null;
+            Line_comboBox.SelectedIndex = -1;
+            SetExpenseInputsEnabled(currency_comboBox.SelectedValue != null);
+            if (_budgetLines == null || Budget_comboBox.SelectedValue == null || Category_comboBox.SelectedValue == null)
+                return;
+
+            var rows = _budgetLines.Select("budget_ID = " + Convert.ToInt32(Budget_comboBox.SelectedValue) +
+                " AND linecategory_ID = " + Convert.ToInt32(Category_comboBox.SelectedValue));
+            if (rows.Length > 0)
+                Line_comboBox.ItemsSource = rows.CopyToDataTable().DefaultView;
         }
 
         private void Category_comboBox_clear_btn_Click(object sender, RoutedEventArgs e)
@@ -65,15 +297,51 @@ namespace Financial_WPF_App.Controls
             Line_comboBox.SelectedItem = null;
         }
 
-        // Added handler referenced by XAML: LostFocus="BeneficiaryName_autoSuggestionUserControl_LostFocus"
         private void BeneficiaryName_autoSuggestionUserControl_LostFocus(object sender, RoutedEventArgs e)
         {
-            // TODO: Add validation or handling for BeneficiaryName textbox lost focus.
+            try
+            {
+                if (BeneficiaryName_txtBox.autoTextBox.Text == "")
+                {
+                    MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = "";
+                }
+                else if (_beneficiaries != null)
+                {
+                    string name = BeneficiaryName_txtBox.autoTextBox.Text;
+                    DataRow[] rows = _beneficiaries.Select("Name like '%" + name + "%'");
+                    if (rows.Length != 0)
+                    {
+                        MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = rows[0].Field<int>("MicroProject_ID").ToString();
+                        MircoProject_ID_autoSuggestionUserControl.CloseAutoSuggestionBox();
+                    }
+                    else
+                    {
+                        MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = "";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowDataError(ex);
+            }
+        }
+
+        private static void ShowDataError(Exception ex)
+        {
+            if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                MessageBox.Show("please check your network and try again", "Error");
+            else if (ex.Message.Contains("host"))
+                MessageBox.Show("please check the server or your network connection and try again", "Error");
+            else if (ex.Message.Contains("Duplicate entry"))
+                MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+            else
+                MessageBox.Show(ex.Message, "Error");
         }
 
         private void IsReceipt_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            // TODO: Implement document type selection logic (e.g., invoice, receipt, payslip)
+            if (!_isConfiguring)
+                ReceiptNum_txtBox.Clear();
         }
 
         private void ReceiptNum_txtBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -83,13 +351,103 @@ namespace Financial_WPF_App.Controls
 
         private void Original_AvgRate_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            // TODO: Implement exchange rate conversion updates to protect financial precision
+            if (!_isConfiguring)
+                USD_Value_TxtBox.Content = string.Empty;
         }
 
         private void Avgrate_clear_btn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            // TODO: Clear selected average rate and reset any dependent currency calculations
             Original_AvgRate_comboBox.SelectedIndex = -1;
+        }
+
+        public bool CurrencySelectionEnabled => currency_comboBox.IsEnabled;
+
+        public bool CashAccountIsEnabled => CashAccount_lable.IsEnabled;
+
+        public int CashAccountSelectedIndex => CashAccount_comboBox.SelectedIndex;
+
+        public int CashAccountId
+        {
+            get
+            {
+                int id;
+                return CashAccount_comboBox.SelectedValue != null && int.TryParse(CashAccount_comboBox.SelectedValue.ToString(), out id) ? id : -1;
+            }
+        }
+
+        public bool MicroProjectIsEnabled => MircoProject_ID_lable.IsEnabled;
+
+        public string MicroProjectText => MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text;
+
+        public string BeneficiaryNameText => BeneficiaryName_txtBox.autoTextBox.Text;
+
+        public bool BudgetLineIsEnabled => Budget_lable.IsEnabled;
+
+        public int BudgetLineSelectedIndex => Line_comboBox.SelectedIndex;
+
+        public int BudgetLineId
+        {
+            get
+            {
+                int id;
+                return Line_comboBox.SelectedValue != null && int.TryParse(Line_comboBox.SelectedValue.ToString(), out id) ? id : -1;
+            }
+        }
+
+        public bool DocumentTypeIsEnabled => Document_Label.IsEnabled;
+
+        public int DocumentTypeSelectedIndex => IsReceipt_comboBox.SelectedIndex;
+
+        public string DocumentTypeItemText
+        {
+            get
+            {
+                if (IsReceipt_comboBox.SelectedItem == null)
+                    return string.Empty;
+                return IsReceipt_comboBox.SelectedItem.ToString();
+            }
+        }
+
+        public bool DocumentNumberIsEnabled => ReceiptNum_txtBox.IsEnabled;
+
+        public string DocumentNumber => ReceiptNum_txtBox.Text;
+
+        public bool OriginalAvgRateIsEnabled => Original_AvgRate_lable.IsEnabled;
+
+        public int OriginalAvgRateSelectedIndex => Original_AvgRate_comboBox.SelectedIndex;
+
+        public int OriginalRateId
+        {
+            get
+            {
+                int id;
+                return Original_AvgRate_comboBox.SelectedValue != null && int.TryParse(Original_AvgRate_comboBox.SelectedValue.ToString(), out id) ? id : -1;
+            }
+        }
+
+        public void ClearSaveFields()
+        {
+            _isConfiguring = true;
+            CashAccount_comboBox.SelectedIndex = -1;
+            Original_AvgRate_comboBox.SelectedIndex = -1;
+            Budget_comboBox.SelectedIndex = -1;
+            Category_comboBox.SelectedIndex = -1;
+            Line_comboBox.SelectedIndex = -1;
+            IsReceipt_comboBox.SelectedIndex = -1;
+            ReceiptNum_txtBox.Clear();
+            MircoProject_ID_autoSuggestionUserControl.autoTextBox.Clear();
+            BeneficiaryName_txtBox.autoTextBox.Clear();
+            USD_Value_TxtBox.Content = string.Empty;
+            Category_comboBox.ItemsSource = null;
+            Line_comboBox.ItemsSource = null;
+            if (_budgetLines != null && _budgetLines.Rows.Count > 0)
+                Budget_comboBox.ItemsSource = new System.Data.DataView(_budgetLines).ToTable(true, "budget_ID", "budget_Name").DefaultView;
+            _isConfiguring = false;
+        }
+
+        public void FocusCurrency()
+        {
+            currency_comboBox.Focus();
         }
     }
 }

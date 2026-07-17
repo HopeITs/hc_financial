@@ -104,15 +104,22 @@ namespace Financial_WPF_App.Helper
             // صلاحيات المدير المالي والمحاسب متطابقة في القيود التشغيلية بحسب الصندوق والحساب
             if (role == "Financial Manager" || role == "Accountant")
             {
-                if (accountType == "Project" || accountType == "Personal")
+                if (accountType == "Personal")
+                {
+                    if (currency == "syr" || currency == "usd" || currency == "eur")
+                    {
+                        priv.Income = priv.Expand = true;
+                    }
+                }
+                else if (accountType == "Project")
                 {
                     if (currency == "syr")
                     {
                         priv.Income = priv.Outcome = priv.Returned = priv.Exchange = priv.Expand = priv.Move = true;
                     }
-                    else if (accountType == "Project")
+                    else
                     {
-                        priv.Exchange = true; // العملات الأجنبية مخصصة للمبادلة فقط
+                        priv.Exchange = true;
                     }
                 }
             }

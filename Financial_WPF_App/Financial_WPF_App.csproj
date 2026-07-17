@@ -337,11 +337,16 @@
     <Compile Include="Helper\GridCustomStackedRenderer.cs" />
     <Compile Include="Helper\InputValidationHelper.cs" />
     <Compile Include="Helper\MouseClickComboBoxBehavior .cs" />
+    <Compile Include="Helper\DataViewContainsFilterComboBoxBehavior.cs" />
+
     <Compile Include="Helper\MultiAttachments_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiBeneficiares_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiBudgetLines_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiPayments_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiSalaries_CustomCopyPaste.cs" />
+    <Compile Include="Helper\AddActionSaveContext.cs" />
+    <Compile Include="Helper\AddActionSaveHelpers.cs" />
+    <Compile Include="Helper\AddActionSaveService.cs" />
     <Compile Include="Helper\OperationPrivileges.cs" />
     <Compile Include="Helper\PasswordHelper.cs" />
     <Compile Include="Helper\ScrollViewerHelper.cs" />
