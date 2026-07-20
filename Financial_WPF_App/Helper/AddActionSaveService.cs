@@ -62,11 +62,12 @@ namespace Financial_WPF_App.Helper
             if (insertedValue == "E")
             {
                 // Personal accounts derive currency from the Till (currency ComboBox is disabled).
-                // Project SYR expenses may also omit an explicit currency (defaults via helper).
+                // Add Action 2 can explicitly require a selection for project SYR expenses.
                 bool personalUsesTillCurrency = string.Equals(context.AccountType, "Personal", StringComparison.OrdinalIgnoreCase);
-                if (!personalUsesTillCurrency &&
-                    op.SelectedCurrencyId <= 0 &&
-                    !AddActionSaveHelpers.IsExpenseFromSyrTill(insertedValue, context.TillType))
+                bool currencyRequired = context.RequireExpenseCurrencySelection ||
+                    (!personalUsesTillCurrency &&
+                     !AddActionSaveHelpers.IsExpenseFromSyrTill(insertedValue, context.TillType));
+                if (currencyRequired && op.SelectedCurrencyId <= 0)
                 {
                     MessageBox.Show("Please make sure to select the currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     if (context.FocusCurrencySelection != null)
@@ -107,17 +108,15 @@ namespace Financial_WPF_App.Helper
 
             actionDate = context.ActionDate.Value.ToString("yyyy/MM/dd");
 
-            if (op.CashAccountRequired || (context.ActionId > 0 && op.CashAccountSelectedIndex != -1))
+            if (op.CashAccountRequired && op.CashAccountSelectedIndex == -1)
             {
-                if (op.CashAccountSelectedIndex == -1)
-                {
-                    MessageBox.Show("Please make sure to select the cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    result.ValidationFailed = true;
-                    return result;
-                }
-
-                cashAccountId = op.CashAccountId;
+                MessageBox.Show("Please make sure to select the cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                result.ValidationFailed = true;
+                return result;
             }
+
+            if (op.CashAccountSelectedIndex != -1)
+                cashAccountId = op.CashAccountId;
 
             if (op.MicroProjectRequired)
             {
@@ -256,6 +255,12 @@ namespace Financial_WPF_App.Helper
 
                     destinationTillId = op.DestinationTillId;
                     observeTillType = AddActionSaveHelpers.GetObserveTillType(context.CorrespondingTills, destinationTillId);
+                    if (string.IsNullOrWhiteSpace(observeTillType))
+                    {
+                        MessageBox.Show("Please make sure to select a valid Corresponding till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        result.ValidationFailed = true;
+                        return result;
+                    }
 
                     if (context.AccountType == "Project" && op.ExchangeAccountSelectedIndex != -1)
                         withExAcc = true;
@@ -279,17 +284,15 @@ namespace Financial_WPF_App.Helper
                 }
             }
 
-            if (op.ObserveCashAccountRequired || (context.ActionId > 0 && op.ObserveCashAccountSelectedIndex != -1))
+            if (op.ObserveCashAccountRequired && op.ObserveCashAccountSelectedIndex == -1)
             {
-                if (op.ObserveCashAccountSelectedIndex == -1)
-                {
-                    MessageBox.Show("Please make sure to select the corresponding cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                    result.ValidationFailed = true;
-                    return result;
-                }
-
-                observeCashAccountId = op.ObserveCashAccountId;
+                MessageBox.Show("Please make sure to select the corresponding cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                result.ValidationFailed = true;
+                return result;
             }
+
+            if (op.ObserveCashAccountSelectedIndex != -1)
+                observeCashAccountId = op.ObserveCashAccountId;
 
             if (op.ExchangeAccountEnabled || (context.ActionId > 0 && op.ExchangeAccountSelectedIndex != -1))
             {
@@ -297,17 +300,15 @@ namespace Financial_WPF_App.Helper
                 {
                     exchangeAccId = op.ExchangeAccountId;
 
-                    if (op.ExchangeCashRequired || (context.ActionId > 0 && op.ExchangeCashSelectedIndex != -1))
+                    if (op.ExchangeCashRequired && op.ExchangeCashSelectedIndex == -1)
                     {
-                        if (op.ExchangeCashSelectedIndex == -1)
-                        {
-                            MessageBox.Show("Please make sure to select the Exchange cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                            result.ValidationFailed = true;
-                            return result;
-                        }
-
-                        exchangeCashId = op.ExchangeCashId;
+                        MessageBox.Show("Please make sure to select the Exchange cash till.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        result.ValidationFailed = true;
+                        return result;
                     }
+
+                    if (op.ExchangeCashSelectedIndex != -1)
+                        exchangeCashId = op.ExchangeCashId;
                 }
             }
 

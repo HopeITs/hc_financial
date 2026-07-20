@@ -186,6 +186,33 @@
             </Button.ToolTip>
         </Button>
 
+        <!-- Employee / Volunteer (required for payslips) -->
+        <Label Grid.Column="4" Grid.Row="4" x:Name="Employee_lable"
+               Style="{DynamicResource statistic_lableStyle}" Content="Volunteer:"
+               HorizontalContentAlignment="Left" />
+        <Grid Grid.Column="5" Grid.Row="4" Height="30" x:Name="Employee_panel">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="Employee_comboBox" TabIndex="11"
+                      Style="{DynamicResource FloatingComboboxStyle}"
+                      DisplayMemberPath="Employee_Name" SelectedValuePath="Employee_Salary_ID" />
+            <Button Grid.Column="1" x:Name="Employee_comboBox_clear" Margin="5,0,0,0"
+                    Style="{StaticResource DeleteButtonStyle}"
+                    Click="Employee_comboBox_clear_Click" />
+        </Grid>
+        <Button Grid.Column="6" Grid.Row="4" x:Name="Employee_help"
+                ToolTipService.InitialShowDelay="100" Width="25" Height="25"
+                Margin="5,0,0,0" BorderBrush="{x:Null}">
+            <Button.Background>
+                <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
+            </Button.Background>
+            <Button.ToolTip>
+                <TextBlock><Run Text="Only the volunteer from this project appears, provided that his salary has been added for the month corresponding to the operation date."/></TextBlock>
+            </Button.ToolTip>
+        </Button>
+
         <!-- Value -->
         <Label Grid.Column="1" Grid.Row="6" x:Name="USD_Value_lable" Style="{DynamicResource statistic_lableStyle}" Content="Value:" HorizontalContentAlignment="Left"  />
         <Label x:Name="USD_Value_TxtBox"  Style="{DynamicResource statistic_lableStyle}" 

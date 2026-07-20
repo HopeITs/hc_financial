@@ -28,6 +28,7 @@ namespace Financial_WPF_App.Helper
         public string SourceFormName { get; set; } = "AddAction_Window2";
         public Models.Action ActionModel { get; set; }
         public Rate RateModel { get; set; }
+        public bool RequireExpenseCurrencySelection { get; set; }
 
         /// <summary>Invoked when currency validation fails (original focuses currency_comboBox).</summary>
         public System.Action FocusCurrencySelection { get; set; }

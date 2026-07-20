@@ -23,10 +23,14 @@ namespace Financial_WPF_App.Controls
     {
         private System.Data.DataTable _budgetLines;
         private System.Data.DataTable _beneficiaries;
+        private System.Data.DataTable _employees;
         private bool _isConfiguring;
         private bool _isMicroProject;
         private bool _isPersonalMode;
+        private bool _requireProjectFieldsWithoutCurrency;
+        private DateTime? _actionDate;
         public event EventHandler CurrencyChanged;
+        public event EventHandler BudgetChanged;
 
         public UC_ExpensesOperation()
         {
@@ -43,7 +47,7 @@ namespace Financial_WPF_App.Controls
             if (_isConfiguring || _isPersonalMode)
                 return;
 
-            ClearCurrencyDependents();
+            ClearCurrencyDependentTextFields();
             var selectedRow = currency_comboBox.SelectedItem as DataRowView;
             string selectedCurrency = selectedRow == null ? string.Empty : Convert.ToString(selectedRow["Name"]);
             bool hasCurrency = selectedRow != null;
@@ -63,12 +67,16 @@ namespace Financial_WPF_App.Controls
         }
 
         public void Configure(bool isMicroProject, object currencies, System.Data.DataTable budgetLines, object cashTills,
-            object averageRates, System.Data.DataTable beneficiaries)
+            object averageRates, System.Data.DataTable beneficiaries, System.Data.DataTable employees,
+            DateTime? actionDate, bool requireProjectFieldsWithoutCurrency)
         {
             _isConfiguring = true;
             _isPersonalMode = false;
             _isMicroProject = isMicroProject;
             _beneficiaries = beneficiaries;
+            _employees = employees;
+            _actionDate = actionDate;
+            _requireProjectFieldsWithoutCurrency = requireProjectFieldsWithoutCurrency;
             currency_comboBox.ItemsSource = currencies as System.Collections.IEnumerable;
             _budgetLines = budgetLines;
             Budget_comboBox.ItemsSource = null;
@@ -96,9 +104,11 @@ namespace Financial_WPF_App.Controls
             BeneficiaryName_txtBox.AutoSuggestionList = beneficiaryNames;
 
             ResetSelectionsAndText();
-            currency_comboBox.IsEnabled = true;
+            SetCurrencyInputsEnabled(true);
             SetExpenseInputsEnabled(false);
             SetOriginAverageRateEnabled(false);
+            payslip_ComboBoxItem.Visibility = !_isMicroProject ? Visibility.Visible : Visibility.Collapsed;
+            SetEmployeeInputsEnabled(false);
             _isConfiguring = false;
         }
 
@@ -108,12 +118,13 @@ namespace Financial_WPF_App.Controls
             _isPersonalMode = true;
             _isMicroProject = false;
             _beneficiaries = null;
+            _employees = null;
+            _requireProjectFieldsWithoutCurrency = false;
 
             ResetSelectionsAndText();
 
             currency_comboBox.ItemsSource = null;
-            currency_comboBox.IsEnabled = false;
-            Currency_Label.IsEnabled = false;
+            SetCurrencyInputsEnabled(false);
 
             Budget_lable.IsEnabled = Budget_panel.IsEnabled = Budget_help.IsEnabled = false;
             Category_lable.IsEnabled = Category_panel.IsEnabled = false;
@@ -129,22 +140,22 @@ namespace Financial_WPF_App.Controls
             CashAccount_lable.IsEnabled = CashAccount_panel.IsEnabled = CashAccount_clear_btn.IsEnabled = enableCashTill;
 
             Document_Label.IsEnabled = Document_panel.IsEnabled = true;
+            payslip_ComboBoxItem.Visibility = Visibility.Collapsed;
             IsReceipt_comboBox.SelectedIndex = -1;
             ReceiptNum_txtBox.Clear();
+            SetEmployeeInputsEnabled(false);
 
             _isConfiguring = false;
         }
 
         public void SetCashTills(object cashTills)
         {
-            CashAccount_comboBox.ItemsSource = cashTills as System.Collections.IEnumerable;
-            CashAccount_comboBox.SelectedIndex = -1;
+            SetItemsSourcePreservingSelection(CashAccount_comboBox, cashTills);
         }
 
         public void SetAverageRates(object averageRates)
         {
-            Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
-            Original_AvgRate_comboBox.SelectedIndex = -1;
+            SetItemsSourcePreservingSelection(Original_AvgRate_comboBox, averageRates);
         }
 
         public void ResetAll()
@@ -158,7 +169,7 @@ namespace Financial_WPF_App.Controls
 
         private void SetAllControlsEnabled(bool enabled)
         {
-            Currency_Label.IsEnabled = currency_comboBox.IsEnabled = enabled;
+            SetCurrencyInputsEnabled(enabled);
             CashAccount_lable.IsEnabled = CashAccount_panel.IsEnabled = CashAccount_clear_btn.IsEnabled = enabled;
             Document_Label.IsEnabled = Document_panel.IsEnabled = enabled;
             Budget_lable.IsEnabled = Budget_panel.IsEnabled = Budget_help.IsEnabled = enabled;
@@ -168,20 +179,23 @@ namespace Financial_WPF_App.Controls
             BeneficiaryName_lable.IsEnabled = BeneficiaryName_txtBox.IsEnabled = enabled;
             Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled =
                 Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled = enabled;
+            Employee_lable.IsEnabled = Employee_panel.IsEnabled = Employee_comboBox_clear.IsEnabled =
+                Employee_help.IsEnabled = enabled;
             USD_Value_lable.IsEnabled = enabled;
         }
 
         private void SetExpenseInputsEnabled(bool currencySelected)
         {
-            CashAccount_lable.IsEnabled = CashAccount_panel.IsEnabled = CashAccount_clear_btn.IsEnabled = currencySelected;
-            Document_Label.IsEnabled = Document_panel.IsEnabled = currencySelected;
+            bool requiredInputsEnabled = currencySelected || _requireProjectFieldsWithoutCurrency;
+            CashAccount_lable.IsEnabled = CashAccount_panel.IsEnabled = CashAccount_clear_btn.IsEnabled = requiredInputsEnabled;
+            Document_Label.IsEnabled = Document_panel.IsEnabled = requiredInputsEnabled;
 
-            bool budgetEnabled = currencySelected && !_isMicroProject;
+            bool budgetEnabled = requiredInputsEnabled && !_isMicroProject;
             Budget_lable.IsEnabled = Budget_panel.IsEnabled = Budget_help.IsEnabled = budgetEnabled;
             Category_lable.IsEnabled = Category_panel.IsEnabled = budgetEnabled && Budget_comboBox.SelectedValue != null;
             Line_lable.IsEnabled = Line_panel.IsEnabled = budgetEnabled && Category_comboBox.SelectedValue != null;
 
-            bool microEnabled = currencySelected && _isMicroProject;
+            bool microEnabled = requiredInputsEnabled && _isMicroProject;
             MircoProject_ID_lable.IsEnabled = MircoProject_ID_autoSuggestionUserControl.IsEnabled = microEnabled;
             BeneficiaryName_lable.IsEnabled = BeneficiaryName_txtBox.IsEnabled = microEnabled;
         }
@@ -196,12 +210,44 @@ namespace Financial_WPF_App.Controls
             Line_comboBox.SelectedIndex = -1;
             IsReceipt_comboBox.SelectedIndex = -1;
             ReceiptNum_txtBox.Clear();
+            Employee_comboBox.SelectedIndex = -1;
+            Employee_comboBox.ItemsSource = null;
+            SetEmployeeInputsEnabled(false);
             MircoProject_ID_autoSuggestionUserControl.autoTextBox.Clear();
             BeneficiaryName_txtBox.autoTextBox.Clear();
             USD_Value_TxtBox.Content = string.Empty;
             Category_comboBox.ItemsSource = null;
             Line_comboBox.ItemsSource = null;
             _isConfiguring = false;
+        }
+
+        private void ClearCurrencyDependentTextFields()
+        {
+            MircoProject_ID_autoSuggestionUserControl.autoTextBox.Clear();
+            BeneficiaryName_txtBox.autoTextBox.Clear();
+            USD_Value_TxtBox.Content = string.Empty;
+        }
+
+        private void SetCurrencyInputsEnabled(bool enabled)
+        {
+            Currency_Label.IsEnabled = enabled;
+            currency_comboBox.IsEnabled = enabled;
+        }
+
+        private static void SetItemsSourcePreservingSelection(ComboBox comboBox, object itemsSource)
+        {
+            object selectedValue = comboBox.SelectedValue;
+            comboBox.ItemsSource = itemsSource as System.Collections.IEnumerable;
+
+            if (selectedValue == null)
+            {
+                comboBox.SelectedIndex = -1;
+                return;
+            }
+
+            comboBox.SelectedValue = selectedValue;
+            if (comboBox.SelectedItem == null)
+                comboBox.SelectedIndex = -1;
         }
 
         private void ResetSelectionsAndText()
@@ -258,6 +304,7 @@ namespace Financial_WPF_App.Controls
             Original_AvgRate_comboBox.SelectedIndex = -1;
             USD_Value_TxtBox.Content = string.Empty;
             SetExpenseInputsEnabled(currency_comboBox.SelectedValue != null);
+            BudgetChanged?.Invoke(this, EventArgs.Empty);
             if (_budgetLines == null || Budget_comboBox.SelectedValue == null)
                 return;
 
@@ -340,8 +387,53 @@ namespace Financial_WPF_App.Controls
 
         private void IsReceipt_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (!_isConfiguring)
-                ReceiptNum_txtBox.Clear();
+            if (_isConfiguring)
+                return;
+
+            ReceiptNum_txtBox.Clear();
+            RefreshEmployeeItems();
+        }
+
+        private void Employee_comboBox_clear_Click(object sender, RoutedEventArgs e)
+        {
+            Employee_comboBox.SelectedIndex = -1;
+        }
+
+        public void SetActionDate(DateTime? actionDate)
+        {
+            _actionDate = actionDate;
+            RefreshEmployeeItems();
+        }
+
+        private void RefreshEmployeeItems()
+        {
+            Employee_comboBox.ItemsSource = null;
+            Employee_comboBox.SelectedIndex = -1;
+
+            bool isPayslip = IsReceipt_comboBox.SelectedItem != null &&
+                IsReceipt_comboBox.SelectedItem.ToString().Contains("payslip");
+            SetEmployeeInputsEnabled(isPayslip);
+            if (!isPayslip || !_actionDate.HasValue || _employees == null || _employees.Rows.Count == 0)
+                return;
+
+            string month = _actionDate.Value.ToString("yyyy/MM");
+            DataRow[] rows = _employees.AsEnumerable()
+                .Where(row => Convert.ToDateTime(row["Month"]).ToString("yyyy/MM") == month)
+                .ToArray();
+            Employee_comboBox.ItemsSource = rows.Length == 0
+                ? _employees.Clone().DefaultView
+                : rows.CopyToDataTable().DefaultView;
+        }
+
+        private void SetEmployeeInputsEnabled(bool enabled)
+        {
+            Employee_lable.IsEnabled = Employee_panel.IsEnabled = Employee_comboBox_clear.IsEnabled =
+                Employee_help.IsEnabled = enabled;
+            if (!enabled)
+            {
+                Employee_comboBox.ItemsSource = null;
+                Employee_comboBox.SelectedIndex = -1;
+            }
         }
 
         private void ReceiptNum_txtBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -394,6 +486,19 @@ namespace Financial_WPF_App.Controls
             }
         }
 
+        public int SelectedBudgetTypeId
+        {
+            get
+            {
+                if (_budgetLines == null || Budget_comboBox.SelectedValue == null)
+                    return -1;
+                DataRow[] rows = _budgetLines.Select("budget_ID = " + Convert.ToInt32(Budget_comboBox.SelectedValue));
+                return rows.Length > 0 && rows[0]["BudgetType_ID"] != DBNull.Value
+                    ? Convert.ToInt32(rows[0]["BudgetType_ID"])
+                    : -1;
+            }
+        }
+
         public bool DocumentTypeIsEnabled => Document_Label.IsEnabled;
 
         public int DocumentTypeSelectedIndex => IsReceipt_comboBox.SelectedIndex;
@@ -411,6 +516,20 @@ namespace Financial_WPF_App.Controls
         public bool DocumentNumberIsEnabled => ReceiptNum_txtBox.IsEnabled;
 
         public string DocumentNumber => ReceiptNum_txtBox.Text;
+
+        public bool EmployeeIsEnabled => Employee_lable.IsEnabled;
+
+        public int EmployeeSelectedIndex => Employee_comboBox.SelectedIndex;
+
+        public int EmployeeSalaryId
+        {
+            get
+            {
+                int id;
+                return Employee_comboBox.SelectedValue != null &&
+                    int.TryParse(Employee_comboBox.SelectedValue.ToString(), out id) ? id : -1;
+            }
+        }
 
         public bool OriginalAvgRateIsEnabled => Original_AvgRate_lable.IsEnabled;
 
@@ -435,6 +554,9 @@ namespace Financial_WPF_App.Controls
             Line_comboBox.SelectedIndex = -1;
             IsReceipt_comboBox.SelectedIndex = -1;
             ReceiptNum_txtBox.Clear();
+            Employee_comboBox.SelectedIndex = -1;
+            Employee_comboBox.ItemsSource = null;
+            SetEmployeeInputsEnabled(false);
             MircoProject_ID_autoSuggestionUserControl.autoTextBox.Clear();
             BeneficiaryName_txtBox.autoTextBox.Clear();
             USD_Value_TxtBox.Content = string.Empty;

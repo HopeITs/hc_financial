@@ -26,6 +26,7 @@ namespace Financial_WPF_App.Views
         private readonly Rate _rate = new Rate();
         private readonly Budget_Lines _budgetLines = new Budget_Lines();
         private readonly Beneficiary _beneficiary = new Beneficiary();
+        private readonly Employee _employee = new Employee();
         private readonly Main_Window_2 _mainWindow;
 
         private DataTable _tills;
@@ -53,6 +54,7 @@ namespace Financial_WPF_App.Views
             Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
             ActionDate_datepicker.SelectedDate = DateTime.Today;
             _expensesControl.CurrencyChanged += ExpensesControl_CurrencyChanged;
+            _expensesControl.BudgetChanged += ExpensesControl_BudgetChanged;
             _exchangeControl.CorrespondingTillChanged += ExchangeControl_CorrespondingTillChanged;
             _exchangeControl.ExchangeAccountChanged += ExchangeControl_ExchangeAccountChanged;
             Account_comboBox.IsEnabled = false;
@@ -256,7 +258,7 @@ namespace Financial_WPF_App.Views
             }
             else if (IsBudgetProject || IsMicroProject)
             {
-                if (_tillType == "SYR" && privileges.Outcome)
+                if (_tillType == "SYR" && privileges.Expand)
                     operations.Add(new OperationOption("Expenses"));
                 else if (_tillType == "USD" || _tillType == "EUR")
                 {
@@ -352,21 +354,41 @@ namespace Financial_WPF_App.Views
         private void ConfigureExpenses()
         {
             DataTable beneficiaries = IsMicroProject ? _beneficiary.Select("", _accountId.ToString(), "") : null;
+            DataTable employees = IsBudgetProject ? _employee.Select_Subproject_Monthly_Employee(_subprojectId) : null;
 
             _expensesControl.Configure(IsMicroProject,
                 _till.Select_All_TillTypes_Currency()?.DefaultView,
                 IsBudgetProject ? _budgetLines.Select_AllAvilableBudgetLines(_accountId) : null,
-                null, null, beneficiaries);
+                null, null, beneficiaries, employees, ActionDate_datepicker.SelectedDate,
+                requireProjectFieldsWithoutCurrency: IsSyrTill(_tillType));
             ExpensesControl_CurrencyChanged(this, EventArgs.Empty);
         }
 
         private void ExpensesControl_CurrencyChanged(object sender, EventArgs e)
         {
-            ClearCommonEntryFields();
             int currencyId = _expensesControl.SelectedCurrencyId;
-            _expensesControl.SetCashTills(FilterProjectCashTills(currencyId)?.DefaultView);
+            int effectiveCurrencyId = currencyId > 0 ? currencyId : GetTillTypeId(_tillType);
+            _expensesControl.SetCashTills(FilterProjectCashTills(effectiveCurrencyId)?.DefaultView);
+            RefreshExpenseAverageRates();
+        }
+
+        private void ExpensesControl_BudgetChanged(object sender, EventArgs e)
+        {
+            RefreshExpenseAverageRates();
+        }
+
+        private void RefreshExpenseDateDependentData()
+        {
+            _expensesControl.SetActionDate(ActionDate_datepicker.SelectedDate);
+            RefreshExpenseAverageRates();
+        }
+
+        private void RefreshExpenseAverageRates()
+        {
+            int currencyId = _expensesControl.SelectedCurrencyId;
             _expensesControl.SetAverageRates(currencyId > 0 && IsCurrency(currencyId, "SYR")
-                ? GetAvailableAverageRates()?.DefaultView : null);
+                ? GetAvailableAverageRates()?.DefaultView
+                : null);
         }
 
         private void ConfigureExchange()
@@ -485,13 +507,15 @@ namespace Financial_WPF_App.Views
         {
             if (_correspondingTills == null)
                 return null;
-            DataRow[] rows = _correspondingTills.AsEnumerable()
-                .Where(r =>
-                {
-                    string type = Convert.ToString(r["Type"]).ToUpperInvariant();
-                    return _tillType == "USD" ? type == "SYR" || type == "EUR" : type != _tillType;
-                }).ToArray();
-            return rows.Length == 0 ? _correspondingTills.Clone() : rows.CopyToDataTable();
+
+            OperationPrivileges privileges = FinancialAuthorizationService.GetOperationPrivileges(
+                Settings.Default.Role, _accountType, _tillType);
+            if (privileges.ExchangeToForeign)
+                return _correspondingTills;
+
+            DataRow[] syrRows = _correspondingTills.AsEnumerable().Where(r =>
+                string.Equals(Convert.ToString(r["Type"]), "SYR", StringComparison.OrdinalIgnoreCase)).ToArray();
+            return syrRows.Length == 0 ? _correspondingTills.Clone() : syrRows.CopyToDataTable();
         }
 
         private DataTable GetDonors() => _accountId > 0 ? _account.Select_Account_Donors(_accountId) : null;
@@ -505,20 +529,26 @@ namespace Financial_WPF_App.Views
             DataRow[] rows = rates.AsEnumerable().Where(r =>
                 (Convert.ToDateTime(r["BeginDate"]).Date <= date && Convert.ToDateTime(r["EndDate"]).Date >= date) ||
                 Convert.ToDecimal(r["Expenditures"]) < Convert.ToDecimal(r["Exchanged_Value"])).ToArray();
+            if (IsBudgetProject)
+            {
+                int budgetTypeId = _expensesControl.SelectedBudgetTypeId;
+                rows = budgetTypeId <= 0
+                    ? new DataRow[0]
+                    : rows.Where(r => Convert.ToInt32(r["fromtp_id"]) == budgetTypeId).ToArray();
+            }
             return rows.Length == 0 ? rates.Clone() : rows.CopyToDataTable();
         }
 
         /// <summary>
-        /// Origin Avg Rate for Budget/Micro Project exchange for a specific FromTill → ToTill pair.
-        /// Uses Select_AllAvilableRates (ToTill) then filters FromTill, matching the original rate model.
-        /// Returns an empty table when no rates exist for that pair (e.g. USD → EUR with none defined).
+        /// Origin Avg Rate for a Budget/Micro Project exchange Source Till -> Corresponding Till pair.
         /// </summary>
         private DataTable GetExchangeAverageRates(string fromTill, string toTill)
         {
             if (_accountId <= 0 || string.IsNullOrWhiteSpace(fromTill) || string.IsNullOrWhiteSpace(toTill))
                 return null;
 
-            // Select_AllAvilableRates filters by destination till type (ToTill column).
+            // Select_AllAvilableRates filters by ToTill; restrict the returned rows by FromTill
+            // so the ComboBox contains only rates for the currently selected exchange pair.
             DataTable rates = _rate.Select_AllAvilableRates(_accountId.ToString(), toTill, true);
             if (rates == null)
                 return null;
@@ -531,15 +561,15 @@ namespace Financial_WPF_App.Views
             if (pairRows.Length == 0)
                 return rates.Clone();
 
-            DataTable pairTable = pairRows.CopyToDataTable();
+            DataTable pairRates = pairRows.CopyToDataTable();
             if (ActionDate_datepicker.SelectedDate == null)
-                return pairTable;
+                return pairRates;
 
             DateTime date = ActionDate_datepicker.SelectedDate.Value.Date;
-            DataRow[] filtered = pairTable.AsEnumerable().Where(r =>
+            DataRow[] filtered = pairRates.AsEnumerable().Where(r =>
                 (Convert.ToDateTime(r["BeginDate"]).Date <= date && Convert.ToDateTime(r["EndDate"]).Date >= date) ||
                 Convert.ToDecimal(r["Expenditures"]) < Convert.ToDecimal(r["Exchanged_Value"])).ToArray();
-            return filtered.Length == 0 ? pairTable.Clone() : filtered.CopyToDataTable();
+            return filtered.Length == 0 ? pairRates.Clone() : filtered.CopyToDataTable();
         }
 
         private DataTable FilterProjectCashTills(int currencyId)
@@ -744,6 +774,8 @@ namespace Financial_WPF_App.Views
                 SourceFormName = "AddAction_Window",
                 ActionModel = new Models.Action(),
                 RateModel = _rate,
+                RequireExpenseCurrencySelection =
+                    (IsBudgetProject || IsMicroProject) && IsSyrTill(_tillType),
                 FocusCurrencySelection = () => _expensesControl.FocusCurrency()
             };
         }
@@ -788,6 +820,9 @@ namespace Financial_WPF_App.Views
                 fields.DocumentTypeItemText = _expensesControl.DocumentTypeItemText;
                 fields.DocumentNumberRequired = _expensesControl.DocumentNumberIsEnabled;
                 fields.DocumentNumber = _expensesControl.DocumentNumber;
+                fields.EmployeeRequired = _expensesControl.EmployeeIsEnabled;
+                fields.EmployeeSelectedIndex = _expensesControl.EmployeeSelectedIndex;
+                fields.EmployeeSalaryId = _expensesControl.EmployeeSalaryId;
                 fields.OriginalAvgRateRequired = _expensesControl.OriginalAvgRateIsEnabled;
                 fields.OriginalAvgRateSelectedIndex = _expensesControl.OriginalAvgRateSelectedIndex;
                 fields.OriginalRateId = _expensesControl.OriginalRateId;
@@ -806,12 +841,13 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
-                    // Budget/Micro Project: Cash Till, Corresponding Cash Till, Exchange Account,
-                    // and Exchange Cash Till remain enabled when applicable but are optional on Save.
+                    // Budget/Micro Project: source Cash Till remains optional. SYR destinations
+                    // require the corresponding Cash Till and, when an Exchange Account is used,
+                    // its Exchange Cash Till, matching the original save rules.
                     fields.CashAccountRequired = false;
-                    fields.ObserveCashAccountRequired = false;
+                    fields.ObserveCashAccountRequired = correspondingIsSyr;
                     fields.ExchangeAccountEnabled = _exchangeControl.ExchangeAccountIsEnabled;
-                    fields.ExchangeCashRequired = false;
+                    fields.ExchangeCashRequired = correspondingIsSyr;
                 }
 
                 fields.CashAccountSelectedIndex = _exchangeControl.CashAccountSelectedIndex;
@@ -860,7 +896,7 @@ namespace Financial_WPF_App.Views
         private void ActionDate_datepicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DynamicOperationContainer.Content == _expensesControl)
-                ExpensesControl_CurrencyChanged(this, EventArgs.Empty);
+                RefreshExpenseDateDependentData();
             else if (DynamicOperationContainer.Content == _exchangeControl && !IsExchangeAccount)
             {
                 string correspondingType = (_exchangeControl.SelectedCorrespondingTillType ?? string.Empty).Trim().ToUpperInvariant();

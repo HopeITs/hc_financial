@@ -270,8 +270,9 @@ namespace Financial_WPF_App.Controls
         public void SetAverageRates(object averageRates)
         {
             _isConfiguring = true;
-            Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
             Original_AvgRate_comboBox.SelectedIndex = -1;
+            Original_AvgRate_comboBox.ItemsSource = null;
+            Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
             _isConfiguring = false;
         }
 
@@ -344,7 +345,8 @@ namespace Financial_WPF_App.Controls
             ExchangeCash_lable.IsEnabled = ExchangeAcc_panel_Copy.IsEnabled = ExchangeCash_clear_btn.IsEnabled =
                 hasCorrespondingTill;
 
-            // Origin Avg Rate: enable for USD→SYR, USD→EUR, EUR→SYR; keep empty for EUR→USD.
+            // Project Origin Avg Rate describes the source funds' historical rate. The original
+            // Add Action exposes it for every valid foreign-currency exchange destination.
             bool enableOriginAvgRate = hasCorrespondingTill && ShouldEnableOriginAvgRate(_currentTillType, correspondingType);
             Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled =
                 Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled = enableOriginAvgRate;
@@ -362,18 +364,16 @@ namespace Financial_WPF_App.Controls
         }
 
         /// <summary>
-        /// Budget/Micro Project Origin Avg Rate pairs that should be available for selection.
-        /// EUR→USD remains empty (disabled).
+        /// Budget/Micro Project Origin Avg Rate is available only for supported source/destination
+        /// combinations. EUR source exchanges do not use an Origin Avg Rate.
+        /// Exchange-account mode exits before this rule is applied.
         /// </summary>
         public static bool ShouldEnableOriginAvgRate(string fromTill, string toTill)
         {
             string from = (fromTill ?? string.Empty).Trim().ToUpperInvariant();
             string to = (toTill ?? string.Empty).Trim().ToUpperInvariant();
-            if (from == "USD" && (to == "SYR" || to == "EUR"))
-                return true;
-            if (from == "EUR" && to == "SYR")
-                return true;
-            return false;
+            return !string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to) &&
+                from != to && from != "EUR";
         }
 
         public bool CashAccountIsEnabled => CashAccount_lable.IsEnabled;
