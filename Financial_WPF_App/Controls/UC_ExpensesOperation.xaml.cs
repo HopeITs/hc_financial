@@ -544,6 +544,48 @@ namespace Financial_WPF_App.Controls
             }
         }
 
+        public void LoadEditValues(int currencyId, int cashAccountId, int microProjectId, string beneficiaryName,
+            int budgetId, int categoryId, int budgetLineId, string documentType, string documentNumber,
+            int employeeSalaryId, int originalRateId)
+        {
+            if (!_isPersonalMode)
+                currency_comboBox.SelectedValue = currencyId > 0 ? (object)currencyId : null;
+
+            CashAccount_comboBox.SelectedValue = cashAccountId > 0 ? (object)cashAccountId : null;
+
+            if (budgetId > 0)
+                Budget_comboBox.SelectedValue = budgetId;
+            if (categoryId > 0)
+                Category_comboBox.SelectedValue = categoryId;
+            if (budgetLineId > 0)
+                Line_comboBox.SelectedValue = budgetLineId;
+
+            MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = microProjectId > 0
+                ? microProjectId.ToString()
+                : string.Empty;
+            BeneficiaryName_txtBox.autoTextBox.Text = beneficiaryName ?? string.Empty;
+            MircoProject_ID_autoSuggestionUserControl.CloseAutoSuggestionBox();
+            BeneficiaryName_txtBox.CloseAutoSuggestionBox();
+
+            if (string.Equals(documentType, "invoice", StringComparison.OrdinalIgnoreCase))
+                IsReceipt_comboBox.SelectedIndex = 0;
+            else if (string.Equals(documentType, "receipt", StringComparison.OrdinalIgnoreCase))
+                IsReceipt_comboBox.SelectedIndex = 1;
+            else if (string.Equals(documentType, "payslip", StringComparison.OrdinalIgnoreCase))
+                IsReceipt_comboBox.SelectedIndex = 2;
+            else
+                IsReceipt_comboBox.SelectedIndex = -1;
+
+            ReceiptNum_txtBox.Text = documentNumber ?? string.Empty;
+            Employee_comboBox.SelectedValue = employeeSalaryId > 0 ? (object)employeeSalaryId : null;
+            Original_AvgRate_comboBox.SelectedValue = originalRateId > 0 ? (object)originalRateId : null;
+        }
+
+        public void ApplyEditLock()
+        {
+            SetCurrencyInputsEnabled(false);
+        }
+
         public void ClearSaveFields()
         {
             _isConfiguring = true;

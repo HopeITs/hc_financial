@@ -96,6 +96,14 @@ namespace Financial_WPF_App.Controls
             }
         }
 
+        public void LoadEditValues(int donorId, int cashAccountId)
+        {
+            _isConfiguring = true;
+            Donor_comboBox.SelectedValue = donorId > 0 ? (object)donorId : null;
+            CashAccount_comboBox.SelectedValue = cashAccountId > 0 ? (object)cashAccountId : null;
+            _isConfiguring = false;
+        }
+
         public void ClearSaveFields()
         {
             _isConfiguring = true;

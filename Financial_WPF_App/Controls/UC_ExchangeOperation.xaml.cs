@@ -473,6 +473,34 @@ namespace Financial_WPF_App.Controls
 
         public string RateText => Rate_txtBox.Text;
 
+        public void LoadEditValues(int cashAccountId, int destinationTillId, int donorId,
+            int observeCashAccountId, int exchangeAccountId, int exchangeCashId,
+            int originalRateId, double rate, string amountText)
+        {
+            CashAccount_comboBox.SelectedValue = cashAccountId > 0 ? (object)cashAccountId : null;
+
+            // Setting the destination invokes the window refresh handlers synchronously, rebuilding
+            // the dependent Cash Till, Exchange Account, and Average Rate lists before selection.
+            DestinationTill_comboBox.SelectedValue = destinationTillId > 0 ? (object)destinationTillId : null;
+            Donor_comboBox.SelectedValue = donorId > 0 ? (object)donorId : null;
+            ObserveCashAccount_comboBox.SelectedValue = observeCashAccountId > 0 ? (object)observeCashAccountId : null;
+            ExchangeAcc_comboBox.SelectedValue = exchangeAccountId > 0 ? (object)exchangeAccountId : null;
+            ExchangeCash_comboBox.SelectedValue = exchangeCashId > 0 ? (object)exchangeCashId : null;
+            Original_AvgRate_comboBox.SelectedValue = originalRateId > 0 ? (object)originalRateId : null;
+            Rate_txtBox.Text = rate.ToString("N9");
+            UpdateExchangedValue(amountText);
+        }
+
+        public void ApplyEditLock()
+        {
+            CashAccount_lable.IsEnabled = CashAccount_panel.IsEnabled = CashAccount_clear_btn.IsEnabled = false;
+            DestinationTill_lable.IsEnabled = DestinationTill_panel.IsEnabled = DestinationTill_clear_btn.IsEnabled = false;
+            ObserveCashAccount_lable.IsEnabled = ObserveCashAccount_panel.IsEnabled = ObserveCashAccount_clear_btn.IsEnabled = false;
+            ExchangeAcc_lable.IsEnabled = ExchangeAcc_panel.IsEnabled = ExchangeAcc_clear_btn.IsEnabled =
+                ExchangeAcc_help.IsEnabled = false;
+            ExchangeCash_lable.IsEnabled = ExchangeAcc_panel_Copy.IsEnabled = ExchangeCash_clear_btn.IsEnabled = false;
+        }
+
         public void ClearSaveFields()
         {
             _isConfiguring = true;

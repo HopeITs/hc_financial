@@ -27,7 +27,9 @@ namespace Financial_WPF_App.Views
         private readonly Budget_Lines _budgetLines = new Budget_Lines();
         private readonly Beneficiary _beneficiary = new Beneficiary();
         private readonly Employee _employee = new Employee();
+        private readonly Models.Action _action = new Models.Action();
         private readonly Main_Window_2 _mainWindow;
+        private readonly Till_Window _parentTillWindow;
 
         private DataTable _tills;
         private DataTable _cashTills;
@@ -40,6 +42,11 @@ namespace Financial_WPF_App.Views
         private string _projectType = string.Empty;
         private string _tillType = string.Empty;
         private string _tillTypeForSave = string.Empty;
+        private int _actionId = -1;
+        private int _editSubprojectFilterId = -1;
+        private bool _approvedAction;
+        private bool _isEditMode;
+        private DataTable _editAction;
         private bool _isResetting;
         private string[] _attachmentPaths = new string[0];
         private OpenFileDialog _attachmentDialog;
@@ -49,6 +56,39 @@ namespace Financial_WPF_App.Views
         public AddAction_Window2(Main_Window_2 mainWindow)
         {
             _mainWindow = mainWindow ?? throw new ArgumentNullException(nameof(mainWindow));
+            InitializeWindow();
+            FillMainComboBoxes();
+        }
+
+        public AddAction_Window2(int accountId, bool isAdminAccount, string accountName, string accountType,
+            string category, int tillId, string tillType, int subprojectId, bool fromTillForm,
+            Main_Window_2 mainWindow, Till_Window parentTillWindow)
+        {
+            _mainWindow = mainWindow ?? throw new ArgumentNullException(nameof(mainWindow));
+            _parentTillWindow = parentTillWindow;
+
+            InitializeWindow();
+            FillMainComboBoxes();
+            InitializeNewTillContext(accountId, accountType, tillId, subprojectId);
+        }
+
+        public AddAction_Window2(int accountId, bool isAdminAccount, string accountName, string accountType,
+            string category, int tillId, string tillType, int actionId, int subprojectId,
+            bool fromTillForm, bool approvedAction, Main_Window_2 mainWindow, Till_Window parentTillWindow)
+        {
+            _mainWindow = mainWindow ?? throw new ArgumentNullException(nameof(mainWindow));
+            _actionId = actionId;
+            _editSubprojectFilterId = subprojectId;
+            _approvedAction = approvedAction;
+            _isEditMode = actionId > 0;
+
+            InitializeWindow();
+            FillMainComboBoxes();
+            InitializeEditContext(accountId, accountType, tillId, tillType, subprojectId);
+        }
+
+        private void InitializeWindow()
+        {
             InitializeComponent();
 
             Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
@@ -61,7 +101,158 @@ namespace Financial_WPF_App.Views
             Till_comboBox.IsEnabled = false;
             Type_comboBox.IsEnabled = false;
             SetCommonInputsEnabled(false);
-            FillMainComboBoxes();
+        }
+
+        private void InitializeEditContext(int accountId, string accountType, int tillId, string tillType, int subprojectId)
+        {
+            if (!_isEditMode)
+                throw new ArgumentException("A valid Action ID is required for edit mode.");
+
+            int projectId = string.Equals(accountType, "Project", StringComparison.OrdinalIgnoreCase)
+                ? subprojectId
+                : 0;
+            Subproject_comboBox.SelectedValue = projectId;
+            Account_comboBox.SelectedValue = accountId;
+            Till_comboBox.SelectedValue = tillId;
+
+            if (Account_comboBox.SelectedItem == null || Till_comboBox.SelectedItem == null)
+                throw new ArgumentException("This page will not open because the selected Action context could not be loaded.");
+
+            _editAction = _approvedAction
+                ? _action.Select(_actionId.ToString(), "", _editSubprojectFilterId.ToString(), true)
+                : _action.Select_action_not_approved(_actionId.ToString(), "", _editSubprojectFilterId.ToString(), true, false);
+
+            if (_editAction == null || _editAction.Rows.Count == 0)
+                throw new ArgumentException("This page will not open because the selected Action could not be loaded.");
+
+            PopulateEditAction(_editAction.Rows[0]);
+            ApplyEditLock();
+        }
+
+        private void InitializeNewTillContext(int accountId, string accountType, int tillId, int subprojectId)
+        {
+            int projectId = string.Equals(accountType, "Project", StringComparison.OrdinalIgnoreCase)
+                ? subprojectId
+                : 0;
+            Subproject_comboBox.SelectedValue = projectId;
+            Account_comboBox.SelectedValue = accountId;
+            Till_comboBox.SelectedValue = tillId;
+
+            if (Account_comboBox.SelectedItem == null || Till_comboBox.SelectedItem == null)
+                throw new ArgumentException("This page will not open because the selected Till context could not be loaded.");
+
+            Subproject_comboBox.IsEnabled = false;
+            Account_comboBox.IsEnabled = false;
+            Till_comboBox.IsEnabled = false;
+        }
+
+        private void PopulateEditAction(DataRow row)
+        {
+            string operation = ResolveEditOperation(row);
+            EnsureEditOperationAvailable(operation);
+
+            ActionDate_datepicker.SelectedDate = GetDate(row, "ActionDate");
+            Type_comboBox.SelectedValue = operation;
+            if (Type_comboBox.SelectedItem == null)
+                throw new ArgumentException("This Action type is not supported by Add Action 2.");
+
+            Amount_txtBox.Text = GetDouble(row, "Amount").ToString();
+            Notes_txtBox.Text = GetString(row, "Note");
+            E_Notes_txtBox.Text = GetString(row, "E_Note");
+
+            int donorId = GetInt(row, "Donor_ID");
+            int cashAccountId = GetInt(row, "CashAccount_ID");
+
+            if (operation == "Income")
+            {
+                _incomeControl.LoadEditValues(donorId, cashAccountId);
+            }
+            else if (operation == "Expenses")
+            {
+                int currencyId = GetInt(row, "Currency_TillType_ID");
+                if (currencyId <= 0 && !IsPersonalAccount)
+                    currencyId = GetTillTypeId(GetDouble(row, "Expandusd") != 0 ? "USD" : "SYR");
+
+                _expensesControl.LoadEditValues(currencyId, cashAccountId,
+                    GetInt(row, "MicroProject_ID"), GetString(row, "Name"),
+                    GetInt(row, "Budget_ID"), GetInt(row, "LineCategory_ID"), GetInt(row, "BudgetLine_ID"),
+                    GetString(row, "IsReceipt"), GetString(row, "ReceiptNote"),
+                    GetInt(row, "Employee_Salary_ID"), GetInt(row, "AvgRateID"));
+            }
+            else if (operation == "Exchange")
+            {
+                _exchangeControl.LoadEditValues(cashAccountId, GetInt(row, "ObserveTill_ID"), donorId,
+                    GetInt(row, "ObserveCashAccount_ID"), GetInt(row, "ExchangeAcc_ID"),
+                    GetInt(row, "Exchange_Cash_ID"), GetInt(row, "AvgRateID"),
+                    GetDouble(row, "Rate"), Amount_txtBox.Text);
+            }
+        }
+
+        private void EnsureEditOperationAvailable(string operation)
+        {
+            if (string.IsNullOrWhiteSpace(operation))
+                throw new ArgumentException("This Action type is not supported by Add Action 2.");
+
+            var operations = Type_comboBox.Items.Cast<OperationOption>().ToList();
+            if (!operations.Any(item => string.Equals(item.Value, operation, StringComparison.Ordinal)))
+            {
+                operations.Add(new OperationOption(operation));
+                Type_comboBox.ItemsSource = operations;
+                Type_comboBox.DisplayMemberPath = "Text";
+                Type_comboBox.SelectedValuePath = "Value";
+            }
+        }
+
+        private void ApplyEditLock()
+        {
+            Subproject_comboBox.IsEnabled = false;
+            Account_comboBox.IsEnabled = false;
+            Till_comboBox.IsEnabled = false;
+            Type_comboBox.IsEnabled = false;
+
+            if (DynamicOperationContainer.Content == _expensesControl)
+                _expensesControl.ApplyEditLock();
+            else if (DynamicOperationContainer.Content == _exchangeControl)
+                _exchangeControl.ApplyEditLock();
+        }
+
+        private static string ResolveEditOperation(DataRow row)
+        {
+            if (GetDouble(row, "Exchange") != 0)
+                return "Exchange";
+            if (GetDouble(row, "Expand") != 0 || GetDouble(row, "Expandusd") != 0)
+                return "Expenses";
+            if (GetDouble(row, "Income") != 0 || GetDouble(row, "Incomeusd") != 0)
+                return "Income";
+            return string.Empty;
+        }
+
+        private static int GetInt(DataRow row, string column)
+        {
+            return row.Table.Columns.Contains(column) && row[column] != DBNull.Value
+                ? Convert.ToInt32(row[column])
+                : -1;
+        }
+
+        private static double GetDouble(DataRow row, string column)
+        {
+            return row.Table.Columns.Contains(column) && row[column] != DBNull.Value
+                ? Convert.ToDouble(row[column])
+                : 0;
+        }
+
+        private static string GetString(DataRow row, string column)
+        {
+            return row.Table.Columns.Contains(column) && row[column] != DBNull.Value
+                ? Convert.ToString(row[column])
+                : string.Empty;
+        }
+
+        private static DateTime GetDate(DataRow row, string column)
+        {
+            return row.Table.Columns.Contains(column) && row[column] != DBNull.Value
+                ? Convert.ToDateTime(row[column])
+                : DateTime.Today;
         }
 
         private void FillMainComboBoxes()
@@ -386,7 +577,8 @@ namespace Financial_WPF_App.Views
         private void RefreshExpenseAverageRates()
         {
             int currencyId = _expensesControl.SelectedCurrencyId;
-            _expensesControl.SetAverageRates(currencyId > 0 && IsCurrency(currencyId, "SYR")
+            _expensesControl.SetAverageRates(IsSyrTill(_tillType) &&
+                currencyId > 0 && IsCurrency(currencyId, "SYR")
                 ? GetAvailableAverageRates()?.DefaultView
                 : null);
         }
@@ -444,7 +636,7 @@ namespace Financial_WPF_App.Views
 
             if (UC_ExchangeOperation.ShouldEnableOriginAvgRate(_tillType, correspondingTypeNormalized))
                 _exchangeControl.SetAverageRates(
-                    GetExchangeAverageRates(_tillType, correspondingTypeNormalized)?.DefaultView);
+                    GetOriginExchangeAverageRates(_tillType, correspondingTypeNormalized)?.DefaultView);
             else
                 _exchangeControl.SetAverageRates(null);
         }
@@ -526,9 +718,11 @@ namespace Financial_WPF_App.Views
             if (rates == null || rates.Rows.Count == 0 || ActionDate_datepicker.SelectedDate == null)
                 return rates;
             DateTime date = ActionDate_datepicker.SelectedDate.Value.Date;
+            int currentRateId = GetCurrentEditRateId();
             DataRow[] rows = rates.AsEnumerable().Where(r =>
                 (Convert.ToDateTime(r["BeginDate"]).Date <= date && Convert.ToDateTime(r["EndDate"]).Date >= date) ||
-                Convert.ToDecimal(r["Expenditures"]) < Convert.ToDecimal(r["Exchanged_Value"])).ToArray();
+                Convert.ToDecimal(r["Expenditures"]) < Convert.ToDecimal(r["Exchanged_Value"]) ||
+                (currentRateId > 0 && Convert.ToInt32(r["ID"]) == currentRateId)).ToArray();
             if (IsBudgetProject)
             {
                 int budgetTypeId = _expensesControl.SelectedBudgetTypeId;
@@ -566,10 +760,28 @@ namespace Financial_WPF_App.Views
                 return pairRates;
 
             DateTime date = ActionDate_datepicker.SelectedDate.Value.Date;
+            int currentRateId = GetCurrentEditRateId();
             DataRow[] filtered = pairRates.AsEnumerable().Where(r =>
                 (Convert.ToDateTime(r["BeginDate"]).Date <= date && Convert.ToDateTime(r["EndDate"]).Date >= date) ||
-                Convert.ToDecimal(r["Expenditures"]) < Convert.ToDecimal(r["Exchanged_Value"])).ToArray();
+                Convert.ToDecimal(r["Expenditures"]) < Convert.ToDecimal(r["Exchanged_Value"]) ||
+                (currentRateId > 0 && Convert.ToInt32(r["ID"]) == currentRateId)).ToArray();
             return filtered.Length == 0 ? pairRates.Clone() : filtered.CopyToDataTable();
+        }
+
+        private DataTable GetOriginExchangeAverageRates(string sourceTill, string correspondingTill)
+        {
+            if (string.Equals(sourceTill, "USD", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(correspondingTill, "SYR", StringComparison.OrdinalIgnoreCase))
+                return GetExchangeAverageRates("EUR", "USD");
+
+            return GetExchangeAverageRates(sourceTill, correspondingTill);
+        }
+
+        private int GetCurrentEditRateId()
+        {
+            return _isEditMode && _editAction != null && _editAction.Rows.Count > 0
+                ? GetInt(_editAction.Rows[0], "Rate_ID")
+                : -1;
         }
 
         private DataTable FilterProjectCashTills(int currencyId)
@@ -755,7 +967,8 @@ namespace Financial_WPF_App.Views
         {
             return new AddActionSaveContext
             {
-                ActionId = -1,
+                ActionId = _actionId,
+                ApprovedAction = _approvedAction,
                 OperationTypeText = Convert.ToString(Type_comboBox.SelectedValue),
                 // Save rules key off Account_Type values used by original Add Action ("Project", "Exchange", "Personal").
                 AccountType = (IsBudgetProject || IsMicroProject) ? "Project" : _accountType,
@@ -772,7 +985,7 @@ namespace Financial_WPF_App.Views
                 Tills = _tills,
                 AttachmentPaths = _attachmentPaths,
                 SourceFormName = "AddAction_Window",
-                ActionModel = new Models.Action(),
+                ActionModel = _action,
                 RateModel = _rate,
                 RequireExpenseCurrencySelection =
                     (IsBudgetProject || IsMicroProject) && IsSyrTill(_tillType),
@@ -796,6 +1009,8 @@ namespace Financial_WPF_App.Views
                 fields.CashAccountId = _incomeControl.CashAccountId;
                 if (IsPersonalAccount)
                     fields.SelectedCurrencyId = GetTillTypeId(_tillType);
+                else if (_isEditMode && _editAction != null && _editAction.Rows.Count > 0)
+                    fields.SelectedCurrencyId = GetInt(_editAction.Rows[0], "Currency_TillType_ID");
             }
             else if (operation == "Expenses")
             {
@@ -886,7 +1101,33 @@ namespace Financial_WPF_App.Views
             Save_btn.IsEnabled = enabled;
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e) => FillMainComboBoxes();
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_isEditMode)
+            {
+                if (_parentTillWindow != null)
+                {
+                    int newContextAccountId = _accountId;
+                    int newContextTillId = _tillId;
+                    int newContextSubprojectId = _subprojectId;
+                    string newContextAccountType = _accountType;
+                    FillMainComboBoxes();
+                    InitializeNewTillContext(newContextAccountId, newContextAccountType,
+                        newContextTillId, newContextSubprojectId);
+                    return;
+                }
+
+                FillMainComboBoxes();
+                return;
+            }
+
+            int accountId = _accountId;
+            int tillId = _tillId;
+            string accountType = _accountType;
+            string tillType = _tillTypeForSave;
+            FillMainComboBoxes();
+            InitializeEditContext(accountId, accountType, tillId, tillType, _editSubprojectFilterId);
+        }
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e) { if (e.LeftButton == MouseButtonState.Pressed) DragMove(); }
         private void Amount_txtBox_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -901,7 +1142,7 @@ namespace Financial_WPF_App.Views
             {
                 string correspondingType = (_exchangeControl.SelectedCorrespondingTillType ?? string.Empty).Trim().ToUpperInvariant();
                 if (UC_ExchangeOperation.ShouldEnableOriginAvgRate(_tillType, correspondingType))
-                    _exchangeControl.SetAverageRates(GetExchangeAverageRates(_tillType, correspondingType)?.DefaultView);
+                    _exchangeControl.SetAverageRates(GetOriginExchangeAverageRates(_tillType, correspondingType)?.DefaultView);
                 else
                     _exchangeControl.SetAverageRates(null);
             }
@@ -956,7 +1197,16 @@ namespace Financial_WPF_App.Views
                     return;
 
                 if (result.Success)
-                    ClearAfterSave();
+                {
+                    if (result.IsEditSave)
+                        Close();
+                    else
+                    {
+                        ClearAfterSave();
+                        if (_parentTillWindow != null)
+                            _parentTillWindow.Load_Data();
+                    }
+                }
             }
             catch (Exception ex)
             {
