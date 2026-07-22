@@ -631,8 +631,9 @@ namespace Financial_WPF_App.Models
 
                        GROUP_CONCAT(DISTINCT COALESCE(`d_budget`.`Name`, `d_account`.`Name`) SEPARATOR ', ') AS `Donor`,
 
-                        linecategory.Name as `Line Type`, 
+                        linecategory.Name as `Line Type`,
                         line.Name as `Line`,
+                        linecategorytype.Name as `Budget Line Type`,
                         action.ActionDate,
                         DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth',
                         DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
@@ -678,6 +679,7 @@ END AS `USD_Value`,
                         LEFT JOIN donor `d_budget` ON budget_donor.donor_id = `d_budget`.id
 
                         LEFT JOIN linecategory on linecategory.id = line.Category_ID
+                        LEFT JOIN linecategorytype on linecategorytype.id = linecategory.Type_ID
                         LEFT JOIN cashaccount on cashaccount.id = action.CashAccount_ID
                         LEFT JOIN cashaccount obs_cashaccount on obs_cashaccount.id = action.ObserveCashAccount_ID
                         LEFT JOIN all_avgrates on action.Rate_ID = all_avgrates.id

@@ -338,7 +338,6 @@
     <Compile Include="Helper\InputValidationHelper.cs" />
     <Compile Include="Helper\MouseClickComboBoxBehavior .cs" />
     <Compile Include="Helper\DataViewContainsFilterComboBoxBehavior.cs" />
-
     <Compile Include="Helper\MultiAttachments_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiBeneficiares_CustomCopyPaste.cs" />
     <Compile Include="Helper\MultiBudgetLines_CustomCopyPaste.cs" />
@@ -560,7 +559,6 @@
     <Compile Include="Views\SubProject_Window.xaml.cs">
       <DependentUpon>SubProject_Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UC_ExpensesOperation.xaml.cs" />
     <Compile Include="Views\User_Window.xaml.cs">
       <DependentUpon>User_Window.xaml</DependentUpon>
     </Compile>

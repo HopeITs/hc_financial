@@ -196,6 +196,7 @@ PopupAnimation="Fade">
 
                         <syncfusion:GridTextColumn x:Name="LineType_DataGridColumn" HeaderText="Line Type"  MappingName="Line Type" />
                         <syncfusion:GridTextColumn x:Name="Line_DataGridColumn" HeaderText="Line"  MappingName="Line" />
+                        <syncfusion:GridTextColumn x:Name="BudgetLineType_DataGridColumn" HeaderText="Budget Line Type" MappingName="Budget Line Type" />
                         <syncfusion:GridDateTimeColumn x:Name="Action_DataGridColumn" HeaderText="Operation Date" MappingName="ActionDate"
                 CustomPattern="dd/MM/yyyy" Pattern="CustomPattern"/>
                         <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>

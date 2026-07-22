@@ -576,6 +576,8 @@ namespace Financial_WPF_App
 
         #region TreeView
 
+        private List<TreeViewItemState> _treeSearchExpansionState;
+
         public void Fill_TreeView(bool keepExpanded)
         {
             AllAccounts_ds = c.Select_Tree_View();
@@ -590,6 +592,9 @@ namespace Financial_WPF_App
                     TreeViewExpandedState.RestoreTreeViewExpandedState(MyTreeView, expandedItems);
 
                 }
+
+                if (!string.IsNullOrWhiteSpace(TreeSearch_txtBox.Text))
+                    TreeSearch_txtBox_TextChanged(TreeSearch_txtBox, null);
 
             }
             RClicked_ID = -1; RClicked_Name = "";
@@ -1112,6 +1117,52 @@ namespace Financial_WPF_App
                 MyTreeView.Items.Add(fiscalbonds);
 
             Fill_Approval_Cities();
+        }
+
+        private void TreeSearch_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchText = (TreeSearch_txtBox.Text ?? string.Empty).Trim();
+            if (TreeSearchPlaceholder != null)
+            {
+                TreeSearchPlaceholder.Visibility = string.IsNullOrEmpty(searchText)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+
+            if (!string.IsNullOrEmpty(searchText) && _treeSearchExpansionState == null)
+                _treeSearchExpansionState = TreeViewExpandedState.GetExpandedItems(MyTreeView);
+
+            foreach (TreeViewItem item in MyTreeView.Items.OfType<TreeViewItem>())
+                FilterTreeItem(item, searchText);
+
+            if (string.IsNullOrEmpty(searchText) && _treeSearchExpansionState != null)
+            {
+                TreeViewExpandedState.RestoreTreeViewExpandedState(MyTreeView, _treeSearchExpansionState);
+                _treeSearchExpansionState = null;
+            }
+        }
+
+        private static bool FilterTreeItem(TreeViewItem item, string searchText)
+        {
+            if (string.IsNullOrEmpty(searchText))
+            {
+                item.Visibility = Visibility.Visible;
+                foreach (TreeViewItem child in item.Items.OfType<TreeViewItem>())
+                    FilterTreeItem(child, searchText);
+                return true;
+            }
+
+            bool childMatches = false;
+            foreach (TreeViewItem child in item.Items.OfType<TreeViewItem>())
+                childMatches |= FilterTreeItem(child, searchText);
+
+            bool itemMatches = HeaderTextExtractor.ExtractText(item.Header)
+                .IndexOf(searchText, StringComparison.CurrentCultureIgnoreCase) >= 0;
+            bool isVisible = itemMatches || childMatches;
+            item.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+            if (childMatches)
+                item.IsExpanded = true;
+            return isVisible;
         }
 
 

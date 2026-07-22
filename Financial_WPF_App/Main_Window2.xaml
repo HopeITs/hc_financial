@@ -569,7 +569,36 @@
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity=".3" Color="{StaticResource Color_MidGray}" />
                             </Border.Effect>
-                            <TreeView ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Margin="5,5,5,8" Height="30">
+                                    <TextBox x:Name="TreeSearch_txtBox"
+                                             Style="{DynamicResource FloatingBoxesStyle}"
+                                             Padding="28,0,8,0"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalContentAlignment="Center"
+                                             ToolTip="Search projects and accounts"
+                                             ToolTipService.InitialShowDelay="100"
+                                             TextChanged="TreeSearch_txtBox_TextChanged"/>
+                                    <Image Source="/Images/Icons/Search.png"
+                                           Width="13" Height="13"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Margin="9,0,0,0"
+                                           IsHitTestVisible="False"
+                                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    <TextBlock x:Name="TreeSearchPlaceholder"
+                                               Text="Search"
+                                               Foreground="{StaticResource DarkGray}"
+                                               FontSize="13"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               IsHitTestVisible="False"/>
+                                </Grid>
+                                <TreeView Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Visible"
                       ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource {x:Type TreeViewItem}}" x:Name="MyTreeView" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                       PreviewMouseRightButtonDown="MyTreeView_PreviewMouseRightButtonDown"
                       FontFamily="Rubik" FontSize="14" Foreground="{StaticResource MidGray}"
@@ -587,7 +616,8 @@
                                         </MenuItem>
                                     </ContextMenu>
                                 </TreeView.ContextMenu>
-                            </TreeView>
+                                </TreeView>
+                            </Grid>
                         </Border>
                     </Grid>
                 </Expander>

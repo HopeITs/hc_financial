@@ -243,15 +243,16 @@ namespace Financial_WPF_App.Helper
             }
             else if (e.Column.ColumnName == "Currency")
             {
-                if (string.IsNullOrWhiteSpace(e.ProposedValue.ToString()))
+                string currency = (e.ProposedValue?.ToString() ?? string.Empty).Trim().ToUpperInvariant();
+                if (currency != "SYR" && currency != "USD")
                 {
                     Login.MultiBeneficiary_AnyError = true;
-                    e.Row.SetColumnError(e.Column.ColumnName, "This cell can not be empty.");
+                    e.Row.SetColumnError(e.Column.ColumnName, "Currency must be USD or SYR.");
                     e.Row.RowError = "There are errors in this row.";
                 }
                 else
                 {
-                    _Currency = e.ProposedValue.ToString();
+                    _Currency = currency;
                 }
             }
             else if (e.Column.ColumnName == "Exchange Rate")
