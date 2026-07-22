@@ -1569,13 +1569,17 @@ namespace Financial_WPF_App.Helper
                 Login.MultiAction_sc.Parameters.AddWithValue("@Account_ID" + k, _Account_ID);
             }
 
-            if (_currency_tilltype_id == -1)
+            int currencyTilltypeIdForSave = string.Equals(_Account_Type, "Personal", StringComparison.OrdinalIgnoreCase)
+                ? -1
+                : _currency_tilltype_id;
+
+            if (currencyTilltypeIdForSave == -1)
             {
                 Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, DBNull.Value);
             }
             else
             {
-                Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, _currency_tilltype_id);
+                Login.MultiAction_sc.Parameters.AddWithValue("@Currency_tilltype_id" + k, currencyTilltypeIdForSave);
             }
 
             string Todaydate = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");

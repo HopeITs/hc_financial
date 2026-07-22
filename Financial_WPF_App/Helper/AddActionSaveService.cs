@@ -331,7 +331,10 @@ namespace Financial_WPF_App.Helper
             }
 
             int selectedCurrencyId = op.SelectedCurrencyId;
-            int currencyTilltypeId = AddActionSaveHelpers.GetCurrencyTilltypeIdForAddActionSave(insertedValue, context.TillType, selectedCurrencyId);
+            bool isPersonalAccount = string.Equals(context.AccountType, "Personal", StringComparison.OrdinalIgnoreCase);
+            int currencyTilltypeId = isPersonalAccount
+                ? -1
+                : AddActionSaveHelpers.GetCurrencyTilltypeIdForAddActionSave(insertedValue, context.TillType, selectedCurrencyId);
             bool isSpecialCase = insertedValue == "E" &&
                                  !string.IsNullOrEmpty(context.TillType) &&
                                  context.TillType.ToLower() == "syr" &&
