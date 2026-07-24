@@ -76,19 +76,7 @@ namespace Financial_WPF_App.Helper
                     return result;
                 }
             }
-            else if (insertedValue == "Ex")
-            {
-                if (context.AccountType == "Project")
-                {
-                    if (!AddActionSaveHelpers.CheckAvgRate(context.RateModel, context.AccountId.ToString(),
-                            (DateTime)context.ActionDate, context.TillType, op.DestinationTillDisplayText))
-                    {
-                        MessageBox.Show("Please ensure that there is at least one AvgRate that matches the conversion currency and extends for a period that includes the transaction date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        result.ValidationFailed = true;
-                        return result;
-                    }
-                }
-            }
+            // Project Exchange AvgRate availability is checked after Amount/Date validation below.
 
             if (string.IsNullOrEmpty(context.AmountText))
             {
@@ -97,7 +85,12 @@ namespace Financial_WPF_App.Helper
                 return result;
             }
 
-            double.TryParse(context.AmountText, out amount);
+            if (!double.TryParse(context.AmountText, out amount))
+            {
+                MessageBox.Show("Please make sure to enter a valid amount.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                result.ValidationFailed = true;
+                return result;
+            }
 
             if (context.ActionDate == null)
             {
@@ -107,6 +100,29 @@ namespace Financial_WPF_App.Helper
             }
 
             actionDate = context.ActionDate.Value.ToString("yyyy/MM/dd");
+
+            if (insertedValue == "Ex")
+            {
+                bool projectOriginAvgRateRequired = context.AccountType == "Project" &&
+                    AddActionSaveHelpers.IsProjectExchangeOriginAvgRateRequired(
+                        context.TillType, op.CorrespondingTillType);
+
+                if (projectOriginAvgRateRequired)
+                {
+                    string rateFromTill;
+                    string rateToTill;
+                    AddActionSaveHelpers.GetProjectExchangeOriginAvgRatePair(
+                        context.TillType, op.CorrespondingTillType, out rateFromTill, out rateToTill);
+
+                    if (!AddActionSaveHelpers.CheckAvgRate(context.RateModel, context.AccountId.ToString(),
+                            context.ActionDate.Value, rateFromTill, rateToTill))
+                    {
+                        MessageBox.Show("Please ensure that there is at least one AvgRate that matches the conversion currency and extends for a period that includes the transaction date.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                        result.ValidationFailed = true;
+                        return result;
+                    }
+                }
+            }
 
             if (op.CashAccountRequired && op.CashAccountSelectedIndex == -1)
             {
@@ -190,33 +206,29 @@ namespace Financial_WPF_App.Helper
                 employeeSalaryId = op.EmployeeSalaryId;
             }
 
-            if (op.OriginalAvgRateRequired)
+            if (op.OriginalAvgRateRequired && op.OriginalAvgRateSelectedIndex == -1)
             {
-                if (op.OriginalAvgRateSelectedIndex == -1)
-                {
-                    // Original: required for Project + SYR till.
-                    // Also required for Project USD → SYR exchange (requested Budget/Micro Project rule).
-                    bool projectSyrTill = context.AccountType == "Project" &&
-                        !string.IsNullOrEmpty(context.TillType) &&
-                        context.TillType.Equals("syr", StringComparison.OrdinalIgnoreCase);
-                    bool projectUsdToSyr = context.AccountType == "Project" &&
-                        !string.IsNullOrEmpty(context.TillType) &&
-                        context.TillType.Equals("usd", StringComparison.OrdinalIgnoreCase) &&
-                        !string.IsNullOrEmpty(op.CorrespondingTillType) &&
-                        op.CorrespondingTillType.Equals("syr", StringComparison.OrdinalIgnoreCase);
+                // Project SYR expenses retain the original requirement. Project exchanges use
+                // the pair-based required rule (USD→SYR is optional but may still be offered).
+                bool projectSyrExpense = insertedValue == "E" && context.AccountType == "Project" &&
+                    !string.IsNullOrEmpty(context.TillType) &&
+                    context.TillType.Equals("syr", StringComparison.OrdinalIgnoreCase);
+                bool projectExchangeOriginAvgRate = insertedValue == "Ex" &&
+                    context.AccountType == "Project" &&
+                    AddActionSaveHelpers.IsProjectExchangeOriginAvgRateRequired(
+                        context.TillType, op.CorrespondingTillType);
 
-                    if (projectSyrTill || projectUsdToSyr)
-                    {
-                        MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
-                        result.ValidationFailed = true;
-                        return result;
-                    }
-                }
-                else
+                if (projectSyrExpense || projectExchangeOriginAvgRate)
                 {
-                    originalRateId = op.OriginalRateId;
+                    MessageBox.Show("Please make sure to select the origin Avg rate", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                    result.ValidationFailed = true;
+                    return result;
                 }
             }
+
+            // Persist a selected Origin Avg Rate even when the field is optional (e.g. USD→SYR).
+            if (op.OriginalAvgRateSelectedIndex != -1)
+                originalRateId = op.OriginalRateId;
 
             if (op.DonorRequired)
             {

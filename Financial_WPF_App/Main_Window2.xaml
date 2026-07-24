@@ -473,10 +473,10 @@
                             <MenuItem x:Name="Approval_MenuItem" Header="Approval" Style="{StaticResource MenuItemStyle}" DataContext="{Binding Source={StaticResource MenuIcon4}}" VerticalAlignment="Bottom"/>
                             <!-- MenuItem with Submenu (Accounting Entries) -->
                             <MenuItem x:Name="Accounting_Entries_MenuItem" Header="Accounting Entries" Style="{StaticResource MenuItemStyle}" DataContext="{Binding Source={StaticResource MenuIcon5}}" VerticalAlignment="Bottom">
-                                <MenuItem Header="Single Entry" Click="Single_Entry_MenuItemAdv_Click"/>
+                                <MenuItem Header="Single Entry" Click="NEW_SINGLE_ENTRY_Click"/>
                                 <MenuItem Header="Multi Entry (From Excel)" Click="Multi_Entry_MenuItemAdv_Click"/>
                                 <MenuItem Header="Multi Attachments (From Excel)" Click="MenuItemAdv_Click"/>
-                                <MenuItem Header="New Single Entry" Click="NEW_SINGLE_ENTRY_Click"/>
+                               <!-- <MenuItem Header="New Single Entry" Click="NEW_SINGLE_ENTRY_Click"/> -->
                             </MenuItem>
 
                             <!-- Regular MenuItem -->

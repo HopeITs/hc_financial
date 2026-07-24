@@ -29,6 +29,10 @@ namespace Financial_WPF_App.Controls
         private bool _isPersonalMode;
         private bool _requireProjectFieldsWithoutCurrency;
         private DateTime? _actionDate;
+        private string _amountText = string.Empty;
+        private double _expandature;
+        private double _usdValue;
+        private DataTable _rateTable;
         public event EventHandler CurrencyChanged;
         public event EventHandler BudgetChanged;
 
@@ -86,6 +90,7 @@ namespace Financial_WPF_App.Controls
                 Budget_comboBox.ItemsSource = new System.Data.DataView(_budgetLines).ToTable(true, "budget_ID", "budget_Name").DefaultView;
             CashAccount_comboBox.ItemsSource = cashTills as System.Collections.IEnumerable;
             Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
+            _rateTable = (averageRates as DataView)?.Table;
 
             var microProjectNumbers = new List<string>();
             var beneficiaryNames = new List<string>();
@@ -109,6 +114,8 @@ namespace Financial_WPF_App.Controls
             SetOriginAverageRateEnabled(false);
             payslip_ComboBoxItem.Visibility = !_isMicroProject ? Visibility.Visible : Visibility.Collapsed;
             SetEmployeeInputsEnabled(false);
+            USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = true;
+            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Visible;
             _isConfiguring = false;
         }
 
@@ -133,7 +140,8 @@ namespace Financial_WPF_App.Controls
             BeneficiaryName_lable.IsEnabled = BeneficiaryName_txtBox.IsEnabled = false;
             Original_AvgRate_lable.IsEnabled = Original_AvgRate_comboBox.IsEnabled =
                 Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled = false;
-            USD_Value_lable.IsEnabled = false;
+            USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = false;
+            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Collapsed;
 
             CashAccount_comboBox.ItemsSource = cashTills as System.Collections.IEnumerable;
             CashAccount_comboBox.SelectedIndex = -1;
@@ -155,7 +163,15 @@ namespace Financial_WPF_App.Controls
 
         public void SetAverageRates(object averageRates)
         {
+            _rateTable = (averageRates as DataView)?.Table;
             SetItemsSourcePreservingSelection(Original_AvgRate_comboBox, averageRates);
+            CalcUsdValue();
+        }
+
+        public void UpdateValue(string amountText)
+        {
+            _amountText = amountText ?? string.Empty;
+            CalcUsdValue();
         }
 
         public void ResetAll()
@@ -165,6 +181,7 @@ namespace Financial_WPF_App.Controls
             ResetSelectionsAndText();
             SetAllControlsEnabled(false);
             _isConfiguring = false;
+            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Collapsed;
         }
 
         private void SetAllControlsEnabled(bool enabled)
@@ -181,7 +198,7 @@ namespace Financial_WPF_App.Controls
                 Original_AvgRate_clear_btn.IsEnabled = Original_AvgRate_help.IsEnabled = enabled;
             Employee_lable.IsEnabled = Employee_panel.IsEnabled = Employee_comboBox_clear.IsEnabled =
                 Employee_help.IsEnabled = enabled;
-            USD_Value_lable.IsEnabled = enabled;
+            USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = enabled;
         }
 
         private void SetExpenseInputsEnabled(bool currencySelected)
@@ -310,7 +327,11 @@ namespace Financial_WPF_App.Controls
 
             var rows = _budgetLines.Select("budget_ID = " + Convert.ToInt32(Budget_comboBox.SelectedValue));
             if (rows.Length > 0)
-                Category_comboBox.ItemsSource = rows.CopyToDataTable().DefaultView.ToTable(true, "linecategory_ID", "linecategory_Name").DefaultView;
+            {
+                DataTable categories = rows.CopyToDataTable().DefaultView
+                    .ToTable(true, "linecategory_ID", "linecategory_Name");
+                Category_comboBox.ItemsSource = categories.DefaultView;
+            }
         }
 
         private void Budget_comboBox_clear_Click(object sender, RoutedEventArgs e)
@@ -444,7 +465,28 @@ namespace Financial_WPF_App.Controls
         private void Original_AvgRate_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (!_isConfiguring)
-                USD_Value_TxtBox.Content = string.Empty;
+                CalcUsdValue();
+        }
+
+        private void CalcUsdValue()
+        {
+            if (_amountText != "" && Original_AvgRate_comboBox.SelectedIndex != -1 && _rateTable != null)
+            {
+                int rateId = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue.ToString());
+                DataRow[] rows = _rateTable.Select("ID=" + rateId);
+                if (rows.Length > 0)
+                {
+                    double avgRate = rows[0].Field<double>("Value");
+                    double.TryParse(_amountText, out _expandature);
+                    _usdValue = _expandature / avgRate;
+                    USD_Value_TxtBox.Content = _usdValue.ToString();
+                }
+            }
+            else
+            {
+                _usdValue = 0;
+                USD_Value_TxtBox.Content = "";
+            }
         }
 
         private void Avgrate_clear_btn_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -579,6 +621,7 @@ namespace Financial_WPF_App.Controls
             ReceiptNum_txtBox.Text = documentNumber ?? string.Empty;
             Employee_comboBox.SelectedValue = employeeSalaryId > 0 ? (object)employeeSalaryId : null;
             Original_AvgRate_comboBox.SelectedValue = originalRateId > 0 ? (object)originalRateId : null;
+            CalcUsdValue();
         }
 
         public void ApplyEditLock()

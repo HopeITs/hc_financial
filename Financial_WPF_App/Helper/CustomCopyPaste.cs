@@ -17,7 +17,6 @@ namespace Financial_WPF_App.Helper
     public class CustomCopyPaste : GridCutCopyPaste
     {
         private const int UsdCurrencyTilltypeId = 2;
-        private const int SyrCurrencyTilltypeId = 4;
 
         public event EventHandler PasteCompleted;
         private DataTable _all_Original_AvgRate_dt, _all_AvgRate_dt, _all_b_dt, _all_t_dt, _all_ExAcc_dt, _all_Accounts_dt, _all_Lines_dt, _all_budgets_dt, _all_cashAccounts_dt, _all_Donors_dt, _all_Employee_dt, _all_Tills_dt, _currency_dt;
@@ -223,17 +222,6 @@ namespace Financial_WPF_App.Helper
         private static string NormalizeLookupName(string value)
         {
             return (value ?? "").Trim().ToLowerInvariant();
-        }
-
-        private void ApplyDefaultCurrencyTilltypeForExpenseFromSyr()
-        {
-            if (_inserted_value == "E" &&
-                !string.IsNullOrEmpty(_Till_Type) &&
-                _Till_Type.Equals("syr", StringComparison.OrdinalIgnoreCase) &&
-                _currency_tilltype_id == -1)
-            {
-                _currency_tilltype_id = SyrCurrencyTilltypeId;
-            }
         }
 
         private int ResolveTillTypeIdFromLoadedData(string tillTypeName)
@@ -510,44 +498,58 @@ namespace Financial_WPF_App.Helper
             }
             else if (e.Column.ColumnName == "Currency")
             {
-                bool exists = false;
-
-                if (e.ProposedValue == null || e.ProposedValue.ToString().IsNullOrWhiteSpace())
+                string currency = (e.ProposedValue?.ToString() ?? string.Empty).Trim().ToUpperInvariant();
+                if (currency != "SYR" && currency != "USD")
                 {
-                    ApplyDefaultCurrencyTilltypeForExpenseFromSyr();
-                    exists = _currency_tilltype_id != -1;
+                    Login.MultiAction_AnyError = true;
+                    e.Row.SetColumnError(e.Column.ColumnName, "Currency must be USD or SYR.");
+                    e.Row.RowError = "There are errors in this row.";
+                    _currency_tilltype_id = -1;
+                    isUsdExpenseFromSyr = false;
+                }
+                // Match Add Action 2: Personal Accounts do not allow choosing a foreign expense currency
+                // (currency ComboBox is disabled; USD-from-SYR Expense path must not run).
+                else if (string.Equals(_Account_Type, "Personal", StringComparison.OrdinalIgnoreCase) &&
+                         _inserted_value == "E" &&
+                         !string.IsNullOrEmpty(_Till_Type) &&
+                         _Till_Type.Equals("syr", StringComparison.OrdinalIgnoreCase) &&
+                         currency == "USD")
+                {
+                    Login.MultiAction_AnyError = true;
+                    e.Row.SetColumnError(e.Column.ColumnName, "Personal accounts cannot create a USD expense from a SYR till.");
+                    e.Row.RowError = "There are errors in this row.";
+                    _currency_tilltype_id = -1;
+                    isUsdExpenseFromSyr = false;
                 }
                 else if (_currency_dt.Rows.Count > 0)
                 {
                     _currency_tilltype_id = _currency_dt.AsEnumerable()
                     .Where(row => row.Field<string>("Name")?.ToLower().Trim()
-                     == e.ProposedValue.ToString().ToLower().Trim())
-                    .Select(row => row.Field<int>("ID")) // صح: عمود رقم العملة
+                     == currency.ToLowerInvariant())
+                    .Select(row => row.Field<int>("ID"))
                     .DefaultIfEmpty(-1)
                     .FirstOrDefault();
-                }
 
-                if (_currency_tilltype_id != -1)
-                {
-                    exists = true;
-                    if (_Till_Type.ToLower() == "syr" &&
-                     _currency_tilltype_id == UsdCurrencyTilltypeId &&
-                    _inserted_value == "E")
+                    if (_currency_tilltype_id != -1)
                     {
-                        isUsdExpenseFromSyr = true;
+                        if (_Till_Type.ToLower() == "syr" &&
+                         _currency_tilltype_id == UsdCurrencyTilltypeId &&
+                        _inserted_value == "E")
+                        {
+                            isUsdExpenseFromSyr = true;
+                        }
+                        else
+                        {
+                            isUsdExpenseFromSyr = false;
+                        }
                     }
                     else
                     {
+                        Login.MultiAction_AnyError = true;
+                        e.Row.SetColumnError(e.Column.ColumnName, "Currency must be USD or SYR.");
+                        e.Row.RowError = "There are errors in this row.";
                         isUsdExpenseFromSyr = false;
                     }
-
-                }
-
-                    if (!exists)
-                {
-                    Login.MultiAction_AnyError = true;
-                    e.Row.SetColumnError(e.Column.ColumnName, "This currency does not exist.");
-                    e.Row.RowError = "There are errors in this row.";
                 }
             }
 
@@ -1377,7 +1379,6 @@ namespace Financial_WPF_App.Helper
         public void build_insert_query()
         {
             ValidateTillResolutionBeforeInsert();
-            ApplyDefaultCurrencyTilltypeForExpenseFromSyr();
 
             // =========================================================================
             // 1. [VALIDATION & DEBUGGING] التحقق والطباعة قبل البدء ببناء الاستعلام

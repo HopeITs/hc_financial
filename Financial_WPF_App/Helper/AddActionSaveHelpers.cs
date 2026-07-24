@@ -19,6 +19,62 @@ namespace Financial_WPF_App.Helper
             return true;
         }
 
+        /// <summary>
+        /// Determines whether Origin Avg Rate should be offered (enabled/populated) for a
+        /// Budget/Micro Project exchange. EUR to USD is not offered; other cross-currency
+        /// pairs including USD to SYR remain available for optional or required selection.
+        /// </summary>
+        public static bool IsProjectExchangeOriginAvgRateOffered(string sourceTill, string correspondingTill)
+        {
+            string source = (sourceTill ?? string.Empty).Trim().ToUpperInvariant();
+            string destination = (correspondingTill ?? string.Empty).Trim().ToUpperInvariant();
+
+            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(destination) || source == destination)
+                return false;
+
+            // EUR to USD is the only foreign-currency pair that does not expose Origin Avg Rate.
+            return source != "EUR" || destination == "SYR";
+        }
+
+        /// <summary>
+        /// Determines whether a Budget/Micro Project exchange requires an Origin Avg Rate on save.
+        /// EUR to USD is not required (and not offered). USD to SYR is offered but optional.
+        /// </summary>
+        public static bool IsProjectExchangeOriginAvgRateRequired(string sourceTill, string correspondingTill)
+        {
+            string source = (sourceTill ?? string.Empty).Trim().ToUpperInvariant();
+            string destination = (correspondingTill ?? string.Empty).Trim().ToUpperInvariant();
+
+            if (source == "USD" && destination == "SYR")
+                return false;
+
+            return IsProjectExchangeOriginAvgRateOffered(source, destination);
+        }
+
+        /// <summary>
+        /// Resolves the Avg Rate currency pair used for a Project exchange. USD to SYR consumes
+        /// the project's EUR to USD Origin Avg Rate; all other supported pairs use their own pair.
+        /// </summary>
+        public static void GetProjectExchangeOriginAvgRatePair(
+            string sourceTill,
+            string correspondingTill,
+            out string rateFromTill,
+            out string rateToTill)
+        {
+            string source = (sourceTill ?? string.Empty).Trim().ToUpperInvariant();
+            string destination = (correspondingTill ?? string.Empty).Trim().ToUpperInvariant();
+
+            if (source == "USD" && destination == "SYR")
+            {
+                rateFromTill = "EUR";
+                rateToTill = "USD";
+                return;
+            }
+
+            rateFromTill = source;
+            rateToTill = destination;
+        }
+
         public static int GetUsdTillIdForCurrentAccount(DataTable tills, int accountId)
         {
             if (tills == null || tills.Rows.Count == 0)

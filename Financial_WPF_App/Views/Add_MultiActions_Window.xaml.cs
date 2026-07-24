@@ -1257,7 +1257,8 @@ namespace Financial_WPF_App.Views
                             }
                             else if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Expand_Item")
                             {
-                                dt.Columns.Add("Currency");
+                                // Match Add Action 2: Personal expense currency comes from the Till
+                                // (currency ComboBox disabled) — do not offer a Currency column.
                                // dt.Columns.Add("Corresponding till");
                                 dt.Columns.Add("Cash till");
 

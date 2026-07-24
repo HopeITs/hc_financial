@@ -1,5 +1,6 @@
 ﻿using Financial_WPF_App.Helper;
 using System;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,6 +15,9 @@ namespace Financial_WPF_App.Controls
         private bool _isConfiguring;
         private bool _isExchangeAccountMode;
         private string _amountText = string.Empty;
+        private double _expandature;
+        private double _usdValue;
+        private DataTable _rateTable;
 
         public event EventHandler CorrespondingTillChanged;
         public event EventHandler ExchangeAccountChanged;
@@ -22,11 +26,13 @@ namespace Financial_WPF_App.Controls
         {
             InitializeComponent();
             Rate_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+            Rate_txtBox.TextChanged += RelatedTextInputChanged;
         }
 
         private void Original_AvgRate_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            // TODO: Recalculate average exchange rates and financial balance adjustments
+            if (!_isConfiguring)
+                RefreshSummaryValues();
         }
 
         private void Avgrate_clear_btn_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -36,7 +42,13 @@ namespace Financial_WPF_App.Controls
 
         private void Donor_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            // TODO: Filter project line-items based on selected financial backer/donor allocations
+            // Donor does not affect USD / Exchanged summary formulas.
+        }
+
+        private void RelatedTextInputChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isConfiguring)
+                RefreshSummaryValues();
         }
 
         private void Donor_comboBox_clear_btn_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -63,16 +75,8 @@ namespace Financial_WPF_App.Controls
             if (_isConfiguring)
                 return;
 
-            _isConfiguring = true;
-            ObserveCashAccount_comboBox.SelectedIndex = -1;
-            ExchangeAcc_comboBox.SelectedIndex = -1;
-            ExchangeCash_comboBox.SelectedIndex = -1;
-            Original_AvgRate_comboBox.SelectedIndex = -1;
-            Original_AvgRate_comboBox.ItemsSource = null;
-            _isConfiguring = false;
-            ApplyCorrespondingTillRules();
+            // Window computes filtered lists, then ApplyCorrespondingTillDependents updates UI once.
             CorrespondingTillChanged?.Invoke(this, EventArgs.Empty);
-            CalcExchangedValue();
         }
 
         private void DestinationTill_clear_btn_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -94,6 +98,7 @@ namespace Financial_WPF_App.Controls
             ExchangeCash_comboBox.SelectedIndex = -1;
             _isConfiguring = false;
             ExchangeAccountChanged?.Invoke(this, EventArgs.Empty);
+            RefreshSummaryValues();
         }
 
         private void ExchangeTill_clear_btn_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -161,6 +166,7 @@ namespace Financial_WPF_App.Controls
             ObserveCashAccount_comboBox.ItemsSource = correspondingCashTills as System.Collections.IEnumerable;
             ExchangeCash_comboBox.ItemsSource = exchangeCashTills as System.Collections.IEnumerable;
             Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
+            _rateTable = (averageRates as DataView)?.Table;
             CashAccount_comboBox.ItemsSource = mainCashTills as System.Collections.IEnumerable;
 
             ResetSelectionsAndText();
@@ -172,6 +178,7 @@ namespace Financial_WPF_App.Controls
 
             _isConfiguring = false;
             ApplyCorrespondingTillRules();
+            RefreshSummaryValues();
         }
 
         private void ConfigureExchangeAccountMode()
@@ -188,6 +195,9 @@ namespace Financial_WPF_App.Controls
             DestinationTill_lable.IsEnabled = DestinationTill_panel.IsEnabled = DestinationTill_clear_btn.IsEnabled = true;
             Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = true;
             Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = true;
+            USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = false;
+            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility = Visibility.Collapsed;
+            Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
             DestinationTill_help.IsEnabled = false;
             ExchangeAcc_help.IsEnabled = false;
             Original_AvgRate_help.IsEnabled = false;
@@ -206,6 +216,9 @@ namespace Financial_WPF_App.Controls
             Donor_lable.IsEnabled = Donor_panel.IsEnabled = Donor_comboBox_clear_btn.IsEnabled = true;
             Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = true;
             Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = true;
+            USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = true;
+            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+                Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Visible;
             DestinationTill_help.IsEnabled = true;
             ExchangeAcc_help.IsEnabled = true;
         }
@@ -221,23 +234,78 @@ namespace Financial_WPF_App.Controls
         public void UpdateExchangedValue(string amountText)
         {
             _amountText = amountText ?? string.Empty;
+            RefreshSummaryValues();
+        }
+
+        /// <summary>
+        /// Exact summary formulas migrated from AddAction_Window.Calc_USDValue and
+        /// AddAction_Window.Calc_ExchangedValue.
+        /// </summary>
+        private void RefreshSummaryValues()
+        {
+            CalcUsdValue();
             CalcExchangedValue();
+        }
+
+        private void CalcUsdValue()
+        {
+            if (_amountText != "" && Original_AvgRate_comboBox.SelectedIndex != -1 && _rateTable != null)
+            {
+                int rateId = Convert.ToInt32(Original_AvgRate_comboBox.SelectedValue.ToString());
+                DataRow[] rows = _rateTable.Select("ID=" + rateId);
+                if (rows.Length > 0)
+                {
+                    double avgRate = rows[0].Field<double>("Value");
+                    double.TryParse(_amountText, out _expandature);
+                    _usdValue = _expandature / avgRate;
+                    USD_Value_TxtBox.Content = _usdValue.ToString();
+                }
+            }
+            else
+            {
+                _usdValue = 0;
+                USD_Value_TxtBox.Content = "";
+            }
         }
 
         private void CalcExchangedValue()
         {
-            if (string.IsNullOrWhiteSpace(_amountText) || string.IsNullOrWhiteSpace(Rate_txtBox.Text))
+            double amount;
+            double rate;
+            if (!string.IsNullOrWhiteSpace(_amountText) &&
+                !string.IsNullOrWhiteSpace(Rate_txtBox.Text) &&
+                double.TryParse(_amountText, out amount) &&
+                double.TryParse(Rate_txtBox.Text, out rate))
             {
-                Exchanged_txtBox.Content = string.Empty;
-                return;
+                Exchanged_txtBox.Content = (amount * rate).ToString();
             }
+        }
 
-            double parsedAmount;
-            double parsedRate;
-            if (double.TryParse(_amountText, out parsedAmount) && double.TryParse(Rate_txtBox.Text, out parsedRate))
-                Exchanged_txtBox.Content = (parsedAmount * parsedRate).ToString();
-            else
-                Exchanged_txtBox.Content = string.Empty;
+        /// <summary>
+        /// Applies all Corresponding Till dependent ComboBox lists in one configuring pass
+        /// to avoid repeated SelectionChanged / CollectionView refresh cycles.
+        /// </summary>
+        public void ApplyCorrespondingTillDependents(object correspondingCashTills, object exchangeAccounts,
+            object averageRates, DataTable rateLookupTable = null)
+        {
+            _isConfiguring = true;
+
+            ObserveCashAccount_comboBox.ItemsSource = correspondingCashTills as System.Collections.IEnumerable;
+            ObserveCashAccount_comboBox.SelectedIndex = -1;
+
+            ExchangeAcc_comboBox.ItemsSource = exchangeAccounts as System.Collections.IEnumerable;
+            ExchangeAcc_comboBox.SelectedIndex = -1;
+
+            ExchangeCash_comboBox.ItemsSource = null;
+            ExchangeCash_comboBox.SelectedIndex = -1;
+
+            Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
+            Original_AvgRate_comboBox.SelectedIndex = -1;
+            _rateTable = rateLookupTable ?? (averageRates as DataView)?.Table;
+
+            ApplyCorrespondingTillRules();
+            _isConfiguring = false;
+            RefreshSummaryValues();
         }
 
         public void SetExchangeAccounts(object exchangeAccounts)
@@ -248,7 +316,6 @@ namespace Financial_WPF_App.Controls
             ExchangeCash_comboBox.ItemsSource = null;
             ExchangeCash_comboBox.SelectedIndex = -1;
             _isConfiguring = false;
-            ApplyCorrespondingTillRules();
         }
 
         public void SetCorrespondingCashTills(object cashTills)
@@ -267,13 +334,16 @@ namespace Financial_WPF_App.Controls
             _isConfiguring = false;
         }
 
-        public void SetAverageRates(object averageRates)
+        public void SetAverageRates(object averageRates, int selectedRateId = -1, DataTable rateLookupTable = null)
         {
             _isConfiguring = true;
             Original_AvgRate_comboBox.SelectedIndex = -1;
-            Original_AvgRate_comboBox.ItemsSource = null;
             Original_AvgRate_comboBox.ItemsSource = averageRates as System.Collections.IEnumerable;
+            _rateTable = rateLookupTable ?? (averageRates as DataView)?.Table;
+            if (selectedRateId > 0)
+                Original_AvgRate_comboBox.SelectedValue = selectedRateId;
             _isConfiguring = false;
+            RefreshSummaryValues();
         }
 
         public void ResetAll()
@@ -284,6 +354,8 @@ namespace Financial_WPF_App.Controls
             ResetSelectionsAndText();
             SetAllControlsEnabled(false);
             _isConfiguring = false;
+            USD_Value_lable.Visibility = USD_Value_TxtBox.Visibility =
+                Exchanged_lable.Visibility = Exchanged_txtBox.Visibility = Visibility.Collapsed;
         }
 
         private void SetAllControlsEnabled(bool enabled)
@@ -299,7 +371,7 @@ namespace Financial_WPF_App.Controls
             Donor_lable.IsEnabled = Donor_panel.IsEnabled = Donor_comboBox_clear_btn.IsEnabled = enabled;
             Rate_lable.IsEnabled = Rate_txtBox.IsEnabled = enabled;
             Exchanged_lable.IsEnabled = Exchanged_txtBox.IsEnabled = enabled;
-            USD_Value_lable.IsEnabled = enabled;
+            USD_Value_lable.IsEnabled = USD_Value_TxtBox.IsEnabled = enabled;
             DestinationTill_help.IsEnabled = enabled;
         }
 
@@ -364,16 +436,13 @@ namespace Financial_WPF_App.Controls
         }
 
         /// <summary>
-        /// Budget/Micro Project Origin Avg Rate is available only for supported source/destination
-        /// combinations. EUR source exchanges do not use an Origin Avg Rate.
+        /// Budget/Micro Project Origin Avg Rate is offered for supported source/destination
+        /// combinations (including optional USD to SYR). EUR to USD is not offered.
         /// Exchange-account mode exits before this rule is applied.
         /// </summary>
         public static bool ShouldEnableOriginAvgRate(string fromTill, string toTill)
         {
-            string from = (fromTill ?? string.Empty).Trim().ToUpperInvariant();
-            string to = (toTill ?? string.Empty).Trim().ToUpperInvariant();
-            return !string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to) &&
-                from != to && from != "EUR";
+            return AddActionSaveHelpers.IsProjectExchangeOriginAvgRateOffered(fromTill, toTill);
         }
 
         public bool CashAccountIsEnabled => CashAccount_lable.IsEnabled;

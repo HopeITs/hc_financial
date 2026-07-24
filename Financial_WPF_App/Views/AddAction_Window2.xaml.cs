@@ -35,6 +35,15 @@ namespace Financial_WPF_App.Views
         private DataTable _cashTills;
         private DataTable _correspondingTills;
         private DataTable _exchangeAccounts;
+        private DataTable _rateTable;
+        private DataTable _currencyTypes;
+        private DataTable _donors;
+        private DataTable _cachedBudgetLines;
+        private DataTable _cachedBeneficiaries;
+        private DataTable _cachedEmployees;
+        private readonly Dictionary<string, DataTable> _ratesByToTill =
+            new Dictionary<string, DataTable>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<int, DataTable> _projectCashByCurrency = new Dictionary<int, DataTable>();
         private int _accountId = -1;
         private int _subprojectId = -1;
         private int _tillId = -1;
@@ -48,6 +57,15 @@ namespace Financial_WPF_App.Views
         private bool _isEditMode;
         private DataTable _editAction;
         private bool _isResetting;
+        private int _contextAccountId = -1;
+        private int _contextTillId = -1;
+        private string _contextTillType = string.Empty;
+        private int _rateCacheAccountId = -1;
+        private string _rateCacheToTill = string.Empty;
+        private int _donorsAccountId = -1;
+        private int _budgetLinesAccountId = -1;
+        private int _beneficiariesAccountId = -1;
+        private int _employeesSubprojectId = -1;
         private string[] _attachmentPaths = new string[0];
         private OpenFileDialog _attachmentDialog;
         private Thread _attachmentDialogThread;
@@ -92,6 +110,7 @@ namespace Financial_WPF_App.Views
             InitializeComponent();
 
             Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+            Amount_txtBox.TextChanged += Amount_txtBox_TextChanged;
             ActionDate_datepicker.SelectedDate = DateTime.Today;
             _expensesControl.CurrencyChanged += ExpensesControl_CurrencyChanged;
             _expensesControl.BudgetChanged += ExpensesControl_BudgetChanged;
@@ -258,6 +277,7 @@ namespace Financial_WPF_App.Views
         private void FillMainComboBoxes()
         {
             _isResetting = true;
+            InvalidateDependentCaches(clearCurrencyTypes: false);
             _tills = FinancialAuthorizationService.FilterTillsByRole(_till.Select_All_tills(), _mainWindow.AllAccounts_ds);
             Subproject_comboBox.ItemsSource = null;
             Subproject_comboBox.SelectedIndex = -1;
@@ -509,9 +529,23 @@ namespace Financial_WPF_App.Views
 
         private void LoadContextData()
         {
+            // Skip when Till selection re-enters the same account/till context (e.g. programmatic re-select).
+            if (_cashTills != null &&
+                _contextAccountId == _accountId &&
+                _contextTillId == _tillId &&
+                string.Equals(_contextTillType, _tillType, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
             _cashTills = FilterCashTillsForRole(_account.Select_Cash_Account("", ""));
             _correspondingTills = _till.Select(_accountId.ToString(), _tillId, "");
             _exchangeAccounts = _account.Select_ExAcc_Tills(_tillType, "");
+            _contextAccountId = _accountId;
+            _contextTillId = _tillId;
+            _contextTillType = _tillType;
+            InvalidateRateCache();
+            _projectCashByCurrency.Clear();
         }
 
         private void ConfigurePersonalIncome()
@@ -544,14 +578,15 @@ namespace Financial_WPF_App.Views
 
         private void ConfigureExpenses()
         {
-            DataTable beneficiaries = IsMicroProject ? _beneficiary.Select("", _accountId.ToString(), "") : null;
-            DataTable employees = IsBudgetProject ? _employee.Select_Subproject_Monthly_Employee(_subprojectId) : null;
+            DataTable beneficiaries = IsMicroProject ? GetBeneficiariesForAccount() : null;
+            DataTable employees = IsBudgetProject ? GetEmployeesForSubproject() : null;
 
             _expensesControl.Configure(IsMicroProject,
-                _till.Select_All_TillTypes_Currency()?.DefaultView,
-                IsBudgetProject ? _budgetLines.Select_AllAvilableBudgetLines(_accountId) : null,
+                GetCurrencyTypes()?.DefaultView,
+                IsBudgetProject ? GetBudgetLinesForAccount() : null,
                 null, null, beneficiaries, employees, ActionDate_datepicker.SelectedDate,
                 requireProjectFieldsWithoutCurrency: IsSyrTill(_tillType));
+            _expensesControl.UpdateValue(Amount_txtBox.Text);
             ExpensesControl_CurrencyChanged(this, EventArgs.Empty);
         }
 
@@ -591,13 +626,16 @@ namespace Financial_WPF_App.Views
                 _exchangeControl.Configure(_tillType, true, GetExchangeDestinationsForExchangeAccount()?.DefaultView,
                     null, null, null, null, null,
                     FilterExchangeAccountCashTills(tillCurrencyId)?.DefaultView);
+                _exchangeControl.UpdateExchangedValue(Amount_txtBox.Text);
                 return;
             }
 
             DataTable destinations = GetExchangeDestinations();
+            PrefetchOriginRatesForDestinations(destinations);
             _exchangeControl.Configure(_tillType, false, destinations?.DefaultView, GetDonors()?.DefaultView,
                 null, null, null, null,
                 FilterProjectCashTills(tillCurrencyId)?.DefaultView);
+            _exchangeControl.UpdateExchangedValue(Amount_txtBox.Text);
         }
 
         private void ExchangeControl_CorrespondingTillChanged(object sender, EventArgs e)
@@ -613,38 +651,64 @@ namespace Financial_WPF_App.Views
                 // Match original Add Action: populate Corresponding Cash Till for the selected destination.
                 // Prefer the destination till's Type_ID so SYR cash tills resolve even when this account
                 // has no SYR till row in the main till list.
-                _exchangeControl.SetCorrespondingCashTills(
+                _exchangeControl.ApplyCorrespondingTillDependents(
                     string.IsNullOrWhiteSpace(correspondingTillType)
                         ? null
-                        : FilterExchangeAccountCashTills(correspondingCurrencyId, preferCurrencyFilter: true)?.DefaultView);
+                        : FilterExchangeAccountCashTills(correspondingCurrencyId, preferCurrencyFilter: true)?.DefaultView,
+                    null,
+                    null);
                 return;
             }
 
-            _exchangeControl.SetCorrespondingCashTills(
-                correspondingCurrencyId > 0
-                    ? FilterProjectCashTills(correspondingCurrencyId)?.DefaultView
-                    : null);
+            object correspondingCash = correspondingCurrencyId > 0
+                ? FilterProjectCashTills(correspondingCurrencyId)?.DefaultView
+                : null;
+            object exchangeAccounts = FilterExchangeAccountsByDestination(correspondingTillType)?.DefaultView;
 
-            DataTable accounts = null;
-            if (_exchangeAccounts != null && !string.IsNullOrWhiteSpace(correspondingTillType))
-            {
-                DataRow[] rows = _exchangeAccounts.Select("toTill = '" + correspondingTillType.Replace("'", "''").ToLowerInvariant() + "'");
-                if (rows.Length > 0)
-                    accounts = rows.CopyToDataTable();
-            }
-            _exchangeControl.SetExchangeAccounts(accounts?.DefaultView);
-
+            object averageRates = null;
+            DataTable rateLookup = null;
             if (UC_ExchangeOperation.ShouldEnableOriginAvgRate(_tillType, correspondingTypeNormalized))
-                _exchangeControl.SetAverageRates(
-                    GetOriginExchangeAverageRates(_tillType, correspondingTypeNormalized)?.DefaultView);
-            else
-                _exchangeControl.SetAverageRates(null);
+            {
+                string rateFromTill;
+                string rateToTill;
+                AddActionSaveHelpers.GetProjectExchangeOriginAvgRatePair(
+                    _tillType, correspondingTypeNormalized, out rateFromTill, out rateToTill);
+                rateLookup = EnsureRatesLoaded(rateToTill);
+                averageRates = FilterExchangeAverageRatesView(rateLookup, rateFromTill);
+            }
+
+            _exchangeControl.ApplyCorrespondingTillDependents(
+                correspondingCash, exchangeAccounts, averageRates, rateLookup);
         }
 
         private void ExchangeControl_ExchangeAccountChanged(object sender, EventArgs e)
         {
             int exchangeAccountId = _exchangeControl.SelectedExchangeAccountId;
             _exchangeControl.SetExchangeCashTills(FilterCashTillsByAccount(_cashTills, "ExchangeAccount_ID", exchangeAccountId)?.DefaultView);
+        }
+
+        private DataTable FilterExchangeAccountsByDestination(string correspondingTillType)
+        {
+            if (_exchangeAccounts == null || string.IsNullOrWhiteSpace(correspondingTillType))
+                return null;
+
+            // Select_ExAcc_Tills aliases LOWER(tilltypes.Name) as 'toTill' — compare case-insensitively.
+            DataRow[] rows = _exchangeAccounts.AsEnumerable()
+                .Where(r => string.Equals(
+                    Convert.ToString(GetExchangeAccountToTillValue(r)),
+                    correspondingTillType.Trim(),
+                    StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+            return rows.Length == 0 ? null : rows.CopyToDataTable();
+        }
+
+        private static object GetExchangeAccountToTillValue(DataRow row)
+        {
+            if (row.Table.Columns.Contains("toTill"))
+                return row["toTill"];
+            if (row.Table.Columns.Contains("ToTill"))
+                return row["ToTill"];
+            return null;
         }
 
         private DataTable GetExchangeDestinationsForExchangeAccount()
@@ -660,7 +724,9 @@ namespace Financial_WPF_App.Views
             if (privileges.ExchangeToForeign)
                 return _correspondingTills;
 
-            DataRow[] rows = _correspondingTills.Select("Type = 'Syr'");
+            DataRow[] rows = _correspondingTills.AsEnumerable()
+                .Where(r => string.Equals(Convert.ToString(r["Type"]), "SYR", StringComparison.OrdinalIgnoreCase))
+                .ToArray();
             return rows.Length == 0 ? _correspondingTills.Clone() : rows.CopyToDataTable();
         }
 
@@ -710,11 +776,68 @@ namespace Financial_WPF_App.Views
             return syrRows.Length == 0 ? _correspondingTills.Clone() : syrRows.CopyToDataTable();
         }
 
-        private DataTable GetDonors() => _accountId > 0 ? _account.Select_Account_Donors(_accountId) : null;
+        private DataTable GetDonors()
+        {
+            if (_accountId <= 0)
+                return null;
+
+            if (_donors != null && _donorsAccountId == _accountId)
+                return _donors;
+
+            _donors = _account.Select_Account_Donors(_accountId);
+            _donorsAccountId = _accountId;
+            return _donors;
+        }
+
+        private DataTable GetBudgetLinesForAccount()
+        {
+            if (_accountId <= 0)
+                return null;
+
+            if (_cachedBudgetLines != null && _budgetLinesAccountId == _accountId)
+                return _cachedBudgetLines;
+
+            _cachedBudgetLines = _budgetLines.Select_AllAvilableBudgetLines(_accountId);
+            _budgetLinesAccountId = _accountId;
+            return _cachedBudgetLines;
+        }
+
+        private DataTable GetBeneficiariesForAccount()
+        {
+            if (_accountId <= 0)
+                return null;
+
+            if (_cachedBeneficiaries != null && _beneficiariesAccountId == _accountId)
+                return _cachedBeneficiaries;
+
+            _cachedBeneficiaries = _beneficiary.Select("", _accountId.ToString(), "");
+            _beneficiariesAccountId = _accountId;
+            return _cachedBeneficiaries;
+        }
+
+        private DataTable GetEmployeesForSubproject()
+        {
+            if (_subprojectId <= 0)
+                return null;
+
+            if (_cachedEmployees != null && _employeesSubprojectId == _subprojectId)
+                return _cachedEmployees;
+
+            _cachedEmployees = _employee.Select_Subproject_Monthly_Employee(_subprojectId);
+            _employeesSubprojectId = _subprojectId;
+            return _cachedEmployees;
+        }
+
+        private DataTable GetCurrencyTypes()
+        {
+            if (_currencyTypes == null)
+                _currencyTypes = _till.Select_All_TillTypes_Currency();
+            return _currencyTypes;
+        }
 
         private DataTable GetAvailableAverageRates()
         {
-            DataTable rates = _rate.Select_AllAvilableRates(_accountId.ToString(), _tillType, true);
+            DataTable rates = EnsureRatesLoaded(_tillType);
             if (rates == null || rates.Rows.Count == 0 || ActionDate_datepicker.SelectedDate == null)
                 return rates;
             DateTime date = ActionDate_datepicker.SelectedDate.Value.Date;
@@ -733,48 +856,103 @@ namespace Financial_WPF_App.Views
             return rows.Length == 0 ? rates.Clone() : rows.CopyToDataTable();
         }
 
-        /// <summary>
-        /// Origin Avg Rate for a Budget/Micro Project exchange Source Till -> Corresponding Till pair.
-        /// </summary>
-        private DataTable GetExchangeAverageRates(string fromTill, string toTill)
+        private void PrefetchOriginRatesForDestinations(DataTable destinations)
         {
-            if (_accountId <= 0 || string.IsNullOrWhiteSpace(fromTill) || string.IsNullOrWhiteSpace(toTill))
+            if (destinations == null || destinations.Rows.Count == 0)
+                return;
+
+            foreach (DataRow row in destinations.Rows)
+            {
+                string destinationType = Convert.ToString(row["Type"]);
+                if (!UC_ExchangeOperation.ShouldEnableOriginAvgRate(_tillType, destinationType))
+                    continue;
+
+                string rateFromTill;
+                string rateToTill;
+                AddActionSaveHelpers.GetProjectExchangeOriginAvgRatePair(
+                    _tillType, destinationType, out rateFromTill, out rateToTill);
+                EnsureRatesLoaded(rateToTill);
+            }
+        }
+
+        private DataTable EnsureRatesLoaded(string toTill)
+        {
+            string key = (toTill ?? string.Empty).Trim();
+            if (_accountId <= 0 || string.IsNullOrWhiteSpace(key))
                 return null;
 
-            // Select_AllAvilableRates filters by ToTill; restrict the returned rows by FromTill
-            // so the ComboBox contains only rates for the currently selected exchange pair.
-            DataTable rates = _rate.Select_AllAvilableRates(_accountId.ToString(), toTill, true);
+            DataTable cached;
+            if (_ratesByToTill.TryGetValue(key, out cached))
+                return cached;
+
+            cached = _rate.Select_AllAvilableRates(_accountId.ToString(), key, true);
+            _ratesByToTill[key] = cached;
+            _rateTable = cached;
+            _rateCacheAccountId = _accountId;
+            _rateCacheToTill = key;
+            return cached;
+        }
+
+        private void InvalidateRateCache()
+        {
+            _rateTable = null;
+            _rateCacheAccountId = -1;
+            _rateCacheToTill = string.Empty;
+            _ratesByToTill.Clear();
+        }
+
+        private void InvalidateDependentCaches(bool clearCurrencyTypes)
+        {
+            _cashTills = null;
+            _correspondingTills = null;
+            _exchangeAccounts = null;
+            _contextAccountId = -1;
+            _contextTillId = -1;
+            _contextTillType = string.Empty;
+            InvalidateRateCache();
+            _projectCashByCurrency.Clear();
+
+            _donors = null;
+            _donorsAccountId = -1;
+            _cachedBudgetLines = null;
+            _budgetLinesAccountId = -1;
+            _cachedBeneficiaries = null;
+            _beneficiariesAccountId = -1;
+            _cachedEmployees = null;
+            _employeesSubprojectId = -1;
+
+            if (clearCurrencyTypes)
+                _currencyTypes = null;
+        }
+
+        private DataView FilterExchangeAverageRatesView(DataTable rates, string fromTill)
+        {
             if (rates == null)
                 return null;
             if (rates.Rows.Count == 0)
-                return rates.Clone();
+                return rates.DefaultView;
 
-            string from = fromTill.Trim();
-            DataRow[] pairRows = rates.AsEnumerable().Where(r =>
-                string.Equals(Convert.ToString(r["FromTill"]), from, StringComparison.OrdinalIgnoreCase)).ToArray();
-            if (pairRows.Length == 0)
-                return rates.Clone();
-
-            DataTable pairRates = pairRows.CopyToDataTable();
-            if (ActionDate_datepicker.SelectedDate == null)
-                return pairRates;
-
-            DateTime date = ActionDate_datepicker.SelectedDate.Value.Date;
+            string from = (fromTill ?? string.Empty).Trim();
+            DateTime? date = ActionDate_datepicker.SelectedDate == null
+                ? (DateTime?)null
+                : ActionDate_datepicker.SelectedDate.Value.Date;
             int currentRateId = GetCurrentEditRateId();
-            DataRow[] filtered = pairRates.AsEnumerable().Where(r =>
-                (Convert.ToDateTime(r["BeginDate"]).Date <= date && Convert.ToDateTime(r["EndDate"]).Date >= date) ||
-                Convert.ToDecimal(r["Expenditures"]) < Convert.ToDecimal(r["Exchanged_Value"]) ||
-                (currentRateId > 0 && Convert.ToInt32(r["ID"]) == currentRateId)).ToArray();
-            return filtered.Length == 0 ? pairRates.Clone() : filtered.CopyToDataTable();
-        }
 
-        private DataTable GetOriginExchangeAverageRates(string sourceTill, string correspondingTill)
-        {
-            if (string.Equals(sourceTill, "USD", StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(correspondingTill, "SYR", StringComparison.OrdinalIgnoreCase))
-                return GetExchangeAverageRates("EUR", "USD");
+            DataRow[] filtered = rates.AsEnumerable().Where(r =>
+            {
+                if (!string.Equals(Convert.ToString(r["FromTill"]), from, StringComparison.OrdinalIgnoreCase))
+                    return false;
+                if (date == null)
+                    return true;
+                return (Convert.ToDateTime(r["BeginDate"]).Date <= date.Value &&
+                        Convert.ToDateTime(r["EndDate"]).Date >= date.Value) ||
+                       Convert.ToDecimal(r["Expenditures"]) < Convert.ToDecimal(r["Exchanged_Value"]) ||
+                       (currentRateId > 0 && Convert.ToInt32(r["ID"]) == currentRateId);
+            }).ToArray();
 
-            return GetExchangeAverageRates(sourceTill, correspondingTill);
+            if (filtered.Length == 0)
+                return rates.Clone().DefaultView;
+            return filtered.CopyToDataTable().DefaultView;
         }
 
         private int GetCurrentEditRateId()
@@ -788,10 +966,17 @@ namespace Financial_WPF_App.Views
         {
             if (_cashTills == null || currencyId <= 0)
                 return null;
+
+            DataTable cached;
+            if (_projectCashByCurrency.TryGetValue(currencyId, out cached))
+                return cached;
+
             DataRow[] rows = _cashTills.AsEnumerable().Where(r =>
                 Convert.ToInt32(r["currency_tilltype_id"]) == currencyId &&
                 ContainsDelimitedId(Convert.ToString(r["SubProject_ID"]), _subprojectId)).ToArray();
-            return rows.Length == 0 ? _cashTills.Clone() : rows.CopyToDataTable();
+            cached = rows.Length == 0 ? _cashTills.Clone() : rows.CopyToDataTable();
+            _projectCashByCurrency[currencyId] = cached;
+            return cached;
         }
 
         private static DataTable FilterCashTillsByAccount(DataTable source, string column, int accountId)
@@ -839,7 +1024,7 @@ namespace Financial_WPF_App.Views
 
             // Fallback when the selected account's till list does not include the target currency
             // (e.g. USD Exchange Account looking up SYR for Corresponding Cash Till).
-            DataTable currencies = _till.Select_All_TillTypes_Currency();
+            DataTable currencies = GetCurrencyTypes();
             if (currencies != null && currencies.Rows.Count > 0)
             {
                 DataRow currencyRow = currencies.AsEnumerable().FirstOrDefault(r =>
@@ -880,6 +1065,7 @@ namespace Financial_WPF_App.Views
         private void ResetBelowProject()
         {
             _isResetting = true;
+            InvalidateDependentCaches(clearCurrencyTypes: false);
             Account_comboBox.ItemsSource = null;
             Account_comboBox.SelectedIndex = -1;
             Till_comboBox.ItemsSource = null;
@@ -901,6 +1087,7 @@ namespace Financial_WPF_App.Views
         private void ResetBelowAccount()
         {
             _isResetting = true;
+            InvalidateDependentCaches(clearCurrencyTypes: false);
             Till_comboBox.ItemsSource = null;
             Till_comboBox.SelectedIndex = -1;
             Type_comboBox.ItemsSource = null;
@@ -1070,12 +1257,15 @@ namespace Financial_WPF_App.Views
                 fields.DonorRequired = _exchangeControl.DonorIsEnabled;
                 fields.DonorSelectedIndex = _exchangeControl.DonorSelectedIndex;
                 fields.DonorId = _exchangeControl.DonorId;
-                fields.OriginalAvgRateRequired = _exchangeControl.OriginalAvgRateIsEnabled;
+                // Required is pair-based (USD→SYR is optional); UI may still offer the ComboBox.
+                fields.OriginalAvgRateRequired = AddActionSaveHelpers.IsProjectExchangeOriginAvgRateRequired(
+                    _tillType, _exchangeControl.SelectedCorrespondingTillType);
                 fields.OriginalAvgRateSelectedIndex = _exchangeControl.OriginalAvgRateSelectedIndex;
                 fields.OriginalRateId = _exchangeControl.OriginalRateId;
                 fields.RateRequired = _exchangeControl.RateIsEnabled;
                 fields.RateText = _exchangeControl.RateText;
-                fields.DestinationTillRequired = _exchangeControl.DestinationTillIsEnabled;
+                // Keep required in edit mode even when ApplyEditLock disables the control.
+                fields.DestinationTillRequired = _exchangeControl.DestinationTillIsEnabled || _isEditMode;
                 fields.DestinationTillSelectedIndex = _exchangeControl.DestinationTillSelectedIndex;
                 fields.DestinationTillId = _exchangeControl.DestinationTillId;
                 fields.DestinationTillDisplayText = _exchangeControl.DestinationTillDisplayText;
@@ -1133,6 +1323,16 @@ namespace Financial_WPF_App.Views
         {
             if (DynamicOperationContainer.Content == _exchangeControl)
                 _exchangeControl.UpdateExchangedValue(Amount_txtBox.Text);
+            else if (DynamicOperationContainer.Content == _expensesControl)
+                _expensesControl.UpdateValue(Amount_txtBox.Text);
+        }
+
+        private void Amount_txtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (DynamicOperationContainer.Content == _exchangeControl)
+                _exchangeControl.UpdateExchangedValue(Amount_txtBox.Text);
+            else if (DynamicOperationContainer.Content == _expensesControl)
+                _expensesControl.UpdateValue(Amount_txtBox.Text);
         }
         private void ActionDate_datepicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1142,7 +1342,16 @@ namespace Financial_WPF_App.Views
             {
                 string correspondingType = (_exchangeControl.SelectedCorrespondingTillType ?? string.Empty).Trim().ToUpperInvariant();
                 if (UC_ExchangeOperation.ShouldEnableOriginAvgRate(_tillType, correspondingType))
-                    _exchangeControl.SetAverageRates(GetOriginExchangeAverageRates(_tillType, correspondingType)?.DefaultView);
+                {
+                    string rateFromTill;
+                    string rateToTill;
+                    AddActionSaveHelpers.GetProjectExchangeOriginAvgRatePair(
+                        _tillType, correspondingType, out rateFromTill, out rateToTill);
+                    DataTable rateLookup = EnsureRatesLoaded(rateToTill);
+                    _exchangeControl.SetAverageRates(
+                        FilterExchangeAverageRatesView(rateLookup, rateFromTill),
+                        rateLookupTable: rateLookup);
+                }
                 else
                     _exchangeControl.SetAverageRates(null);
             }
