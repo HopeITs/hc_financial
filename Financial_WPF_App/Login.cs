@@ -111,7 +111,9 @@ namespace Financial_WPF_App.Models
             MyConn = new MySqlConnection(ConnectionString);
             if (MyConn.State == ConnectionState.Closed)
             {
+                Helper.PerfLog.BeginOpen();
                 MyConn.Open();
+                Helper.PerfLog.EndOpen();
                 return true;
             }
             else
@@ -131,8 +133,14 @@ namespace Financial_WPF_App.Models
 
         public static void CloseAndClearConnection()
         {
+            // Close() returns the connection to the pool so the next query can reuse it.
+            // ClearAllPoolsAsync() used to run here as well, but it wipes every pool in the
+            // process, which forced a full TCP + MySQL auth handshake before every single
+            // query. Pooling is enabled by default in both connection strings; nothing in the
+            // app depends on the pools being flushed (online/offline use different connection
+            // strings and therefore different pools).
             MyConn.Close();
-            MyConn.ClearAllPoolsAsync();
+            Helper.PerfLog.EndOperation();
         }
 
         public static string ReplaceQuotation(string value)

@@ -323,6 +323,7 @@
     <Compile Include="Helper\Approval_CustomAlternatingRowStyleSelector.cs" />
     <Compile Include="Helper\Approval_CustomRowStyleSelector.cs" />
     <Compile Include="Helper\CellStyleSelector.cs" />
+    <Compile Include="Helper\PerfLog.cs" />
     <Compile Include="Helper\ComboBoxBehaviorManager.cs" />
     <Compile Include="Helper\CustomAlternatingRowStyleSelector.cs" />
     <Compile Include="Helper\CustomCopyPaste.cs" />
