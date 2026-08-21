@@ -742,10 +742,119 @@ namespace Financial_WPF_App
 
         }
 
+        #region lazy tab content
+
+        // Tabs whose hosting window has not been built yet. The window - and therefore
+        // its database load - is created the first time the tab is actually selected,
+        // instead of building every tab up front when the account is opened.
+        private readonly Dictionary<TabItem, Func<Window>> _pendingTabs = new Dictionary<TabItem, Func<Window>>();
+
+        // True while Fill_Account_Tabs is running. The first tab is selected (and therefore
+        // built) inside that method, exactly as before, so a data error on it must keep
+        // propagating to OnLoad. Tabs opened later cannot throw into a WPF event handler,
+        // so those are reported with the same message box the rest of this file uses.
+        private bool _buildingTabs;
+
+        /// <summary>
+        /// Registers the factory that builds this tab's content. Must be called before the
+        /// TabItem is added to tabControl1, because adding the first item selects it and
+        /// that selection is what triggers the build.
+        /// </summary>
+        private void SetLazyContent(TabItem tab, Func<Window> factory)
+        {
+            _pendingTabs[tab] = factory;
+        }
+
+        private void TabControl1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // SelectionChanged bubbles: combo boxes and grids inside a tab raise it too.
+            // Only react when the tab control itself changed selection.
+            if (!ReferenceEquals(e.Source, tabControl1))
+                return;
+
+            TabItem selected = tabControl1.SelectedItem as TabItem;
+            MaterializeTab(selected);
+
+            // The selected tab is the one showing its underline, and it is now certain to
+            // have a template, so this is the reliable moment to repaint it.
+            ApplyTabHeaderColor(selected);
+        }
+
+        /// <summary>
+        /// Apply_Color_Theme walks the tab contents once, at ApplicationIdle, right after the
+        /// account loads. A tab built later than that would be missed and would keep the
+        /// default style colours instead of the account's theme colour, so each tab re-runs
+        /// the same colouring on its own content when it is built. Dispatched at the same
+        /// priority because the visual tree does not exist yet the instant Content is set.
+        /// </summary>
+        private void ApplyThemeToTabContent(TabItem tab)
+        {
+            if (tab == null || tab.Content == null)
+                return;
+
+            object content = tab.Content;
+            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+            {
+                WindowUtils.UIElementColoring(content, Theme_Color);
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+
+        private void MaterializeTab(TabItem tab)
+        {
+            Func<Window> factory;
+            if (tab == null || !_pendingTabs.TryGetValue(tab, out factory))
+                return;
+
+            if (_buildingTabs)
+            {
+                // Same call stack as the old eager code - let OnLoad handle any failure.
+                tab.Content = factory().Content;
+                _pendingTabs.Remove(tab);
+                ApplyThemeToTabContent(tab);
+                return;
+            }
+
+            try
+            {
+                tab.Content = factory().Content;
+                // Only drop the factory once the content is really there, so a tab that
+                // failed on a transient network error can be retried by selecting it again.
+                _pendingTabs.Remove(tab);
+                ApplyThemeToTabContent(tab);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        #endregion
+
         public void Fill_Account_Tabs(string till_ID, string type)
+        {
+            _buildingTabs = true;
+            try
+            {
+                Fill_Account_Tabs_Core(till_ID, type);
+            }
+            finally
+            {
+                _buildingTabs = false;
+            }
+        }
+
+        private void Fill_Account_Tabs_Core(string till_ID, string type)
         {
             if (AccType != "Cash")
             {
+                _pendingTabs.Clear();
+                _tabHeaderColors.Clear();
                 tabControl1.Items.Clear();
                 TabItem newTabItem = new TabItem();
 
@@ -774,7 +883,16 @@ namespace Financial_WPF_App
                             }
                             if (addtill)
                             {
-                                Till_Window till_Window = new Till_Window(Acc_ID, IsAdminAccount, Account_Name, AccType, Category, SubProject_ID, Till_ID, TillType_Name, this, main_Window);
+                                // captured so the deferred build uses exactly the values
+                                // the eager build would have used
+                                int c_AccID = Acc_ID, c_SubProjectID = SubProject_ID, c_TillID = Till_ID;
+                                bool c_IsAdmin = IsAdminAccount;
+                                string c_AccName = Account_Name, c_AccType = AccType, c_Category = Category, c_TillType = TillType_Name;
+
+                                Func<Window> tillFactory = () => new Till_Window(
+                                    c_AccID, c_IsAdmin, c_AccName, c_AccType, c_Category,
+                                    c_SubProjectID, c_TillID, c_TillType, this, main_Window);
+
                                 newTabItem = new TabItem
                                 {
                                     Header = (t_dt.Rows[i].Field<string>(1)).ToUpper(),
@@ -815,9 +933,9 @@ namespace Financial_WPF_App
                                     newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["GreenBlue"];
                                     newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["GreenBlue"]);
                                 }
-                                tabControl1.Items.Add(newTabItem);
                                 newTabItem.Content = null;
-                                newTabItem.Content = till_Window.Content;
+                                SetLazyContent(newTabItem, tillFactory);
+                                tabControl1.Items.Add(newTabItem);
                             }
                         }
                     }
@@ -826,7 +944,10 @@ namespace Financial_WPF_App
                 {
                     if (Rates_privileges)
                     {
-                        Rate_Window rate_Window = new Rate_Window(Acc_ID, IsAdminAccount, AccType, Category, main_Window);
+                        int r_AccID = Acc_ID; bool r_IsAdmin = IsAdminAccount;
+                        string r_AccType = AccType, r_Category = Category;
+                        Func<Window> rateFactory = () => new Rate_Window(r_AccID, r_IsAdmin, r_AccType, r_Category, main_Window);
+
                         newTabItem = new TabItem
                         {
                             Header = "Rates",
@@ -849,16 +970,18 @@ namespace Financial_WPF_App
                                 newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                                 break;
                         }
-                        tabControl1.Items.Add(newTabItem);
                         newTabItem.Content = null;
-                        newTabItem.Content = rate_Window.Content;
+                        SetLazyContent(newTabItem, rateFactory);
+                        tabControl1.Items.Add(newTabItem);
                     }
 
                     if (Category == "Micro Projects")
                     {
                         if (Beneficiaries_privileges)
                         {
-                            Account_Beneficiaries_Window account_Beneficiaries_Window = new Account_Beneficiaries_Window(Acc_ID, SubProject_ID, main_Window);
+                            int b_AccID = Acc_ID, b_SubProjectID = SubProject_ID;
+                            Func<Window> benFactory = () => new Account_Beneficiaries_Window(b_AccID, b_SubProjectID, main_Window);
+
                             newTabItem = new TabItem
                             {
                                 Header = "Beneficiaries",
@@ -868,16 +991,18 @@ namespace Financial_WPF_App
                             };
                             newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["HopeRed"];
                             newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["HopeRed"]);
-                            tabControl1.Items.Add(newTabItem);
                             newTabItem.Content = null;
-                            newTabItem.Content = account_Beneficiaries_Window.Content;
+                            SetLazyContent(newTabItem, benFactory);
+                            tabControl1.Items.Add(newTabItem);
                         }
                     }
                     else if (Category == "Budget")
                     {
                         if (Budget_privileges)
                         {
-                            AddBudgetLines_Windows AddBudgetLines_Windows = new AddBudgetLines_Windows(Acc_ID.ToString(), IsAdminAccount, main_Window);
+                            string bl_AccID = Acc_ID.ToString(); bool bl_IsAdmin = IsAdminAccount;
+                            Func<Window> budgetsFactory = () => new AddBudgetLines_Windows(bl_AccID, bl_IsAdmin, main_Window);
+
                             newTabItem = new TabItem
                             {
                                 Header = "Budgets",
@@ -887,13 +1012,15 @@ namespace Financial_WPF_App
                             };
                             newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
                             newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
-                            tabControl1.Items.Add(newTabItem);
                             newTabItem.Content = null;
-                            newTabItem.Content = AddBudgetLines_Windows.Content;
+                            SetLazyContent(newTabItem, budgetsFactory);
+                            tabControl1.Items.Add(newTabItem);
                         }
                         if (BudgetLins_privileges)
                         {
-                            AllAccountBudgetLines_Windows AllAccountBudgetLines_Windows = new AllAccountBudgetLines_Windows(Acc_ID.ToString(), Project_ID, main_Window);
+                            string abl_AccID = Acc_ID.ToString(); int abl_ProjectID = Project_ID;
+                            Func<Window> budgetLinesFactory = () => new AllAccountBudgetLines_Windows(abl_AccID, abl_ProjectID, main_Window);
+
                             newTabItem = new TabItem
                             {
                                 Header = "Budget Lines",
@@ -903,14 +1030,16 @@ namespace Financial_WPF_App
                             };
                             newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
                             newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
-                            tabControl1.Items.Add(newTabItem);
                             newTabItem.Content = null;
-                            newTabItem.Content = AllAccountBudgetLines_Windows.Content;
+                            SetLazyContent(newTabItem, budgetLinesFactory);
+                            tabControl1.Items.Add(newTabItem);
                         }
 
                         if (ExpensesReport_privileges)
                         {
-                            ExpensesReport_Window ExpensesReport_Window = new ExpensesReport_Window(Acc_ID, main_Window);
+                            int er_AccID = Acc_ID;
+                            Func<Window> expensesFactory = () => new ExpensesReport_Window(er_AccID, main_Window);
+
                             newTabItem = new TabItem
                             {
                                 Header = "Budget Report",
@@ -920,9 +1049,9 @@ namespace Financial_WPF_App
                             };
                             newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
                             newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
-                            tabControl1.Items.Add(newTabItem);
                             newTabItem.Content = null;
-                            newTabItem.Content = ExpensesReport_Window.Content;
+                            SetLazyContent(newTabItem, expensesFactory);
+                            tabControl1.Items.Add(newTabItem);
                         }
                     }
 
@@ -931,7 +1060,9 @@ namespace Financial_WPF_App
                 {
                     if (ExchangeRates_privileges)
                     {
-                        ExchangAccount_Rate_Window ExchangAccount_Rate_Window = new ExchangAccount_Rate_Window(Acc_ID, Account_Name, main_Window);
+                        int xr_AccID = Acc_ID; string xr_AccName = Account_Name;
+                        Func<Window> exRateFactory = () => new ExchangAccount_Rate_Window(xr_AccID, xr_AccName, main_Window);
+
                         newTabItem = new TabItem
                         {
                             Header = "Rates",
@@ -941,15 +1072,17 @@ namespace Financial_WPF_App
                         };
                         newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["Orange"];
                         newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["Orange"]);
-                        tabControl1.Items.Add(newTabItem);
                         newTabItem.Content = null;
-                        newTabItem.Content = ExchangAccount_Rate_Window.Content;
+                        SetLazyContent(newTabItem, exRateFactory);
+                        tabControl1.Items.Add(newTabItem);
                     }
                 }
 
                 if (AddTill_privileges)
                 {
-                    Add_till add_till = new Add_till(Acc_ID, AccType, Category, this, main_Window);
+                    int at_AccID = Acc_ID; string at_AccType = AccType, at_Category = Category;
+                    Func<Window> addTillFactory = () => new Add_till(at_AccID, at_AccType, at_Category, this, main_Window);
+
                     newTabItem = new TabItem
                     {
                         Header = "+",
@@ -990,9 +1123,9 @@ namespace Financial_WPF_App
                         newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"];
                         newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["PastelDarkBlue"]);
                     }
-                    tabControl1.Items.Add(newTabItem);
                     newTabItem.Content = null;
-                    newTabItem.Content = add_till.Content;
+                    SetLazyContent(newTabItem, addTillFactory);
+                    tabControl1.Items.Add(newTabItem);
                 }
             }
             else
@@ -1001,9 +1134,13 @@ namespace Financial_WPF_App
 
                 if (CashTill_privileges)
                 {
+                    _pendingTabs.Clear();
+                    _tabHeaderColors.Clear();
                     tabControl1.Items.Clear();
 
-                    CashTill_Window cash_window = new CashTill_Window(Acc_ID, Account_Name, main_Window);
+                    int ct_AccID = Acc_ID; string ct_AccName = Account_Name;
+                    Func<Window> cashTillFactory = () => new CashTill_Window(ct_AccID, ct_AccName, main_Window);
+
                     newTabItem = new TabItem
                     {
                         Header = "Cash Till",
@@ -1013,14 +1150,16 @@ namespace Financial_WPF_App
                     };
                     newTabItem.Foreground = (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"];
                     newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
-                    tabControl1.Items.Add(newTabItem);
                     newTabItem.Content = null;
-                    newTabItem.Content = cash_window.Content;
+                    SetLazyContent(newTabItem, cashTillFactory);
+                    tabControl1.Items.Add(newTabItem);
                 }
 
                 if (Balances_privileges)
                 {
-                    CashBalances_Window CashBalances_Window = new CashBalances_Window(Acc_ID, main_Window);
+                    int cb_AccID = Acc_ID;
+                    Func<Window> cashBalancesFactory = () => new CashBalances_Window(cb_AccID, main_Window);
+
                     newTabItem = new TabItem
                     {
                         Header = "Balances",
@@ -1030,27 +1169,49 @@ namespace Financial_WPF_App
                         FlowDirection = FlowDirection.LeftToRight
                     };
                     newTabItem.Loaded += (sender, e) => NewTabItem_Loaded(sender, e, (SolidColorBrush)Application.Current.Resources["DarkgrayishViolet"]);
-                    tabControl1.Items.Add(newTabItem);
                     newTabItem.Content = null;
-                    newTabItem.Content = CashBalances_Window.Content;
+                    SetLazyContent(newTabItem, cashBalancesFactory);
+                    tabControl1.Items.Add(newTabItem);
                 }
             }
 
         }
         // Event handler for the Loaded event
+        // The theme colour each tab header should use. Remembered because the override
+        // below can only be applied once the tab's template tree actually exists.
+        private readonly Dictionary<TabItem, SolidColorBrush> _tabHeaderColors = new Dictionary<TabItem, SolidColorBrush>();
+
         private void NewTabItem_Loaded(object sender, RoutedEventArgs e, SolidColorBrush color)
         {
             TabItem tabItem = sender as TabItem;
-            if (tabItem != null)
-            {
-                // Find the BottomBorder inside the TabItem template
-                Border bottomBorder = tabItem.Template.FindName("BottomBorder", tabItem) as Border;
-                if (bottomBorder != null)
-                {
-                    // Set the new color for the bottom border
-                    bottomBorder.Background = color;  // Replace with your desired color
-                }
-            }
+            if (tabItem == null)
+                return;
+
+            _tabHeaderColors[tabItem] = color;
+            ApplyTabHeaderColor(tabItem);
+        }
+
+        /// <summary>
+        /// tabItemStyle draws BottomBorder with a hard-coded HopeRed default and this is what
+        /// repaints it in the account's colour. Template.FindName only resolves once the tab's
+        /// template tree has been instantiated - for a tab that has not been rendered yet it
+        /// returns null and the red default stays on screen. So the colour is remembered and
+        /// re-applied when the tab is selected, by which point the template is guaranteed.
+        /// </summary>
+        private void ApplyTabHeaderColor(TabItem tabItem)
+        {
+            SolidColorBrush color;
+            if (tabItem == null || !_tabHeaderColors.TryGetValue(tabItem, out color) || color == null)
+                return;
+
+            tabItem.ApplyTemplate();
+
+            if (tabItem.Template == null)
+                return;
+
+            Border bottomBorder = tabItem.Template.FindName("BottomBorder", tabItem) as Border;
+            if (bottomBorder != null)
+                bottomBorder.Background = color;
         }
 
         private void PersonalAcc_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
