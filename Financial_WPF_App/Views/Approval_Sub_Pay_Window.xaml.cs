@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Financial_WPF_App.Helper;
 
 namespace Financial_WPF_App.Views
 {
@@ -468,6 +469,10 @@ namespace Financial_WPF_App.Views
 
                     MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     LoadGrid();
+                    
+                    // Approving moves an action from action_not_approved into action, so every
+                    // till holding it is now stale. Nothing used to tell them.
+                    TillNotifier.RaiseRefresh();
                 }
                 else
                 {
@@ -518,6 +523,10 @@ namespace Financial_WPF_App.Views
 
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         LoadGrid();
+                        
+                        // Approving moves an action from action_not_approved into action, so every
+                        // till holding it is now stale. Nothing used to tell them.
+                        TillNotifier.RaiseRefresh();
                     }
                 }
             }
@@ -664,6 +673,10 @@ namespace Financial_WPF_App.Views
 
                     MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     LoadGrid();
+                    
+                    // Approving moves an action from action_not_approved into action, so every
+                    // till holding it is now stale. Nothing used to tell them.
+                    TillNotifier.RaiseRefresh();
                 }
 
             }

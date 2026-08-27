@@ -1412,8 +1412,13 @@ namespace Financial_WPF_App.Views
                     else
                     {
                         ClearAfterSave();
-                        if (_parentTillWindow != null)
-                            _parentTillWindow.Load_Data();
+
+                        // Refreshing only the till we were opened from left the other side of
+                        // a transfer or exchange showing stale figures until it was refreshed
+                        // by hand. Edit and delete already broadcast (Till_Window does it once
+                        // the dialog returns); an insert never did. Broadcasting covers the
+                        // parent till as well, so no separate Load_Data call is needed.
+                        TillNotifier.RaiseRefresh();
                     }
                 }
             }
