@@ -643,9 +643,18 @@ namespace Financial_WPF_App.Views
 
         private void LoadGrid()
         {
-            DataTable temp_dt = a.Select("", Till_ID.ToString(), SubProject_ID.ToString(), true);
+            // One connection and one round trip instead of three. The three statements are
+            // unchanged - see Action.Select_Till_Screen - only the number of trips differs.
+            DataSet screen = a.Select_Till_Screen(Till_ID.ToString(), SubProject_ID.ToString(), true, Account_ID);
 
-            DataTable Not_Approved_temp_dt = a.Select_action_not_approved("", Till_ID.ToString(), SubProject_ID.ToString(), true, false);
+            if (screen.Tables.Count < Models.Action.TillScreenTableCount)
+                throw new InvalidOperationException(
+                    "The till screen query returned " + screen.Tables.Count +
+                    " result sets instead of " + Models.Action.TillScreenTableCount + ".");
+
+            DataTable temp_dt = screen.Tables[Models.Action.TillScreenGrid];
+
+            DataTable Not_Approved_temp_dt = screen.Tables[Models.Action.TillScreenNotApproved];
 
             int User_ID = Settings.Default.User_ID;
             List<int> CashAccount_ID = new List<int>();
@@ -750,14 +759,15 @@ namespace Financial_WPF_App.Views
 
             sum_dt = new DataTable();
             cash_dt = new DataTable();
-            DataSet ds = a.Select_Sums(Till_ID.ToString(), Account_ID, "");
-            if (ds.Tables.Count > 0)
+            // the totals and cash balances came back in the same batch as the grid above
+            DataSet ds = screen;
+            if (ds.Tables.Count > Models.Action.TillScreenSums)
             {
-                sum_dt = ds.Tables[0];
+                sum_dt = ds.Tables[Models.Action.TillScreenSums];
 
-                if (ds.Tables.Count > 1)
+                if (ds.Tables.Count > Models.Action.TillScreenCashBalances)
                 {
-                    DataTable temp_cash = ds.Tables[1];
+                    DataTable temp_cash = ds.Tables[Models.Action.TillScreenCashBalances];
                     if (temp_cash != null && temp_cash.Rows.Count > 0)
                     {
                         if (!AsFiscalBond)
