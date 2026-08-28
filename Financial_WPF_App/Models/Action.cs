@@ -930,7 +930,11 @@ END AS `USD_Value`,
             return dt;
         }
 
-        public DataTable Select_Revenue_Exchange_Report(int TillType_ID, string TillType_Name)
+        /// <summary>
+        /// Pass "" for both dates to read everything, which is how this report behaved
+        /// before the range was added. Dates are "yyyy/MM/dd".
+        /// </summary>
+        public DataTable Select_Revenue_Exchange_Report(int TillType_ID, string TillType_Name, string FromDate = "", string ToDate = "")
         {
             string query = @"SELECT 
                         city.Name AS `City_Name`,
@@ -991,6 +995,14 @@ END AS `USD_Value`,
                 query += " where actiontype.shortname IN ('I','Ex','E','O') AND LOWER(accounttype.name) = 'project' AND tilltypes.ID = @TillType_ID";
             }
 
+            // Optional range. Both empty reads everything, which the "All" item in the year
+            // box relies on. Compared against the column directly so an index on
+            // action.ActionDate stays usable.
+            if (FromDate != "")
+                query += " AND action.ActionDate >= @FromDate";
+            if (ToDate != "")
+                query += " AND action.ActionDate <= @ToDate";
+
             query += " Group by action.id ORDER BY city.id, project.id, subproject.id, account.id, action.id;";
 
             DataTable dt = new DataTable();
@@ -998,6 +1010,8 @@ END AS `USD_Value`,
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@TillType_ID", TillType_ID);
+                sc.Parameters.AddWithValue("@FromDate", FromDate);
+                sc.Parameters.AddWithValue("@ToDate", ToDate);
 
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;

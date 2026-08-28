@@ -157,6 +157,27 @@ PopupAnimation="Fade">
                                 </Button.Background>
                             </Button>
                         </StackPanel>
+
+                        <Label x:Name="Year_Label" Style="{DynamicResource statistic_lableStyle}" Content="Year:" Margin="18,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+                        <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="Year_comboBox" TabIndex="18"
+                                  SelectionChanged="Year_comboBox_SelectionChanged"
+                                  Margin="3,0,2,0" VerticalAlignment="Center" Width="100" Height="30"/>
+
+                        <Label x:Name="From_Label" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="14,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+                        <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker" Margin="3,0,2,0" VerticalAlignment="Center" Width="150" Height="30"
+                                    SelectedDateChanged="Date_Changed"/>
+
+                        <Label x:Name="To_Label" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="14,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+                        <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" VerticalAlignment="Center" Width="150" Height="30"
+                                    SelectedDateChanged="Date_Changed"/>
+
+                        <Button ToolTip="Show the selected period" ToolTipService.InitialShowDelay="100"
+                                Style="{DynamicResource AddButtonStyle}"
+                                x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="10,0,0,0" VerticalAlignment="Center" Height="25" Width="55" >
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/Buttons/Apply_blue.png" Stretch="Uniform"/>
+                            </Button.Background>
+                        </Button>
                     </WrapPanel>
                     <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
                         <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>

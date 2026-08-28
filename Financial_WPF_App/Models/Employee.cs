@@ -83,7 +83,11 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable Select_Employee_Salary(int Employee_ID)
+        /// <summary>
+        /// Pass "" for both dates to read every salary row, which is how this screen behaved
+        /// before the range was added. Dates are "yyyy/MM/dd"; the column holds the month.
+        /// </summary>
+        public DataTable Select_Employee_Salary(int Employee_ID, string FromDate = "", string ToDate = "")
         {
             MySqlCommand sc = new MySqlCommand();
 
@@ -106,6 +110,20 @@ namespace Financial_WPF_App.Models
             {
                 sc.Parameters.AddWithValue("@Employee_ID", Employee_ID);
                 query += " AND employee.id = @Employee_ID ";
+            }
+
+            // Optional range on the salary month. Both empty reads everything, which the
+            // "All" item in the year box relies on. Compared against the column directly so
+            // an index on employee_salary.month stays usable as the table grows.
+            if (FromDate != "")
+            {
+                sc.Parameters.AddWithValue("@FromDate", FromDate);
+                query += " AND employee_salary.month >= @FromDate";
+            }
+            if (ToDate != "")
+            {
+                sc.Parameters.AddWithValue("@ToDate", ToDate);
+                query += " AND employee_salary.month <= @ToDate";
             }
 
             query += " ORDER BY subproject.Name ASC;";

@@ -48,6 +48,9 @@ namespace Financial_WPF_App.Views
             {
                 l = new Log();
 
+                FillYears();
+                SetCurrentYear();
+
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
@@ -83,6 +86,96 @@ namespace Financial_WPF_App.Views
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
 
+        // Set while code is moving the pickers, so their SelectedDateChanged does not fight
+        // the year box that just set them.
+        private bool _settingDates;
+
+        private const string AllYears = "All";
+
+        private void FillYears()
+        {
+            _settingDates = true;
+
+            Year_comboBox.Items.Clear();
+            Year_comboBox.Items.Add(AllYears);
+
+            // Wider than the data needs. The log only starts when logging was switched on,
+            // but an older range costs nothing and keeps the list right if the database is
+            // restored from further back.
+            for (int y = DateTime.Today.Year; y >= 2020; y--)
+                Year_comboBox.Items.Add(y.ToString());
+
+            _settingDates = false;
+        }
+
+        private void SetCurrentYear()
+        {
+            _settingDates = true;
+
+            int year = DateTime.Today.Year;
+            FromDate_datepicker.SelectedDate = new DateTime(year, 1, 1);
+            ToDate_datepicker.SelectedDate = new DateTime(year, 12, 31);
+            Year_comboBox.SelectedItem = year.ToString();
+
+            _settingDates = false;
+        }
+
+        // Picking a year just fills the two dates - one filter underneath, two ways in.
+        private void Year_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_settingDates || Year_comboBox.SelectedItem == null)
+                return;
+
+            string choice = Year_comboBox.SelectedItem.ToString();
+            _settingDates = true;
+
+            if (choice == AllYears)
+            {
+                FromDate_datepicker.SelectedDate = null;
+                ToDate_datepicker.SelectedDate = null;
+            }
+            else
+            {
+                int year = int.Parse(choice);
+                FromDate_datepicker.SelectedDate = new DateTime(year, 1, 1);
+                ToDate_datepicker.SelectedDate = new DateTime(year, 12, 31);
+            }
+
+            _settingDates = false;
+            Load_Data();
+        }
+
+        // Typing a date by hand means the range is no longer a whole year.
+        private void Date_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_settingDates)
+                return;
+
+            _settingDates = true;
+            Year_comboBox.SelectedItem = null;
+            _settingDates = false;
+        }
+
+        // Empty means no bound on that side; both empty reads everything, as before.
+        private string SelectedFrom()
+        {
+            return FromDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)FromDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private string SelectedTo()
+        {
+            return ToDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private void Go_btn_Click(object sender, RoutedEventArgs e)
+        {
+            Load_Data();
+        }
+
         private void Load_Data()
         {
             Fill_Grid();
@@ -90,7 +183,11 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Grid()
         {
-            dt = l.Select();
+            dt = l.Select(SelectedFrom(), SelectedTo());
+
+            // The counter used to be written only in myDataGrid_Loaded, which runs once, so it
+            // kept showing whatever the first load found no matter how the filter changed.
+            All_textBlock.Text = (dt == null ? 0 : dt.Rows.Count).ToString("N0");
 
             if (dt != null && dt.Rows.Count > 0)
             {
@@ -283,10 +380,9 @@ namespace Financial_WPF_App.Views
                 Export_btn.CommandTarget = myDataGrid;
                 Bind_Show_Hide_Menu();
 
-                int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
-
-                // All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
+                // The row count is written in Fill_Grid, which runs on every filter change.
+                // Loaded fires once, so writing it here as well would only freeze the first
+                // value on screen.
             }
         }
 
