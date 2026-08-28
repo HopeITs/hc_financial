@@ -168,6 +168,14 @@ namespace Financial_WPF_App.Views
                 //myExpander.IsExpanded = false;
                 Balances.Visibility = Visibility.Hidden;
 
+                // Learn which months this till has, and open on its newest one, before the
+                // grid is loaded - otherwise the first load would fetch everything. This is a
+                // grouped-count query, a handful of rows however big the till is.
+                // Only here, not in Load_Data: a refresh after saving must keep whatever
+                // period the user is looking at.
+                FillPeriods(a.Select_Till_Periods(Till_ID.ToString()));
+                SelectNewestPeriod();
+
                 Load_Data();
                 Apply_Color_Theme();
                 Dispatcher.BeginInvoke(new System.Action(() =>
@@ -641,16 +649,141 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        #region period filter
+
+        /// <summary>One month in the period picker.</summary>
+        private class Local_Period
+        {
+            public string Period { get; set; }        // "yyyy-MM" - what the query uses
+            public string Display { get; set; }       // "2024-06   (142)" - what the user sees
+            public bool Check_Status { get; set; }
+        }
+
+        private List<Local_Period> objPeriodList = new List<Local_Period>();
+
+        /// <summary>Nothing ticked means no date restriction, the whole till.</summary>
+        private List<string> SelectedPeriods()
+        {
+            List<string> chosen = new List<string>();
+            foreach (Local_Period p in objPeriodList)
+                if (p.Check_Status)
+                    chosen.Add(p.Period);
+            return chosen;
+        }
+
+        private void ShowPeriodCount()
+        {
+            int count = objPeriodList.Count(p => p.Check_Status);
+
+            if (count == 0)
+                Period_comboBox.Text = "All months";
+            else if (count == 1)
+                Period_comboBox.Text = objPeriodList.First(p => p.Check_Status).Period;
+            else
+                Period_comboBox.Text = count.ToString() + " months";
+        }
+
+        /// <summary>
+        /// Rebuilt from the period list that comes back with every load, so a month created by
+        /// a new action appears without reopening the till. Ticks are carried over.
+        /// </summary>
+        private void FillPeriods(DataTable periods)
+        {
+            if (periods == null)
+                return;
+
+            HashSet<string> ticked = new HashSet<string>(SelectedPeriods());
+
+            objPeriodList = new List<Local_Period>();
+            foreach (System.Data.DataRow row in periods.Rows)
+            {
+                string period = Convert.ToString(row["Period"]);
+                if (string.IsNullOrEmpty(period))
+                    continue;
+
+                objPeriodList.Add(new Local_Period
+                {
+                    Period = period,
+                    Display = period + "   (" + Convert.ToInt32(row["Movements"]).ToString("N0") + ")",
+                    Check_Status = ticked.Contains(period)
+                });
+            }
+
+            Period_comboBox.ItemsSource = null;
+            Period_comboBox.ItemsSource = objPeriodList;
+            ShowPeriodCount();
+        }
+
+        /// <summary>
+        /// The till opens on its own most recent month rather than on everything. Each till
+        /// covers its own stretch of time, so a fixed window would be empty for some and
+        /// useless for others.
+        /// </summary>
+        private void SelectNewestPeriod()
+        {
+            if (objPeriodList.Count == 0)
+                return;
+
+            objPeriodList[0].Check_Status = true;   // the list arrives newest first
+
+            Period_comboBox.ItemsSource = null;
+            Period_comboBox.ItemsSource = objPeriodList;
+            ShowPeriodCount();
+        }
+
+        // Ticking a box only updates the caption. Reloading on every tick would fire a query
+        // per click while the user is still choosing months, so the reload waits for the
+        // drop-down to close and runs once for the whole selection.
+        private bool _periodsDirty;
+
+        private void Period_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
+        {
+            _periodsDirty = true;
+            ShowPeriodCount();
+        }
+
+        private void Period_comboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            if (!_periodsDirty)
+                return;
+
+            _periodsDirty = false;
+            Load_Data();
+        }
+
+        private void Period_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Local_Period p in objPeriodList)
+                p.Check_Status = false;
+
+            Period_comboBox.ItemsSource = null;
+            Period_comboBox.ItemsSource = objPeriodList;
+            ShowPeriodCount();
+
+            // The clear button is a deliberate single action, so it reloads straight away -
+            // there is nothing to batch up the way ticking several months has.
+            _periodsDirty = false;
+            Load_Data();
+        }
+
+        #endregion
+
         private void LoadGrid()
         {
             // One connection and one round trip instead of three. The three statements are
             // unchanged - see Action.Select_Till_Screen - only the number of trips differs.
-            DataSet screen = a.Select_Till_Screen(Till_ID.ToString(), SubProject_ID.ToString(), true, Account_ID);
+            // The range narrows the two grids; the totals stay for the whole till.
+            DataSet screen = a.Select_Till_Screen(Till_ID.ToString(), SubProject_ID.ToString(), true, Account_ID,
+                SelectedPeriods());
 
             if (screen.Tables.Count < Models.Action.TillScreenTableCount)
                 throw new InvalidOperationException(
                     "The till screen query returned " + screen.Tables.Count +
                     " result sets instead of " + Models.Action.TillScreenTableCount + ".");
+
+            // Came back in the same batch - keeps the list current when an action creates a
+            // month that did not exist when the till was opened.
+            FillPeriods(screen.Tables[Models.Action.TillScreenPeriods]);
 
             DataTable temp_dt = screen.Tables[Models.Action.TillScreenGrid];
 
@@ -902,27 +1035,29 @@ namespace Financial_WPF_App.Views
                 {
                     if (dt != null && dt.Rows.Count > 0)
                     {
-                        //int count = dt.Rows.Count;
-                        // All_textBlock.Text = count.ToString("N0");
-                        UpdateAllCounters();
+                        // Counted after binding, not before: UpdateAllCounters reads
+                        // myDataGrid.View, so running it first counted the PREVIOUS contents
+                        // and the number stayed one step behind every filter change.
                         myDataGrid.ItemsSource = dt.DefaultView;
+                        UpdateAllCounters();
                     }
                     else
                     {
                         myDataGrid.ItemsSource = null;
+                        UpdateAllCounters();
                     }
                 }
                 else
                 {
                     if (not_approved_dt != null && not_approved_dt.Rows.Count > 0)
                     {
-                        //All_textBlock.Text = dt.Rows.Count.ToString();
                         myDataGrid.ItemsSource = not_approved_dt.DefaultView;
                         UpdateAllCounters();
                     }
                     else
                     {
                         myDataGrid.ItemsSource = null;
+                        UpdateAllCounters();
                     }
                 }
 
@@ -961,8 +1096,13 @@ namespace Financial_WPF_App.Views
 
         private void UpdateAllCounters()
         {
+            // An empty grid must read zero, not keep the last number it showed.
             if (myDataGrid.View == null)
+            {
+                All_textBlock.Text = "0";
+                All_textBlockusd.Text = "0";
                 return;
+            }
 
             // غير SYR → عدّ عادي
             if (!TillType_Name.Equals("syr", StringComparison.OrdinalIgnoreCase))

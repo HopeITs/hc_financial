@@ -317,6 +317,42 @@
                     <!--<CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource ComboBoxActionStyle}" x:Name="ExactSearch_checkBox" Content="Full Match"  Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch" Width="89" Margin="0,0,10,0"/>-->
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TabIndex="10"/>
                 </StackPanel>
+
+                <!-- Declared last on purpose: a DockPanel gives space in declaration order,
+                     so the search box reserves its width first and this takes the leftover.
+                     A label and one combo, nothing else - the months are checkboxes inside the
+                     drop-down, so the bar never grows however narrow the window gets. -->
+                <StackPanel x:Name="Period_StackPanel" Orientation="Horizontal"
+                            VerticalAlignment="Center" Margin="12,0,0,0">
+                    <Label x:Name="Period_Label" Style="{DynamicResource statistic_lableStyle}" Content="Period:" Margin="14,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+                    <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="Period_comboBox" TabIndex="18"
+                              ToolTip="Tick the months to show. Nothing ticked shows every movement."
+                              ToolTipService.InitialShowDelay="100"
+                              IsEditable="True" IsReadOnly="True"
+                              DropDownClosed="Period_comboBox_DropDownClosed"
+                              Margin="3,0,2,0" VerticalAlignment="Center" Width="150" Height="30">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Width="200"
+                                          Click="Period_Checkbox_Item_Clicked"
+                                          Style="{DynamicResource CheckBoxStyle}"
+                                          Content="{Binding Display}"
+                                          IsChecked="{Binding Check_Status}"
+                                          CommandParameter="{Binding Period}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <!-- The grey behind the X is baked into delete.png, so no Background setting
+                         could show through it. DeleteButtonWhiteStyle is the same button drawn
+                         from a white-backed copy of the icon. -->
+                    <Button ToolTip="Clear the months and show everything" ToolTipService.InitialShowDelay="100"
+                            x:Name="Period_clear_btn" TabIndex="19" Click="Period_clear_btn_Click"
+                            Style="{StaticResource DeleteButtonWhiteStyle}"
+                            Width="25" Height="30"
+                            HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+
             </DockPanel>
         </Grid>
         <Grid Grid.Row="3">

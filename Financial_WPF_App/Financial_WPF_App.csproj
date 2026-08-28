@@ -984,6 +984,7 @@
     <None Include="Resources\Remeber_btn_c.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Buttons\Apply_blue.png" />
     <Resource Include="Images\Buttons\save_btn.png" />
   </ItemGroup>
   <ItemGroup>
@@ -1215,6 +1216,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Buttons\delete.png" />
+    <Resource Include="Images\Buttons\delete_white.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Buttons\delete_disabled.png" />
