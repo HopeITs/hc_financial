@@ -45,47 +45,16 @@ Everything below is ordered by that principle.
 
 ---
 
-## 1. Finish the date filter on `Lines_Report_Window` — IN PROGRESS
+## 1. `Lines_Report_Window` — DONE
 
-**Status:** implemented, builds clean, **not yet tested by the user, not committed**
+Shipped in `69e6214`. `SelectLines_Report` takes an optional From/To; both empty
+reads everything, as before. The screen has a year combo box beside From/To
+pickers and opens on the current calendar year.
 
-### Open decision
-
-2026 has **282** actions; 2024 has **10,499**. The current default (calendar year)
-opens a nearly empty screen. Options:
-
-- keep the calendar year
-- default to the **most recent year that has data** — one line in `SetCurrentYear()`
-- default to `All` and let the user filter
-
-**This is the user's call.** Ask before changing.
-
-### Before committing
-
-- open the report → defaults applied, counter matches
-- change year → data *and* counter update together
-- edit a date by hand → year box clears; Apply works
-- `All` → everything returns
-- search and Excel export still work on what is shown
-
-### Suggested commit message
-
-```
-Add a date range to the lines report
-
-SelectLines_Report read the entire action table on every open - no date filter,
-no till filter. It now takes an optional range; both dates empty reads everything,
-exactly as before.
-
-The screen gains a year combo box and From/To pickers that drive one filter
-between them, and opens on <the chosen default> instead of all 28,409 actions.
-
-Also fixes the row counter, which was written only in myDataGrid_Loaded - a
-once-only event - so it kept showing the first load's count regardless of filter.
-
-Apply_blue.png is apply.png recoloured to GreenBlue #17778D with the alpha
-channel untouched; the original is unchanged and still used by Payments_Window.
-```
+**One thing to watch.** The test database holds 282 rows for 2026 against 10,499
+for 2024, so the report opens looking almost empty here. On real data the current
+year is the right default. If it proves wrong in use, the alternative is "the most
+recent year that has data", which costs one extra grouped-count query.
 
 ---
 
@@ -95,18 +64,37 @@ From the per-screen survey. **Seven screens deserve a filter; nineteen do not.**
 
 ### Do these, in this order
 
-| # | screen | source | size | why here |
+Every row below is measured. Two entries in the first version of this table were
+wrong, and both were caught only by measuring — so measure before implementing,
+every time.
+
+| # | screen | rows it renders | span | verdict |
 |---|---|---|---|---|
-| 1 | `Lines_Report_Window` | whole `action` table | no filter at all | section 1 — in progress |
-| 2 | **`Till_Window`** | `action` | 28,409 · largest till 10,039 over 4 years | most-used screen in the app |
-| 3 | `All_Accounts_Window` | `Select_All_Actions` | 28,431 (UNION of two tables) | no filter |
-| 4 | `CashTill_Window` / `CashAction_Window` | `cashaction` | 6,245 over 3.2 years | no filter |
-| 5 | `ExpensesReport_Window` | budget lines | — | year filter; budgets are annual |
-| 6 | `Fixed_Assets_Report_Sub_Window` | — | — | From → To |
-| 7 | `Revenue_Exchange_Sub_Report_Window` | — | — | From → To |
-| 8 | `Syr_Balances_Sub_Window` | — | — | **single date** — a balance is "as of", not "between" |
-| 9 | `Monthly_Salaries_Window` | `employee_salary` | 3,174 | month / year |
-| 10 | `Log_Window` | `log` | 639 but grows forever | From → To, default last month |
+| 1 | `Lines_Report_Window` | whole `action` table | 6 years | **done** — From/To + year, defaults to the current year |
+| 2 | `Till_Window` | 28,409 · largest till 10,039 | 4 years | **done** — multi-select month picker |
+| 3 | `Revenue_Exchange_Sub_Report_Window` | **6,624** | 5 years | **worth doing** — and see the note below |
+| 4 | `Monthly_Salaries_Window` | 3,174 (busiest year 1,478) | 5 years | marginal — a year filter saves maybe 100 ms |
+| 5 | `Fixed_Assets_Report_Sub_Window` | not yet measured | — | measure first |
+| 6 | `Syr_Balances_Sub_Window` | not yet measured | — | a balance is "as of" — single date, not a range |
+
+### Withdrawn from this list, with the measurement that withdrew it
+
+| screen | the claim | what it measures | verdict |
+|---|---|---|---|
+| `All_Accounts_Window` | "reads `Select_All_Actions`, 28,431 rows" | reads **`Account.Select`** — the `account` table, **75 rows**, and its only date is `BeginDate` | **wrong screen.** Reference data; no filter |
+| `CashTill_Window` | "`cashaction`, 6,245 rows over 3.2 years" | calls the stored procedure `Cash_Flow`. Biggest cash account: 5,161 rows in **427 ms**, against a floor of 116 ms | real but small — see below |
+| `CashAction_Window` | listed with the above | a **single-record editor** (`Select_CashAction(id)`) | nothing to filter |
+| `Log_Window` | "639 rows but grows forever" | 656 rows: **292 in 2025, 364 in 2026** | grows ~330 rows a year. Not a performance problem this decade |
+| `ExpensesReport_Window` | "year filter; budgets are annual" | its tables are tiny — 18 budgets, 509 budget lines, 298 lines — yet its queries cost **1.4-5.6 s of server time** | a filter cannot help. See section 5 |
+
+**`CashTill_Window` in detail.** A filter there is possible — `Cash_Flow` returns a
+`Counting date` column — but the payoff is ~300 ms on **one** of seven cash
+accounts, and nothing on the other six (which hold 1, 2, 2, 60, 83 and 934 rows).
+The cost is that `Cash_Flow` is a stored procedure that **lives only on the
+server**: it is not in this repository, not in version control, and `git revert`
+cannot undo an edit to it. Changing it applies instantly to everyone, including
+users still on an older build. Revisit only if real data produces several large
+cash accounts.
 
 ### Do NOT add filters to these
 
@@ -235,6 +223,60 @@ be computed with their original conditions independently, not derived by additio
 If attempted: preserve column order exactly, and verify by comparing all eleven
 values across every till the way `Select_Till_Screen` was verified.
 
+### The expenses report is slow because of views, not volume
+
+This is the only place found so far where the server itself is the bottleneck
+rather than the network, so the usual answer — fetch fewer rows — does not apply.
+
+Measured cost of its queries, from `perf.csv`:
+
+| query | total | of which server-side |
+|---|---|---|
+| `Budget_Lines.Select_unique_Budget_types` | 7,513 ms | **5,617 ms** |
+| `Budget.Select` | 5,458 ms | **5,060 ms** |
+| `Budget.Select_Lines_ExpensesReport` | 3,302 ms | 2,802 ms |
+| `Budget_Lines.Select_All` | 2,810 ms | 2,280 ms |
+| `Budget.Select_LineTypes_ExpensesReport` | 2,025 ms | 1,766 ms |
+
+Against the network floor of 206-406 ms, these are doing real work. But the data
+is tiny: 18 budgets, 509 budget lines, 298 lines, 165 rates.
+
+The reason is that they read **views**, and the views are large:
+
+| view | joins | nested selects |
+|---|---|---|
+| `all_budgetlines` | 14 (13 LEFT) | 3 |
+| `all_avgrates` | 22 (16 LEFT) | 6 |
+
+`cash_balances` is a view too.
+
+MySQL has no materialised views, so every touch rebuilds the whole thing. The
+clearest example is the app's own query:
+
+```sql
+SELECT DISTINCT (all_budgetlines.BudgetType_ID), all_budgetlines.BudgetType
+FROM all_budgetlines;
+```
+
+It returns **one row** and costs **1,455 ms**. Counting the view alone costs
+1,159 ms — so nearly all of it is building a 14-join view in order to read one
+distinct value out of it.
+
+**Do not add a date filter here.** The view is rebuilt whether or not the result
+is filtered.
+
+Three real options, none of them started:
+
+1. **Read the base table instead.** That one query wants distinct budget types —
+   they live in a small base table. This is a per-query fix, low risk, and does
+   not touch the view. Start here.
+2. **Cache in the app.** Budget types change rarely; read once per session
+   instead of per screen open. Needs a rule for when the cache is stale.
+3. **Rewrite or index behind the views.** Biggest payoff, and the only one that
+   helps every caller — but the views live on the server, outside this
+   repository and outside `git revert`, exactly like `Cash_Flow`. Needs `EXPLAIN`
+   on each view first, and a way to version the definitions.
+
 ### `P-06` / async — blocked behind a prerequisite
 
 Two different things hide under "async":
@@ -302,6 +344,33 @@ It is a normal table, not temporary, and **shared across all sessions**. Two use
 opening the rates screen at once can drop each other's table mid-read. This is a
 data-correctness hazard, not a performance one.
 
+### e. `Login.MyConn` is a shared static field, rewritten on every call
+
+```csharp
+public static MySqlConnection MyConn;               // one field, shared
+MyConn = new MySqlConnection(ConnectionString);     // overwritten per call
+```
+
+`BuildConnection()` assigns the static field, then the caller uses it and calls
+`CloseAndClearConnection()`. Two callers running at once would have the second
+overwrite the first's connection, and the first would then close a connection it
+no longer owns.
+
+Nothing in the app deliberately queries in parallel, and today it does not
+happen: a few paths run off the UI thread (`Login_Window2` sign-in,
+`SaveDocument` uploads) but each awaits before the next database call. The window
+is real but never entered.
+
+**It predates this branch.** Pooling (P-01) did not create it. It is recorded
+because it widens on a slow link: the slower the connection, the longer each
+caller holds the field, so the odds of an overlap rise for exactly the users who
+can least afford it.
+
+Fixing it means giving each caller its own `MySqlConnection` rather than sharing
+one static field. That is a change to every one of the ~200 call sites, so it is
+a project, not a patch — and it should not be started until something actually
+demonstrates a collision.
+
 ### c. ~4,236 payments dated beyond 2030
 
 `payment` is the largest table (41,257 rows). Its date range ends at
@@ -318,19 +387,98 @@ request; revisit only if imports actually time out.
 
 ---
 
+## 6b. The connection findings — reviewed, mostly closed
+
+A full review of every connection change on this branch, done because some users
+are on very slow links.
+
+### The idle stall — real, measured, deliberately left alone
+
+The first query after a pause costs far more than the rest:
+
+| gap since the last query | n | average open |
+|---|---|---|
+| under 10 s | 1,170 | 275 ms |
+| 10-60 s | 97 | 317 ms |
+| 1-5 min | 39 | 382 ms |
+| 5-15 min | 10 | 1,269 ms |
+| over 15 min | 21 | **3,002 ms** (worst 11,055) |
+
+Two causes, both confirmed:
+
+1. **The app shortens its own idle limit.** All 177 query sites send
+   `SET SESSION wait_timeout = 600` first. The server's own default is **28800**
+   (8 hours), so the app is only ever cutting it to 10 minutes. Session variables
+   survive in the pool, so the server kills connections that are sitting idle
+   there, and the pool hands the dead one out anyway.
+2. **NAT drops idle mappings**, commonly around 5 minutes, and does it silently.
+   Silent death is what makes it expensive: with no close notification the client
+   waits through TCP retransmissions. The 2 → 4 → 7 → 8 → 11 second ladder in the
+   log is that backoff.
+
+**Left unfixed on purpose.** Both fixes carry risk for users on bad links:
+
+- Raising `wait_timeout` also extends how long a crashed client holds row locks.
+  Four sites in `Payment.cs` open a transaction that spans several round trips
+  (`START TRANSACTION` … `ReGenerate_AllPayments` … `COMMIT`). At 600 s the locks
+  clear in 10 minutes; at 28800 they would sit for 8 hours. That 600 is probably
+  deliberate. Every other transaction in the app sends
+  `START TRANSACTION … COMMIT` as one batch and cannot outlive its command.
+- `Keepalive` would fix the NAT half, but a probe that fails repeatedly on a
+  lossy link makes the OS tear down a connection that still worked — so it can
+  hurt precisely the users it was meant to help.
+
+If this is ever revisited: raise `wait_timeout` on read paths only, leave the four
+`Payment.cs` sites at 600, and measure before and after.
+
+### What the review confirmed is safe
+
+Both changes that altered connection behaviour help slow links **more** than fast
+ones, because both remove round trips or bytes — the two things a weak link
+charges most for. On a 1 Mbit/s link:
+
+| screen | uncompressed | compressed |
+|---|---|---|
+| till grid, all actions | 29.6 s | **4.0 s** |
+| all payments | 11.7 s | **2.9 s** |
+| cash flow, biggest account | 4.5 s | **1.3 s** |
+
+And pooling replaced a constant cost with a rare one: of 1,344 opens on record,
+only **16 (1.2%)** are slower than the *median* open before pooling existed.
+
+### What the review changed
+
+`Connect Timeout` 60 → 180 (`9d0886f`). 60 s had been picked from measurements on
+a fast link. The handshake moves 5,389 bytes — 43 ms even at 1 Mbit/s — so
+bandwidth does not limit it; it costs about 16 round trips, so latency does. 180 s
+covers a round trip of 11 s. Higher buys nothing: `Open()` blocks the UI thread,
+so the number is also the freeze duration, and a failure past three minutes means
+unreachable rather than slow.
+
+---
+
 ## 7. Recommended order
+
+Reordered after measuring. The filter work has reached the end of what it can
+usefully do — most remaining screens are too small to benefit.
 
 | # | item | measured value | risk | section |
 |---|---|---|---|---|
-| 1 | finish + commit the lines report filter | reads 282 rows instead of 28,409 | low | 1 |
-| 2 | date filter on `Till_Window` | biggest remaining, most-used screen | medium — UI change | 2 |
-| 3 | merge the combo-box queries | 5,610 → 1,218 ms per account open | low | 3 |
-| 4 | date filters on the other five screens | varies | low once the pattern is settled | 2 |
+| 1 | merge the account combo-box queries | 5,610 → 1,218 ms per account open | low | 3 |
+| 2 | `all_budgetlines` → read the base table for the distinct-types query | ~1,400 ms per call, one query changed | low | 5 |
+| 3 | filter on `Revenue_Exchange_Sub_Report_Window` | 6,624 rows over 5 years | low, pattern settled | 2 |
+| 4 | measure the two unmeasured sub-reports | unknown | none — measurement only | 2 |
 | 5 | remove `PerfLog` | — | none | 4 |
-| 6 | the correctness issues in section 6 | not speed | needs decisions | 6 |
+| 6 | the correctness issues | not speed | needs decisions | 6 |
 
-**Settle the filter design on screens 1 and 2 before spreading it to seven** —
-changing the pattern later means touching all of them again.
+Deliberately **not** on the list, each with its measurement in section 2 or 5:
+`All_Accounts_Window`, `CashTill_Window`, `CashAction_Window`, `Log_Window`,
+`Monthly_Salaries_Window` (marginal), `ExpensesReport_Window` (a filter cannot
+help it), and the two connection fixes in section 6b.
+
+**Note on ordering.** Items 1-3 are all "one query, measured, low risk". Item 5
+should wait until the work stops, because it is the only instrument left for
+telling whether any of this helped.
 
 ---
 
