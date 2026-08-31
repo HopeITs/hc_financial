@@ -1,1 +1,0 @@
-CREATE ALGORITHM=UNDEFINED DEFINER=`hcfi`@`%` SQL SECURITY DEFINER VIEW `b` AS select `budget`.`ID` AS `budget_id`,year((`budget`.`BeginDate` + interval `numbers`.`n` year)) AS `year` from (`budget` join `numbers` on((`numbers`.`n` <= (year(`budget`.`EndDate`) - year(`budget`.`BeginDate`))))) order by `budget`.`ID`,year((`budget`.`BeginDate` + interval `numbers`.`n` year))

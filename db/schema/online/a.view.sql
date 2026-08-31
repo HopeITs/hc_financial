@@ -1,1 +1,0 @@
-CREATE ALGORITHM=UNDEFINED DEFINER=`hcfi`@`%` SQL SECURITY DEFINER VIEW `a` AS select 1 AS `month` union select 2 AS `02` union select 3 AS `03` union select 4 AS `04` union select 5 AS `05` union select 6 AS `06` union select 7 AS `07` union select 8 AS `08` union select 9 AS `09` union select 10 AS `10` union select 11 AS `11` union select 12 AS `12`
