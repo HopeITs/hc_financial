@@ -168,15 +168,19 @@ namespace Financial_WPF_App.Views
                 //myExpander.IsExpanded = false;
                 Balances.Visibility = Visibility.Hidden;
 
-                // Learn which months this till has, and open on its newest one, before the
-                // grid is loaded - otherwise the first load would fetch everything. This is a
-                // grouped-count query, a handful of rows however big the till is.
+                // Open on the newest month the till has movements in. The server works out
+                // which month that is inside the same query, so this costs one round trip.
+                //
+                // It used to be two: ask which months exist, then ask for that month's rows.
+                // Measured, one round trip costs about as much as 1,500 rows of this grid, so
+                // the extra trip cancelled the filter out on small tills and ate into the gain
+                // on large ones.
+                //
                 // Only here, not in Load_Data: a refresh after saving must keep whatever
                 // period the user is looking at.
-                FillPeriods(a.Select_Till_Periods(Till_ID.ToString()));
-                SelectNewestPeriod();
-
+                _openingOnNewest = true;
                 Load_Data();
+                _openingOnNewest = false;
                 Apply_Color_Theme();
                 Dispatcher.BeginInvoke(new System.Action(() =>
                 {
@@ -734,6 +738,11 @@ namespace Financial_WPF_App.Views
         // Ticking a box only updates the caption. Reloading on every tick would fire a query
         // per click while the user is still choosing months, so the reload waits for the
         // drop-down to close and runs once for the whole selection.
+        // Set only while the window is opening. It makes LoadGrid ask for "the newest month
+        // this till has", which the server resolves inside the query, instead of the screen
+        // having to find that out in a round trip of its own first.
+        private bool _openingOnNewest;
+
         private bool _periodsDirty;
 
         private void Period_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
@@ -773,8 +782,12 @@ namespace Financial_WPF_App.Views
             // One connection and one round trip instead of three. The three statements are
             // unchanged - see Action.Select_Till_Screen - only the number of trips differs.
             // The range narrows the two grids; the totals stay for the whole till.
+            List<string> periods = _openingOnNewest
+                ? new List<string> { Models.Action.NewestPeriod }
+                : SelectedPeriods();
+
             DataSet screen = a.Select_Till_Screen(Till_ID.ToString(), SubProject_ID.ToString(), true, Account_ID,
-                SelectedPeriods());
+                periods);
 
             if (screen.Tables.Count < Models.Action.TillScreenTableCount)
                 throw new InvalidOperationException(
@@ -784,6 +797,11 @@ namespace Financial_WPF_App.Views
             // Came back in the same batch - keeps the list current when an action creates a
             // month that did not exist when the till was opened.
             FillPeriods(screen.Tables[Models.Action.TillScreenPeriods]);
+
+            // The rows above are already the newest month's; this only makes the picker say
+            // so. The list arrives newest first, and it came from the same round trip.
+            if (_openingOnNewest)
+                SelectNewestPeriod();
 
             DataTable temp_dt = screen.Tables[Models.Action.TillScreenGrid];
 
