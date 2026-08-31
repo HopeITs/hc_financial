@@ -1,22 +1,24 @@
--- Rollback: Select_All_Budget_Lines_Details
+-- Select_All_Budget_Lines_Details - ORIGINAL - ONLINE
 --
--- The definition exactly as it was on the online server before the change, taken
--- from commit 8a00102, which recorded it with SHOW CREATE.
+-- Exactly as both servers had it before the change, from commit 8a00102. The two
+-- servers carried the same body; only the DEFINER differed.
 --
--- The application needs no change either way: it calls the procedure by name and
--- neither the name nor the parameters moved.
+-- Going back costs: offline 2,291 ms -> 15,501 ms. The application needs no change
+-- either way - the name and the parameter did not move.
 --
--- Running this brings back the slowness the change removed - offline that was
--- 15,501 ms against 2,291 ms.
+-- DEFINER
+--   Kept deliberately. These objects are SQL SECURITY DEFINER, so they run with
+--   the privileges of the user named in the clause, not the caller's. Setting a
+--   DEFINER other than yourself needs SUPER (or SET_USER_ID), so run this as an
+--   account that has it. If you cannot, remove the DEFINER clause and the object
+--   is created as whoever runs the file - check that user can read every table it
+--   touches before relying on it.
 --
--- The DEFINER clause is removed, so the procedure is recreated as whichever user
--- runs this file.
-
 DROP PROCEDURE IF EXISTS `Select_All_Budget_Lines_Details`;
 
 DELIMITER $$
 
-CREATE PROCEDURE `Select_All_Budget_Lines_Details`(IN `Type_ID` INT)
+CREATE DEFINER=`hcfi`@`%` PROCEDURE `Select_All_Budget_Lines_Details`(IN `Type_ID` INT)
 BEGIN
 SET SESSION group_concat_max_len = 1000000;
 set @sql = null;

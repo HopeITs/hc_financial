@@ -1,6 +1,6 @@
--- Apply: Select_All_Budget_Lines_Details
+-- Select_All_Budget_Lines_Details - NEW - OFFLINE (MariaDB 10.4)
 --
--- WHAT IT CHANGES
+-- WHAT IT FIXES
 --   The procedure builds its columns dynamically, three per donor, and each one
 --   carried a correlated subquery for that donor's rate:
 --
@@ -8,55 +8,42 @@
 --                         WHERE budget_id = all_budgetlines.budget_ID
 --                           AND donor_id  = <n>) / 100
 --
---   With 13 donors that is 39 subqueries per row. budget_donor is small and
---   already indexed, so each one is fast - there are simply far too many of them.
+--   13 donors x 3 columns x 28,426 rows is roughly 1.1 million subqueries.
+--   budget_donor holds 116 rows and is already indexed on (budget_id, donor_id),
+--   so each lookup was fast - there were simply far too many of them.
 --
---   budget_donor is now joined once and the rate picked per donor with a
---   conditional aggregate, which the surrounding GROUP BY already supports:
+--   It now joins budget_donor once and picks the rate with a conditional
+--   aggregate, which the surrounding GROUP BY already supports:
 --
 --       Expected_Total * MAX(CASE WHEN bd.donor_id = <n> THEN bd.rate END) / 100
 --
---   Nothing else moves: same columns, same names, same order, same parameters.
+--   Two changes in total: that expression in three places, and one LEFT JOIN.
+--   Same columns, same names, same order, same parameter, same GROUP BY.
+--
+--       offline   15,501 ms -> 2,291 ms   (7x)
+--       online     1,533 ms -> 1,318 ms
+--
+--   The online copy holds 509 budget lines against 2,265 offline, which is why
+--   the gain measures small there. It grows with rows and with donor count.
 --
 -- VERIFIED
---   The old and new procedure were both installed and run side by side, for
---   every budget type, on both databases. Results compared value by value:
+--   Old and new were installed side by side and run for every budget type on both
+--   servers, then compared value by value. Offline: 2,265 rows x 56 columns,
+--   identical. Online: identical. Confirmed independently by the user offline.
 --
---       offline (MariaDB 10.4)   2,265 rows x 56 columns   identical
---       online  (MySQL 8.4)        509 rows                identical
+-- DEFINER
+--   Kept deliberately. These objects are SQL SECURITY DEFINER, so they run with
+--   the privileges of the user named in the clause, not the caller's. Setting a
+--   DEFINER other than yourself needs SUPER (or SET_USER_ID), so run this as an
+--   account that has it. If you cannot, remove the DEFINER clause and the object
+--   is created as whoever runs the file - check that user can read every table it
+--   touches before relying on it.
 --
---   Also checked, because the rewrite would behave differently if they were not
---   true - on the online data:
---
---       duplicate (budget_id, donor_id) rows        0  (and a unique key forbids them)
---       groups where Price varies                   0
---       groups where Expected_Total varies          0
---       budgets with no donor                       1  (covered by the comparison)
---
--- MEASURED
---       offline   15,501 ms -> 2,291 ms   (7x)
---       online      1,533 ms -> 1,318 ms
---
---   The online test database holds far fewer budget lines, so the gain is small
---   there. It grows with the number of donors and rows.
---
--- NOT IN THIS FILE
---   cash_balances. The offline database had a bad version of that view and it has
---   been fixed there, but the online one was already written the right way. There
---   is nothing to fix online.
---
--- HOW TO RUN
---   Open in MySQL Workbench, connect, execute the whole file. Safe to re-run.
---   The DELIMITER lines are needed; keep them.
---
--- TO UNDO
---   Run rollback-budget-lines.sql in this directory.
-
 DROP PROCEDURE IF EXISTS `Select_All_Budget_Lines_Details`;
 
 DELIMITER $$
 
-CREATE PROCEDURE `Select_All_Budget_Lines_Details`(IN `Type_ID` INT)
+CREATE DEFINER=`hcfinancial`@`%` PROCEDURE `Select_All_Budget_Lines_Details`(IN `Type_ID` INT)
 BEGIN
 
 SET SESSION group_concat_max_len = 1000000;
