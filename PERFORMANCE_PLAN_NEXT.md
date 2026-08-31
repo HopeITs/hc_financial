@@ -223,59 +223,82 @@ be computed with their original conditions independently, not derived by additio
 If attempted: preserve column order exactly, and verify by comparing all eleven
 values across every till the way `Select_Till_Screen` was verified.
 
-### The expenses report is slow because of views, not volume
+### Server-side objects — the biggest wins found so far, and the rules learned
 
-This is the only place found so far where the server itself is the bottleneck
-rather than the network, so the usual answer — fetch fewer rows — does not apply.
+This is the one area where the **server** is the bottleneck rather than the
+network, so "fetch fewer rows" does not apply. Two objects were rewritten and both
+are done; a third is prepared but not applied.
 
-Measured cost of its queries, from `perf.csv`:
+#### What was wrong, and what it cost
 
-| query | total | of which server-side |
+| object | the fault | offline |
 |---|---|---|
-| `Budget_Lines.Select_unique_Budget_types` | 7,513 ms | **5,617 ms** |
-| `Budget.Select` | 5,458 ms | **5,060 ms** |
-| `Budget.Select_Lines_ExpensesReport` | 3,302 ms | 2,802 ms |
-| `Budget_Lines.Select_All` | 2,810 ms | 2,280 ms |
-| `Budget.Select_LineTypes_ExpensesReport` | 2,025 ms | 1,766 ms |
+| `cash_balances` (view) | two unrelated branches hung off `cashaccount`, so the server built their cross product — **6,304,983 rows to return 781** | 23,215 ms → **131 ms** |
+| `get_cash_report()` | reads that view several times | 70,412 ms → **475 ms** |
+| `Select_All_Budget_Lines_Details` | one correlated subquery per donor per row — 13 donors × 3 columns × 28,426 rows ≈ **1.1 million** | 15,501 ms → **2,291 ms** |
 
-Against the network floor of 206-406 ms, these are doing real work. But the data
-is tiny: 18 budgets, 509 budget lines, 298 lines, 165 rates.
+The fix in both cases is the same shape: **aggregate once, before joining**, rather
+than letting the join multiply rows and cleaning up afterwards.
 
-The reason is that they read **views**, and the views are large:
+#### State
 
-| view | joins | nested selects |
+| | `cash_balances` | `Select_All_Budget_Lines_Details` |
 |---|---|---|
-| `all_budgetlines` | 14 (13 LEFT) | 3 |
-| `all_avgrates` | 22 (16 LEFT) | 6 |
+| offline (MariaDB 10.4) | applied, verified by me and independently by the user | applied, verified both ways |
+| online (Percona 8.4) | **already correct** — written the right way there; nothing to do | **not applied.** `db/changes/apply-budget-lines.sql` is ready |
 
-`cash_balances` is a view too.
+The online database has not been modified at all. `db/schema/online/` still matches
+it exactly.
 
-MySQL has no materialised views, so every touch rebuilds the whole thing. The
-clearest example is the app's own query:
+#### Files
 
-```sql
-SELECT DISTINCT (all_budgetlines.BudgetType_ID), all_budgetlines.BudgetType
-FROM all_budgetlines;
-```
+    db/schema/local/, db/schema/online/     definitions as dumped from each server
+    db/changes/apply-budget-lines.sql       the one change still outstanding
+    db/changes/rollback-budget-lines.sql    its exact original
+    db/changes/compare-old-vs-new.sql       installs the originals under _old names
+                                            beside the current ones, with the queries
+                                            to compare them
 
-It returns **one row** and costs **1,455 ms**. Counting the view alone costs
-1,159 ms — so nearly all of it is building a 14-join view in order to read one
-distinct value out of it.
+#### Rules this cost something to learn
 
-**Do not add a date filter here.** The view is rebuilt whether or not the result
-is filtered.
+1. **Dump the definitions before touching anything.** They are in no version
+   control otherwise, and `git revert` cannot reach a server object. `8a00102` is
+   that baseline, and it is what made every comparison and every offer to undo
+   possible.
+2. **Never carry a diagnosis from one server to the other.** `Select_Budget_Details`
+   looked like the culprit because a filter sat outside a derived table: 1.6–9.9x
+   on MySQL 8.4, **nothing at all** on MariaDB 10.4, where
+   `condition_pushdown_for_derived` is on and the optimizer already does it. And
+   `cash_balances` was a different definition on each server — the bad one existed
+   only offline. An earlier note in `8a00102` claiming the two servers differ only
+   in `DEFINER` was wrong.
+3. **Measure the screen, not the theory.** Every correct finding here came from
+   timing the actual calls a window makes. Every wrong one came from reading SQL
+   and reasoning about it.
+4. **Compare results in a deterministic order.** The first check of the budget
+   lines rewrite showed 22,390 differences and nearly sank it. The report's
+   `ORDER BY` omits `line_ID`, so tied rows come back in whatever order the plan
+   produces. Sorted by the group key, the two are identical. *That non-determinism
+   is still in the procedure* — worth knowing if the row order ever looks unstable.
+5. **Check the conditions the rewrite depends on, not just the output.** For these
+   two: no account owning more than one SYR/PAY till, no duplicate
+   `(budget_id, donor_id)` (a unique key enforces it), no column varying inside a
+   group, and no `SUM`/`COUNT` the added join could inflate. All verified on both
+   servers. If the first ever becomes false, the **old** `cash_balances` would
+   double-count and the new one would not — they would differ, and the new one
+   would be right.
+6. **Ask again when the diagnosis changes.** Approval to change the offline
+   database was given for a specific fix. When that fix turned out to be the wrong
+   one, two different and larger changes were applied under the same approval. That
+   was too wide a reading. A changed diagnosis needs a fresh yes.
 
-Three real options, none of them started:
+#### Still open, same family, not started
 
-1. **Read the base table instead.** That one query wants distinct budget types —
-   they live in a small base table. This is a per-query fix, low risk, and does
-   not touch the view. Start here.
-2. **Cache in the app.** Budget types change rarely; read once per session
-   instead of per screen open. Needs a rule for when the cache is stale.
-3. **Rewrite or index behind the views.** Biggest payoff, and the only one that
-   helps every caller — but the views live on the server, outside this
-   repository and outside `git revert`, exactly like `Cash_Flow`. Needs `EXPLAIN`
-   on each view first, and a way to version the definitions.
+`Lines_ExpensesReport`, `LineTypes_ExpensesReport`, `Select_Syr_Balances` and
+`Cash_Flow` are all server-side and none have been examined properly.
+`LineTypes_ExpensesReport` visibly has the filter-outside-the-derived-table shape,
+which is worth nothing on MariaDB and something on MySQL — measure both before
+touching either.
 
 ### `P-06` / async — blocked behind a prerequisite
 
