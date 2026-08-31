@@ -132,9 +132,7 @@ namespace Financial_WPF_App.Models
             MyConn = new MySqlConnection(ConnectionString);
             if (MyConn.State == ConnectionState.Closed)
             {
-                Helper.PerfLog.BeginOpen();
                 MyConn.Open();
-                Helper.PerfLog.EndOpen();
                 return true;
             }
             else
@@ -161,7 +159,6 @@ namespace Financial_WPF_App.Models
             // app depends on the pools being flushed (online/offline use different connection
             // strings and therefore different pools).
             MyConn.Close();
-            Helper.PerfLog.EndOperation();
         }
 
         public static string ReplaceQuotation(string value)
