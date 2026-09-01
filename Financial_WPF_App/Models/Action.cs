@@ -310,9 +310,33 @@ namespace Financial_WPF_App.Models
             return query;
         }
 
-        public DataTable Select_action_not_approved(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed, bool ForApproval)
+        /// <summary>
+        /// Pass "" for both dates to read everything, which is how this behaved before the
+        /// range was added. Dates are "yyyy/MM/dd", as on the other screens.
+        /// </summary>
+        public DataTable Select_action_not_approved(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed, bool ForApproval,
+            string FromDate = "", string ToDate = "")
         {
             string query = BuildNotApprovedQuery(Action_ID, Till_IDs, SubProject_ID, showClosed, ForApproval);
+
+            // Optional range, added here rather than inside the shared builder so the till
+            // screen's period picker and this date range stay independent of each other.
+            if (FromDate != "" || ToDate != "")
+            {
+                string extra = "";
+                if (FromDate != "")
+                    extra += " AND action_not_approved.ActionDate >= '" + FromDate.Replace("'", "") + "'";
+                if (ToDate != "")
+                    extra += " AND action_not_approved.ActionDate <= '" + ToDate.Replace("'", "") + "'";
+
+                // The builder ends with GROUP BY ... ORDER BY ...; the condition belongs
+                // before that, so it goes in ahead of the GROUP BY the builder wrote.
+                int at = query.LastIndexOf(" GROUP BY action_not_approved.id", StringComparison.OrdinalIgnoreCase);
+                if (at < 0)
+                    at = query.LastIndexOf(" Group by action_not_approved.id", StringComparison.OrdinalIgnoreCase);
+                if (at >= 0)
+                    query = query.Substring(0, at) + extra + query.Substring(at);
+            }
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -333,7 +357,12 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable Select_Deleted_action(string Till_IDs, bool ForApproval)
+        /// <summary>
+        /// Pass "" for both dates to read everything, which is how this behaved before the
+        /// range was added. Dates are "yyyy/MM/dd", as on the other screens.
+        /// </summary>
+        public DataTable Select_Deleted_action(string Till_IDs, bool ForApproval,
+            string FromDate = "", string ToDate = "")
         {
 
             string query = @"SELECT category.ID AS `Category_ID`, category.Name as `Category_Name`,
@@ -433,6 +462,13 @@ namespace Financial_WPF_App.Models
                 if (Properties.Settings.Default.Role != "Head Office")
                     condition += " and action_deleted.`Amount` <= (select role.Approval_Limit from role where role.Name = '" + Properties.Settings.Default.Role + "')";
             }
+
+            // Optional range. Both empty reads everything, as before. Compared against the
+            // column directly so an index on action_deleted.ActionDate stays usable.
+            if (FromDate != "")
+                condition += " and action_deleted.ActionDate >= '" + FromDate.Replace("'", "") + "'";
+            if (ToDate != "")
+                condition += " and action_deleted.ActionDate <= '" + ToDate.Replace("'", "") + "'";
 
             query += condition + " Group by action_deleted.id " + " ORDER BY action_deleted.ActionDate DESC, action_deleted.ID DESC;";
 

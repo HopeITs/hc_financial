@@ -167,6 +167,20 @@
                             <ImageBrush ImageSource="/Images/Buttons/restore.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
+
+                    <Label x:Name="From_Label" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="18,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+                    <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker" Margin="3,0,2,0" VerticalAlignment="Center" Width="150" Height="30"/>
+
+                    <Label x:Name="To_Label" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="14,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+                    <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" VerticalAlignment="Center" Width="150" Height="30"/>
+
+                    <Button ToolTip="Show the selected period" ToolTipService.InitialShowDelay="100"
+                            Style="{DynamicResource AddButtonStyle}"
+                            x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="10,0,0,0" VerticalAlignment="Center" Height="25" Width="55">
+                        <Button.Background>
+                            <ImageBrush x:Name="Go_btn_Image" ImageSource="/Images/Buttons/apply.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
                 </WrapPanel>
                 <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
                     <RadioButton Style="{StaticResource RadioButtonStyle}" x:Name="DeletedActions_RadioButton" Content="Show Deleted Actions" IsChecked="False" Margin="112,6,3,8" Grid.Column="2" Tag="False" Click="DeletedActions_RadioButton_Click"/>

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Financial_WPF_App.Helper;
 
 namespace Financial_WPF_App.Views
@@ -64,6 +65,8 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
+
+                SetApplyButtonColour();
 
                 Load_Data();
                 Apply_Color_Theme();
@@ -161,11 +164,75 @@ namespace Financial_WPF_App.Views
 
         }
 
+        #region date range
+
+        // The approval screens open with nothing loaded, the way Payments does. Approval is
+        // a work queue, so nothing is hidden by a default period - there is no default
+        // period at all. The user picks a range and presses Apply.
+
+        /// <summary>
+        /// Each approval tab has its own colour, so its Apply button carries it: Budget is
+        /// PastelDarkBlue, Micro Projects HopeRed, Exchange Orange, Personal PastelGreen.
+        /// The images are apply.png recoloured, alpha untouched.
+        /// </summary>
+        private void SetApplyButtonColour()
+        {
+            string image;
+            if (Account_Type == "Exchange")
+                image = "Apply_orange.png";
+            else if (Account_Type == "Personal")
+                image = "Apply_green.png";
+            else if (Category == "Micro Projects")
+                image = "apply.png";
+            else
+                image = "Apply_darkblue.png";
+
+            Go_btn.Background = new ImageBrush(
+                new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/" + image)))
+            {
+                Stretch = Stretch.Uniform
+            };
+        }
+
+        // Empty means no bound on that side; both empty reads everything.
+        private string SelectedFrom()
+        {
+            return FromDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)FromDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private string SelectedTo()
+        {
+            return ToDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private void Go_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                LoadGrid();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        #endregion
+
         public void Load_Data()
         {
-            LoadGrid();
+            // No LoadGrid here. The screen opens empty and waits for Apply - same as
+            // Payments. Opening this window used to run two queries per tab across sixteen
+            // tabs before anyone had asked for anything.
             Show_Hide();
-
         }
 
         private void Show_Hide()
@@ -280,8 +347,11 @@ namespace Financial_WPF_App.Views
         private void LoadGrid()
         {
 
-            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true);
-            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true);
+            string from = SelectedFrom();
+            string to = SelectedTo();
+
+            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true, from, to);
+            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true, from, to);
 
             System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
             System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
@@ -429,8 +499,9 @@ namespace Financial_WPF_App.Views
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
 
-                int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
+                // The row count is written where the data is set, which now happens on
+                // every Apply. Loaded fires once, so writing it here as well would only
+                // freeze whatever the screen opened with.
 
                 //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
                 Export_btn.CommandTarget = myDataGrid;
@@ -884,6 +955,9 @@ namespace Financial_WPF_App.Views
                     }
                     else
                     {
+                        // The counter was written only on the branch that had rows, so an
+                        // empty result left the previous number on screen.
+                        All_textBlock.Text = "0";
                         myDataGrid.ItemsSource = null;
                     }
                 }
@@ -913,6 +987,7 @@ namespace Financial_WPF_App.Views
                     }
                     else
                     {
+                        All_textBlock.Text = "0";
                         myDataGrid.ItemsSource = null;
                     }
                 }
