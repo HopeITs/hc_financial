@@ -7,8 +7,14 @@
 -- 1. The two per-donor figures are computed once, grouped by rate and donor, into
 --    temporary tables, and looked up with a conditional aggregate - instead of a
 --    correlated subquery repeated for every donor on every rate row. The outer query
---    gains GROUP BY all_avgrates.ID, which is safe because that column is unique
---    (checked: 910 rows, 910 distinct ids), so every row is its own group.
+--    gains GROUP BY all_avgrates.ID, which is safe because that column is rate.ID,
+--    a primary key, and the view yields one row per rate (910 rows, 910 distinct ids).
+--
+--    The temporary tables deliberately do NOT declare their column types. action.Amount
+--    is a double and budget_donor.rate a float, so the original expressions produced a
+--    double; an earlier version of this file declared the aggregate DECIMAL(30,6),
+--    which rounded it to six decimals. The server infers the type instead, and the
+--    index is added afterwards.
 --
 -- 2. @sql5 was selected with a different WHERE than @sql1 and @sql3: they filter to
 --    rates that go into SYR, it did not. The donor columns are created by @sql1, so
@@ -18,7 +24,7 @@
 --
 -- VERIFIED
 --   Old and new installed side by side and run for every till type, compared value by
---   value with the row order normalised:
+--   value at full precision - no rounding - with the row order normalised:
 --
 --       type 1 pay    identical
 --       type 2 USD    identical      14,827 ms -> 458 ms
@@ -56,10 +62,7 @@ BEGIN
        same two aggregates, so they are computed once here, grouped by the rate and
        the donor, and looked up by the generated columns below. */
 
-    CREATE TEMPORARY TABLE Syr_Exchanged_Agg (
-        rate_id INT, donor_id INT, amt DECIMAL(30,6),
-        PRIMARY KEY (rate_id, donor_id)
-    ) AS
+    CREATE TEMPORARY TABLE Syr_Exchanged_Agg AS
     SELECT ar.ID AS rate_id, a.donor_id AS donor_id, SUM(a.Amount) AS amt
     FROM all_avgrates ar
     JOIN action a ON a.ActionDate BETWEEN ar.BeginDate AND ar.EndDate
@@ -74,10 +77,9 @@ BEGIN
       AND a.donor_id IS NOT NULL
     GROUP BY ar.ID, a.donor_id;
 
-    CREATE TEMPORARY TABLE Syr_Expenses_Agg (
-        rate_id INT, donor_id INT, amt DECIMAL(30,6),
-        PRIMARY KEY (rate_id, donor_id)
-    ) AS
+    ALTER TABLE Syr_Exchanged_Agg ADD INDEX (rate_id, donor_id);
+
+    CREATE TEMPORARY TABLE Syr_Expenses_Agg AS
     SELECT a.Rate_ID AS rate_id, bd.donor_id AS donor_id,
            SUM(a.Amount *
                (SELECT bd2.rate FROM budget_donor bd2
@@ -91,6 +93,8 @@ BEGIN
     WHERE at.shortname IN ('E','Ex')
       AND bd.donor_id IS NOT NULL
     GROUP BY a.Rate_ID, bd.donor_id;
+
+    ALTER TABLE Syr_Expenses_Agg ADD INDEX (rate_id, donor_id);
 
     SELECT GROUP_CONCAT(DISTINCT CONCAT(
         'IFNULL(MAX(CASE WHEN exch.donor_id = ', donor.ID, ' THEN exch.amt END),0) AS `', donor.Name, ' Amount exchanged`,
