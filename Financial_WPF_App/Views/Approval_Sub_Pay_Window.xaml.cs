@@ -96,101 +96,18 @@ namespace Financial_WPF_App.Views
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
-        #region date range
 
-        // Pay sits under Micro Accounts, whose colour is HopeRed - which is what apply.png
-        // already is, so this button needs no recolouring.
-        //
-        // The month picker and the From/To range are one filter with two ways in: choosing
-        // months clears the dates, typing a date clears the months. Nothing loads until
-        // Apply, the way Payments does - approval is a work queue, so a default period
-        // would quietly hide items waiting on someone's decision.
-        private Helper.PeriodPicker _periods;
+        #region month filter
 
-        private void SetUpPeriodPicker()
+        // Pay sits under Micro Accounts, whose colour is HopeRed - which apply.png already
+        // is, so it needs no image of its own.
+        private void SetUpFilter()
         {
-            _periods = new Helper.PeriodPicker(
-                Period_comboBox,
-                () => p.Select_Approval_Pay_Periods(SubProject_ID),
-                () =>
-                {
-                    if (_periods.AnySelected())
-                    {
-                        ClearDates();
-                        LoadGrid();
-                    }
-                });
-        }
-
-        private void Period_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
-        {
-            CheckBox box = sender as CheckBox;
-            if (box == null)
-                return;
-
-            Helper.PeriodPicker.Row row = box.DataContext as Helper.PeriodPicker.Row;
-            if (row == null)
-                return;
-
-            row.Check_Status = box.IsChecked == true;
-            _periods.Ticked(row);
-        }
-
-        // Clearing the months leaves the dates as the filter; if they are empty too the
-        // next Apply reads everything.
-        private void Period_clear_btn_Click(object sender, RoutedEventArgs e)
-        {
-            if (_periods != null)
-                _periods.Clear();
-        }
-
-        private bool _settingDates;
-
-        private void ClearDates()
-        {
-            _settingDates = true;
-            FromDate_datepicker.SelectedDate = null;
-            ToDate_datepicker.SelectedDate = null;
-            _settingDates = false;
-        }
-
-        private void Date_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (_settingDates)
-                return;
-
-            if (_periods != null)
-                _periods.Clear();
-        }
-
-        private string SelectedFrom()
-        {
-            return FromDate_datepicker.SelectedDate == null
-                ? ""
-                : ((DateTime)FromDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-        }
-
-        private string SelectedTo()
-        {
-            return ToDate_datepicker.SelectedDate == null
-                ? ""
-                : ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-        }
-
-        private void Go_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                LoadGrid();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
+            MonthFilter.ShowDateRange = true;
+            MonthFilter.ApplyImage = "apply.png";
+            MonthFilter.LoadMonths = () => p.Select_Approval_Pay_Periods(SubProject_ID);
+            MonthFilter.Apply += (s2, e2) => LoadGrid();
+            MonthFilter.Initialise();
         }
 
         #endregion
@@ -198,15 +115,15 @@ namespace Financial_WPF_App.Views
         public void Load_Data()
         {
             // No LoadGrid here. The screen opens empty and waits for Apply.
-            SetUpPeriodPicker();
+            SetUpFilter();
         }
 
         private void LoadGrid()
         {
 
-            string from = SelectedFrom();
-            string to = SelectedTo();
-            List<string> months = _periods == null ? null : _periods.Selected();
+            string from = MonthFilter.From();
+            string to = MonthFilter.To();
+            List<string> months = MonthFilter.SelectedMonths();
 
             Payments_dt = p.Select_All_Not_Approved_Payments(SubProject_ID, true, -1, from, to, -1, months);
             Deleted_Payments_dt = p.Select_All_Deleted_Payments(SubProject_ID, true, from, to, months);

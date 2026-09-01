@@ -66,8 +66,7 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
 
-                SetApplyButtonColour();
-                SetUpPeriodPicker();
+                SetUpFilter();
 
                 Load_Data();
                 Apply_Color_Theme();
@@ -165,129 +164,34 @@ namespace Financial_WPF_App.Views
 
         }
 
-        #region date range
 
-        // The approval screens open with nothing loaded, the way Payments does. Approval is
-        // a work queue, so nothing is hidden by a default period - there is no default
-        // period at all. The user picks a range and presses Apply.
+        #region month filter
+
+        // The markup and the wiring live in Controls/UC_MonthFilter; this screen only says
+        // where the months come from, which colour the Apply button is, and what to do when
+        // the user asks for a period.
+        private void SetUpFilter()
+        {
+            MonthFilter.ShowDateRange = true;
+            MonthFilter.ApplyImage = ApplyImageForThisTab();
+            MonthFilter.LoadMonths = () => a.Select_Approval_Periods(Tills_ID.ToString());
+            MonthFilter.Apply += (s2, e2) => LoadGrid();
+            MonthFilter.Initialise();
+        }
 
         /// <summary>
-        /// Each approval tab has its own colour, so its Apply button carries it: Budget is
-        /// PastelDarkBlue, Micro Projects HopeRed, Exchange Orange, Personal PastelGreen.
-        /// The images are apply.png recoloured, alpha untouched.
+        /// Each approval tab has its own colour, so its Apply button carries it. apply.png is
+        /// already HopeRed, which is Micro Projects, so only the other three needed an image.
         /// </summary>
-        private void SetApplyButtonColour()
+        private string ApplyImageForThisTab()
         {
-            string image;
             if (Account_Type == "Exchange")
-                image = "Apply_orange.png";
-            else if (Account_Type == "Personal")
-                image = "Apply_green.png";
-            else if (Category == "Micro Projects")
-                image = "apply.png";
-            else
-                image = "Apply_darkblue.png";
-
-            Go_btn.Background = new ImageBrush(
-                new BitmapImage(new Uri("pack://application:,,,/Images/Buttons/" + image)))
-            {
-                Stretch = Stretch.Uniform
-            };
-        }
-
-        // The month picker and the From/To range are one filter with two ways in, the same
-        // arrangement the other screens use for their year box. Choosing months clears the
-        // dates; typing a date clears the months.
-        private Helper.PeriodPicker _periods;
-
-        private void SetUpPeriodPicker()
-        {
-            _periods = new Helper.PeriodPicker(
-                Period_comboBox,
-                () => a.Select_Approval_Periods(Tills_ID.ToString()),
-                () =>
-                {
-                    // Only reload if the picker is what the user is filtering by. Ticking
-                    // months and then clearing them should not fetch on the way past.
-                    if (_periods.AnySelected())
-                    {
-                        ClearDates();
-                        LoadGrid();
-                    }
-                });
-        }
-
-        private void Period_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
-        {
-            CheckBox box = sender as CheckBox;
-            if (box == null)
-                return;
-
-            Helper.PeriodPicker.Row row = box.DataContext as Helper.PeriodPicker.Row;
-            if (row == null)
-                return;
-
-            row.Check_Status = box.IsChecked == true;
-            _periods.Ticked(row);
-        }
-
-        // Clearing the months leaves the dates as the filter; if they are empty too the
-        // next Apply reads everything.
-        private void Period_clear_btn_Click(object sender, RoutedEventArgs e)
-        {
-            if (_periods != null)
-                _periods.Clear();
-        }
-
-        private bool _settingDates;
-
-        private void ClearDates()
-        {
-            _settingDates = true;
-            FromDate_datepicker.SelectedDate = null;
-            ToDate_datepicker.SelectedDate = null;
-            _settingDates = false;
-        }
-
-        // A date typed by hand means the months no longer describe what is shown.
-        private void Date_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (_settingDates)
-                return;
-
-            if (_periods != null)
-                _periods.Clear();
-        }
-
-        // Empty means no bound on that side; both empty reads everything.
-        private string SelectedFrom()
-        {
-            return FromDate_datepicker.SelectedDate == null
-                ? ""
-                : ((DateTime)FromDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-        }
-
-        private string SelectedTo()
-        {
-            return ToDate_datepicker.SelectedDate == null
-                ? ""
-                : ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
-        }
-
-        private void Go_btn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                LoadGrid();
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
-                { MessageBox.Show("please check your network and try again", "Error"); }
-                else if (ex.Message.Contains("host"))
-                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else { MessageBox.Show(ex.Message, "Error"); }
-            }
+                return "Apply_orange.png";
+            if (Account_Type == "Personal")
+                return "Apply_green.png";
+            if (Category == "Micro Projects")
+                return "apply.png";
+            return "Apply_darkblue.png";
         }
 
         #endregion
@@ -412,10 +316,9 @@ namespace Financial_WPF_App.Views
         private void LoadGrid()
         {
 
-            string from = SelectedFrom();
-            string to = SelectedTo();
-
-            List<string> months = _periods == null ? null : _periods.Selected();
+            string from = MonthFilter.From();
+            string to = MonthFilter.To();
+            List<string> months = MonthFilter.SelectedMonths();
 
             Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true, from, to, months);
             Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true, from, to, months);

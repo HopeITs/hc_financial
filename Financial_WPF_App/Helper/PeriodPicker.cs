@@ -66,6 +66,22 @@ namespace Financial_WPF_App.Helper
             return _rows.Any(r => !r.IsSelectAll && r.Check_Status);
         }
 
+        /// <summary>
+        /// Tick the newest month, which is the first row - the list arrives newest first.
+        /// The till screen opens on it.
+        /// </summary>
+        public void SelectNewest()
+        {
+            Row first = _rows.FirstOrDefault(r => !r.IsSelectAll);
+            if (first == null)
+                return;
+
+            foreach (Row r in _rows)
+                r.Check_Status = false;
+            first.Check_Status = true;
+            Rebind();
+        }
+
         /// <summary>Untick everything. Used when the user types a date by hand instead.</summary>
         public void Clear()
         {
@@ -126,9 +142,15 @@ namespace Financial_WPF_App.Helper
                 _onClosed();
         }
 
-        /// <summary>Columns: Period ("yyyy-MM"), Movements (int).</summary>
+        /// <summary>
+        /// Columns: Period ("yyyy-MM"), Movements (int). A host that already has the list -
+        /// the till screen gets it inside the batch that fills the grid - calls this instead,
+        /// and the drop-down will not go and fetch it again.
+        /// </summary>
         public void Fill(DataTable periods)
         {
+            _loaded = true;
+
             HashSet<string> ticked = new HashSet<string>(Selected());
 
             _rows = new List<Row> {

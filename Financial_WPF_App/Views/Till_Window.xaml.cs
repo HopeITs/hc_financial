@@ -178,6 +178,8 @@ namespace Financial_WPF_App.Views
                 //
                 // Only here, not in Load_Data: a refresh after saving must keep whatever
                 // period the user is looking at.
+                SetUpFilter();
+
                 _openingOnNewest = true;
                 Load_Data();
                 _openingOnNewest = false;
@@ -656,124 +658,25 @@ namespace Financial_WPF_App.Views
         #region period filter
 
         /// <summary>One month in the period picker.</summary>
-        private class Local_Period
-        {
-            public string Period { get; set; }        // "yyyy-MM" - what the query uses
-            public string Display { get; set; }       // "2024-06   (142)" - what the user sees
-            public bool Check_Status { get; set; }
-        }
-
-        private List<Local_Period> objPeriodList = new List<Local_Period>();
-
-        /// <summary>Nothing ticked means no date restriction, the whole till.</summary>
-        private List<string> SelectedPeriods()
-        {
-            List<string> chosen = new List<string>();
-            foreach (Local_Period p in objPeriodList)
-                if (p.Check_Status)
-                    chosen.Add(p.Period);
-            return chosen;
-        }
-
-        private void ShowPeriodCount()
-        {
-            int count = objPeriodList.Count(p => p.Check_Status);
-
-            if (count == 0)
-                Period_comboBox.Text = "All months";
-            else if (count == 1)
-                Period_comboBox.Text = objPeriodList.First(p => p.Check_Status).Period;
-            else
-                Period_comboBox.Text = count.ToString() + " months";
-        }
-
-        /// <summary>
-        /// Rebuilt from the period list that comes back with every load, so a month created by
-        /// a new action appears without reopening the till. Ticks are carried over.
-        /// </summary>
-        private void FillPeriods(DataTable periods)
-        {
-            if (periods == null)
-                return;
-
-            HashSet<string> ticked = new HashSet<string>(SelectedPeriods());
-
-            objPeriodList = new List<Local_Period>();
-            foreach (System.Data.DataRow row in periods.Rows)
-            {
-                string period = Convert.ToString(row["Period"]);
-                if (string.IsNullOrEmpty(period))
-                    continue;
-
-                objPeriodList.Add(new Local_Period
-                {
-                    Period = period,
-                    Display = period + "   (" + Convert.ToInt32(row["Movements"]).ToString("N0") + ")",
-                    Check_Status = ticked.Contains(period)
-                });
-            }
-
-            Period_comboBox.ItemsSource = null;
-            Period_comboBox.ItemsSource = objPeriodList;
-            ShowPeriodCount();
-        }
-
-        /// <summary>
-        /// The till opens on its own most recent month rather than on everything. Each till
-        /// covers its own stretch of time, so a fixed window would be empty for some and
-        /// useless for others.
-        /// </summary>
-        private void SelectNewestPeriod()
-        {
-            if (objPeriodList.Count == 0)
-                return;
-
-            objPeriodList[0].Check_Status = true;   // the list arrives newest first
-
-            Period_comboBox.ItemsSource = null;
-            Period_comboBox.ItemsSource = objPeriodList;
-            ShowPeriodCount();
-        }
-
-        // Ticking a box only updates the caption. Reloading on every tick would fire a query
-        // per click while the user is still choosing months, so the reload waits for the
-        // drop-down to close and runs once for the whole selection.
         // Set only while the window is opening. It makes LoadGrid ask for "the newest month
         // this till has", which the server resolves inside the query, instead of the screen
         // having to find that out in a round trip of its own first.
         private bool _openingOnNewest;
 
-        private bool _periodsDirty;
-
-        private void Period_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
+        // The month list, the tick boxes, the caption and the clear button were written
+        // out here. They are now Controls/UC_MonthFilter, shared with the five approval
+        // screens - this window only says where the months come from and what to do when
+        // the selection changes.
+        private void SetUpFilter()
         {
-            _periodsDirty = true;
-            ShowPeriodCount();
+            // The list arrives inside the batch that fills the grid, so the drop-down never
+            // has to fetch it. LoadMonths is only the fallback if it is opened before a load.
+            MonthFilter.ShowDateRange = false;
+            MonthFilter.LoadMonths = () => a.Select_Till_Periods(Till_ID.ToString());
+            MonthFilter.Apply += (s2, e2) => Load_Data();
+            MonthFilter.Initialise();
         }
 
-        private void Period_comboBox_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!_periodsDirty)
-                return;
-
-            _periodsDirty = false;
-            Load_Data();
-        }
-
-        private void Period_clear_btn_Click(object sender, RoutedEventArgs e)
-        {
-            foreach (Local_Period p in objPeriodList)
-                p.Check_Status = false;
-
-            Period_comboBox.ItemsSource = null;
-            Period_comboBox.ItemsSource = objPeriodList;
-            ShowPeriodCount();
-
-            // The clear button is a deliberate single action, so it reloads straight away -
-            // there is nothing to batch up the way ticking several months has.
-            _periodsDirty = false;
-            Load_Data();
-        }
 
         #endregion
 
@@ -784,7 +687,7 @@ namespace Financial_WPF_App.Views
             // The range narrows the two grids; the totals stay for the whole till.
             List<string> periods = _openingOnNewest
                 ? new List<string> { Models.Action.NewestPeriod }
-                : SelectedPeriods();
+                : MonthFilter.SelectedMonths();
 
             DataSet screen = a.Select_Till_Screen(Till_ID.ToString(), SubProject_ID.ToString(), true, Account_ID,
                 periods);
@@ -796,12 +699,12 @@ namespace Financial_WPF_App.Views
 
             // Came back in the same batch - keeps the list current when an action creates a
             // month that did not exist when the till was opened.
-            FillPeriods(screen.Tables[Models.Action.TillScreenPeriods]);
+            MonthFilter.Fill(screen.Tables[Models.Action.TillScreenPeriods]);
 
             // The rows above are already the newest month's; this only makes the picker say
             // so. The list arrives newest first, and it came from the same round trip.
             if (_openingOnNewest)
-                SelectNewestPeriod();
+                MonthFilter.SelectNewest();
 
             DataTable temp_dt = screen.Tables[Models.Action.TillScreenGrid];
 

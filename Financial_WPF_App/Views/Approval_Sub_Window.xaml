@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Financial_WPF_App.Controls"
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Views.Approval_Sub_Window"
         mc:Ignorable="d"
@@ -36,7 +37,7 @@
             </StackPanel>
         </Border>-->
         <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
-            <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
+            <DockPanel  LastChildFill="False" Background="{StaticResource LightGray1}" Height="40">
                 <WrapPanel Orientation="Horizontal" Width="Auto">
                     <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                         <Menu.Resources>
@@ -172,51 +173,8 @@
                     <RadioButton Style="{StaticResource RadioButtonStyle}" x:Name="DeletedActions_RadioButton" Content="Show Deleted Actions" IsChecked="False" Margin="112,6,3,8" Grid.Column="2" Tag="False" Click="DeletedActions_RadioButton_Click"/>
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                 </StackPanel>
-                <StackPanel x:Name="Filter_StackPanel" Orientation="Horizontal"
-                            VerticalAlignment="Center" Margin="12,0,0,0">
-
-                    <Label x:Name="Period_Label" Style="{DynamicResource statistic_lableStyle}" Content="Month:" Margin="8,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
-                    <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="Period_comboBox" TabIndex="17"
-                              ToolTip="Tick the months to show, or Select All. Nothing ticked uses the dates instead."
-                              ToolTipService.InitialShowDelay="100"
-                              IsEditable="True" IsReadOnly="True"
-                              Margin="3,0,2,0" VerticalAlignment="Center" Width="110" Height="30">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox Width="200"
-                                          Click="Period_Checkbox_Item_Clicked"
-                                          Style="{DynamicResource CheckBoxStyle}"
-                                          Content="{Binding Display}"
-                                          IsChecked="{Binding Check_Status}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
-                    <!-- The grey behind the X is baked into delete.png, so no Background
-                         setting could show through it. DeleteButtonWhiteStyle is the same
-                         button drawn from a white-backed copy of the icon. -->
-                    <Button Style="{DynamicResource DeleteButtonWhiteStyle}"
-                            x:Name="Period_clear_btn" TabIndex="18" Click="Period_clear_btn_Click"
-                            ToolTip="Clear the months" ToolTipService.InitialShowDelay="100"
-                            Width="25" Height="30"
-                            HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,0,0,0"/>
-
-                    <Label x:Name="From_Label" Style="{DynamicResource statistic_lableStyle}" Content="From:" Margin="10,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
-                    <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="FromDate_datepicker" Margin="3,0,2,0" VerticalAlignment="Center" Width="105" Height="30"
-                                SelectedDateChanged="Date_Changed"/>
-
-                    <Label x:Name="To_Label" Style="{DynamicResource statistic_lableStyle}" Content="To:" Margin="8,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
-                    <DatePicker Style="{StaticResource DatePickerActionBar}" x:Name="ToDate_datepicker" Margin="3,0,2,0" VerticalAlignment="Center" Width="105" Height="30"
-                                SelectedDateChanged="Date_Changed"/>
-
-                    <Button ToolTip="Show the selected period" ToolTipService.InitialShowDelay="100"
-                            Style="{DynamicResource AddButtonStyle}"
-                            x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="8,0,0,0" VerticalAlignment="Center" Height="25" Width="50">
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Images/Buttons/apply.png" Stretch="Uniform"/>
-                        </Button.Background>
-                    </Button>
-                </StackPanel>
+                <controls:UC_MonthFilter x:Name="MonthFilter" DockPanel.Dock="Right"
+                                         VerticalAlignment="Center" Margin="12,0,0,0"/>
             </DockPanel>
         </Grid>
         <syncfusion:SfDataGrid x:Name="myDataGrid" FrozenColumnCount="1"                                            

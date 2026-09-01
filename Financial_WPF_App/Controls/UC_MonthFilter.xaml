@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="Financial_WPF_App.Controls.UC_MonthFilter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             mc:Ignorable="d"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             FlowDirection="LeftToRight">
+
+    <!-- The month filter, in one place instead of three.
+
+         Two shapes, chosen with ShowDateRange:
+
+           months only          the accounts screen - ticking months reloads when the
+                                drop-down closes, because there is nothing else to press
+           months and a range   the approval screens - months OR From/To, whichever is
+                                set, and nothing happens until Apply
+
+         The whole control sizes to its content. It must never be the child a DockPanel
+         fills, because a StackPanel that is given less than it needs does not shrink,
+         it clips - and the Apply button, being last, is what disappears. -->
+
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+        <Label x:Name="Month_Label"
+               Style="{DynamicResource statistic_lableStyle}"
+               Content="Month:" Margin="8,2,1,2"
+               VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+
+        <ComboBox x:Name="Period_comboBox"
+                  Style="{DynamicResource ActionComboboxStyle}"
+                  ToolTip="Tick the months to show, or Select All."
+                  ToolTipService.InitialShowDelay="100"
+                  IsEditable="True" IsReadOnly="True"
+                  Margin="3,0,2,0" VerticalAlignment="Center" Width="110" Height="30">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox Width="200"
+                              Click="Period_Checkbox_Item_Clicked"
+                              Style="{DynamicResource CheckBoxStyle}"
+                              Content="{Binding Display}"
+                              IsChecked="{Binding Check_Status}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <!-- The grey behind the X is baked into delete.png, so no Background setting could
+             show through it. DeleteButtonWhiteStyle is the same button drawn from a
+             white-backed copy of the icon. -->
+        <Button x:Name="Period_clear_btn"
+                Style="{DynamicResource DeleteButtonWhiteStyle}"
+                Click="Period_clear_btn_Click"
+                ToolTip="Clear the months" ToolTipService.InitialShowDelay="100"
+                Width="25" Height="30"
+                HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,0,0,0"/>
+
+        <!-- Collapsed on the accounts screen, which has no date range and no Apply. -->
+        <StackPanel x:Name="Range_Panel" Orientation="Horizontal" VerticalAlignment="Center">
+
+            <Label Style="{DynamicResource statistic_lableStyle}" Content="From:"
+                   Margin="10,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+            <DatePicker x:Name="FromDate_datepicker"
+                        Style="{StaticResource DatePickerActionBar}"
+                        SelectedDateChanged="Date_Changed"
+                        Margin="3,0,2,0" VerticalAlignment="Center" Width="105" Height="30"/>
+
+            <Label Style="{DynamicResource statistic_lableStyle}" Content="To:"
+                   Margin="8,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+            <DatePicker x:Name="ToDate_datepicker"
+                        Style="{StaticResource DatePickerActionBar}"
+                        SelectedDateChanged="Date_Changed"
+                        Margin="3,0,2,0" VerticalAlignment="Center" Width="105" Height="30"/>
+
+            <Button x:Name="Go_btn"
+                    Style="{DynamicResource AddButtonStyle}"
+                    Click="Go_btn_Click"
+                    ToolTip="Show the selected period" ToolTipService.InitialShowDelay="100"
+                    Margin="8,0,5,0" VerticalAlignment="Center" Height="25" Width="50">
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Buttons/apply.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
