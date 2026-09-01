@@ -368,29 +368,52 @@ namespace Financial_WPF_App.Models
         /// range was added. Dates are "yyyy/MM/dd", as on the other screens.
         /// </summary>
         /// <summary>
-        /// The months these tills have anything waiting for approval or deleted, newest
-        /// first, with a count each. Grouped counts only - a handful of rows however much is
-        /// waiting. Both tables are included so a month holding nothing but deleted rows
-        /// still appears.
+        /// The months these tills have rows in, newest first, with a count each.
         ///
-        /// Fetched when the month list is first opened, not when the screen opens: the
-        /// approval screens deliberately load nothing until asked.
+        /// The count has to be what picking that month will actually show, so this repeats
+        /// the conditions the grid applies - the first version did not, and reported every
+        /// row in the month while the grid showed only the ones this user may approve. The
+        /// number was always higher than the list, and often the list was empty.
+        ///
+        /// <paramref name="deleted"/> follows the screen's own radio button: the two grids
+        /// read different tables, so one list cannot describe both.
         ///
         /// Columns: Period ("yyyy-MM"), Movements (int).
         /// </summary>
-        public DataTable Select_Approval_Periods(string Till_IDs)
+        public DataTable Select_Approval_Periods(string Till_IDs, bool deleted = false)
         {
-            string f = Till_IDs != "" ? " WHERE Till_ID in (" + Till_IDs + ")" : "";
+            string t = deleted ? "action_deleted" : "action_not_approved";
 
-            string query = @"SELECT x.Period AS 'Period', SUM(x.n) AS 'Movements' FROM (
-                        SELECT DATE_FORMAT(ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
-                        FROM action_not_approved" + f + @" GROUP BY Period
-                        UNION ALL
-                        SELECT DATE_FORMAT(ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
-                        FROM action_deleted" + f + @" GROUP BY Period
-                     ) x
-                     WHERE x.Period IS NOT NULL
-                     GROUP BY x.Period ORDER BY x.Period DESC;";
+            string condition = " WHERE 1 ";
+
+            if (Till_IDs != "")
+                condition += " and till.ID in (" + Till_IDs + ")";
+
+            // The same conditions BuildNotApprovedQuery and Select_Deleted_action apply when
+            // ForApproval is true. Kept in step with them by hand; if either gains a rule,
+            // this needs it too or the counts drift again.
+            condition += " and " + t + ".SourceAction = 1";
+            condition += " and (edited_byuser.ID <> " + Properties.Settings.Default.User_ID +
+                         " or edited_byuser.ID is null) and created_byuser.`ID` <> " +
+                         Properties.Settings.Default.User_ID;
+
+            if (deleted)
+                condition += " and deleted_by <> " + Properties.Settings.Default.User_ID;
+
+            if (Properties.Settings.Default.Role != "Head Office")
+                condition += " and " + t + ".`Amount` <= (select role.Approval_Limit from role where role.Name = '" +
+                             Properties.Settings.Default.Role + "')";
+
+            string query =
+                "SELECT DATE_FORMAT(" + t + ".ActionDate, '%Y-%m') AS 'Period', COUNT(DISTINCT " + t + ".id) AS 'Movements'" +
+                " FROM " + t +
+                " LEFT JOIN till ON till.id = " + t + ".Till_ID" +
+                " LEFT JOIN account ON account.ID = till.Account_ID" +
+                " LEFT JOIN `user` created_byuser on created_byuser.id = " + t + ".User_ID" +
+                " LEFT JOIN `user` edited_byuser on edited_byuser.id = " + t + ".edited_by" +
+                condition +
+                " AND " + t + ".ActionDate IS NOT NULL" +
+                " GROUP BY Period ORDER BY Period DESC;";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -408,11 +431,6 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        /// <summary>
-        /// The screen offers a month picker and a From/To range, but only one of them is
-        /// ever set - choosing months clears the dates and typing a date clears the months -
-        /// so whichever arrives is the filter. Both empty reads everything, as before.
-        /// </summary>
         public DataTable Select_Deleted_action(string Till_IDs, bool ForApproval,
             string FromDate = "", string ToDate = "", List<string> Periods = null)
         {

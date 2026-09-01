@@ -82,6 +82,15 @@ namespace Financial_WPF_App.Helper
             Rebind();
         }
 
+        /// <summary>
+        /// Forget the list, so the next drop-down fetches it again. Used when the screen
+        /// changes which table it is showing.
+        /// </summary>
+        public void Invalidate()
+        {
+            _loaded = false;
+        }
+
         /// <summary>Untick everything. Used when the user types a date by hand instead.</summary>
         public void Clear()
         {

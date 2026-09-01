@@ -35,10 +35,18 @@ namespace Financial_WPF_App.Controls
         public Func<DataTable> LoadMonths { get; set; }
 
         /// <summary>
-        /// Raised when the user has asked for a different period: on Apply where there is an
-        /// Apply button, or when the drop-down closes where there is not.
+        /// Raised when the user has asked for a period: when the month drop-down closes on a
+        /// changed selection, or when Apply is pressed for the From/To range. Months need no
+        /// Apply on any screen - the button is there for the dates.
         /// </summary>
         public event EventHandler Apply;
+
+        /// <summary>
+        /// Raised when the X is pressed. Nothing is selected any more, and the screen should
+        /// show nothing rather than everything - an empty filter here means "not asked yet",
+        /// not "asked for all of it".
+        /// </summary>
+        public event EventHandler Cleared;
 
         /// <summary>
         /// False on the accounts screen, which filters by month alone. True on the approval
@@ -111,6 +119,17 @@ namespace Financial_WPF_App.Controls
                 _picker.SelectNewest();
         }
 
+        /// <summary>
+        /// Forget the month list so the next look at the drop-down fetches it again. The
+        /// approval screens switch between the waiting rows and the deleted ones, which are
+        /// different tables with different counts.
+        /// </summary>
+        public void InvalidateMonths()
+        {
+            if (_picker != null)
+                _picker.Invalidate();
+        }
+
         /// <summary>Replaces the month list, for a host that already has it to hand.</summary>
         public void Fill(DataTable months)
         {
@@ -122,14 +141,10 @@ namespace Financial_WPF_App.Controls
 
         private void DropDownFinished()
         {
-            // With an Apply button, closing the drop-down is not the request - Apply is.
-            // Without one, closing it is the only signal there will be.
-            if (ShowDateRange)
-            {
-                if (_picker.AnySelected())
-                    ClearDates();
-                return;
-            }
+            // Picking months is the request, on every screen. The dates are the other way in,
+            // so choosing months clears them.
+            if (_picker.AnySelected())
+                ClearDates();
 
             Raise();
         }
@@ -148,16 +163,22 @@ namespace Financial_WPF_App.Controls
             _picker.Ticked(row);
         }
 
+        /// <summary>
+        /// The X drops the whole period - months and dates both - and the screen empties.
+        /// Reloading everything instead would be the one thing nobody pressing a clear button
+        /// wants on a table this size.
+        /// </summary>
         private void Period_clear_btn_Click(object sender, RoutedEventArgs e)
         {
             if (_picker == null)
                 return;
 
             _picker.Clear();
+            ClearDates();
 
-            // On the accounts screen there is no Apply, so clearing is itself the request.
-            if (!ShowDateRange)
-                Raise();
+            EventHandler h = Cleared;
+            if (h != null)
+                h(this, EventArgs.Empty);
         }
 
         private void ClearDates()

@@ -667,6 +667,17 @@ namespace Financial_WPF_App.Views
         // out here. They are now Controls/UC_MonthFilter, shared with the five approval
         // screens - this window only says where the months come from and what to do when
         // the selection changes.
+        /// <summary>
+        /// The X drops the period entirely. Nothing is asked for, so nothing is shown - the
+        /// grid empties without a query rather than falling back to the whole till, which on
+        /// the largest one is ten thousand rows nobody asked for.
+        /// </summary>
+        private void ShowNothing()
+        {
+            myDataGrid.ItemsSource = null;
+            UpdateAllCounters();
+        }
+
         private void SetUpFilter()
         {
             // The list arrives inside the batch that fills the grid, so the drop-down never
@@ -674,6 +685,7 @@ namespace Financial_WPF_App.Views
             MonthFilter.ShowDateRange = false;
             MonthFilter.LoadMonths = () => a.Select_Till_Periods(Till_ID.ToString());
             MonthFilter.Apply += (s2, e2) => Load_Data();
+            MonthFilter.Cleared += (s2, e2) => ShowNothing();
             MonthFilter.Initialise();
         }
 

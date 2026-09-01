@@ -390,36 +390,45 @@ namespace Financial_WPF_App.Models
         }
 
         /// <summary>
-        /// The months this subproject has payments waiting for approval or deleted, newest
-        /// first, with a count each. Scoped exactly as the two grids are - Pay tills, this
-        /// subproject - so a count in the list matches what picking that month shows.
+        /// The months this subproject has payment rows in, newest first, with a count each.
         ///
-        /// Fetched when the month list is first opened, not when the screen opens: the
-        /// approval screens deliberately load nothing until asked.
+        /// Scoped exactly as the grid is - Pay tills, this subproject, and the same approval
+        /// conditions - so the number beside a month is what picking it shows. The first
+        /// version counted every row in the month and the grid showed fewer, or none.
+        ///
+        /// <paramref name="deleted"/> follows the screen's own radio button.
         ///
         /// Columns: Period ("yyyy-MM"), Movements (int).
         /// </summary>
-        public DataTable Select_Approval_Pay_Periods(string SubProject_ID)
+        public DataTable Select_Approval_Pay_Periods(string SubProject_ID, bool deleted = false)
         {
-            string query = @"SELECT x.Period AS 'Period', SUM(x.n) AS 'Movements' FROM (
-                        SELECT DATE_FORMAT(action_not_approved.ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
-                        FROM action_not_approved
-                        LEFT JOIN till ON till.id = action_not_approved.Till_ID
-                        LEFT JOIN tilltypes ON tilltypes.id = till.Type_ID
-                        LEFT JOIN account ON account.ID = till.Account_ID
-                        WHERE tilltypes.Name = 'Pay' AND account.SubProject_ID in (" + SubProject_ID + @")
-                        GROUP BY Period
-                        UNION ALL
-                        SELECT DATE_FORMAT(action_deleted.ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
-                        FROM action_deleted
-                        LEFT JOIN till ON till.id = action_deleted.Till_ID
-                        LEFT JOIN tilltypes ON tilltypes.id = till.Type_ID
-                        LEFT JOIN account ON account.ID = till.Account_ID
-                        WHERE tilltypes.Name = 'Pay' AND account.SubProject_ID in (" + SubProject_ID + @")
-                        GROUP BY Period
-                     ) x
-                     WHERE x.Period IS NOT NULL
-                     GROUP BY x.Period ORDER BY x.Period DESC;";
+            string t = deleted ? "action_deleted" : "action_not_approved";
+
+            string condition =
+                " WHERE tilltypes.Name = 'Pay' and account.SubProject_ID in (" + SubProject_ID + ") " +
+                " and " + t + ".SourceAction = 1" +
+                " and (edited_byuser.ID <> " + Properties.Settings.Default.User_ID +
+                " or edited_byuser.ID is null) and created_byuser.`ID` <> " +
+                Properties.Settings.Default.User_ID;
+
+            if (deleted)
+                condition += " and deleted_by <> " + Properties.Settings.Default.User_ID;
+
+            if (Properties.Settings.Default.Role != "Head Office")
+                condition += " and " + t + ".`Amount` <= (select role.Approval_Limit from role where role.Name = '" +
+                             Properties.Settings.Default.Role + "')";
+
+            string query =
+                "SELECT DATE_FORMAT(" + t + ".ActionDate, '%Y-%m') AS 'Period', COUNT(DISTINCT " + t + ".id) AS 'Movements'" +
+                " FROM " + t +
+                " LEFT JOIN till ON till.id = " + t + ".Till_ID" +
+                " LEFT JOIN tilltypes ON tilltypes.id = till.Type_ID" +
+                " LEFT JOIN account ON account.ID = till.Account_ID" +
+                " LEFT JOIN `user` created_byuser on created_byuser.id = " + t + ".User_ID" +
+                " LEFT JOIN `user` edited_byuser on edited_byuser.id = " + t + ".edited_by" +
+                condition +
+                " AND " + t + ".ActionDate IS NOT NULL" +
+                " GROUP BY Period ORDER BY Period DESC;";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())

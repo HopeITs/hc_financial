@@ -174,9 +174,25 @@ namespace Financial_WPF_App.Views
         {
             MonthFilter.ShowDateRange = true;
             MonthFilter.ApplyImage = ApplyImageForThisTab();
-            MonthFilter.LoadMonths = () => a.Select_Approval_Periods(Tills_ID.ToString());
+            // Deleted_Actions follows the screen's radio button: the two grids read different
+            // tables, so the counts beside the months have to follow it too.
+            MonthFilter.LoadMonths = () => a.Select_Approval_Periods(Tills_ID.ToString(), Deleted_Actions);
             MonthFilter.Apply += (s2, e2) => LoadGrid();
+            MonthFilter.Cleared += (s2, e2) => ShowNothing();
             MonthFilter.Initialise();
+        }
+
+
+        /// <summary>
+        /// The X drops the period entirely. Nothing is asked for, so nothing is shown - the
+        /// grid empties without a query rather than falling back to the whole table.
+        /// </summary>
+        private void ShowNothing()
+        {
+            Actions_dt = null;
+            Deleted_Actions_dt = null;
+            myDataGrid.ItemsSource = null;
+            All_textBlock.Text = "0";
         }
 
         /// <summary>
@@ -846,6 +862,11 @@ namespace Financial_WPF_App.Views
         {
             try
             {
+                // The two grids read different tables, so the month list and its counts no
+                // longer describe what is shown. Dropped here; the next look at the
+                // drop-down fetches the right one.
+                MonthFilter.InvalidateMonths();
+
                 RadioButton radioButton = sender as RadioButton;
 
                 // If the RadioButton was checked before the click, this will uncheck it
