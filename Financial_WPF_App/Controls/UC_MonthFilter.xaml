@@ -13,11 +13,13 @@
            months only          the accounts screen - ticking months reloads when the
                                 drop-down closes, because there is nothing else to press
            months and a range   the approval screens - months OR From/To, whichever is
-                                set, and nothing happens until Apply
+                                set. Months apply on their own here too; Apply is for
+                                the dates, which are not a request until they are typed
 
          The whole control sizes to its content. It must never be the child a DockPanel
-         fills, because a StackPanel that is given less than it needs does not shrink,
-         it clips - and the Apply button, being last, is what disappears. -->
+         fills, and whatever is beside it must not waste width, because a StackPanel
+         given less than it needs does not shrink - it clips, and the Apply button,
+         being last, is what disappears. -->
 
     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 
@@ -74,7 +76,7 @@
                     Style="{DynamicResource AddButtonStyle}"
                     Click="Go_btn_Click"
                     ToolTip="Show the selected period" ToolTipService.InitialShowDelay="100"
-                    Margin="8,0,5,0" VerticalAlignment="Center" Height="25" Width="50">
+                    Margin="8,0,5,0" VerticalAlignment="Center" Height="25" Width="44">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Buttons/apply.png" Stretch="Uniform"/>
                 </Button.Background>

@@ -183,7 +183,7 @@ PopupAnimation="Fade">
 
                             <Button ToolTip="Show the selected period" ToolTipService.InitialShowDelay="100"
                                     Style="{DynamicResource AddButtonStyle}"
-                                    x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="10,0,0,0" VerticalAlignment="Center" Height="25" Width="55" >
+                                    x:Name="Go_btn" TabIndex="20" Click="Go_btn_Click" Margin="10,0,0,0" VerticalAlignment="Center" Height="25" Width="44" >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Buttons/Apply_blue.png" Stretch="Uniform"/>
                                 </Button.Background>

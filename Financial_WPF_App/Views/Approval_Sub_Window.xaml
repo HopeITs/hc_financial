@@ -170,7 +170,7 @@
                     </Button>
                 </WrapPanel>
                 <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
-                    <RadioButton Style="{StaticResource RadioButtonStyle}" x:Name="DeletedActions_RadioButton" Content="Show Deleted Actions" IsChecked="False" Margin="112,6,3,8" Grid.Column="2" Tag="False" Click="DeletedActions_RadioButton_Click"/>
+                    <RadioButton Style="{StaticResource RadioButtonStyle}" x:Name="DeletedActions_RadioButton" Content="Show Deleted Actions" IsChecked="False" Margin="12,6,3,8" Grid.Column="2" Tag="False" Click="DeletedActions_RadioButton_Click"/>
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                 </StackPanel>
                 <controls:UC_MonthFilter x:Name="MonthFilter" DockPanel.Dock="Right"
