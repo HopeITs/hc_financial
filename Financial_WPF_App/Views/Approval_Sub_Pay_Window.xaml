@@ -163,7 +163,7 @@ PopupAnimation="Fade">
                         </Button>
                     </StackPanel>
                     <Button  Style="{DynamicResource AddButtonStyle}"
-                     x:Name="Restore_btn" FlowDirection="LeftToRight" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Stretch" Width="30" Height="22" Click="Restore_btn_Click" ToolTip="Restore" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
+                     x:Name="Restore_btn" Visibility="Collapsed" FlowDirection="LeftToRight" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Stretch" Width="30" Height="22" Click="Restore_btn_Click" ToolTip="Restore" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
                         <Button.Background>
                             <ImageBrush ImageSource="/Images/Buttons/restore.png" Stretch="Uniform"/>
                         </Button.Background>
