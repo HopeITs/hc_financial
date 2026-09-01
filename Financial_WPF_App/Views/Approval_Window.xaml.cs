@@ -123,6 +123,20 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Main_Tabs()
         {
+            _buildingTabs = true;
+            try
+            {
+                Fill_Main_Tabs_Core();
+            }
+            finally
+            {
+                _buildingTabs = false;
+            }
+        }
+
+        private void Fill_Main_Tabs_Core()
+        {
+            _pendingTabs.Clear();
             Main_tabControl.Items.Clear();
             TabItem newTabItem = new TabItem();
 
@@ -166,6 +180,7 @@ namespace Financial_WPF_App.Views
 
                         TabControl SubTabControler = new TabControl();
                         SubTabControler.Style = (Style)FindResource("TabControlStyle");
+                        SubTabControler.SelectionChanged += SubTab_SelectionChanged;
                         newTabItem.Content = SubTabControler;
 
                         DataTable t_dt = new DataTable();
@@ -212,9 +227,8 @@ namespace Financial_WPF_App.Views
                                     {
                                         string Tills_ID = string.Join(",", Tills_ID_rows);
 
-                                        Approval_Sub_Window Sub_Window = new Approval_Sub_Window(Tills_ID, "Project", "Budget", TillType_Name, this, main_Window);
-
-                                        newTabItem.Content = Sub_Window.Content;
+                                        TabItem lazyTab = newTabItem;
+                                        SetLazyContent(lazyTab, () => new Approval_Sub_Window(Tills_ID, "Project", "Budget", TillType_Name, this, main_Window));
                                     }
                                 }
                             }
@@ -248,6 +262,7 @@ namespace Financial_WPF_App.Views
 
                         TabControl SubTabControler = new TabControl();
                         SubTabControler.Style = (Style)FindResource("TabControlStyle");
+                        SubTabControler.SelectionChanged += SubTab_SelectionChanged;
                         newTabItem.Content = SubTabControler;
 
                         DataTable t_dt = new DataTable();
@@ -300,9 +315,8 @@ namespace Financial_WPF_App.Views
                                     {
                                         string Tills_ID = string.Join(",", Tills_ID_rows);
 
-                                        Approval_Sub_Window Sub_Window = new Approval_Sub_Window(Tills_ID, "Project", "Micro Projects", TillType_Name, this, main_Window);
-
-                                        newTabItem.Content = Sub_Window.Content;
+                                        TabItem lazyTab = newTabItem;
+                                        SetLazyContent(lazyTab, () => new Approval_Sub_Window(Tills_ID, "Project", "Micro Projects", TillType_Name, this, main_Window));
                                     }
 
                                 }
@@ -328,9 +342,8 @@ namespace Financial_WPF_App.Views
                                     {
                                         string Subprojects_ID = string.Join(",", Subprojects_ID_rows);
 
-                                        Approval_Sub_Pay_Window Sub_Pay_Window = new Approval_Sub_Pay_Window(Subprojects_ID, this, main_Window);
-
-                                        newTabItem.Content = Sub_Pay_Window.Content;
+                                        TabItem lazyPayTab = newTabItem;
+                                        SetLazyContent(lazyPayTab, () => new Approval_Sub_Pay_Window(Subprojects_ID, this, main_Window));
                                     }
                                 }
                             }
@@ -366,6 +379,7 @@ namespace Financial_WPF_App.Views
 
                         TabControl SubTabControler = new TabControl();
                         SubTabControler.Style = (Style)FindResource("TabControlStyle");
+                        SubTabControler.SelectionChanged += SubTab_SelectionChanged;
                         newTabItem.Content = SubTabControler;
 
                         DataTable t_dt = new DataTable();
@@ -411,9 +425,8 @@ namespace Financial_WPF_App.Views
                                     {
                                         string Tills_ID = string.Join(",", Tills_ID_rows);
 
-                                        Approval_Sub_Window Sub_Window = new Approval_Sub_Window(Tills_ID, "Exchange", "", TillType_Name, this, main_Window);
-
-                                        newTabItem.Content = Sub_Window.Content;
+                                        TabItem lazyTab = newTabItem;
+                                        SetLazyContent(lazyTab, () => new Approval_Sub_Window(Tills_ID, "Exchange", "", TillType_Name, this, main_Window));
                                     }
                                 }
                             }
@@ -451,6 +464,7 @@ namespace Financial_WPF_App.Views
 
                         TabControl SubTabControler = new TabControl();
                         SubTabControler.Style = (Style)FindResource("TabControlStyle");
+                        SubTabControler.SelectionChanged += SubTab_SelectionChanged;
                         newTabItem.Content = SubTabControler;
 
                         DataTable t_dt = new DataTable();
@@ -496,9 +510,8 @@ namespace Financial_WPF_App.Views
                                     {
                                         string Tills_ID = string.Join(",", Tills_ID_rows);
 
-                                        Approval_Sub_Window Sub_Window = new Approval_Sub_Window(Tills_ID, "Personal", "", TillType_Name, this, main_Window);
-
-                                        newTabItem.Content = Sub_Window.Content;
+                                        TabItem lazyTab = newTabItem;
+                                        SetLazyContent(lazyTab, () => new Approval_Sub_Window(Tills_ID, "Personal", "", TillType_Name, this, main_Window));
                                     }
 
                                 }
@@ -526,6 +539,82 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+
+
+        #region lazy tab content
+
+        // Approval has four main tabs and one sub-tab per till type inside each: sixteen
+        // sub-windows, each running two queries, built the moment the screen opens. That is
+        // about 37 round trips to show the one tab the user is looking at, and on real data
+        // it also fetches every waiting row for fifteen tabs nobody opened.
+        //
+        // A sub-tab's window is now built the first time that sub-tab is selected. Same
+        // pattern as Account_Window.
+        private readonly Dictionary<TabItem, Func<Window>> _pendingTabs = new Dictionary<TabItem, Func<Window>>();
+
+        // True while the tabs are being laid out. The first sub-tab of each control is
+        // selected as it is added, and that build is on the same call stack as OnLoad, so a
+        // failure there must keep propagating exactly as it did before.
+        private bool _buildingTabs;
+
+        /// <summary>
+        /// Registers the factory that builds this tab's content. Must be called before the
+        /// TabItem is added to its TabControl, because adding the first item selects it and
+        /// that selection is what triggers the build.
+        /// </summary>
+        private void SetLazyContent(TabItem tab, Func<Window> factory)
+        {
+            _pendingTabs[tab] = factory;
+        }
+
+        /// <summary>
+        /// Every sub-tab control gets this. Selecting a sub-tab builds its window if it has
+        /// not been built yet.
+        /// </summary>
+        private void SubTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // SelectionChanged bubbles: grids and combo boxes inside a tab raise it too.
+            TabControl control = sender as TabControl;
+            if (control == null || !ReferenceEquals(e.Source, control))
+                return;
+
+            MaterializeTab(control.SelectedItem as TabItem);
+        }
+
+        private void MaterializeTab(TabItem tab)
+        {
+            Func<Window> factory;
+            if (tab == null || !_pendingTabs.TryGetValue(tab, out factory))
+                return;
+
+            if (_buildingTabs)
+            {
+                // Same call stack as the old eager code - let OnLoad handle any failure.
+                tab.Content = factory().Content;
+                _pendingTabs.Remove(tab);
+                return;
+            }
+
+            try
+            {
+                tab.Content = factory().Content;
+                // Only drop the factory once the content is really there, so a tab that
+                // failed on a transient network error can be retried by selecting it again.
+                _pendingTabs.Remove(tab);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else if (ex.Message.Contains("Duplicate entry"))
+                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        #endregion
 
         private void NewTabItem_Loaded(object sender, RoutedEventArgs e, SolidColorBrush color)
         {
