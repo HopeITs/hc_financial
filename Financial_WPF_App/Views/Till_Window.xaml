@@ -324,7 +324,7 @@
                      drop-down, so the bar never grows however narrow the window gets. -->
                 <StackPanel x:Name="Period_StackPanel" Orientation="Horizontal"
                             VerticalAlignment="Center" Margin="12,0,0,0">
-                    <Label x:Name="Period_Label" Style="{DynamicResource statistic_lableStyle}" Content="Period:" Margin="14,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+                    <Label x:Name="Period_Label" Style="{DynamicResource statistic_lableStyle}" Content="Month:" Margin="14,2,1,2" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
                     <ComboBox Style="{DynamicResource ActionComboboxStyle}" x:Name="Period_comboBox" TabIndex="18"
                               ToolTip="Tick the months to show. Nothing ticked shows every movement."
                               ToolTipService.InitialShowDelay="100"

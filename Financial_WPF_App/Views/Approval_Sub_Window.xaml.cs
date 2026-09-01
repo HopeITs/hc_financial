@@ -231,6 +231,14 @@ namespace Financial_WPF_App.Views
             _periods.Ticked(row);
         }
 
+        // Clearing the months leaves the dates as the filter; if they are empty too the
+        // next Apply reads everything.
+        private void Period_clear_btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (_periods != null)
+                _periods.Clear();
+        }
+
         private bool _settingDates;
 
         private void ClearDates()
