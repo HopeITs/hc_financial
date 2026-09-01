@@ -314,16 +314,22 @@ namespace Financial_WPF_App.Models
         /// Pass "" for both dates to read everything, which is how this behaved before the
         /// range was added. Dates are "yyyy/MM/dd", as on the other screens.
         /// </summary>
+        /// <summary>
+        /// The screen offers a month picker and a From/To range, but only one of them is
+        /// ever set - choosing months clears the dates and typing a date clears the months -
+        /// so whichever arrives is the filter. Both empty reads everything, as before.
+        /// </summary>
         public DataTable Select_action_not_approved(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed, bool ForApproval,
-            string FromDate = "", string ToDate = "")
+            string FromDate = "", string ToDate = "", List<string> Periods = null)
         {
             string query = BuildNotApprovedQuery(Action_ID, Till_IDs, SubProject_ID, showClosed, ForApproval);
 
             // Optional range, added here rather than inside the shared builder so the till
             // screen's period picker and this date range stay independent of each other.
-            if (FromDate != "" || ToDate != "")
+            string extra = BuildPeriodCondition("action_not_approved.ActionDate", Periods, Till_IDs);
+
+            if (FromDate != "" || ToDate != "" || extra != "")
             {
-                string extra = "";
                 if (FromDate != "")
                     extra += " AND action_not_approved.ActionDate >= '" + FromDate.Replace("'", "") + "'";
                 if (ToDate != "")
@@ -361,8 +367,54 @@ namespace Financial_WPF_App.Models
         /// Pass "" for both dates to read everything, which is how this behaved before the
         /// range was added. Dates are "yyyy/MM/dd", as on the other screens.
         /// </summary>
+        /// <summary>
+        /// The months these tills have anything waiting for approval or deleted, newest
+        /// first, with a count each. Grouped counts only - a handful of rows however much is
+        /// waiting. Both tables are included so a month holding nothing but deleted rows
+        /// still appears.
+        ///
+        /// Fetched when the month list is first opened, not when the screen opens: the
+        /// approval screens deliberately load nothing until asked.
+        ///
+        /// Columns: Period ("yyyy-MM"), Movements (int).
+        /// </summary>
+        public DataTable Select_Approval_Periods(string Till_IDs)
+        {
+            string f = Till_IDs != "" ? " WHERE Till_ID in (" + Till_IDs + ")" : "";
+
+            string query = @"SELECT x.Period AS 'Period', SUM(x.n) AS 'Movements' FROM (
+                        SELECT DATE_FORMAT(ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
+                        FROM action_not_approved" + f + @" GROUP BY Period
+                        UNION ALL
+                        SELECT DATE_FORMAT(ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
+                        FROM action_deleted" + f + @" GROUP BY Period
+                     ) x
+                     WHERE x.Period IS NOT NULL
+                     GROUP BY x.Period ORDER BY x.Period DESC;";
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        /// <summary>
+        /// The screen offers a month picker and a From/To range, but only one of them is
+        /// ever set - choosing months clears the dates and typing a date clears the months -
+        /// so whichever arrives is the filter. Both empty reads everything, as before.
+        /// </summary>
         public DataTable Select_Deleted_action(string Till_IDs, bool ForApproval,
-            string FromDate = "", string ToDate = "")
+            string FromDate = "", string ToDate = "", List<string> Periods = null)
         {
 
             string query = @"SELECT category.ID AS `Category_ID`, category.Name as `Category_Name`,
@@ -465,6 +517,8 @@ namespace Financial_WPF_App.Models
 
             // Optional range. Both empty reads everything, as before. Compared against the
             // column directly so an index on action_deleted.ActionDate stays usable.
+            condition += BuildPeriodCondition("action_deleted.ActionDate", Periods, Till_IDs);
+
             if (FromDate != "")
                 condition += " and action_deleted.ActionDate >= '" + FromDate.Replace("'", "") + "'";
             if (ToDate != "")
@@ -737,6 +791,17 @@ namespace Financial_WPF_App.Models
                    " UNION ALL SELECT MAX(ActionDate) FROM action_not_approved" + f + ") z)";
         }
 
+        /// <summary>
+        /// The month-list form of the condition, without the "newest month" sentinel that
+        /// needs a till to resolve. Public and static so the payment approval screen, which
+        /// filters the same two tables through a different model, builds it the same way
+        /// rather than growing a second copy.
+        /// </summary>
+        public static string PeriodCondition(string column, List<string> periods)
+        {
+            return BuildMonthRanges(column, periods);
+        }
+
         private string BuildPeriodCondition(string column, List<string> periods, string Till_IDs)
         {
             if (periods == null || periods.Count == 0)
@@ -748,6 +813,20 @@ namespace Financial_WPF_App.Models
                 return " and (" + column + " >= " + start +
                        " AND " + column + " <= LAST_DAY(" + start + "))";
             }
+
+            return BuildMonthRanges(column, periods);
+        }
+
+        /// <summary>
+        /// Turns a set of "yyyy-MM" months into a SQL date condition. Runs of consecutive
+        /// months collapse into one BETWEEN, so a whole year is one range rather than twelve
+        /// - shorter SQL, and a form the server can still satisfy from an index on the date
+        /// column. Non-adjacent picks stay as separate OR-ed ranges.
+        /// </summary>
+        private static string BuildMonthRanges(string column, List<string> periods)
+        {
+            if (periods == null || periods.Count == 0)
+                return "";
 
             List<DateTime> months = new List<DateTime>();
             foreach (string p in periods)

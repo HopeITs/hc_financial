@@ -389,7 +389,56 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable Select_All_Not_Approved_Payments(string SubProject_ID, bool ForApproval, int Action_ID, string FromDate, string ToDate, int Microproject_ID)
+        /// <summary>
+        /// The months this subproject has payments waiting for approval or deleted, newest
+        /// first, with a count each. Scoped exactly as the two grids are - Pay tills, this
+        /// subproject - so a count in the list matches what picking that month shows.
+        ///
+        /// Fetched when the month list is first opened, not when the screen opens: the
+        /// approval screens deliberately load nothing until asked.
+        ///
+        /// Columns: Period ("yyyy-MM"), Movements (int).
+        /// </summary>
+        public DataTable Select_Approval_Pay_Periods(string SubProject_ID)
+        {
+            string query = @"SELECT x.Period AS 'Period', SUM(x.n) AS 'Movements' FROM (
+                        SELECT DATE_FORMAT(action_not_approved.ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
+                        FROM action_not_approved
+                        LEFT JOIN till ON till.id = action_not_approved.Till_ID
+                        LEFT JOIN tilltypes ON tilltypes.id = till.Type_ID
+                        LEFT JOIN account ON account.ID = till.Account_ID
+                        WHERE tilltypes.Name = 'Pay' AND account.SubProject_ID in (" + SubProject_ID + @")
+                        GROUP BY Period
+                        UNION ALL
+                        SELECT DATE_FORMAT(action_deleted.ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
+                        FROM action_deleted
+                        LEFT JOIN till ON till.id = action_deleted.Till_ID
+                        LEFT JOIN tilltypes ON tilltypes.id = till.Type_ID
+                        LEFT JOIN account ON account.ID = till.Account_ID
+                        WHERE tilltypes.Name = 'Pay' AND account.SubProject_ID in (" + SubProject_ID + @")
+                        GROUP BY Period
+                     ) x
+                     WHERE x.Period IS NOT NULL
+                     GROUP BY x.Period ORDER BY x.Period DESC;";
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        public DataTable Select_All_Not_Approved_Payments(string SubProject_ID, bool ForApproval, int Action_ID, string FromDate, string ToDate, int Microproject_ID,
+            List<string> Periods = null)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
@@ -439,6 +488,15 @@ namespace Financial_WPF_App.Models
                  LEFT JOIN `user` edited_byuser on edited_byuser.id = edited_by";
 
             string condition = " where tilltypes.Name = 'Pay' and account.SubProject_ID in (" + SubProject_ID + ") ";
+
+            // The screen offers months or a From/To range, never both at once, so
+            // whichever arrives is the filter. Both empty reads everything, as before.
+            condition += Models.Action.PeriodCondition("action_not_approved.ActionDate", Periods);
+
+            if (FromDate != "")
+                condition += " and action_not_approved.ActionDate >= '" + FromDate.Replace("'", "") + "'";
+            if (ToDate != "")
+                condition += " and action_not_approved.ActionDate <= '" + ToDate.Replace("'", "") + "'";
 
             if (ForApproval)
             {
@@ -490,7 +548,8 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable Select_All_Deleted_Payments(string SubProject_ID, bool ForApproval)
+        public DataTable Select_All_Deleted_Payments(string SubProject_ID, bool ForApproval,
+            string FromDate = "", string ToDate = "", List<string> Periods = null)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
@@ -541,6 +600,15 @@ action_deleted.`note` as 'Note',
                  LEFT JOIN `user` deleted_byuser on deleted_byuser.id = deleted_by";
 
             string condition = " where tilltypes.Name = 'Pay' and account.SubProject_ID in (" + SubProject_ID + ") ";
+
+            // The screen offers months or a From/To range, never both at once, so
+            // whichever arrives is the filter. Both empty reads everything, as before.
+            condition += Models.Action.PeriodCondition("action_deleted.ActionDate", Periods);
+
+            if (FromDate != "")
+                condition += " and action_deleted.ActionDate >= '" + FromDate.Replace("'", "") + "'";
+            if (ToDate != "")
+                condition += " and action_deleted.ActionDate <= '" + ToDate.Replace("'", "") + "'";
 
             if (ForApproval)
             {

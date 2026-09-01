@@ -96,16 +96,112 @@ namespace Financial_WPF_App.Views
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
+        #region date range
+
+        // Pay sits under Micro Accounts, whose colour is HopeRed - which is what apply.png
+        // already is, so this button needs no recolouring.
+        //
+        // The month picker and the From/To range are one filter with two ways in: choosing
+        // months clears the dates, typing a date clears the months. Nothing loads until
+        // Apply, the way Payments does - approval is a work queue, so a default period
+        // would quietly hide items waiting on someone's decision.
+        private Helper.PeriodPicker _periods;
+
+        private void SetUpPeriodPicker()
+        {
+            _periods = new Helper.PeriodPicker(
+                Period_comboBox,
+                () => p.Select_Approval_Pay_Periods(SubProject_ID),
+                () =>
+                {
+                    if (_periods.AnySelected())
+                    {
+                        ClearDates();
+                        LoadGrid();
+                    }
+                });
+        }
+
+        private void Period_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
+        {
+            CheckBox box = sender as CheckBox;
+            if (box == null)
+                return;
+
+            Helper.PeriodPicker.Row row = box.DataContext as Helper.PeriodPicker.Row;
+            if (row == null)
+                return;
+
+            row.Check_Status = box.IsChecked == true;
+            _periods.Ticked(row);
+        }
+
+        private bool _settingDates;
+
+        private void ClearDates()
+        {
+            _settingDates = true;
+            FromDate_datepicker.SelectedDate = null;
+            ToDate_datepicker.SelectedDate = null;
+            _settingDates = false;
+        }
+
+        private void Date_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_settingDates)
+                return;
+
+            if (_periods != null)
+                _periods.Clear();
+        }
+
+        private string SelectedFrom()
+        {
+            return FromDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)FromDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private string SelectedTo()
+        {
+            return ToDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private void Go_btn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                LoadGrid();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("MySql") || ex.Message.Contains("MySQL"))
+                { MessageBox.Show("please check your network and try again", "Error"); }
+                else if (ex.Message.Contains("host"))
+                { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
+                else { MessageBox.Show(ex.Message, "Error"); }
+            }
+        }
+
+        #endregion
+
         public void Load_Data()
         {
-            LoadGrid();
+            // No LoadGrid here. The screen opens empty and waits for Apply.
+            SetUpPeriodPicker();
         }
 
         private void LoadGrid()
         {
 
-            Payments_dt = p.Select_All_Not_Approved_Payments(SubProject_ID, true, -1, "", "", -1);
-            Deleted_Payments_dt = p.Select_All_Deleted_Payments(SubProject_ID, true);
+            string from = SelectedFrom();
+            string to = SelectedTo();
+            List<string> months = _periods == null ? null : _periods.Selected();
+
+            Payments_dt = p.Select_All_Not_Approved_Payments(SubProject_ID, true, -1, from, to, -1, months);
+            Deleted_Payments_dt = p.Select_All_Deleted_Payments(SubProject_ID, true, from, to, months);
 
             System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
             System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
@@ -151,6 +247,9 @@ namespace Financial_WPF_App.Views
                     }
                     else
                     {
+                        // The counter was written only on the branch that had rows, so
+                        // filtering down to nothing left the previous number on screen.
+                        All_textBlock.Text = "0";
                         myDataGrid.ItemsSource = null;
                     }
                 }
@@ -177,6 +276,7 @@ namespace Financial_WPF_App.Views
                     }
                     else
                     {
+                        All_textBlock.Text = "0";
                         myDataGrid.ItemsSource = null;
                     }
 
@@ -342,8 +442,9 @@ namespace Financial_WPF_App.Views
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
 
-                int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
+                // The row count is written where the data is set, which now happens on
+                // every Apply. Loaded fires once, so writing it here as well would only
+                // freeze whatever the screen opened with.
 
                 //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
                 Export_btn.CommandTarget = myDataGrid;

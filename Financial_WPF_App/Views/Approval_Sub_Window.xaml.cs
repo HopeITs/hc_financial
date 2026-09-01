@@ -67,6 +67,7 @@ namespace Financial_WPF_App.Views
                 }
 
                 SetApplyButtonColour();
+                SetUpPeriodPicker();
 
                 Load_Data();
                 Apply_Color_Theme();
@@ -192,6 +193,62 @@ namespace Financial_WPF_App.Views
             {
                 Stretch = Stretch.Uniform
             };
+        }
+
+        // The month picker and the From/To range are one filter with two ways in, the same
+        // arrangement the other screens use for their year box. Choosing months clears the
+        // dates; typing a date clears the months.
+        private Helper.PeriodPicker _periods;
+
+        private void SetUpPeriodPicker()
+        {
+            _periods = new Helper.PeriodPicker(
+                Period_comboBox,
+                () => a.Select_Approval_Periods(Tills_ID.ToString()),
+                () =>
+                {
+                    // Only reload if the picker is what the user is filtering by. Ticking
+                    // months and then clearing them should not fetch on the way past.
+                    if (_periods.AnySelected())
+                    {
+                        ClearDates();
+                        LoadGrid();
+                    }
+                });
+        }
+
+        private void Period_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
+        {
+            CheckBox box = sender as CheckBox;
+            if (box == null)
+                return;
+
+            Helper.PeriodPicker.Row row = box.DataContext as Helper.PeriodPicker.Row;
+            if (row == null)
+                return;
+
+            row.Check_Status = box.IsChecked == true;
+            _periods.Ticked(row);
+        }
+
+        private bool _settingDates;
+
+        private void ClearDates()
+        {
+            _settingDates = true;
+            FromDate_datepicker.SelectedDate = null;
+            ToDate_datepicker.SelectedDate = null;
+            _settingDates = false;
+        }
+
+        // A date typed by hand means the months no longer describe what is shown.
+        private void Date_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_settingDates)
+                return;
+
+            if (_periods != null)
+                _periods.Clear();
         }
 
         // Empty means no bound on that side; both empty reads everything.
@@ -350,8 +407,10 @@ namespace Financial_WPF_App.Views
             string from = SelectedFrom();
             string to = SelectedTo();
 
-            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true, from, to);
-            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true, from, to);
+            List<string> months = _periods == null ? null : _periods.Selected();
+
+            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true, from, to, months);
+            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true, from, to, months);
 
             System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
             System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
