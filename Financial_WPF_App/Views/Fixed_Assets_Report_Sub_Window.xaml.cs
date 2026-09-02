@@ -61,6 +61,9 @@ namespace Financial_WPF_App.Views
                 myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
                 myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
             }
+            FillYears();
+            SetDefaultPeriod();
+
             Load_Data();
             Apply_Color_Theme();
             Apply_DataGrid_Color_Theme();
@@ -83,6 +86,94 @@ namespace Financial_WPF_App.Views
             myDataGrid.TableSummaryRowStyle = (Style)Application.Current.Resources[TableSummaryRowStyle_Name];
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
+        // Set while code is moving the pickers, so their SelectedDateChanged does not fight
+        // the year box that just set them.
+        private bool _settingDates;
+
+        private const string AllYears = "All";
+
+        private void FillYears()
+        {
+            _settingDates = true;
+
+            Year_comboBox.Items.Clear();
+            Year_comboBox.Items.Add(AllYears);
+
+            for (int y = DateTime.Today.Year; y >= 2020; y--)
+                Year_comboBox.Items.Add(y.ToString());
+
+            _settingDates = false;
+        }
+
+        // A fixed asset bought years ago is still an asset today, so this report opens
+        // on everything rather than on a year. The filter narrows it; it does not hide.
+        private void SetDefaultPeriod()
+        {
+            _settingDates = true;
+
+            FromDate_datepicker.SelectedDate = null;
+            ToDate_datepicker.SelectedDate = null;
+            Year_comboBox.SelectedItem = AllYears;
+
+            _settingDates = false;
+        }
+
+        // Picking a year just fills the two dates - one filter underneath, two ways in.
+        private void Year_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_settingDates || Year_comboBox.SelectedItem == null)
+                return;
+
+            string choice = Year_comboBox.SelectedItem.ToString();
+            _settingDates = true;
+
+            if (choice == AllYears)
+            {
+                FromDate_datepicker.SelectedDate = null;
+                ToDate_datepicker.SelectedDate = null;
+            }
+            else
+            {
+                int year = int.Parse(choice);
+                FromDate_datepicker.SelectedDate = new DateTime(year, 1, 1);
+                ToDate_datepicker.SelectedDate = new DateTime(year, 12, 31);
+            }
+
+            _settingDates = false;
+            Load_Data();
+        }
+
+        // Typing a date by hand means the range is no longer a whole year.
+        private void Date_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_settingDates)
+                return;
+
+            _settingDates = true;
+            Year_comboBox.SelectedItem = null;
+            _settingDates = false;
+        }
+
+        // Empty means no bound on that side; both empty reads everything, as before.
+        private string SelectedFrom()
+        {
+            return FromDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)FromDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private string SelectedTo()
+        {
+            return ToDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private void Go_btn_Click(object sender, RoutedEventArgs e)
+        {
+            Load_Data();
+        }
+
         private void Load_Data()
         {
             Fill_myDataGrid();
@@ -93,7 +184,11 @@ namespace Financial_WPF_App.Views
         {
             myDataGrid.ItemsSource = null;
 
-            dt = l.Select_Fixed_Assets_Report(TillType_ID);
+            dt = l.Select_Fixed_Assets_Report(TillType_ID, SelectedFrom(), SelectedTo());
+
+            // The counter used to be written only in the Loaded handler, which runs once,
+            // so it kept showing the first load's count whatever the filter did.
+            All_textBlock.Text = (dt == null ? 0 : dt.Rows.Count).ToString("N0");
 
 
 

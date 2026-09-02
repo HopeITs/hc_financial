@@ -74,7 +74,11 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable Select_Fixed_Assets_Report(int TillType_ID)
+        /// <summary>
+        /// Pass "" for both dates to read every fixed asset, which is how this report behaved
+        /// before the range was added. Dates are "yyyy/MM/dd" and filter the entry date.
+        /// </summary>
+        public DataTable Select_Fixed_Assets_Report(int TillType_ID, string FromDate = "", string ToDate = "")
         {
             //check user from database
             string query = @"SELECT 
@@ -102,8 +106,18 @@ namespace Financial_WPF_App.Models
                                 LEFT JOIN project on subproject.Project_ID = project.ID
                                 LEFT JOIN city on subproject.City_ID = city.ID
 
-                                WHERE LOWER(linecategory.Name) = 'fixed assets' AND tilltypes.id = @TillType_ID
+                                WHERE LOWER(linecategory.Name) = 'fixed assets' AND tilltypes.id = @TillType_ID";
 
+            // Optional range on the entry date. Both empty reads everything, which the "All"
+            // item in the year box relies on. Compared against the column directly rather
+            // than through DATE_FORMAT, so an index on action.ActionDate stays usable - the
+            // report already formats that column for display, but display is not filtering.
+            if (FromDate != "")
+                query += " AND action.ActionDate >= @FromDate";
+            if (ToDate != "")
+                query += " AND action.ActionDate <= @ToDate";
+
+            query += @"
                                 ORDER BY city.ID, project.ID, subproject.ID, account.ID;";
 
             DataTable dt = new DataTable();
@@ -112,6 +126,8 @@ namespace Financial_WPF_App.Models
 
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@TillType_ID", TillType_ID);
+                sc.Parameters.AddWithValue("@FromDate", FromDate);
+                sc.Parameters.AddWithValue("@ToDate", ToDate);
 
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;

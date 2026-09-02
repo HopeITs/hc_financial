@@ -827,6 +827,29 @@
                 </Style.Triggers>
             </Style>
 
+            <!-- Same button as DeleteButtonStyle, drawn on white instead of the grey the
+                 icon has baked into it. For use on the grey toolbars, where the grey version
+                 blends into the bar. -->
+            <Style x:Key="DeleteButtonWhiteStyle" TargetType="Button" BasedOn="{StaticResource DeleteButtonStyle}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="0">
+                                <Image Name="DeleteImage"
+                                       Source="/Images/Buttons/delete_white.png"
+                                       Stretch="Fill"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
             <Style x:Key="ActionDeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource DeleteButtonStyle}">
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="Template">

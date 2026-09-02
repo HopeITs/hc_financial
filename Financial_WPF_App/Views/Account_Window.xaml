@@ -158,7 +158,8 @@
             <ColumnDefinition x:Name="Second_col" Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <TabControl Grid.ColumnSpan="2" x:Name="tabControl1" Style="{StaticResource TabControlStyle}" Grid.Column="0"></TabControl>
+        <TabControl Grid.ColumnSpan="2" x:Name="tabControl1" Style="{StaticResource TabControlStyle}" Grid.Column="0"
+                    SelectionChanged="TabControl1_SelectionChanged"></TabControl>
 
         <Expander Style="{StaticResource AccountExpander}" IsExpanded="False" Grid.Column="1" x:Name="myExpander" ExpandDirection="Right"
          HorizontalContentAlignment="Left"

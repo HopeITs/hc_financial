@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
@@ -29,7 +30,10 @@ namespace Financial_WPF_App.Models
                     AND ad.AType_ID IN (1, 3);";
         }
 
-        public DataTable Select(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed)
+        // The SQL for the till screen lives in these three builders so that the single-query
+        // methods below and the batched Select_Till_Screen share one copy of each statement.
+        private string BuildSelectQuery(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed,
+            List<string> Periods = null)
         {
 
             string query = @"SELECT category.ID AS `Category_ID`, category.Name as `Category_Name`,
@@ -130,7 +134,17 @@ namespace Financial_WPF_App.Models
                 condition += " and account.IsClosed = 0 ";
             }
 
+            // Optional months. An empty set reads the whole till, exactly as before.
+            condition += BuildPeriodCondition("action.ActionDate", Periods, Till_IDs);
+
             query += condition + " Group by action.id " + " ORDER BY action.ActionDate DESC, action.ID DESC;";
+
+            return query;
+        }
+
+        public DataTable Select(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed)
+        {
+            string query = BuildSelectQuery(Action_ID, Till_IDs, SubProject_ID, showClosed);
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -177,7 +191,8 @@ namespace Financial_WPF_App.Models
             return ds;
         }
 
-        public DataTable Select_action_not_approved(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed, bool ForApproval)
+        private string BuildNotApprovedQuery(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed, bool ForApproval,
+            List<string> Periods = null)
         {
 
             string query = @"SELECT category.ID AS `Category_ID`, category.Name as `Category_Name`,
@@ -288,7 +303,53 @@ namespace Financial_WPF_App.Models
                     condition += " and action_not_approved.`Amount` <= (select role.Approval_Limit from role where role.Name = '" + Properties.Settings.Default.Role + "')";
             }
 
+            condition += BuildPeriodCondition("action_not_approved.ActionDate", Periods, Till_IDs);
+
             query += condition + " GROUP BY action_not_approved.id " +" ORDER BY action_not_approved.ActionDate DESC, action_not_approved.ID DESC;";
+
+            return query;
+        }
+
+        /// <summary>
+        /// Pass "" for both dates to read everything, which is how this behaved before the
+        /// range was added. Dates are "yyyy/MM/dd", as on the other screens.
+        /// </summary>
+        /// <summary>
+        /// The screen offers a month picker and a From/To range, but only one of them is
+        /// ever set - choosing months clears the dates and typing a date clears the months -
+        /// so whichever arrives is the filter. Both empty reads everything, as before.
+        /// </summary>
+        /// <summary>
+        /// <paramref name="RowLimit"/> caps how many rows come back, newest first - the
+        /// order these grids were already in. 0 means every row, which is what every caller
+        /// but the approval screen passes, so nothing else changes.
+        /// </summary>
+        public DataTable Select_action_not_approved(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed, bool ForApproval,
+            string FromDate = "", string ToDate = "", List<string> Periods = null, int RowLimit = 0)
+        {
+            string query = BuildNotApprovedQuery(Action_ID, Till_IDs, SubProject_ID, showClosed, ForApproval);
+
+            // Optional range, added here rather than inside the shared builder so the till
+            // screen's period picker and this date range stay independent of each other.
+            string extra = BuildPeriodCondition("action_not_approved.ActionDate", Periods, Till_IDs);
+
+            if (FromDate != "" || ToDate != "" || extra != "")
+            {
+                if (FromDate != "")
+                    extra += " AND action_not_approved.ActionDate >= '" + FromDate.Replace("'", "") + "'";
+                if (ToDate != "")
+                    extra += " AND action_not_approved.ActionDate <= '" + ToDate.Replace("'", "") + "'";
+
+                // The builder ends with GROUP BY ... ORDER BY ...; the condition belongs
+                // before that, so it goes in ahead of the GROUP BY the builder wrote.
+                int at = query.LastIndexOf(" GROUP BY action_not_approved.id", StringComparison.OrdinalIgnoreCase);
+                if (at < 0)
+                    at = query.LastIndexOf(" Group by action_not_approved.id", StringComparison.OrdinalIgnoreCase);
+                if (at >= 0)
+                    query = query.Substring(0, at) + extra + query.Substring(at);
+            }
+
+            query = Helper.SqlLimit.Apply(query, RowLimit);
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -309,7 +370,17 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable Select_Deleted_action(string Till_IDs, bool ForApproval)
+        /// <summary>
+        /// Pass "" for both dates to read everything, which is how this behaved before the
+        /// range was added. Dates are "yyyy/MM/dd", as on the other screens.
+        /// </summary>
+        /// <summary>
+        /// <paramref name="RowLimit"/> caps how many rows come back, newest first - the
+        /// order these grids were already in. 0 means every row, which is what every caller
+        /// but the approval screen passes, so nothing else changes.
+        /// </summary>
+        public DataTable Select_Deleted_action(string Till_IDs, bool ForApproval,
+            string FromDate = "", string ToDate = "", List<string> Periods = null, int RowLimit = 0)
         {
 
             string query = @"SELECT category.ID AS `Category_ID`, category.Name as `Category_Name`,
@@ -410,7 +481,18 @@ namespace Financial_WPF_App.Models
                     condition += " and action_deleted.`Amount` <= (select role.Approval_Limit from role where role.Name = '" + Properties.Settings.Default.Role + "')";
             }
 
+            // Optional range. Both empty reads everything, as before. Compared against the
+            // column directly so an index on action_deleted.ActionDate stays usable.
+            condition += BuildPeriodCondition("action_deleted.ActionDate", Periods, Till_IDs);
+
+            if (FromDate != "")
+                condition += " and action_deleted.ActionDate >= '" + FromDate.Replace("'", "") + "'";
+            if (ToDate != "")
+                condition += " and action_deleted.ActionDate <= '" + ToDate.Replace("'", "") + "'";
+
             query += condition + " Group by action_deleted.id " + " ORDER BY action_deleted.ActionDate DESC, action_deleted.ID DESC;";
+
+            query = Helper.SqlLimit.Apply(query, RowLimit);
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -545,7 +627,7 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataSet Select_Sums(string Till_IDs, int Account_ID, string ActionDate)
+        private string BuildSumsQuery(string Till_IDs, string ActionDate)
         {
             //check user from database
             string sub_condition = " WHERE action.Till_ID in (" + Till_IDs + ") ";
@@ -595,6 +677,13 @@ namespace Financial_WPF_App.Models
                 " cash_balances.Account_E AS 'Expenses', cash_balances.Account_Net AS 'Deference'" +
                 " FROM cash_balances WHERE cash_balances.Account_id = @Account_ID;";
 
+            return query;
+        }
+
+        public DataSet Select_Sums(string Till_IDs, int Account_ID, string ActionDate)
+        {
+            string query = BuildSumsQuery(Till_IDs, ActionDate);
+
             DataSet ds = new DataSet();
             if (Login.BuildConnection())
             {
@@ -615,7 +704,228 @@ namespace Financial_WPF_App.Models
             return ds;
         }
 
-        public DataTable SelectLines_Report()
+        /// <summary>
+        /// The three queries the till screen needs, sent as one batch over one connection.
+        /// Each of them still costs the server what it always did; what disappears is two of
+        /// the three connections and two of the three network round trips - measured at 3,950 ms
+        /// down to 2,044 ms for one screen load.
+        ///
+        /// The statements are the same text the individual methods run, from the same builders,
+        /// so there is no second copy of the SQL to drift out of step.
+        ///
+        /// Returns five tables, in this order:
+        ///   0  the grid            (Select)
+        ///   1  the not-approved grid (Select_action_not_approved)
+        ///   2  the totals          (Select_Sums, first result)
+        ///   3  the cash balances   (Select_Sums, second result)
+        ///   4  the period list     (months with movements, for the period picker)
+        /// Callers must check TillScreenTableCount before indexing.
+        /// </summary>
+        public const int TillScreenTableCount = 5;
+        public const int TillScreenGrid = 0;
+        public const int TillScreenNotApproved = 1;
+        public const int TillScreenSums = 2;
+        public const int TillScreenCashBalances = 3;
+        public const int TillScreenPeriods = 4;
+
+        /// <summary>
+        /// Turns a set of "yyyy-MM" months into a SQL date condition on <paramref name="column"/>.
+        ///
+        /// Runs of consecutive months collapse into one BETWEEN, so picking a whole year gives
+        /// one range rather than twelve - shorter SQL, and a form the server can still satisfy
+        /// from an index on the date column. Non-adjacent picks stay as separate OR'd ranges.
+        ///
+        /// Returns "" for an empty set, meaning no date restriction at all.
+        /// </summary>
+        /// <summary>
+        /// Pass this as the only period to mean "whichever month this till last had
+        /// movements in", worked out by the server inside the same query. It exists so the
+        /// screen does not have to ask which month that is and then ask for the rows: that
+        /// was a second round trip, and a round trip costs more than the rows it saved on
+        /// any till under about 1,500 movements.
+        /// </summary>
+        public const string NewestPeriod = "@newest";
+
+        /// <summary>
+        /// The first day of the newest month this till has anything in, as SQL. Both tables
+        /// are considered, so a till whose latest activity is still unapproved opens on that
+        /// month rather than on an older one.
+        /// </summary>
+        private static string NewestMonthStart(string Till_IDs)
+        {
+            string f = Till_IDs != "" ? " WHERE Till_ID in (" + Till_IDs + ")" : "";
+            return "(SELECT DATE_FORMAT(MAX(z.d), '%Y-%m-01') FROM (" +
+                   " SELECT MAX(ActionDate) AS d FROM action" + f +
+                   " UNION ALL SELECT MAX(ActionDate) FROM action_not_approved" + f + ") z)";
+        }
+
+        /// <summary>
+        /// The month-list form of the condition, without the "newest month" sentinel that
+        /// needs a till to resolve. Public and static so the payment approval screen, which
+        /// filters the same two tables through a different model, builds it the same way
+        /// rather than growing a second copy.
+        /// </summary>
+        public static string PeriodCondition(string column, List<string> periods)
+        {
+            return BuildMonthRanges(column, periods);
+        }
+
+        private string BuildPeriodCondition(string column, List<string> periods, string Till_IDs)
+        {
+            if (periods == null || periods.Count == 0)
+                return "";
+
+            if (periods.Count == 1 && periods[0] == NewestPeriod)
+            {
+                string start = NewestMonthStart(Till_IDs);
+                return " and (" + column + " >= " + start +
+                       " AND " + column + " <= LAST_DAY(" + start + "))";
+            }
+
+            return BuildMonthRanges(column, periods);
+        }
+
+        /// <summary>
+        /// Turns a set of "yyyy-MM" months into a SQL date condition. Runs of consecutive
+        /// months collapse into one BETWEEN, so a whole year is one range rather than twelve
+        /// - shorter SQL, and a form the server can still satisfy from an index on the date
+        /// column. Non-adjacent picks stay as separate OR-ed ranges.
+        /// </summary>
+        private static string BuildMonthRanges(string column, List<string> periods)
+        {
+            if (periods == null || periods.Count == 0)
+                return "";
+
+            List<DateTime> months = new List<DateTime>();
+            foreach (string p in periods)
+            {
+                int y, m;
+                if (p != null && p.Length >= 7 &&
+                    int.TryParse(p.Substring(0, 4), out y) && int.TryParse(p.Substring(5, 2), out m))
+                    months.Add(new DateTime(y, m, 1));
+            }
+            if (months.Count == 0)
+                return "";
+
+            months.Sort();
+
+            List<string> ranges = new List<string>();
+            DateTime runStart = months[0];
+            DateTime runEnd = months[0];
+
+            for (int i = 1; i <= months.Count; i++)
+            {
+                bool adjacent = i < months.Count && months[i] == runEnd.AddMonths(1);
+                if (adjacent)
+                {
+                    runEnd = months[i];
+                    continue;
+                }
+
+                DateTime last = new DateTime(runEnd.Year, runEnd.Month,
+                    DateTime.DaysInMonth(runEnd.Year, runEnd.Month));
+
+                ranges.Add("(" + column + " >= '" + runStart.ToString("yyyy-MM-dd") + "'" +
+                           " AND " + column + " <= '" + last.ToString("yyyy-MM-dd") + "')");
+
+                if (i < months.Count)
+                {
+                    runStart = months[i];
+                    runEnd = months[i];
+                }
+            }
+
+            return " and (" + string.Join(" OR ", ranges) + ")";
+        }
+
+        /// <summary>
+        /// The months this till actually has movements in, newest first, with a count each.
+        /// Grouped counts only - a handful of rows however big the till is. Both tables are
+        /// included so a month that holds nothing but unapproved actions still appears.
+        /// Columns: Period ("yyyy-MM"), Movements (int).
+        /// </summary>
+        private string BuildPeriodsQuery(string Till_IDs)
+        {
+            string tillFilter = Till_IDs != "" ? " WHERE Till_ID in (" + Till_IDs + ")" : "";
+
+            return @"SELECT x.Period AS 'Period', SUM(x.n) AS 'Movements' FROM (
+                        SELECT DATE_FORMAT(ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
+                        FROM action" + tillFilter + @" GROUP BY Period
+                        UNION ALL
+                        SELECT DATE_FORMAT(ActionDate, '%Y-%m') AS Period, COUNT(*) AS n
+                        FROM action_not_approved" + tillFilter + @" GROUP BY Period
+                     ) x
+                     WHERE x.Period IS NOT NULL
+                     GROUP BY x.Period ORDER BY x.Period DESC;";
+        }
+
+        /// <summary>
+        /// Just the period list, for working out which month to open on before the grid is
+        /// loaded. Cheap - grouped counts, no row data.
+        /// </summary>
+        public DataTable Select_Till_Periods(string Till_IDs)
+        {
+            string query = BuildPeriodsQuery(Till_IDs);
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
+        /// <remarks>
+        /// The months narrow the two grids only. The totals deliberately stay for the
+        /// whole till - a balance is the till's balance, the way a bank statement shows a
+        /// period of movements against the account's own balance. The screen states the
+        /// period so the two are not confused.
+        /// </remarks>
+        public DataSet Select_Till_Screen(string Till_IDs, string SubProject_ID, bool showClosed, int Account_ID,
+            List<string> Periods = null)
+        {
+            // @SubProject_ID and @t are shared by more than one statement but carry the same
+            // value in each, so one parameter serves them all. @Account_ID and @ActionDate
+            // belong to the sums query alone. The month ranges are literal dates built by
+            // BuildPeriodCondition from a closed set of "yyyy-MM" values, never user text.
+            string query = BuildSelectQuery("", Till_IDs, SubProject_ID, showClosed, Periods)
+                         + BuildNotApprovedQuery("", Till_IDs, SubProject_ID, showClosed, false, Periods)
+                         + BuildSumsQuery(Till_IDs, "")
+                         + BuildPeriodsQuery(Till_IDs);
+
+            DataSet ds = new DataSet();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.Parameters.AddWithValue("@SubProject_ID", SubProject_ID);
+                sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+                sc.Parameters.AddWithValue("@ActionDate", "");
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(ds);
+                Login.CloseAndClearConnection();
+            }
+            return ds;
+        }
+
+        /// <summary>
+        /// Pass "" for both dates to read everything, which is how this report behaved before
+        /// the range was added. Dates are "yyyy/MM/dd", the same format the other screens use.
+        /// </summary>
+        public DataTable SelectLines_Report(string FromDate = "", string ToDate = "")
         {
             //هنا جلب الأسماء مجمعة من المسارين دون تكرار
             //Group_Concat(donor.Name) as `Donor`,
@@ -699,7 +1009,16 @@ END AS `USD_Value`,
                         LEFT JOIN beneficiary b ON b.MicroProject_ID = action.MicroProject_ID
 
 
-                        where actiontype.shortname IN ('E','Ex') AND LOWER(tilltypes.Name) = LOWER('Syr') AND category.Name in('Budget','Micro Projects')
+                        where actiontype.shortname IN ('E','Ex') AND LOWER(tilltypes.Name) = LOWER('Syr') AND category.Name in('Budget','Micro Projects')";
+
+            // Optional date range. Leaving both empty reads the whole action table, which is
+            // what this report always did - the screen's "Show All" button relies on that.
+            if (FromDate != "")
+                query += " AND action.ActionDate >= @FromDate";
+            if (ToDate != "")
+                query += " AND action.ActionDate <= @ToDate";
+
+            query += @"
                         Group by action.id;";
             // LEFT JOIN donor on donor.id = budget_donor.donor_id
 
@@ -707,6 +1026,9 @@ END AS `USD_Value`,
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
+
+                sc.Parameters.AddWithValue("@FromDate", FromDate);
+                sc.Parameters.AddWithValue("@ToDate", ToDate);
 
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
@@ -720,7 +1042,11 @@ END AS `USD_Value`,
             return dt;
         }
 
-        public DataTable Select_Revenue_Exchange_Report(int TillType_ID, string TillType_Name)
+        /// <summary>
+        /// Pass "" for both dates to read everything, which is how this report behaved
+        /// before the range was added. Dates are "yyyy/MM/dd".
+        /// </summary>
+        public DataTable Select_Revenue_Exchange_Report(int TillType_ID, string TillType_Name, string FromDate = "", string ToDate = "")
         {
             string query = @"SELECT 
                         city.Name AS `City_Name`,
@@ -781,6 +1107,14 @@ END AS `USD_Value`,
                 query += " where actiontype.shortname IN ('I','Ex','E','O') AND LOWER(accounttype.name) = 'project' AND tilltypes.ID = @TillType_ID";
             }
 
+            // Optional range. Both empty reads everything, which the "All" item in the year
+            // box relies on. Compared against the column directly so an index on
+            // action.ActionDate stays usable.
+            if (FromDate != "")
+                query += " AND action.ActionDate >= @FromDate";
+            if (ToDate != "")
+                query += " AND action.ActionDate <= @ToDate";
+
             query += " Group by action.id ORDER BY city.id, project.id, subproject.id, account.id, action.id;";
 
             DataTable dt = new DataTable();
@@ -788,6 +1122,8 @@ END AS `USD_Value`,
             {
                 MySqlCommand sc = new MySqlCommand();
                 sc.Parameters.AddWithValue("@TillType_ID", TillType_ID);
+                sc.Parameters.AddWithValue("@FromDate", FromDate);
+                sc.Parameters.AddWithValue("@ToDate", ToDate);
 
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;

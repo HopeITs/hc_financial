@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Financial_WPF_App.Controls"
         xmlns:local="clr-namespace:Financial_WPF_App.Helper"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Helper="clr-namespace:Financial_WPF_App.Helper" x:Class="Financial_WPF_App.Views.Approval_Sub_Window"
         mc:Ignorable="d"
@@ -36,7 +37,7 @@
             </StackPanel>
         </Border>-->
         <Grid Grid.Row="2" Margin="0,5,0,0" Grid.ColumnSpan="2" >
-            <DockPanel  LastChildFill="True" Background="{StaticResource LightGray1}" Height="40">
+            <DockPanel  LastChildFill="False" Background="{StaticResource LightGray1}" Height="40">
                 <WrapPanel Orientation="Horizontal" Width="Auto">
                     <Menu x:Name="ShowHideMenu" Margin="5,2,5,2">
                         <Menu.Resources>
@@ -162,14 +163,16 @@
                         </Button>
                     </StackPanel>
                     <Button  Style="{DynamicResource AddButtonStyle}"
-                        x:Name="Restore_btn" FlowDirection="LeftToRight" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Stretch" Width="30" Height="22" Click="Restore_btn_Click" ToolTip="Restore" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
+                        x:Name="Restore_btn" Visibility="Collapsed" FlowDirection="LeftToRight" HorizontalAlignment="Stretch" Grid.Column="1" VerticalAlignment="Stretch" Width="30" Height="22" Click="Restore_btn_Click" ToolTip="Restore" ToolTipService.InitialShowDelay="100" Padding="1,1,1,1" Margin="1,10,1,1">
                         <Button.Background>
                             <ImageBrush ImageSource="/Images/Buttons/restore.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
                 </WrapPanel>
+                <controls:UC_RowLimitFilter x:Name="RowLimit" DockPanel.Dock="Left"
+                                            VerticalAlignment="Center" Margin="10,0,0,0"/>
                 <StackPanel x:Name="Panel1" Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0">
-                    <RadioButton Style="{StaticResource RadioButtonStyle}" x:Name="DeletedActions_RadioButton" Content="Show Deleted Actions" IsChecked="False" Margin="112,6,3,8" Grid.Column="2" Tag="False" Click="DeletedActions_RadioButton_Click"/>
+                    <RadioButton Style="{StaticResource RadioButtonStyle}" x:Name="DeletedActions_RadioButton" Content="Show Deleted Actions" IsChecked="False" Margin="12,6,3,8" Grid.Column="2" Tag="False" Click="DeletedActions_RadioButton_Click"/>
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TextWrapping="Wrap" TabIndex="10"/>
                 </StackPanel>
             </DockPanel>

@@ -56,6 +56,9 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
 
+                FillYears();
+                SetDefaultPeriod();
+
                 Load_Data();
                 Apply_Color_Theme();
                 Apply_DataGrid_Color_Theme();
@@ -136,9 +139,98 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        // Set while code is moving the pickers, so their SelectedDateChanged does not fight
+        // the year box that just set them.
+        private bool _settingDates;
+
+        private const string AllYears = "All";
+
+        private void FillYears()
+        {
+            _settingDates = true;
+
+            Year_comboBox.Items.Clear();
+            Year_comboBox.Items.Add(AllYears);
+
+            for (int y = DateTime.Today.Year; y >= 2020; y--)
+                Year_comboBox.Items.Add(y.ToString());
+
+            _settingDates = false;
+        }
+
+        // Income and exchange are read a period at a time, so this opens on the current
+        // year rather than on everything.
+        private void SetDefaultPeriod()
+        {
+            _settingDates = true;
+
+            int year = DateTime.Today.Year;
+            FromDate_datepicker.SelectedDate = new DateTime(year, 1, 1);
+            ToDate_datepicker.SelectedDate = new DateTime(year, 12, 31);
+            Year_comboBox.SelectedItem = year.ToString();
+
+            _settingDates = false;
+        }
+
+        // Picking a year just fills the two dates - one filter underneath, two ways in.
+        private void Year_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_settingDates || Year_comboBox.SelectedItem == null)
+                return;
+
+            string choice = Year_comboBox.SelectedItem.ToString();
+            _settingDates = true;
+
+            if (choice == AllYears)
+            {
+                FromDate_datepicker.SelectedDate = null;
+                ToDate_datepicker.SelectedDate = null;
+            }
+            else
+            {
+                int year = int.Parse(choice);
+                FromDate_datepicker.SelectedDate = new DateTime(year, 1, 1);
+                ToDate_datepicker.SelectedDate = new DateTime(year, 12, 31);
+            }
+
+            _settingDates = false;
+            Load_Data();
+        }
+
+        // Typing a date by hand means the range is no longer a whole year.
+        private void Date_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_settingDates)
+                return;
+
+            _settingDates = true;
+            Year_comboBox.SelectedItem = null;
+            _settingDates = false;
+        }
+
+        // Empty means no bound on that side; both empty reads everything, as before.
+        private string SelectedFrom()
+        {
+            return FromDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)FromDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private string SelectedTo()
+        {
+            return ToDate_datepicker.SelectedDate == null
+                ? ""
+                : ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
+        }
+
+        private void Go_btn_Click(object sender, RoutedEventArgs e)
+        {
+            Load_Data();
+        }
+
         private void LoadGrid()
         {
-            dt = a.Select_Revenue_Exchange_Report(TillType_ID, TillType_Name);
+            dt = a.Select_Revenue_Exchange_Report(TillType_ID, TillType_Name, SelectedFrom(), SelectedTo());
 
             Set_myDataGrid_ItemSource();
 
@@ -162,6 +254,9 @@ namespace Financial_WPF_App.Views
                 }
                 else
                 {
+                    // The counter was only written on the non-empty branch, so filtering
+                    // down to nothing left the previous count on screen.
+                    All_textBlock.Text = "0";
                     myDataGrid.ItemsSource = null;
                 }
 

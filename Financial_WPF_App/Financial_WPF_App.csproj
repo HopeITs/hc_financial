@@ -303,6 +303,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\UC_RowLimitFilter.xaml.cs">
+      <DependentUpon>UC_RowLimitFilter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UC_MonthFilter.xaml.cs">
+      <DependentUpon>UC_MonthFilter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UC_ExchangeOperation.xaml.cs">
       <DependentUpon>UC_ExchangeOperation.xaml</DependentUpon>
     </Compile>
@@ -350,6 +356,8 @@
     <Compile Include="Helper\PasswordHelper.cs" />
     <Compile Include="Helper\ScrollViewerHelper.cs" />
     <Compile Include="Helper\SearchDataGrid.cs" />
+    <Compile Include="Helper\PeriodPicker.cs" />
+    <Compile Include="Helper\SqlLimit.cs" />
     <Compile Include="Helper\TillNotifier.cs" />
     <Compile Include="Helper\TreeViewExpandedState.cs" />
     <Compile Include="Helper\TreeViewItemState.cs" />
@@ -567,6 +575,14 @@
     </Compile>
     <Compile Include="Design\WindowUtils.cs" />
     <Page Include="Controls\AutoCompleteTextBoxUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UC_RowLimitFilter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UC_MonthFilter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -983,6 +999,10 @@
     <None Include="Resources\Remeber_btn_c.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Buttons\Apply_blue.png" />
+    <Resource Include="Images\Buttons\Apply_darkblue.png" />
+    <Resource Include="Images\Buttons\Apply_orange.png" />
+    <Resource Include="Images\Buttons\Apply_green.png" />
     <Resource Include="Images\Buttons\save_btn.png" />
   </ItemGroup>
   <ItemGroup>
@@ -1214,6 +1234,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Buttons\delete.png" />
+    <Resource Include="Images\Buttons\delete_white.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Buttons\delete_disabled.png" />

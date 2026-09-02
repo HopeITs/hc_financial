@@ -9,6 +9,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Financial_WPF_App.Helper;
 
 namespace Financial_WPF_App.Views
 {
@@ -63,6 +65,8 @@ namespace Financial_WPF_App.Views
                     myDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
                     myDataGrid.Columns[i].VerticalAlignment = VerticalAlignment.Center;
                 }
+
+                SetUpFilter();
 
                 Load_Data();
                 Apply_Color_Theme();
@@ -160,11 +164,27 @@ namespace Financial_WPF_App.Views
 
         }
 
+
+        #region how many rows
+
+        // The screen used to offer months and a From/To range. A queue is worked through,
+        // not read by date, so what it offers now is how much of it to bring back - newest
+        // first, which is the order the grids were already in. Choosing a number is the
+        // request, so there is no Apply button.
+        private void SetUpFilter()
+        {
+            RowLimit.Changed += (s2, e2) => LoadGrid();
+        }
+
+        #endregion
+
         public void Load_Data()
         {
+            // Fifty rows is cheap enough to fetch on open, and a queue nobody can see is no
+            // use. The tab itself is still built only when it is selected, so this runs for
+            // the one tab being looked at, not sixteen.
             LoadGrid();
             Show_Hide();
-
         }
 
         private void Show_Hide()
@@ -279,8 +299,10 @@ namespace Financial_WPF_App.Views
         private void LoadGrid()
         {
 
-            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true);
-            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true);
+            int rows = RowLimit.Limit;
+
+            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true, "", "", null, rows);
+            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true, "", "", null, rows);
 
             System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
             System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
@@ -428,8 +450,9 @@ namespace Financial_WPF_App.Views
             {
                 this.myDataGrid.GetVisualContainer().ScrollOwner.ScrollChanged += ScrollOwner_ScrollChanged;
 
-                int count = myDataGrid.View.Records.Count();
-                All_textBlock.Text = count.ToString("N0");
+                // The row count is written where the data is set, which now happens on
+                // every Apply. Loaded fires once, so writing it here as well would only
+                // freeze whatever the screen opened with.
 
                 //All_textBlock.Text = myDataGrid.View.Records.Count().ToString();
                 Export_btn.CommandTarget = myDataGrid;
@@ -554,6 +577,10 @@ namespace Financial_WPF_App.Views
 
                     MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     LoadGrid();
+                    
+                    // Approving moves an action from action_not_approved into action, so every
+                    // till holding it is now stale. Nothing used to tell them.
+                    TillNotifier.RaiseRefresh();
                 }
                 else
                 {
@@ -603,6 +630,10 @@ namespace Financial_WPF_App.Views
 
                         MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                         LoadGrid();
+                        
+                        // Approving moves an action from action_not_approved into action, so every
+                        // till holding it is now stale. Nothing used to tell them.
+                        TillNotifier.RaiseRefresh();
                     }
 
                 }
@@ -705,6 +736,10 @@ namespace Financial_WPF_App.Views
 
                     MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                     LoadGrid();
+                    
+                    // Approving moves an action from action_not_approved into action, so every
+                    // till holding it is now stale. Nothing used to tell them.
+                    TillNotifier.RaiseRefresh();
                 }
 
             }
@@ -792,6 +827,7 @@ namespace Financial_WPF_App.Views
         {
             try
             {
+
                 RadioButton radioButton = sender as RadioButton;
 
                 // If the RadioButton was checked before the click, this will uncheck it
@@ -871,6 +907,9 @@ namespace Financial_WPF_App.Views
                     }
                     else
                     {
+                        // The counter was written only on the branch that had rows, so an
+                        // empty result left the previous number on screen.
+                        All_textBlock.Text = "0";
                         myDataGrid.ItemsSource = null;
                     }
                 }
@@ -900,6 +939,7 @@ namespace Financial_WPF_App.Views
                     }
                     else
                     {
+                        All_textBlock.Text = "0";
                         myDataGrid.ItemsSource = null;
                     }
                 }

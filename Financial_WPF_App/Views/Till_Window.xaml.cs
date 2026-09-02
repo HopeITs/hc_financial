@@ -35,7 +35,7 @@ namespace Financial_WPF_App.Views
             this.TillType_Name = TillType_Name;
             this.IsAdminAccount = IsAdminAccount;
             Onload();
-
+            HookContentVisibility();
         }
 
         public Till_Window(int FiscalBond_ID, string FiscalBond_Name, Main_Window_2 main_Window)
@@ -54,7 +54,7 @@ namespace Financial_WPF_App.Views
 
             if (Onload())
             {
-
+                HookContentVisibility();
             }
             else
             {
@@ -97,12 +97,55 @@ namespace Financial_WPF_App.Views
 
         #endregion
 
+        // TillNotifier.RefreshTill is a broadcast: saving one action told every Till_Window
+        // ever built to reload. Those windows are never closed - only their Content is moved
+        // into a TabItem - so the list only ever grows, and the content keeps them alive
+        // through its event handlers, which is why unsubscribing on OnClosed never happened.
+        //
+        // Measured in a real session: one Action.Update was followed by 12-13 full grid
+        // reloads, 466 s of the session's database time, 58% of the total. All but one of
+        // those reloads were for tills sitting in a tab nobody was looking at.
+        //
+        // A hidden till now records that it is stale and reloads the moment it becomes
+        // visible again, so what you see on screen is still always current.
+        private bool _refreshPending;
+
         private void OnTillRefresh()
         {
             Dispatcher.Invoke(() =>
             {
-                Load_Data();
+                if (IsContentVisible())
+                    Load_Data();
+                else
+                    _refreshPending = true;
             });
+        }
+
+        private bool IsContentVisible()
+        {
+            FrameworkElement content = Content as FrameworkElement;
+
+            // No content element to judge by - behave as before and reload.
+            if (content == null)
+                return true;
+
+            return content.IsVisible;
+        }
+
+        private void HookContentVisibility()
+        {
+            FrameworkElement content = Content as FrameworkElement;
+            if (content == null)
+                return;
+
+            content.IsVisibleChanged += (s, e) =>
+            {
+                if (!_refreshPending || !((FrameworkElement)s).IsVisible)
+                    return;
+
+                _refreshPending = false;
+                Load_Data();
+            };
         }
 
         private bool Onload()
@@ -125,7 +168,21 @@ namespace Financial_WPF_App.Views
                 //myExpander.IsExpanded = false;
                 Balances.Visibility = Visibility.Hidden;
 
+                // Open on the newest month the till has movements in. The server works out
+                // which month that is inside the same query, so this costs one round trip.
+                //
+                // It used to be two: ask which months exist, then ask for that month's rows.
+                // Measured, one round trip costs about as much as 1,500 rows of this grid, so
+                // the extra trip cancelled the filter out on small tills and ate into the gain
+                // on large ones.
+                //
+                // Only here, not in Load_Data: a refresh after saving must keep whatever
+                // period the user is looking at.
+                SetUpFilter();
+
+                _openingOnNewest = true;
                 Load_Data();
+                _openingOnNewest = false;
                 Apply_Color_Theme();
                 Dispatcher.BeginInvoke(new System.Action(() =>
                 {
@@ -598,11 +655,72 @@ namespace Financial_WPF_App.Views
             }
         }
 
+        #region period filter
+
+        /// <summary>One month in the period picker.</summary>
+        // Set only while the window is opening. It makes LoadGrid ask for "the newest month
+        // this till has", which the server resolves inside the query, instead of the screen
+        // having to find that out in a round trip of its own first.
+        private bool _openingOnNewest;
+
+        // The month list, the tick boxes, the caption and the clear button were written
+        // out here. They are now Controls/UC_MonthFilter, shared with the five approval
+        // screens - this window only says where the months come from and what to do when
+        // the selection changes.
+        /// <summary>
+        /// The X drops the period entirely. Nothing is asked for, so nothing is shown - the
+        /// grid empties without a query rather than falling back to the whole till, which on
+        /// the largest one is ten thousand rows nobody asked for.
+        /// </summary>
+        private void ShowNothing()
+        {
+            myDataGrid.ItemsSource = null;
+            UpdateAllCounters();
+        }
+
+        private void SetUpFilter()
+        {
+            // The list arrives inside the batch that fills the grid, so the drop-down never
+            // has to fetch it. LoadMonths is only the fallback if it is opened before a load.
+            MonthFilter.ShowDateRange = false;
+            MonthFilter.LoadMonths = () => a.Select_Till_Periods(Till_ID.ToString());
+            MonthFilter.Apply += (s2, e2) => Load_Data();
+            MonthFilter.Cleared += (s2, e2) => ShowNothing();
+            MonthFilter.Initialise();
+        }
+
+
+        #endregion
+
         private void LoadGrid()
         {
-            DataTable temp_dt = a.Select("", Till_ID.ToString(), SubProject_ID.ToString(), true);
+            // One connection and one round trip instead of three. The three statements are
+            // unchanged - see Action.Select_Till_Screen - only the number of trips differs.
+            // The range narrows the two grids; the totals stay for the whole till.
+            List<string> periods = _openingOnNewest
+                ? new List<string> { Models.Action.NewestPeriod }
+                : MonthFilter.SelectedMonths();
 
-            DataTable Not_Approved_temp_dt = a.Select_action_not_approved("", Till_ID.ToString(), SubProject_ID.ToString(), true, false);
+            DataSet screen = a.Select_Till_Screen(Till_ID.ToString(), SubProject_ID.ToString(), true, Account_ID,
+                periods);
+
+            if (screen.Tables.Count < Models.Action.TillScreenTableCount)
+                throw new InvalidOperationException(
+                    "The till screen query returned " + screen.Tables.Count +
+                    " result sets instead of " + Models.Action.TillScreenTableCount + ".");
+
+            // Came back in the same batch - keeps the list current when an action creates a
+            // month that did not exist when the till was opened.
+            MonthFilter.Fill(screen.Tables[Models.Action.TillScreenPeriods]);
+
+            // The rows above are already the newest month's; this only makes the picker say
+            // so. The list arrives newest first, and it came from the same round trip.
+            if (_openingOnNewest)
+                MonthFilter.SelectNewest();
+
+            DataTable temp_dt = screen.Tables[Models.Action.TillScreenGrid];
+
+            DataTable Not_Approved_temp_dt = screen.Tables[Models.Action.TillScreenNotApproved];
 
             int User_ID = Settings.Default.User_ID;
             List<int> CashAccount_ID = new List<int>();
@@ -707,14 +825,15 @@ namespace Financial_WPF_App.Views
 
             sum_dt = new DataTable();
             cash_dt = new DataTable();
-            DataSet ds = a.Select_Sums(Till_ID.ToString(), Account_ID, "");
-            if (ds.Tables.Count > 0)
+            // the totals and cash balances came back in the same batch as the grid above
+            DataSet ds = screen;
+            if (ds.Tables.Count > Models.Action.TillScreenSums)
             {
-                sum_dt = ds.Tables[0];
+                sum_dt = ds.Tables[Models.Action.TillScreenSums];
 
-                if (ds.Tables.Count > 1)
+                if (ds.Tables.Count > Models.Action.TillScreenCashBalances)
                 {
-                    DataTable temp_cash = ds.Tables[1];
+                    DataTable temp_cash = ds.Tables[Models.Action.TillScreenCashBalances];
                     if (temp_cash != null && temp_cash.Rows.Count > 0)
                     {
                         if (!AsFiscalBond)
@@ -849,27 +968,29 @@ namespace Financial_WPF_App.Views
                 {
                     if (dt != null && dt.Rows.Count > 0)
                     {
-                        //int count = dt.Rows.Count;
-                        // All_textBlock.Text = count.ToString("N0");
-                        UpdateAllCounters();
+                        // Counted after binding, not before: UpdateAllCounters reads
+                        // myDataGrid.View, so running it first counted the PREVIOUS contents
+                        // and the number stayed one step behind every filter change.
                         myDataGrid.ItemsSource = dt.DefaultView;
+                        UpdateAllCounters();
                     }
                     else
                     {
                         myDataGrid.ItemsSource = null;
+                        UpdateAllCounters();
                     }
                 }
                 else
                 {
                     if (not_approved_dt != null && not_approved_dt.Rows.Count > 0)
                     {
-                        //All_textBlock.Text = dt.Rows.Count.ToString();
                         myDataGrid.ItemsSource = not_approved_dt.DefaultView;
                         UpdateAllCounters();
                     }
                     else
                     {
                         myDataGrid.ItemsSource = null;
+                        UpdateAllCounters();
                     }
                 }
 
@@ -908,8 +1029,13 @@ namespace Financial_WPF_App.Views
 
         private void UpdateAllCounters()
         {
+            // An empty grid must read zero, not keep the last number it showed.
             if (myDataGrid.View == null)
+            {
+                All_textBlock.Text = "0";
+                All_textBlockusd.Text = "0";
                 return;
+            }
 
             // غير SYR → عدّ عادي
             if (!TillType_Name.Equals("syr", StringComparison.OrdinalIgnoreCase))

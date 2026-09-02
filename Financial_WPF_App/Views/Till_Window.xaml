@@ -3,6 +3,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:Financial_WPF_App.Controls"
     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
     xmlns:local="clr-namespace:Financial_WPF_App.Helper"
     x:Class="Financial_WPF_App.Views.Till_Window"
@@ -317,6 +318,14 @@
                     <!--<CheckBox Unchecked="ExactSearch_checkBox_Unchecked" Style="{DynamicResource ComboBoxActionStyle}" x:Name="ExactSearch_checkBox" Content="Full Match"  Checked="ExactSearch_checkBox_Checked" VerticalAlignment="Stretch" Width="89" Margin="0,0,10,0"/>-->
                     <TextBox Style="{DynamicResource TextBoxActionStyle}" TextChanged="Search_txtBox_TextChanged" x:Name="Search_txtBox" TabIndex="10"/>
                 </StackPanel>
+
+                <!-- Declared last on purpose: a DockPanel gives space in declaration order,
+                     so the search box reserves its width first and this takes the leftover.
+                     A label and one combo, nothing else - the months are checkboxes inside the
+                     drop-down, so the bar never grows however narrow the window gets. -->
+                <controls:UC_MonthFilter x:Name="MonthFilter" ShowDateRange="False"
+                                         VerticalAlignment="Center" Margin="12,0,0,0"/>
+
             </DockPanel>
         </Grid>
         <Grid Grid.Row="3">

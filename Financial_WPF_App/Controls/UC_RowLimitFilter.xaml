@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Financial_WPF_App.Controls.UC_RowLimitFilter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             mc:Ignorable="d"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             FlowDirection="LeftToRight">
+
+    <!-- How many rows to fetch, for the approval screens.
+
+         They had a month picker and a From/To range. A queue is not read by date -
+         it is worked through - so what is wanted is the first so many of it, newest
+         first, which is the order the grids were already in.
+
+         Choosing a number is the request, so there is no Apply button: one click
+         instead of two, and no way to leave a choice half-made.
+
+         Sizes to its content. Never make it the child a DockPanel fills. -->
+
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+        <Label x:Name="Rows_Label"
+               Style="{DynamicResource statistic_lableStyle}"
+               Content="Show:" Margin="8,2,1,2"
+               VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+
+        <ComboBox x:Name="Limit_comboBox"
+                  Style="{DynamicResource ActionComboboxStyle}"
+                  ToolTip="How many rows to load. Select All loads every one."
+                  ToolTipService.InitialShowDelay="100"
+                  DisplayMemberPath="Caption"
+                  SelectionChanged="Limit_comboBox_SelectionChanged"
+                  Margin="3,0,5,0" VerticalAlignment="Center" Width="120" Height="30"/>
+    </StackPanel>
+</UserControl>

@@ -389,7 +389,13 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable Select_All_Not_Approved_Payments(string SubProject_ID, bool ForApproval, int Action_ID, string FromDate, string ToDate, int Microproject_ID)
+        /// <summary>
+        /// <paramref name="RowLimit"/> caps how many rows come back, newest first - the
+        /// order these grids were already in. 0 means every row, which is what every caller
+        /// but the approval screen passes, so nothing else changes.
+        /// </summary>
+        public DataTable Select_All_Not_Approved_Payments(string SubProject_ID, bool ForApproval, int Action_ID, string FromDate, string ToDate, int Microproject_ID,
+            List<string> Periods = null, int RowLimit = 0)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
@@ -440,6 +446,15 @@ namespace Financial_WPF_App.Models
 
             string condition = " where tilltypes.Name = 'Pay' and account.SubProject_ID in (" + SubProject_ID + ") ";
 
+            // The screen offers months or a From/To range, never both at once, so
+            // whichever arrives is the filter. Both empty reads everything, as before.
+            condition += Models.Action.PeriodCondition("action_not_approved.ActionDate", Periods);
+
+            if (FromDate != "")
+                condition += " and action_not_approved.ActionDate >= '" + FromDate.Replace("'", "") + "'";
+            if (ToDate != "")
+                condition += " and action_not_approved.ActionDate <= '" + ToDate.Replace("'", "") + "'";
+
             if (ForApproval)
             {
                 condition += " and action_not_approved.SourceAction = 1";
@@ -469,6 +484,8 @@ namespace Financial_WPF_App.Models
             condition += " order by action_not_approved.id";
             query += condition;
 
+            query = Helper.SqlLimit.Apply(query, RowLimit);
+
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
@@ -490,7 +507,13 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable Select_All_Deleted_Payments(string SubProject_ID, bool ForApproval)
+        /// <summary>
+        /// <paramref name="RowLimit"/> caps how many rows come back, newest first - the
+        /// order these grids were already in. 0 means every row, which is what every caller
+        /// but the approval screen passes, so nothing else changes.
+        /// </summary>
+        public DataTable Select_All_Deleted_Payments(string SubProject_ID, bool ForApproval,
+            string FromDate = "", string ToDate = "", List<string> Periods = null, int RowLimit = 0)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
@@ -542,6 +565,15 @@ action_deleted.`note` as 'Note',
 
             string condition = " where tilltypes.Name = 'Pay' and account.SubProject_ID in (" + SubProject_ID + ") ";
 
+            // The screen offers months or a From/To range, never both at once, so
+            // whichever arrives is the filter. Both empty reads everything, as before.
+            condition += Models.Action.PeriodCondition("action_deleted.ActionDate", Periods);
+
+            if (FromDate != "")
+                condition += " and action_deleted.ActionDate >= '" + FromDate.Replace("'", "") + "'";
+            if (ToDate != "")
+                condition += " and action_deleted.ActionDate <= '" + ToDate.Replace("'", "") + "'";
+
             if (ForApproval)
             {
                 condition += " and action_deleted.SourceAction = 1";
@@ -553,6 +585,8 @@ action_deleted.`note` as 'Note',
 
             condition += " order by action_deleted.id";
             query += condition;
+
+            query = Helper.SqlLimit.Apply(query, RowLimit);
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
