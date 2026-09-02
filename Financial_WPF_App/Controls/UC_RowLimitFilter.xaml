@@ -30,6 +30,6 @@
                   ToolTipService.InitialShowDelay="100"
                   DisplayMemberPath="Caption"
                   SelectionChanged="Limit_comboBox_SelectionChanged"
-                  Margin="3,0,5,0" VerticalAlignment="Center" Width="95" Height="30"/>
+                  Margin="3,0,5,0" VerticalAlignment="Center" Width="120" Height="30"/>
     </StackPanel>
 </UserControl>
