@@ -335,42 +335,48 @@ count after load.
 
 ---
 
-### The approval screens — a filter, and nothing loaded until asked
+### The approval screens — how many rows, not which dates
 
-`a5402cd`, `7bf8d71`, `7dd0f1c`
+`a5402cd`, `7bf8d71`, `7dd0f1c`, `46c2e58`
 
 Lazy tabs cut approval to the tab being looked at. This cuts that tab to what the
 user asks for.
 
-**Nothing loads until asked.** The grid stays empty until Apply or a month is
-picked — the Payments pattern, where `LoadGrid` is deliberately absent from
-`Load_Data`. That matters more here than anywhere else: approval is a work queue,
-so a default period would silently hide items waiting on someone's decision. There
-is no default period, and nothing is hidden, because nothing is shown until asked
-for.
+**Where it ended up.** A row count — 50, 100, 200, 500, 1000, Select All — starting
+at 50, newest first, which is the order both grids were already in. Choosing a
+number is the request, so there is no Apply button. `RowLimit` is an optional
+argument defaulting to 0, so the five other callers of those queries are untouched.
 
-**A month picker with Select All**, listing only months that have rows, plus a
-From/To range. They are one filter with two ways in — choosing months clears the
-dates, typing a date clears the months. Months apply on their own when the
-drop-down closes; Apply is for the dates, which are not a request until typed.
+**Where it went first, and why that was wrong.** It was built with the same month
+picker and From/To range as the report screens, and the screens opened with nothing
+loaded — the reasoning being that approval is a work queue, so a default *period*
+would silently hide items waiting on someone's decision.
 
-**The X empties the screen.** An empty selection means "no restriction", so
-clearing used to reload the whole table — on the largest till, ten thousand rows,
-which is the one thing nobody pressing a clear button wants. An empty filter now
-means "not asked yet", not "asked for all of it".
+The reasoning was right and the shape was wrong. A queue is not read by date; it is
+worked through. A count hides nothing — it stops short, and the total is on the
+counter above the grid — so the screens load again on open, at 50. A queue nobody
+can see is no use.
 
-Two things the picker deliberately does not do:
+That cost two rounds of work on a filter that was then removed. What survived it is
+in section 3 and in `Controls/UC_MonthFilter`, which the accounts screen still uses.
 
-- It does not fetch the month list when the screen opens. These screens open with
-  no queries at all; the list is fetched the first time the drop-down is opened.
-- It does not reload on every tick. Choosing four months would otherwise fire four
-  queries while the user was still deciding.
+**The LIMIT is appended in one place**, `Helper/SqlLimit`. These queries are built
+as strings and end in several shapes — `ORDER BY` with a semicolon, without one,
+lower-case, after a `GROUP BY` — and putting the clause in the wrong place is a
+run-time syntax error, not a compile error. All four shapes were run against the
+database with a limit appended, and so were both guards: a limit of 0 changes
+nothing, and applying it twice does not produce `LIMIT 5 LIMIT 100`.
 
-#### The month counts were wrong, and the fix has a maintenance cost
+**Removed with the filter**: `Select_Approval_Periods` and
+`Select_Approval_Pay_Periods`, 121 lines that existed only to count rows per month
+for the picker — including the fix below, which is now of historical interest only
+but is the reason to keep reading.
+
+#### The month counts were wrong, and why that still matters
 
 The number beside each month counted every row in that month. The grid shows only
 the rows the current user may act on, so the number was always higher than the list
-and often the list was empty. The grid applies these and the count applied none:
+and often the list was empty. The grid applied these and the count applied none:
 
 ```
 SourceAction = 1
@@ -379,13 +385,10 @@ Amount <= the role's approval limit
 the account not closed
 ```
 
-It also summed the waiting rows and the deleted ones together while the screen
-shows one or the other. The count query now repeats the same conditions and reads
-the table the radio button is on; switching the radio drops the list so the next
-look fetches the right one.
-
-**Kept in step by hand.** If either grid query gains a rule, the count query needs
-it too or the numbers drift again. It is noted in both.
+**The lesson outlives the code.** A count shown beside a filter is a promise about
+what that filter will return, and it has to be produced by the same conditions or
+it is a lie. Anything counting rows for a picker anywhere else in this application
+has the same obligation.
 
 ### One filter component instead of three copies
 

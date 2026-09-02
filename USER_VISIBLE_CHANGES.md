@@ -12,7 +12,7 @@ screens gained a date filter.
 
 A working session that used to spend **13 minutes** waiting on the database now
 spends **2 minutes**. Most of that is invisible — screens simply arrive sooner.
-The visible parts are the new filter bar, the approval screen opening instantly
+The visible parts are the new filter bar, the approval screen opening at once
 instead of after a wait, and two screens that took twenty seconds now taking under
 one.
 
@@ -84,23 +84,32 @@ rows can be waiting, it fetched all of them for fifteen tabs nobody opened.
 
 Now:
 
-- **It opens immediately, showing nothing.** You choose a period and ask for it.
 - **A tab loads the first time you open it**, not before.
+- **It shows the newest 50 rows**, and you choose a different number if you want
+  more.
 
-### Why it starts empty
+### The Show box
 
-Approval is a work queue. A screen that opened on "this year" would quietly hide
-anything waiting outside it. So there is no default period — nothing is hidden,
-because nothing is shown until you ask.
+```
+Show:   50 · 100 · 200 · 500 · 1000 · Select All
+```
 
-**This is the question most likely to come back**: "the approval screen is empty".
-It is meant to be. Pick months, or a From/To range, and it fills.
+It opens on **50**. Choosing a number loads straight away — there is no Apply
+button to press afterwards.
 
-The same "build the tab when it is opened" change also went to the revenue and
-exchange report, the fixed assets report, the Syrian balances and the budget lines
-screens.
+The rows come newest first, so 50 means the 50 most recent things waiting for you.
+**Select All** brings back every one.
 
----
+### Why a count and not a date
+
+This screen briefly had a month picker and a From/To range, like the reports do.
+That was the wrong shape for it: a queue is worked through, not read by date. What
+you want is the top of the pile, however much of it you can deal with — and the
+count above the grid tells you how much is there in total.
+
+**Nothing is hidden by the default.** Fifty does not filter anything out; it stops
+short, and the counter says so. Choose a bigger number, or Select All, and the rest
+is there.
 
 ## 4. The filter, on eight screens
 
@@ -112,7 +121,9 @@ screens.
 | Revenue / exchange report | the current year |
 | **Till (accounts)** | the newest month that has movements |
 | **Fixed assets report** | **everything** |
-| **Approval**, all five tabs | **nothing, until you ask** |
+
+The approval screens are not in this list any more — they ask how many rows, not
+which dates. See section 3.
 
 ### How it works
 
@@ -144,13 +155,6 @@ first opened and never change again. They now update every time the filter chang
 including down to zero.
 
 If anyone previously learned to distrust those numbers, they can stop.
-
-### The count beside each month is what you will get
-
-Worth knowing because it was briefly wrong: on the approval screens the number
-beside a month counts only the rows **you** can act on — not everything in that
-month. Two people with different approval limits will correctly see different
-numbers for the same month.
 
 ---
 

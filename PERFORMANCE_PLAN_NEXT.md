@@ -74,12 +74,19 @@ Every row measured before it was built, and after.
 | `Monthly_Salaries_Window` | current year | |
 | `Revenue_Exchange_Sub_Report_Window` | current year | |
 | `Fixed_Assets_Report_Sub_Window` | **everything** | an old asset is still an asset |
-| `Approval_Sub_Window` ×4 | **nothing until asked** | work queue - a default period would hide items |
-| `Approval_Sub_Pay_Window` | **nothing until asked** | |
+| `Approval_Sub_Window` ×4 | **newest 50 rows** | a count, not a date - see below |
+| `Approval_Sub_Pay_Window` | **newest 50 rows** | |
 
-The filter is one component, `Controls/UC_MonthFilter` over `Helper/PeriodPicker`.
-Anything added to it reaches all eight screens; anything copied out of it starts
-the next six-screen bug.
+The date filter is one component, `Controls/UC_MonthFilter` over
+`Helper/PeriodPicker`. Anything added to it reaches every screen that uses it;
+anything copied out of it starts the next six-screen bug.
+
+The five approval screens use `Controls/UC_RowLimitFilter` instead - a row count,
+50 by default, appended by `Helper/SqlLimit`. They were built with the date filter
+first and it was the wrong shape: a queue is worked through, not read by date. Two
+rounds of work went into a filter that was then removed. **Ask what the screen is
+for before deciding what its filter should be**; the answer for a queue is "how much
+of it", and for a ledger "which part of the year".
 
 ### The rule that came out of it
 
