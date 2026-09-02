@@ -390,64 +390,12 @@ namespace Financial_WPF_App.Models
         }
 
         /// <summary>
-        /// The months this subproject has payment rows in, newest first, with a count each.
-        ///
-        /// Scoped exactly as the grid is - Pay tills, this subproject, and the same approval
-        /// conditions - so the number beside a month is what picking it shows. The first
-        /// version counted every row in the month and the grid showed fewer, or none.
-        ///
-        /// <paramref name="deleted"/> follows the screen's own radio button.
-        ///
-        /// Columns: Period ("yyyy-MM"), Movements (int).
+        /// <paramref name="RowLimit"/> caps how many rows come back, newest first - the
+        /// order these grids were already in. 0 means every row, which is what every caller
+        /// but the approval screen passes, so nothing else changes.
         /// </summary>
-        public DataTable Select_Approval_Pay_Periods(string SubProject_ID, bool deleted = false)
-        {
-            string t = deleted ? "action_deleted" : "action_not_approved";
-
-            string condition =
-                " WHERE tilltypes.Name = 'Pay' and account.SubProject_ID in (" + SubProject_ID + ") " +
-                " and " + t + ".SourceAction = 1" +
-                " and (edited_byuser.ID <> " + Properties.Settings.Default.User_ID +
-                " or edited_byuser.ID is null) and created_byuser.`ID` <> " +
-                Properties.Settings.Default.User_ID;
-
-            if (deleted)
-                condition += " and deleted_by <> " + Properties.Settings.Default.User_ID;
-
-            if (Properties.Settings.Default.Role != "Head Office")
-                condition += " and " + t + ".`Amount` <= (select role.Approval_Limit from role where role.Name = '" +
-                             Properties.Settings.Default.Role + "')";
-
-            string query =
-                "SELECT DATE_FORMAT(" + t + ".ActionDate, '%Y-%m') AS 'Period', COUNT(DISTINCT " + t + ".id) AS 'Movements'" +
-                " FROM " + t +
-                " LEFT JOIN till ON till.id = " + t + ".Till_ID" +
-                " LEFT JOIN tilltypes ON tilltypes.id = till.Type_ID" +
-                " LEFT JOIN account ON account.ID = till.Account_ID" +
-                " LEFT JOIN `user` created_byuser on created_byuser.id = " + t + ".User_ID" +
-                " LEFT JOIN `user` edited_byuser on edited_byuser.id = " + t + ".edited_by" +
-                condition +
-                " AND " + t + ".ActionDate IS NOT NULL" +
-                " GROUP BY Period ORDER BY Period DESC;";
-
-            DataTable dt = new DataTable();
-            if (Login.BuildConnection())
-            {
-                MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                sc.Parameters.AddWithValue("@t", 600);
-                sc.Connection = Login.MyConn;
-
-                MySqlDataAdapter da = new MySqlDataAdapter(sc);
-                da.Fill(dt);
-                Login.CloseAndClearConnection();
-            }
-            return dt;
-        }
-
         public DataTable Select_All_Not_Approved_Payments(string SubProject_ID, bool ForApproval, int Action_ID, string FromDate, string ToDate, int Microproject_ID,
-            List<string> Periods = null)
+            List<string> Periods = null, int RowLimit = 0)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
@@ -536,6 +484,8 @@ namespace Financial_WPF_App.Models
             condition += " order by action_not_approved.id";
             query += condition;
 
+            query = Helper.SqlLimit.Apply(query, RowLimit);
+
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
@@ -557,8 +507,13 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        /// <summary>
+        /// <paramref name="RowLimit"/> caps how many rows come back, newest first - the
+        /// order these grids were already in. 0 means every row, which is what every caller
+        /// but the approval screen passes, so nothing else changes.
+        /// </summary>
         public DataTable Select_All_Deleted_Payments(string SubProject_ID, bool ForApproval,
-            string FromDate = "", string ToDate = "", List<string> Periods = null)
+            string FromDate = "", string ToDate = "", List<string> Periods = null, int RowLimit = 0)
         {
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
@@ -630,6 +585,8 @@ action_deleted.`note` as 'Note',
 
             condition += " order by action_deleted.id";
             query += condition;
+
+            query = Helper.SqlLimit.Apply(query, RowLimit);
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())

@@ -97,52 +97,30 @@ namespace Financial_WPF_App.Views
             myDataGrid.GroupSummaryRowStyle = (Style)Application.Current.Resources[GroupSummaryRowStyle];
         }
 
-        #region month filter
+        #region how many rows
 
-        // Pay sits under Micro Accounts, whose colour is HopeRed - which apply.png already
-        // is, so it needs no image of its own.
+        // See Approval_Sub_Window: months and dates are gone, this asks how much of the
+        // queue to bring back. Choosing a number is the request.
         private void SetUpFilter()
         {
-            MonthFilter.ShowDateRange = true;
-            MonthFilter.ApplyImage = "apply.png";
-            // Deleted_Actions follows the screen's radio button: the two grids read different
-            // tables, so the counts beside the months have to follow it too.
-            MonthFilter.LoadMonths = () => p.Select_Approval_Pay_Periods(SubProject_ID, Deleted_Actions);
-            MonthFilter.Apply += (s2, e2) => LoadGrid();
-            MonthFilter.Cleared += (s2, e2) => ShowNothing();
-            MonthFilter.Initialise();
-        }
-
-
-        /// <summary>
-        /// The X drops the period entirely. Nothing is asked for, so nothing is shown - the
-        /// grid empties without a query rather than falling back to the whole table.
-        /// </summary>
-        private void ShowNothing()
-        {
-            Payments_dt = null;
-            Deleted_Payments_dt = null;
-            myDataGrid.ItemsSource = null;
-            All_textBlock.Text = "0";
+            RowLimit.Changed += (s2, e2) => LoadGrid();
         }
 
         #endregion
 
         public void Load_Data()
         {
-            // No LoadGrid here. The screen opens empty and waits for Apply.
             SetUpFilter();
+            LoadGrid();
         }
 
         private void LoadGrid()
         {
 
-            string from = MonthFilter.From();
-            string to = MonthFilter.To();
-            List<string> months = MonthFilter.SelectedMonths();
+            int rows = RowLimit.Limit;
 
-            Payments_dt = p.Select_All_Not_Approved_Payments(SubProject_ID, true, -1, from, to, -1, months);
-            Deleted_Payments_dt = p.Select_All_Deleted_Payments(SubProject_ID, true, from, to, months);
+            Payments_dt = p.Select_All_Not_Approved_Payments(SubProject_ID, true, -1, "", "", -1, null, rows);
+            Deleted_Payments_dt = p.Select_All_Deleted_Payments(SubProject_ID, true, "", "", null, rows);
 
             System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
             System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
@@ -748,10 +726,6 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                // The two grids read different tables, so the month list and its counts no
-                // longer describe what is shown. Dropped here; the next look at the
-                // drop-down fetches the right one.
-                MonthFilter.InvalidateMonths();
 
                 RadioButton radioButton = sender as RadioButton;
 

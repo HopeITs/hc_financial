@@ -319,8 +319,13 @@ namespace Financial_WPF_App.Models
         /// ever set - choosing months clears the dates and typing a date clears the months -
         /// so whichever arrives is the filter. Both empty reads everything, as before.
         /// </summary>
+        /// <summary>
+        /// <paramref name="RowLimit"/> caps how many rows come back, newest first - the
+        /// order these grids were already in. 0 means every row, which is what every caller
+        /// but the approval screen passes, so nothing else changes.
+        /// </summary>
         public DataTable Select_action_not_approved(string Action_ID, string Till_IDs, string SubProject_ID, bool showClosed, bool ForApproval,
-            string FromDate = "", string ToDate = "", List<string> Periods = null)
+            string FromDate = "", string ToDate = "", List<string> Periods = null, int RowLimit = 0)
         {
             string query = BuildNotApprovedQuery(Action_ID, Till_IDs, SubProject_ID, showClosed, ForApproval);
 
@@ -343,6 +348,8 @@ namespace Financial_WPF_App.Models
                 if (at >= 0)
                     query = query.Substring(0, at) + extra + query.Substring(at);
             }
+
+            query = Helper.SqlLimit.Apply(query, RowLimit);
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
@@ -368,71 +375,12 @@ namespace Financial_WPF_App.Models
         /// range was added. Dates are "yyyy/MM/dd", as on the other screens.
         /// </summary>
         /// <summary>
-        /// The months these tills have rows in, newest first, with a count each.
-        ///
-        /// The count has to be what picking that month will actually show, so this repeats
-        /// the conditions the grid applies - the first version did not, and reported every
-        /// row in the month while the grid showed only the ones this user may approve. The
-        /// number was always higher than the list, and often the list was empty.
-        ///
-        /// <paramref name="deleted"/> follows the screen's own radio button: the two grids
-        /// read different tables, so one list cannot describe both.
-        ///
-        /// Columns: Period ("yyyy-MM"), Movements (int).
+        /// <paramref name="RowLimit"/> caps how many rows come back, newest first - the
+        /// order these grids were already in. 0 means every row, which is what every caller
+        /// but the approval screen passes, so nothing else changes.
         /// </summary>
-        public DataTable Select_Approval_Periods(string Till_IDs, bool deleted = false)
-        {
-            string t = deleted ? "action_deleted" : "action_not_approved";
-
-            string condition = " WHERE 1 ";
-
-            if (Till_IDs != "")
-                condition += " and till.ID in (" + Till_IDs + ")";
-
-            // The same conditions BuildNotApprovedQuery and Select_Deleted_action apply when
-            // ForApproval is true. Kept in step with them by hand; if either gains a rule,
-            // this needs it too or the counts drift again.
-            condition += " and " + t + ".SourceAction = 1";
-            condition += " and (edited_byuser.ID <> " + Properties.Settings.Default.User_ID +
-                         " or edited_byuser.ID is null) and created_byuser.`ID` <> " +
-                         Properties.Settings.Default.User_ID;
-
-            if (deleted)
-                condition += " and deleted_by <> " + Properties.Settings.Default.User_ID;
-
-            if (Properties.Settings.Default.Role != "Head Office")
-                condition += " and " + t + ".`Amount` <= (select role.Approval_Limit from role where role.Name = '" +
-                             Properties.Settings.Default.Role + "')";
-
-            string query =
-                "SELECT DATE_FORMAT(" + t + ".ActionDate, '%Y-%m') AS 'Period', COUNT(DISTINCT " + t + ".id) AS 'Movements'" +
-                " FROM " + t +
-                " LEFT JOIN till ON till.id = " + t + ".Till_ID" +
-                " LEFT JOIN account ON account.ID = till.Account_ID" +
-                " LEFT JOIN `user` created_byuser on created_byuser.id = " + t + ".User_ID" +
-                " LEFT JOIN `user` edited_byuser on edited_byuser.id = " + t + ".edited_by" +
-                condition +
-                " AND " + t + ".ActionDate IS NOT NULL" +
-                " GROUP BY Period ORDER BY Period DESC;";
-
-            DataTable dt = new DataTable();
-            if (Login.BuildConnection())
-            {
-                MySqlCommand sc = new MySqlCommand();
-                sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                sc.Parameters.AddWithValue("@t", 600);
-                sc.Connection = Login.MyConn;
-
-                MySqlDataAdapter da = new MySqlDataAdapter(sc);
-                da.Fill(dt);
-                Login.CloseAndClearConnection();
-            }
-            return dt;
-        }
-
         public DataTable Select_Deleted_action(string Till_IDs, bool ForApproval,
-            string FromDate = "", string ToDate = "", List<string> Periods = null)
+            string FromDate = "", string ToDate = "", List<string> Periods = null, int RowLimit = 0)
         {
 
             string query = @"SELECT category.ID AS `Category_ID`, category.Name as `Category_Name`,
@@ -543,6 +491,8 @@ namespace Financial_WPF_App.Models
                 condition += " and action_deleted.ActionDate <= '" + ToDate.Replace("'", "") + "'";
 
             query += condition + " Group by action_deleted.id " + " ORDER BY action_deleted.ActionDate DESC, action_deleted.ID DESC;";
+
+            query = Helper.SqlLimit.Apply(query, RowLimit);
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())

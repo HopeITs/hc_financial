@@ -165,58 +165,25 @@ namespace Financial_WPF_App.Views
         }
 
 
-        #region month filter
+        #region how many rows
 
-        // The markup and the wiring live in Controls/UC_MonthFilter; this screen only says
-        // where the months come from, which colour the Apply button is, and what to do when
-        // the user asks for a period.
+        // The screen used to offer months and a From/To range. A queue is worked through,
+        // not read by date, so what it offers now is how much of it to bring back - newest
+        // first, which is the order the grids were already in. Choosing a number is the
+        // request, so there is no Apply button.
         private void SetUpFilter()
         {
-            MonthFilter.ShowDateRange = true;
-            MonthFilter.ApplyImage = ApplyImageForThisTab();
-            // Deleted_Actions follows the screen's radio button: the two grids read different
-            // tables, so the counts beside the months have to follow it too.
-            MonthFilter.LoadMonths = () => a.Select_Approval_Periods(Tills_ID.ToString(), Deleted_Actions);
-            MonthFilter.Apply += (s2, e2) => LoadGrid();
-            MonthFilter.Cleared += (s2, e2) => ShowNothing();
-            MonthFilter.Initialise();
-        }
-
-
-        /// <summary>
-        /// The X drops the period entirely. Nothing is asked for, so nothing is shown - the
-        /// grid empties without a query rather than falling back to the whole table.
-        /// </summary>
-        private void ShowNothing()
-        {
-            Actions_dt = null;
-            Deleted_Actions_dt = null;
-            myDataGrid.ItemsSource = null;
-            All_textBlock.Text = "0";
-        }
-
-        /// <summary>
-        /// Each approval tab has its own colour, so its Apply button carries it. apply.png is
-        /// already HopeRed, which is Micro Projects, so only the other three needed an image.
-        /// </summary>
-        private string ApplyImageForThisTab()
-        {
-            if (Account_Type == "Exchange")
-                return "Apply_orange.png";
-            if (Account_Type == "Personal")
-                return "Apply_green.png";
-            if (Category == "Micro Projects")
-                return "apply.png";
-            return "Apply_darkblue.png";
+            RowLimit.Changed += (s2, e2) => LoadGrid();
         }
 
         #endregion
 
         public void Load_Data()
         {
-            // No LoadGrid here. The screen opens empty and waits for Apply - same as
-            // Payments. Opening this window used to run two queries per tab across sixteen
-            // tabs before anyone had asked for anything.
+            // Fifty rows is cheap enough to fetch on open, and a queue nobody can see is no
+            // use. The tab itself is still built only when it is selected, so this runs for
+            // the one tab being looked at, not sixteen.
+            LoadGrid();
             Show_Hide();
         }
 
@@ -332,12 +299,10 @@ namespace Financial_WPF_App.Views
         private void LoadGrid()
         {
 
-            string from = MonthFilter.From();
-            string to = MonthFilter.To();
-            List<string> months = MonthFilter.SelectedMonths();
+            int rows = RowLimit.Limit;
 
-            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true, from, to, months);
-            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true, from, to, months);
+            Actions_dt = a.Select_action_not_approved("", Tills_ID.ToString(), "", true, true, "", "", null, rows);
+            Deleted_Actions_dt = a.Select_Deleted_action(Tills_ID.ToString(), true, "", "", null, rows);
 
             System.Data.DataColumn newColumn = new System.Data.DataColumn("IsSelected", typeof(Int32));
             System.Data.DataColumn newColumn1 = new System.Data.DataColumn("IsSelected", typeof(Int32));
@@ -862,10 +827,6 @@ namespace Financial_WPF_App.Views
         {
             try
             {
-                // The two grids read different tables, so the month list and its counts no
-                // longer describe what is shown. Dropped here; the next look at the
-                // drop-down fetches the right one.
-                MonthFilter.InvalidateMonths();
 
                 RadioButton radioButton = sender as RadioButton;
 
