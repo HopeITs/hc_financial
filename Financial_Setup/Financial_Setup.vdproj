@@ -1629,7 +1629,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\Financial Setup.msi"
+        "OutputFilename" = "8:Debug\\Financial_Setup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1708,11 +1708,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-<<<<<<< HEAD
-                "FrameworkVersion" = "8:v4.6.1                                                                                                       "
-=======
-                "FrameworkVersion" = "8:v4.6.1                                                                                                        "
->>>>>>> Faster
+                "FrameworkVersion" = "8:v4.6.1                                                                                     "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=671728"
                 }
@@ -3996,25 +3992,16 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Financial"
-<<<<<<< HEAD
-        "ProductCode" = "8:{C916E6C0-9C3B-41B4-9088-941EFAF82A85}"
-        "PackageCode" = "8:{4E35E866-0FB4-4715-9654-380083DB2ABA}"
-=======
-        "ProductCode" = "8:{E7837EF4-D8FC-4C29-94C9-8AD298CB71A5}"
-        "PackageCode" = "8:{16F85CBD-34D5-41E0-9FC4-A36C571F74F1}"
->>>>>>> Faster
+        "ProductName" = "8:Cashing"
+        "ProductCode" = "8:{77CC65D4-4747-438E-8F3B-02887A8FEF99}"
+        "PackageCode" = "8:{D3E644C8-F33A-4B44-BB21-DFC905233A60}"
         "UpgradeCode" = "8:{FA8ACE2C-C0BE-462F-933D-A47742515111}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-<<<<<<< HEAD
-        "ProductVersion" = "8:3.1.14"
-=======
         "ProductVersion" = "8:3.1.15"
->>>>>>> Faster
         "Manufacturer" = "8:Hope Center"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
