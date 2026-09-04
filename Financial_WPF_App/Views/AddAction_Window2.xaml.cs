@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -110,6 +111,7 @@ namespace Financial_WPF_App.Views
             InitializeComponent();
 
             Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+            InputValidationHelper.EnableThousandsSeparator(Amount_txtBox);
             Amount_txtBox.TextChanged += Amount_txtBox_TextChanged;
             ActionDate_datepicker.SelectedDate = DateTime.Today;
             _expensesControl.CurrencyChanged += ExpensesControl_CurrencyChanged;
@@ -175,7 +177,7 @@ namespace Financial_WPF_App.Views
             if (Type_comboBox.SelectedItem == null)
                 throw new ArgumentException("This Action type is not supported by Add Action 2.");
 
-            Amount_txtBox.Text = GetDouble(row, "Amount").ToString();
+            Amount_txtBox.Text = GetDouble(row, "Amount").ToString(CultureInfo.InvariantCulture);
             Notes_txtBox.Text = GetString(row, "Note");
             E_Notes_txtBox.Text = GetString(row, "E_Note");
 

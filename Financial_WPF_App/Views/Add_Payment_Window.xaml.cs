@@ -80,6 +80,8 @@ namespace Financial_WPF_App.Views
                 MircoProject_ID_autoSuggestionUserControl.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
                 Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 ReturnedAmount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+                InputValidationHelper.EnableThousandsSeparator(Amount_txtBox);
+                InputValidationHelper.EnableThousandsSeparator(ReturnedAmount_txtBox);
                 for (int i = 0; i < payDataGrid.Columns.Count; i++)
                 {
                     payDataGrid.Columns[i].TextAlignment = TextAlignment.Left;
@@ -217,7 +219,7 @@ namespace Financial_WPF_App.Views
 
                 if (a_dt.Rows[0]["Income"] != DBNull.Value)
                 {
-                    Amount_txtBox.Text = string.Format("{0:N2}", a_dt.Rows[0].Field<Double>("Income"));
+                    Amount_txtBox.Text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N2}", a_dt.Rows[0].Field<Double>("Income"));
                     if(Amount_txtBox.Text == "0.00")
                     {
                         Amount_txtBox.IsEnabled = false;
@@ -225,7 +227,7 @@ namespace Financial_WPF_App.Views
                 }
                 if (a_dt.Rows[0]["Outcome"] != DBNull.Value)
                 {
-                    ReturnedAmount_txtBox.Text = string.Format("{0:N2}", a_dt.Rows[0].Field<Double>("Outcome"));
+                    ReturnedAmount_txtBox.Text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N2}", a_dt.Rows[0].Field<Double>("Outcome"));
                     if (ReturnedAmount_txtBox.Text == "0.00")
                     {
                         ReturnedAmount_txtBox.IsEnabled = false;
@@ -275,7 +277,7 @@ namespace Financial_WPF_App.Views
                 string value = Amount_txtBox.Text;
                 if (value != "")
                 {
-                    Amount_txtBox.Text = Login.ConvertToDouble(value);
+                    Amount_txtBox.Text = InputValidationHelper.FormatAmount(value);
                 }
             }
             catch (Exception ex)
@@ -298,7 +300,7 @@ namespace Financial_WPF_App.Views
                 string value = ReturnedAmount_txtBox.Text;
                 if (value != "")
                 {
-                    ReturnedAmount_txtBox.Text = Login.ConvertToDouble(value);
+                    ReturnedAmount_txtBox.Text = InputValidationHelper.FormatAmount(value);
                 }
             }
             catch (Exception ex)
@@ -417,8 +419,8 @@ namespace Financial_WPF_App.Views
 
                 amount_str = Amount_txtBox.Text.Replace(",", "");
                 returnedamount_str = ReturnedAmount_txtBox.Text.Replace(",", "");
-                Double.TryParse(amount_str, out amount);
-                Double.TryParse(returnedamount_str, out returnedamount);
+                InputValidationHelper.TryParseFormattedNumber(amount_str, out amount);
+                InputValidationHelper.TryParseFormattedNumber(returnedamount_str, out returnedamount);
 
                 Date = ((DateTime)(Date_datepicker.SelectedDate)).ToString("yyyy/MM/dd");
                 CashAccount_ID = Convert.ToInt32(CashAccount_comboBox.SelectedValue);

@@ -82,6 +82,11 @@ namespace Financial_WPF_App
                 Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 ToReturn_Amount_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
                 Payment_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+                ExchangeRate_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+                InputValidationHelper.EnableThousandsSeparator(Amount_txtBox);
+                InputValidationHelper.EnableThousandsSeparator(ToReturn_Amount_txtBox);
+                InputValidationHelper.EnableThousandsSeparator(ExchangeRate_txtBox);
+                InputValidationHelper.EnableThousandsSeparator(Payment_txtBox);
                 Payment_interval_TextBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
                 MP_ID_txtBox.PreviewTextInput += InputValidationHelper.Integers_NumberValidationTextBox;
 
@@ -177,8 +182,8 @@ namespace Financial_WPF_App
                 NationalNumber_txtBox.Text = dt.Rows[0]["NationalNumber"].ToString();
                 Mobile_txtBox.Text = dt.Rows[0]["Mobile"].ToString();
                 Partners_txtBox.Text = dt.Rows[0]["Partners"].ToString();
-                Amount_txtBox.Text = Original_Amount = Login.ConvertToDouble(dt.Rows[0]["Amount"].ToString());
-                ExchangeRate_txtBox.Text = Original_ExchangeRate = Login.ConvertToDouble(dt.Rows[0]["ExchangeRate"].ToString());
+                Amount_txtBox.Text = Original_Amount = Convert.ToDecimal(dt.Rows[0]["Amount"]).ToString("N2", System.Globalization.CultureInfo.InvariantCulture);
+                ExchangeRate_txtBox.Text = Original_ExchangeRate = Convert.ToDecimal(dt.Rows[0]["ExchangeRate"]).ToString("N2", System.Globalization.CultureInfo.InvariantCulture);
                 
                 
                 if (dt.Rows[0]["Date"] == DBNull.Value)
@@ -191,8 +196,8 @@ namespace Financial_WPF_App
                 else
                     FirstPaymentDate_datepicker.SelectedDate = Original_FirstPaymentDate = Convert.ToDateTime(dt.Rows[0]["FirstPaymentDate"].ToString());
                 Payment_interval_TextBox.Text = Original_Payment_interval = dt.Rows[0]["Payment_interval"].ToString();
-                ToReturn_Amount_txtBox.Text = Original_ToReturn_Amount = Login.ConvertToDouble(dt.Rows[0]["ToReturn_Amount"].ToString());
-                Payment_txtBox.Text = Original_Payment = Login.ConvertToDouble(dt.Rows[0]["Payment"].ToString());
+                ToReturn_Amount_txtBox.Text = Original_ToReturn_Amount = Convert.ToDecimal(dt.Rows[0]["ToReturn_Amount"]).ToString("N2", System.Globalization.CultureInfo.InvariantCulture);
+                Payment_txtBox.Text = Original_Payment = Convert.ToDecimal(dt.Rows[0]["Payment"]).ToString("N2", System.Globalization.CultureInfo.InvariantCulture);
                 //PaymentCount_txtBox.Text = Login.ConvertToDouble(dt.Rows[0]["PaymentsCount"].ToString());
                 Notes_txtBox.Text = dt.Rows[0]["Notes"].ToString();
                 ReceiptNumber_txtBox.Text = dt.Rows[0]["ReceiptNumber"].ToString();
@@ -324,7 +329,7 @@ namespace Financial_WPF_App
             {
                 if (ToReturn_Amount_txtBox.Text != "")
                 {
-                    ToReturn_Amount_txtBox.Text = Login.ConvertToDouble(ToReturn_Amount_txtBox.Text);
+                    ToReturn_Amount_txtBox.Text = InputValidationHelper.FormatAmount(ToReturn_Amount_txtBox.Text);
                 }
                 Calculate_values();
             }
@@ -345,11 +350,11 @@ namespace Financial_WPF_App
         {
             try
             {
-                decimal rate = Convert.ToDecimal(ExchangeRate_txtBox.Text.ToString());
+                decimal rate = InputValidationHelper.ParseFormattedDecimal(ExchangeRate_txtBox.Text);
                 decimal amount; 
                 decimal correspondingLoan= 0;
 
-                if (decimal.TryParse(Amount_txtBox.Text, out amount) && decimal.TryParse(ExchangeRate_txtBox.Text, out rate))
+                if (InputValidationHelper.TryParseFormattedDecimal(Amount_txtBox.Text, out amount) && InputValidationHelper.TryParseFormattedDecimal(ExchangeRate_txtBox.Text, out rate))
                 {
                     if (Original_ExchangeRate != rate.ToString() || Original_Amount != amount.ToString())
                     {
@@ -401,15 +406,15 @@ namespace Financial_WPF_App
             {
                 if (Amount_txtBox.Text != "")
                 {
-                    Amount_txtBox.Text = Login.ConvertToDouble(Amount_txtBox.Text);
+                    Amount_txtBox.Text = InputValidationHelper.FormatAmount(Amount_txtBox.Text);
                 }
                 if(ExchangeRate_txtBox.Text != "")
                 {
-                    decimal rate = Convert.ToDecimal(ExchangeRate_txtBox.Text.ToString());
+                    decimal rate = InputValidationHelper.ParseFormattedDecimal(ExchangeRate_txtBox.Text);
                     decimal amount;
                     decimal correspondingLoan = 0;
 
-                    if (decimal.TryParse(Amount_txtBox.Text, out amount) && decimal.TryParse(ExchangeRate_txtBox.Text, out rate))
+                    if (InputValidationHelper.TryParseFormattedDecimal(Amount_txtBox.Text, out amount) && InputValidationHelper.TryParseFormattedDecimal(ExchangeRate_txtBox.Text, out rate))
                     {
                         if (Original_ExchangeRate != rate.ToString() || Original_Amount != amount.ToString())
                         {
@@ -452,7 +457,7 @@ namespace Financial_WPF_App
             {
                 if (Payment_txtBox.Text != "")
                 {
-                    Payment_txtBox.Text = Login.ConvertToDouble(Payment_txtBox.Text);
+                    Payment_txtBox.Text = InputValidationHelper.FormatAmount(Payment_txtBox.Text);
                 }
                 Calculate_values();
             }
@@ -641,8 +646,8 @@ namespace Financial_WPF_App
                 if (ToSave)
                 {
                     b.Update(Beneficiary_ID, FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
-                        , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text, Convert.ToInt32(Currency_comboBox.SelectedValue), Convert.ToDecimal(ExchangeRate_txtBox.Text)
-                        , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
+                        , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text, Convert.ToInt32(Currency_comboBox.SelectedValue), InputValidationHelper.ParseFormattedDecimal(ExchangeRate_txtBox.Text)
+                        , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment, System.Globalization.CultureInfo.InvariantCulture), Convert.ToInt32(Payment_interval_TextBox.Text)
                         , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, Original_MicroProject_ID, SubProject_ID, RegeneratePayments, DeleteSchedualedPayments, "Beneficiary_Window");
 
                     MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
@@ -653,8 +658,8 @@ namespace Financial_WPF_App
             else//Add new
             {
                 Beneficiary_ID = b.Insert(FName_txtBox.Text, LName_txtBox.Text, FaName_txtBox.Text, NationalNumber_txtBox.Text, Mobile_txtBox.Text
-                    , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text, Convert.ToInt32(Currency_comboBox.SelectedValue),Convert.ToDecimal(ExchangeRate_txtBox.Text)
-                    , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment), Convert.ToInt32(Payment_interval_TextBox.Text)
+                    , Partners_txtBox.Text, MicroProject_ID, MP_Name_txtBox.Text, Convert.ToInt32(Currency_comboBox.SelectedValue),InputValidationHelper.ParseFormattedDecimal(ExchangeRate_txtBox.Text)
+                    , amount, Date, FirstPaymentDate, ToReturn_Amountamount, float.Parse(payment, System.Globalization.CultureInfo.InvariantCulture), Convert.ToInt32(Payment_interval_TextBox.Text)
                     , Notes_txtBox.Text, ReceiptNumber_txtBox.Text, OrderNumber_txtBox.Text, Account_ID, RegeneratePayments, "Beneficiary_Window");
 
                 MessageBox.Show("Saved successfully.", "Confirmation", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
@@ -700,8 +705,8 @@ namespace Financial_WPF_App
             else
                 ToReturn_Amount_str = "";
 
-            Double.TryParse(amount_str, out amount);
-            Double.TryParse(ToReturn_Amount_str, out ToReturn_Amountamount);
+            InputValidationHelper.TryParseFormattedNumber(amount_str, out amount);
+            InputValidationHelper.TryParseFormattedNumber(ToReturn_Amount_str, out ToReturn_Amountamount);
 
 
             if (Payment_txtBox.Text == "" || Payment_txtBox.Text == "0") payment = "0";

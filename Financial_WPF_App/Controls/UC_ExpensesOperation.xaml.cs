@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Financial_WPF_App.Helper;
+
 namespace Financial_WPF_App.Controls
 {
     /// <summary>
@@ -477,7 +479,7 @@ namespace Financial_WPF_App.Controls
                 if (rows.Length > 0)
                 {
                     double avgRate = rows[0].Field<double>("Value");
-                    double.TryParse(_amountText, out _expandature);
+                    InputValidationHelper.TryParseFormattedNumber(_amountText, out _expandature);
                     _usdValue = _expandature / avgRate;
                     USD_Value_TxtBox.Content = _usdValue.ToString();
                 }

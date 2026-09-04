@@ -26,6 +26,7 @@ namespace Financial_WPF_App.Controls
         {
             InitializeComponent();
             Rate_txtBox.PreviewTextInput += InputValidationHelper.Decimal_NumberValidationTextBox;
+            InputValidationHelper.EnableThousandsSeparator(Rate_txtBox);
             Rate_txtBox.TextChanged += RelatedTextInputChanged;
         }
 
@@ -63,9 +64,9 @@ namespace Financial_WPF_App.Controls
                 return;
 
             double rate;
-            if (double.TryParse(value, out rate) && !double.IsNaN(rate) && !double.IsInfinity(rate))
+            if (InputValidationHelper.TryParseFormattedNumber(value, out rate) && !double.IsNaN(rate) && !double.IsInfinity(rate))
             {
-                Rate_txtBox.Text = rate.ToString();
+                Rate_txtBox.Text = rate.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 CalcExchangedValue();
             }
         }
@@ -256,7 +257,7 @@ namespace Financial_WPF_App.Controls
                 if (rows.Length > 0)
                 {
                     double avgRate = rows[0].Field<double>("Value");
-                    double.TryParse(_amountText, out _expandature);
+                    InputValidationHelper.TryParseFormattedNumber(_amountText, out _expandature);
                     _usdValue = _expandature / avgRate;
                     USD_Value_TxtBox.Content = _usdValue.ToString();
                 }
@@ -274,8 +275,8 @@ namespace Financial_WPF_App.Controls
             double rate;
             if (!string.IsNullOrWhiteSpace(_amountText) &&
                 !string.IsNullOrWhiteSpace(Rate_txtBox.Text) &&
-                double.TryParse(_amountText, out amount) &&
-                double.TryParse(Rate_txtBox.Text, out rate))
+                InputValidationHelper.TryParseFormattedNumber(_amountText, out amount) &&
+                InputValidationHelper.TryParseFormattedNumber(Rate_txtBox.Text, out rate))
             {
                 Exchanged_txtBox.Content = (amount * rate).ToString();
             }
@@ -556,7 +557,7 @@ namespace Financial_WPF_App.Controls
             ExchangeAcc_comboBox.SelectedValue = exchangeAccountId > 0 ? (object)exchangeAccountId : null;
             ExchangeCash_comboBox.SelectedValue = exchangeCashId > 0 ? (object)exchangeCashId : null;
             Original_AvgRate_comboBox.SelectedValue = originalRateId > 0 ? (object)originalRateId : null;
-            Rate_txtBox.Text = rate.ToString("N9");
+            Rate_txtBox.Text = rate.ToString("N9", System.Globalization.CultureInfo.InvariantCulture);
             UpdateExchangedValue(amountText);
         }
 

@@ -85,7 +85,7 @@ namespace Financial_WPF_App.Helper
                 return result;
             }
 
-            if (!double.TryParse(context.AmountText, out amount))
+            if (!InputValidationHelper.TryParseFormattedNumber(context.AmountText, out amount))
             {
                 MessageBox.Show("Please make sure to enter a valid amount.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                 result.ValidationFailed = true;
@@ -251,7 +251,7 @@ namespace Financial_WPF_App.Helper
                     return result;
                 }
 
-                double.TryParse(op.RateText, out rate);
+                InputValidationHelper.TryParseFormattedNumber(op.RateText, out rate);
             }
 
             if (op.DestinationTillRequired || (context.ActionId > 0 && op.DestinationTillSelectedIndex != -1))
