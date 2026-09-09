@@ -213,6 +213,53 @@ namespace Financial_WPF_App.Helper
         }
 
         /// <summary>
+        /// SQL fragment testing whether a tilltypes row is a local currency. Pass the
+        /// alias the query already uses, for example LocalCurrencySql("tilltypes", true).
+        ///
+        /// includePaymentsContainer decides whether the 'pay' container counts. The
+        /// existing queries are not consistent about this - the till screen counts pay
+        /// for income but not for expenses - and that difference is preserved rather
+        /// than quietly tidied away, because nobody now knows whether it was deliberate.
+        /// Callers state which one they mean.
+        ///
+        /// On a database that has not had the currency columns added yet, this returns
+        /// exactly the condition the query used before, so behaviour is unchanged.
+        /// </summary>
+        public static string LocalCurrencySql(string tilltypesAlias, bool includePaymentsContainer)
+        {
+            EnsureLoaded();
+
+            if (!_schemaSupportsMultipleLocalCurrencies)
+            {
+                return includePaymentsContainer
+                    ? "(" + tilltypesAlias + ".Name = 'SYR' OR " + tilltypesAlias + ".Name = 'PAY')"
+                    : tilltypesAlias + ".Name = 'SYR'";
+            }
+
+            return includePaymentsContainer
+                ? tilltypesAlias + ".is_local_currency = 1"
+                : "(" + tilltypesAlias + ".is_local_currency = 1 AND LOWER(" + tilltypesAlias + ".Name) <> 'pay')";
+        }
+
+        /// <summary>
+        /// SQL fragment for "the amount is in a local currency", as the action tables
+        /// express it: the currency column says a local currency, or says nothing at all.
+        /// A missing currency has always meant the local one.
+        /// </summary>
+        public static string LocalAmountSql(string currencyAlias)
+        {
+            EnsureLoaded();
+
+            string isLocal = _schemaSupportsMultipleLocalCurrencies
+                ? currencyAlias + ".is_local_currency = 1"
+                : currencyAlias + ".Name = 'SYR'";
+
+            return "(" + isLocal
+                 + " OR " + currencyAlias + ".Name IS NULL"
+                 + " OR " + currencyAlias + ".Name = '')";
+        }
+
+        /// <summary>
         /// SQL fragment that scales a column to the common unit, for totals that span
         /// both local currencies. Pass the aliases already in the query, for example
         /// ScaleToBaseUnitSql("action.Amount", "tilltypes").
