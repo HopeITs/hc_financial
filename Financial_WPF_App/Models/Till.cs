@@ -178,11 +178,37 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        /// <summary>
+        /// The currencies a user may pick in a Currency dropdown. Feeds six screens:
+        /// Account_Window, AddAction_Window, AddAction_Window2, Add_MultiActions_Window,
+        /// Beneficiary_Window and Denominations_Window.
+        ///
+        /// This used to read WHERE LOWER(Name) IN ('syr','usd'), which meant a newly
+        /// added local currency was invisible in all six - the user could create a till
+        /// for it but could then neither select it on a transaction nor see its
+        /// banknotes.
+        ///
+        /// The list is now derived from the currency's own properties: every local
+        /// currency, plus USD. EUR stays out deliberately, as before - see the note in
+        /// AddAction_Window2 about resolving it from the corresponding till instead.
+        ///
+        /// 'pay' is excluded because it is a till container, not a currency. It carries
+        /// is_local_currency = 1 because it does hold local money, which is the right
+        /// answer for "is this local?" but the wrong one for "can I pick this?". The
+        /// rest of the codebase special-cases it the same way.
+        /// </summary>
         public DataTable Select_All_TillTypes_Currency()
         {
-            string query = @"SELECT tilltypes.ID, tilltypes.Name 
-              FROM tilltypes 
-              WHERE LOWER(tilltypes.Name)  IN ('syr','usd');";
+            // Falls back to the original hardcoded list while the database is still on
+            // the old schema, so this build runs against either.
+            string query = Helper.CurrencyService.SchemaSupportsMultipleLocalCurrencies
+                ? @"SELECT tilltypes.ID, tilltypes.Name
+                    FROM tilltypes
+                    WHERE (tilltypes.is_local_currency = 1 OR LOWER(tilltypes.Name) = 'usd')
+                      AND LOWER(tilltypes.Name) <> 'pay';"
+                : @"SELECT tilltypes.ID, tilltypes.Name
+                    FROM tilltypes
+                    WHERE LOWER(tilltypes.Name)  IN ('syr','usd');";
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
