@@ -756,6 +756,47 @@ namespace Financial_WPF_App
         private bool _buildingTabs;
 
         /// <summary>
+        /// Puts the tills in the order the tabs should appear: the current local currency
+        /// first, then any superseded local currency, then the foreign ones. Within each
+        /// group the original order is kept.
+        ///
+        /// Sorted here rather than in Till.Select because that method has ten callers and
+        /// only this screen's tab order is being changed.
+        ///
+        /// No account in the data holds both a payments till and a local-currency till, so
+        /// the payments container never competes for the first position.
+        /// </summary>
+        private DataTable OrderTillsForTabs(DataTable tills)
+        {
+            if (tills == null || tills.Rows.Count < 2)
+                return tills;
+
+            try
+            {
+                var ordered = tills.AsEnumerable()
+                    .Select((row, index) => new { row, index })
+                    .OrderBy(x =>
+                    {
+                        int typeId = x.row.Field<int>("Type_ID");
+                        if (!Helper.CurrencyService.IsLocalCurrency(typeId)) return 2; // foreign last
+                        return Helper.CurrencyService.IsLegacyLocalCurrency(typeId) ? 1 : 0;
+                    })
+                    .ThenBy(x => x.index)
+                    .Select(x => x.row);
+
+                DataTable sorted = tills.Clone();
+                foreach (DataRow row in ordered)
+                    sorted.ImportRow(row);
+                return sorted;
+            }
+            catch
+            {
+                // Ordering is cosmetic - never let it stop the account from opening.
+                return tills;
+            }
+        }
+
+        /// <summary>
         /// Registers the factory that builds this tab's content. Must be called before the
         /// TabItem is added to tabControl1, because adding the first item selects it and
         /// that selection is what triggers the build.
@@ -862,6 +903,7 @@ namespace Financial_WPF_App
                 {
                     t_dt = new DataTable();
                     t_dt = t.Select(Acc_ID.ToString(), -1, "");
+                    t_dt = OrderTillsForTabs(t_dt);
 
                     if (t_dt != null && t_dt.Rows.Count > 0)
                     {

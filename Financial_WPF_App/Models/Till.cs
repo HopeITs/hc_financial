@@ -226,12 +226,30 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        /// <summary>
+        /// The till types an account does not have yet - the list behind the "Add till"
+        /// screen.
+        ///
+        /// A CLOSED account is not offered the current local currency. Closed accounts
+        /// stay entirely in the currency they were closed in; that is what keeps their
+        /// figures frozen and reconcilable against the paperwork already issued for them.
+        /// The superseded local currency and the foreign ones are still offered, because
+        /// blocking those would be a change to how closed accounts behave today.
+        /// </summary>
         public DataTable Select_Account_Missing_TillTypes(int Account_ID)
         {
-            string query = @"SELECT tilltypes.ID, tilltypes.Name FROM tilltypes LEFT JOIN 
+            string closedAccountRule =
+                Helper.CurrencyService.SchemaSupportsMultipleLocalCurrencies
+                    ? @" AND (account.IsClosed = 0
+                             OR NOT (tilltypes.is_local_currency = 1 AND tilltypes.base_divisor = 1))"
+                    : string.Empty;
+
+            string query = @"SELECT tilltypes.ID, tilltypes.Name FROM tilltypes LEFT JOIN
                             (SELECT tilltypes.ID FROM tilltypes LEFT JOIN till ON till.Type_ID = tilltypes.ID
                             WHERE till.Account_ID = @Account_ID) t1
-                            ON tilltypes.ID = t1.id WHERE tilltypes.Name <> 'pay' AND t1.ID is null";
+                            ON tilltypes.ID = t1.id
+                            JOIN account ON account.ID = @Account_ID
+                            WHERE tilltypes.Name <> 'pay' AND t1.ID is null" + closedAccountRule;
 
             DataTable dt = new DataTable();
             if (Login.BuildConnection())
