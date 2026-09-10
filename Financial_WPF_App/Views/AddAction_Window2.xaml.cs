@@ -1,4 +1,4 @@
-using Financial_WPF_App.Controls;
+﻿using Financial_WPF_App.Controls;
 using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
@@ -192,7 +192,7 @@ namespace Financial_WPF_App.Views
             {
                 int currencyId = GetInt(row, "Currency_TillType_ID");
                 if (currencyId <= 0 && !IsPersonalAccount)
-                    currencyId = GetTillTypeId(GetDouble(row, "Expandusd") != 0 ? "USD" : "SYR");
+                    currencyId = GetTillTypeId(GetDouble(row, "Expandusd") != 0 ? "USD" : _tillType);
 
                 _expensesControl.LoadEditValues(currencyId, cashAccountId,
                     GetInt(row, "MicroProject_ID"), GetString(row, "Name"),
@@ -471,7 +471,7 @@ namespace Financial_WPF_App.Views
             }
             else if (IsBudgetProject || IsMicroProject)
             {
-                if (_tillType == "SYR" && privileges.Expand)
+                if (IsLocalTill(_tillType) && privileges.Expand)
                     operations.Add(new OperationOption("Expenses"));
                 else if (_tillType == "USD" || _tillType == "EUR")
                 {
@@ -587,7 +587,7 @@ namespace Financial_WPF_App.Views
                 GetCurrencyTypes()?.DefaultView,
                 IsBudgetProject ? GetBudgetLinesForAccount() : null,
                 null, null, beneficiaries, employees, ActionDate_datepicker.SelectedDate,
-                requireProjectFieldsWithoutCurrency: IsSyrTill(_tillType));
+                requireProjectFieldsWithoutCurrency: IsLocalTill(_tillType));
             _expensesControl.UpdateValue(Amount_txtBox.Text);
             ExpensesControl_CurrencyChanged(this, EventArgs.Empty);
         }
@@ -614,8 +614,8 @@ namespace Financial_WPF_App.Views
         private void RefreshExpenseAverageRates()
         {
             int currencyId = _expensesControl.SelectedCurrencyId;
-            _expensesControl.SetAverageRates(IsSyrTill(_tillType) &&
-                currencyId > 0 && IsCurrency(currencyId, "SYR")
+            _expensesControl.SetAverageRates(IsLocalTill(_tillType) &&
+                currencyId > 0 && Helper.CurrencyService.IsLocalCurrency(currencyId, false)
                 ? GetAvailableAverageRates()?.DefaultView
                 : null);
         }
@@ -718,7 +718,7 @@ namespace Financial_WPF_App.Views
             if (_correspondingTills == null)
                 return null;
 
-            if (_tillType == "SYR")
+            if (IsLocalTill(_tillType))
                 return _correspondingTills;
 
             OperationPrivileges privileges = FinancialAuthorizationService.GetOperationPrivileges(
@@ -727,7 +727,7 @@ namespace Financial_WPF_App.Views
                 return _correspondingTills;
 
             DataRow[] rows = _correspondingTills.AsEnumerable()
-                .Where(r => string.Equals(Convert.ToString(r["Type"]), "SYR", StringComparison.OrdinalIgnoreCase))
+                .Where(r => IsLocalTill(Convert.ToString(r["Type"])))
                 .ToArray();
             return rows.Length == 0 ? _correspondingTills.Clone() : rows.CopyToDataTable();
         }
@@ -774,7 +774,7 @@ namespace Financial_WPF_App.Views
                 return _correspondingTills;
 
             DataRow[] syrRows = _correspondingTills.AsEnumerable().Where(r =>
-                string.Equals(Convert.ToString(r["Type"]), "SYR", StringComparison.OrdinalIgnoreCase)).ToArray();
+                IsLocalTill(Convert.ToString(r["Type"]))).ToArray();
             return syrRows.Length == 0 ? _correspondingTills.Clone() : syrRows.CopyToDataTable();
         }
 
@@ -1059,9 +1059,15 @@ namespace Financial_WPF_App.Views
         private bool IsExchangeAccount => string.Equals(_accountType, "Exchange", StringComparison.OrdinalIgnoreCase);
         private bool IsPersonalAccount => string.Equals(_accountType, "Personal", StringComparison.OrdinalIgnoreCase);
 
-        private static bool IsSyrTill(string tillType)
+        /// <summary>
+        /// Is this till in a local currency? Was a name match against "SYR", which left a
+        /// newly added local currency behaving like a foreign one all over this screen.
+        /// The payments container is excluded - it holds local money but is not something
+        /// a user records a transaction against here.
+        /// </summary>
+        private static bool IsLocalTill(string tillType)
         {
-            return string.Equals((tillType ?? string.Empty).Trim(), "SYR", StringComparison.OrdinalIgnoreCase);
+            return Helper.CurrencyService.IsLocalCurrency(tillType, false);
         }
 
         private void ResetBelowProject()
@@ -1177,7 +1183,7 @@ namespace Financial_WPF_App.Views
                 ActionModel = _action,
                 RateModel = _rate,
                 RequireExpenseCurrencySelection =
-                    (IsBudgetProject || IsMicroProject) && IsSyrTill(_tillType),
+                    (IsBudgetProject || IsMicroProject) && IsLocalTill(_tillType),
                 FocusCurrencySelection = () => _expensesControl.FocusCurrency()
             };
         }
@@ -1193,7 +1199,7 @@ namespace Financial_WPF_App.Views
                 fields.DonorSelectedIndex = _incomeControl.DonorSelectedIndex;
                 fields.DonorId = _incomeControl.DonorId;
                 // Personal Income: Cash Till mandatory only for SYR; currency comes from the Till.
-                fields.CashAccountRequired = _incomeControl.CashAccountIsEnabled && IsSyrTill(_tillType);
+                fields.CashAccountRequired = _incomeControl.CashAccountIsEnabled && IsLocalTill(_tillType);
                 fields.CashAccountSelectedIndex = _incomeControl.CashAccountSelectedIndex;
                 fields.CashAccountId = _incomeControl.CashAccountId;
                 if (IsPersonalAccount)
@@ -1209,7 +1215,7 @@ namespace Financial_WPF_App.Views
                     : _expensesControl.SelectedCurrencyId;
                 // Personal Expenses: Cash Till required only for SYR (USD/EUR optional).
                 fields.CashAccountRequired = IsPersonalAccount
-                    ? (_expensesControl.CashAccountIsEnabled && IsSyrTill(_tillType))
+                    ? (_expensesControl.CashAccountIsEnabled && IsLocalTill(_tillType))
                     : _expensesControl.CashAccountIsEnabled;
                 fields.CashAccountSelectedIndex = _expensesControl.CashAccountSelectedIndex;
                 fields.CashAccountId = _expensesControl.CashAccountId;
@@ -1233,12 +1239,12 @@ namespace Financial_WPF_App.Views
             }
             else if (operation == "Exchange")
             {
-                bool correspondingIsSyr = IsSyrTill(_exchangeControl.SelectedCorrespondingTillType);
+                bool correspondingIsSyr = IsLocalTill(_exchangeControl.SelectedCorrespondingTillType);
 
                 if (IsExchangeAccount)
                 {
                     // Exchange Account: enabled controls stay selectable; only SYR sides are mandatory on Save.
-                    fields.CashAccountRequired = IsSyrTill(_tillType);
+                    fields.CashAccountRequired = IsLocalTill(_tillType);
                     fields.ObserveCashAccountRequired = correspondingIsSyr;
                     fields.ExchangeAccountEnabled = false;
                     fields.ExchangeCashRequired = false;

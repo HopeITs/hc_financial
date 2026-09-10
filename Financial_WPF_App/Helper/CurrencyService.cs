@@ -121,6 +121,17 @@ namespace Financial_WPF_App.Helper
             return c != null && c.IsLocal;
         }
 
+        /// <summary>Same, with the caller deciding whether the payments container counts.</summary>
+        public static bool IsLocalCurrency(int tillTypeId, bool includePaymentsContainer)
+        {
+            CurrencyInfo c = Find(tillTypeId);
+            if (c == null || !c.IsLocal) return false;
+
+            if (includePaymentsContainer) return true;
+
+            return !string.Equals(c.Name, PaymentsContainerName, StringComparison.OrdinalIgnoreCase);
+        }
+
         public static bool IsLocalCurrency(string tillTypeName)
         {
             CurrencyInfo c = Find(tillTypeName);
