@@ -43,7 +43,7 @@ namespace Financial_WPF_App.Helper
                 if (personalAccounts_dt != null && personalAccounts_dt.Rows.Count > 0)
                 {
                     var userPersonal = personalAccounts_dt.AsEnumerable().Select(row => row.Field<int>("ID")).Distinct();
-                    orConditions.Add($"(Account_ID IN ({string.Join(",", userPersonal)}) AND Tilltypes_Name = 'SYR')");
+                    orConditions.Add($"(Account_ID IN ({string.Join(",", userPersonal)}) AND {CurrencyService.LocalCurrencyNamesFilter("Tilltypes_Name", false)})");
                 }
                 if (orConditions.Count == 0) return null;
                 string filter = $"({string.Join(" OR ", orConditions)}) AND is_administrative = 0";
@@ -57,12 +57,12 @@ namespace Financial_WPF_App.Helper
                 if (projects_dt != null && projects_dt.Rows.Count > 0)
                 {
                     var userAccounts = projects_dt.AsEnumerable().Select(row => row.Field<int>("AccountID")).Distinct();
-                    orConditions.Add($"(Account_ID IN ({string.Join(",", userAccounts)}) AND Tilltypes_Name = 'SYR')");
+                    orConditions.Add($"(Account_ID IN ({string.Join(",", userAccounts)}) AND {CurrencyService.LocalCurrencyNamesFilter("Tilltypes_Name", false)})");
                 }
                 if (personalAccounts_dt != null && personalAccounts_dt.Rows.Count > 0)
                 {
                     var userPersonal = personalAccounts_dt.AsEnumerable().Select(row => row.Field<int>("ID")).Distinct();
-                    orConditions.Add($"(Account_ID IN ({string.Join(",", userPersonal)}) AND Tilltypes_Name = 'SYR')");
+                    orConditions.Add($"(Account_ID IN ({string.Join(",", userPersonal)}) AND {CurrencyService.LocalCurrencyNamesFilter("Tilltypes_Name", false)})");
                 }
                 if (orConditions.Count == 0) return null;
                 string filter = $"({string.Join(" OR ", orConditions)}) AND is_administrative = 0 AND IsClosed = 0";
@@ -76,7 +76,7 @@ namespace Financial_WPF_App.Helper
                 if (fiscalbonds_dt != null && fiscalbonds_dt.Rows.Count > 0)
                 {
                     var userFiscal = fiscalbonds_dt.AsEnumerable().Select(row => row.Field<int>("FiscalbondID")).Distinct();
-                    orConditions.Add($"(Fiscalbond_ID IN ({string.Join(",", userFiscal)}) AND Tilltypes_Name = 'SYR')");
+                    orConditions.Add($"(Fiscalbond_ID IN ({string.Join(",", userFiscal)}) AND {CurrencyService.LocalCurrencyNamesFilter("Tilltypes_Name", false)})");
                 }
                 if (orConditions.Count == 0) return null;
                 string filter = $"({string.Join(" OR ", orConditions)}) AND is_administrative = 0 AND IsClosed = 0";
@@ -106,14 +106,14 @@ namespace Financial_WPF_App.Helper
             {
                 if (accountType == "Personal")
                 {
-                    if (currency == "syr" || currency == "usd" || currency == "eur")
+                    if (CurrencyService.IsLocalCurrency(currency, false) || currency == "usd" || currency == "eur")
                     {
                         priv.Income = priv.Expand = true;
                     }
                 }
                 else if (accountType == "Project")
                 {
-                    if (currency == "syr")
+                    if (CurrencyService.IsLocalCurrency(currency, false))
                     {
                         priv.Income = priv.Outcome = priv.Returned = priv.Exchange = priv.Expand = priv.Move = true;
                     }
@@ -125,7 +125,7 @@ namespace Financial_WPF_App.Helper
             }
             else if (role == "Employee")
             {
-                if (currency == "syr")
+                if (CurrencyService.IsLocalCurrency(currency, false))
                 {
                     priv.Income = priv.Outcome = priv.Returned = priv.Expand = true;
                 }

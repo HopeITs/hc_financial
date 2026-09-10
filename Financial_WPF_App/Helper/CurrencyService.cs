@@ -127,6 +127,22 @@ namespace Financial_WPF_App.Helper
             return c != null && c.IsLocal;
         }
 
+        /// <summary>
+        /// Same question, but the caller says whether the payments container counts.
+        /// Rules about what a user may do with money should normally pass false: 'pay'
+        /// holds local money, so it is a local currency, but it is a container rather
+        /// than something anyone picks or spends from.
+        /// </summary>
+        public static bool IsLocalCurrency(string tillTypeName, bool includePaymentsContainer)
+        {
+            CurrencyInfo c = Find(tillTypeName);
+            if (c == null || !c.IsLocal) return false;
+
+            if (includePaymentsContainer) return true;
+
+            return !string.Equals(c.Name, PaymentsContainerName, StringComparison.OrdinalIgnoreCase);
+        }
+
         // ------------------------------------------------------------------
         //  Question 2 - which currency is this exactly?
         // ------------------------------------------------------------------
@@ -257,6 +273,38 @@ namespace Financial_WPF_App.Helper
             return "(" + isLocal
                  + " OR " + currencyAlias + ".Name IS NULL"
                  + " OR " + currencyAlias + ".Name = '')";
+        }
+
+        /// <summary>
+        /// A DataTable filter expression matching the local currencies by name, for the
+        /// places that filter an in-memory table rather than query the database - for
+        /// example LocalCurrencyNamesFilter("Tilltypes_Name", false) produces
+        /// Tilltypes_Name IN ('SYR','SYP(NEW)').
+        ///
+        /// Names are taken from the currency table rather than written into the code, so
+        /// a currency added later is included without anyone editing this.
+        /// </summary>
+        public static string LocalCurrencyNamesFilter(string columnName, bool includePaymentsContainer)
+        {
+            EnsureLoaded();
+
+            var names = new List<string>();
+            foreach (CurrencyInfo c in _byId.Values)
+            {
+                if (!c.IsLocal) continue;
+                if (!includePaymentsContainer &&
+                    string.Equals(c.Name, PaymentsContainerName, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                // A single quote inside a DataTable filter literal is escaped by doubling it.
+                names.Add("'" + c.Name.Replace("'", "''") + "'");
+            }
+
+            // Nothing local at all would make the filter match everything if left empty,
+            // so fall back to a condition that matches nothing instead.
+            if (names.Count == 0) return "1 = 0";
+
+            return columnName + " IN (" + string.Join(",", names) + ")";
         }
 
         /// <summary>
