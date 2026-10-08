@@ -234,11 +234,6 @@ namespace Financial_WPF_App.Models
                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
                THEN action_not_approved.Amount  ELSE 0 END) AS 'Expandusd',
 
-
-                (SELECT account.ID FROM action_not_approved oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action_not_approved.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',
-                (SELECT account.Name FROM action_not_approved oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action_not_approved.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
-
-                donor.id as 'Donor_ID', donor.name as 'Donor',
                 /* Display-only columns that span both local currencies: the old lira
                    divided by its base_divisor, so one figure can stand for the two of
                    them. Nothing stored is converted. */
@@ -251,6 +246,11 @@ namespace Financial_WPF_App.Models
                 (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I' THEN action_not_approved.Amount ELSE 0 END) AS 'Incomecurrent',
                 (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O' THEN action_not_approved.Amount ELSE 0 END) AS 'Outcomecurrent',
 
+
+                (SELECT account.ID FROM action_not_approved oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action_not_approved.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',
+                (SELECT account.Name FROM action_not_approved oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action_not_approved.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
+
+                donor.id as 'Donor_ID', donor.name as 'Donor',
                 action_not_approved.`MicroProject_ID` ,
 
                 (select CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) from beneficiary JOIN account on beneficiary.Account_ID = account.ID
@@ -438,11 +438,6 @@ namespace Financial_WPF_App.Models
                 (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
                 THEN action_deleted.Amount  ELSE 0 END) AS 'Expandusd',
 
-                (SELECT account.ID FROM action_deleted oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action_deleted.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',
-                (SELECT account.Name FROM action_deleted oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action_deleted.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
-
-                donor.id as 'Donor_ID', donor.name as 'Donor',
-                action_deleted.`MicroProject_ID` ,
                 /* Display-only columns that span both local currencies: the old lira
                    divided by its base_divisor, so one figure can stand for the two of
                    them. Nothing stored is converted. */
@@ -455,6 +450,11 @@ namespace Financial_WPF_App.Models
                 (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I' THEN action_deleted.Amount ELSE 0 END) AS 'Incomecurrent',
                 (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O' THEN action_deleted.Amount ELSE 0 END) AS 'Outcomecurrent',
 
+                (SELECT account.ID FROM action_deleted oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action_deleted.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',
+                (SELECT account.Name FROM action_deleted oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action_deleted.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
+
+                donor.id as 'Donor_ID', donor.name as 'Donor',
+                action_deleted.`MicroProject_ID` ,
 
                 (select CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) from beneficiary JOIN account on beneficiary.Account_ID = account.ID
                 where beneficiary.MicroProject_ID = action_deleted.MicroProject_ID AND account.SubProject_ID = subproject.ID) as 'Name',
@@ -672,16 +672,16 @@ namespace Financial_WPF_App.Models
         {
             //check user from database
             string sub_condition = " WHERE action.Till_ID in (" + Till_IDs + ") ";
-            if (ActionDate != "")
-            {
-                sub_condition += " and action.ActionDate = @ActionDate ";
-            }
-
             // "a USD amount inside a local till". The payments container counts here: it
             // holds amounts in whichever currency the beneficiary is paid in, so with it
             // excluded SumIU/SumEU were always zero for a pay till and SumI/SumE swept the
             // dollars in with the lira. The two forms differ for no other till type.
             string localTill = Helper.CurrencyService.LocalCurrencySql("tilltypes", true);
+            if (ActionDate != "")
+            {
+                sub_condition += " and action.ActionDate = @ActionDate ";
+            }
+
             string query = @"SELECT  
                                (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID
                                 LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id"
@@ -709,11 +709,6 @@ namespace Financial_WPF_App.Models
                             ",( (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'I' AND " + localTill + @" AND currency_type.Name = 'USD') - (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + " AND actiontype.shortname = 'E' AND " + localTill + @" AND currency_type.Name = 'USD') ) AS 'NetUSD'" +
 
 
-
-                            " FROM till ";
-
-            string condition = " where 1 ";
-            if (Till_IDs != "" && Till_IDs != "-1")
                             // Appended LAST on purpose: Till_Window reads this row by column
                             // index, so anything inserted above would shift every box.
                             // "All the local money, in the current currency's unit" - the only
@@ -724,6 +719,11 @@ namespace Financial_WPF_App.Models
                             ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'O' AND " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @") AS 'SumOLegacy'" +
                             ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I' AND " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @") AS 'SumICurrent'" +
                             ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'O' AND " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @") AS 'SumOCurrent'" +
+
+                            " FROM till ";
+
+            string condition = " where 1 ";
+            if (Till_IDs != "" && Till_IDs != "-1")
             {
                 condition += " and till.ID in (" + Till_IDs + ")";
             }
