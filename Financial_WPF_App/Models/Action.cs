@@ -1006,7 +1006,8 @@ namespace Financial_WPF_App.Models
                         DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
                         Currency_Tilltype.Name as 'Currency',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
-                        (CASE WHEN actiontype.shortname = 'E' and (LOWER(Currency_Tilltype.Name) = LOWER('Syr') OR Currency_Tilltype.Name IS NULL) THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
+                        (CASE WHEN actiontype.shortname = 'E' and ((" + Helper.CurrencyService.LocalCurrencySql("Currency_Tilltype", false) + @" AND NOT " + Helper.CurrencyService.CurrentLocalAmountSql("Currency_Tilltype") + @") OR Currency_Tilltype.Name IS NULL) THEN action.Amount ELSE 0 END) AS 'ExpenseSYR',
+                        (CASE WHEN actiontype.shortname = 'E' and " + Helper.CurrencyService.CurrentLocalAmountSql("Currency_Tilltype") + @" THEN action.Amount ELSE 0 END) AS 'ExpenseCurrent',
                         (CASE WHEN actiontype.shortname = 'E' and LOWER(Currency_Tilltype.Name) = LOWER('Usd') THEN action.Amount ELSE 0 END) AS 'ExpenseUSD',
                         action.Note,
                         action.E_Note,
@@ -1020,7 +1021,7 @@ namespace Financial_WPF_App.Models
                         all_avgrates.value as `AvgRateValue`, 
                         CASE 
                        WHEN actiontype.shortname = 'E' 
-                       AND (LOWER(Currency_Tilltype.Name) = LOWER('Syr') OR Currency_Tilltype.Name IS NULL)
+                       AND (" + Helper.CurrencyService.LocalCurrencySql("Currency_Tilltype", false) + @" OR Currency_Tilltype.Name IS NULL)
                        THEN action.Amount / NULLIF(all_avgrates.value,0)
 
                        WHEN actiontype.shortname = 'E' 
@@ -1066,7 +1067,7 @@ END AS `USD_Value`,
                         LEFT JOIN beneficiary b ON b.MicroProject_ID = action.MicroProject_ID
 
 
-                        where actiontype.shortname IN ('E','Ex') AND LOWER(tilltypes.Name) = LOWER('Syr') AND category.Name in('Budget','Micro Projects')";
+                        where actiontype.shortname IN ('E','Ex') AND " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND category.Name in('Budget','Micro Projects')";
 
             // Optional date range. Leaving both empty reads the whole action table, which is
             // what this report always did - the screen's "Show All" button relies on that.

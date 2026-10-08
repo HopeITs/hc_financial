@@ -18,6 +18,7 @@ namespace Financial_WPF_App.Views
         public Lines_Report_Window(Main_Window_2 main_Window)
         {
             InitializeComponent();
+            NameCurrencyColumns();
             this.main_Window = main_Window;
 
             Onload();
@@ -35,6 +36,21 @@ namespace Financial_WPF_App.Views
         string HeaderStyle_Name = "SfDataGrid_header";
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
+
+        /// <summary>
+        /// Titles the per-currency expense columns with the currencies' real names. The old
+        /// currency's column now holds only the old currency: both used to share one column
+        /// and the totals under it added old lira to new.
+        /// </summary>
+        private void NameCurrencyColumns()
+        {
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+            if (string.IsNullOrWhiteSpace(newName)) newName = "New";
+
+            Expensesyr_DataGridColumn.HeaderText = "Expense(" + oldName + ")";
+            ExpenseCurrent_DataGridColumn.HeaderText = "Expense(" + newName + ")";
+        }
 
         private void Onload()
         {
