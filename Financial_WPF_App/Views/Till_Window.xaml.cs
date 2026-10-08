@@ -328,7 +328,7 @@ namespace Financial_WPF_App.Views
             {
                 if (Account_Type == "Project")
                 {
-                    if (TillType_Name.ToLower() == "syr")
+                    if (IsLocalTill(TillType_Name))
                     {
                         Edit_privileges = Add_privileges = Delete_privileges = true;
                     }
@@ -339,7 +339,7 @@ namespace Financial_WPF_App.Views
                 }
                 else if (Account_Type == "Personal")
                 {
-                    if (TillType_Name.ToLower() == "syr")
+                    if (IsLocalTill(TillType_Name))
                     {
                         Edit_privileges = Add_privileges = Delete_privileges = true;
                     }
@@ -353,14 +353,14 @@ namespace Financial_WPF_App.Views
             {
                 if (Account_Type == "Project")
                 {
-                    if (TillType_Name.ToLower() == "syr")
+                    if (IsLocalTill(TillType_Name))
                     {
                         Edit_privileges = Add_privileges = Delete_privileges = true;
                     }
                 }
                 else if (Account_Type == "Personal")
                 {
-                    if (TillType_Name.ToLower() == "syr")
+                    if (IsLocalTill(TillType_Name))
                     {
                         Edit_privileges = Add_privileges = Delete_privileges = true;
                     }
@@ -425,16 +425,27 @@ namespace Financial_WPF_App.Views
             }
 
             // Hide expenses & exchange for PAY till type
-            if (TillType_Name.ToLower() == "pay")
+            if (IsPayTill())
             {
-                var colIncome = myDataGrid.Columns
-                .FirstOrDefault(c => c.MappingName == "Income");
+                // A pay till holds both local currencies, so the single Income and
+                // Transfer columns are swapped for one pair per currency.
+                ConfigurePayCurrencyColumns();
 
-                if (colIncome != null)
-                    colIncome.HeaderText = "Income(SYR)";
-
-                All_Label.Content = "All(SYR):";
+                // A count of rows, not an amount, and it never was in one currency.
+                All_Label.Content = "All(Local):";
                 USD_StatsPanel.Visibility = Visibility.Visible;
+
+                string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+                string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+            if (string.IsNullOrWhiteSpace(newName)) newName = "New";
+                Income_Label.Content = "Income(" + oldName + "):";
+                Transfered_Label.Content = "Transfered(" + oldName + "):";
+                PayIncomeCurrent_Label.Content = "Income(" + newName + "):";
+                PayTransferCurrent_Label.Content = "Transfered(" + newName + "):";
+                PayIncomeUnified_Label.Content = "Total Income(" + newName + "):";
+                PayTransferUnified_Label.Content = "Total Transfered(" + newName + "):";
+                PayIncomeCurrent_Panel.Visibility = PayTransferCurrent_Panel.Visibility =
+                PayIncomeUnified_Panel.Visibility = PayTransferUnified_Panel.Visibility = Visibility.Visible;
 
                 Exchange_Label.Visibility = Visibility.Collapsed;
                 Exchange_textBlock.Visibility = Visibility.Collapsed;
@@ -449,7 +460,10 @@ namespace Financial_WPF_App.Views
                     if (C.HeaderText.ToString() == "Line" || C.HeaderText.ToString() == "Budget" || C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Document type"
                         || C.HeaderText.ToString() == "Donor" || C.HeaderText.ToString() == "Volunteer" || C.HeaderText.ToString() == "Expenses(USD)" || C.HeaderText.ToString() == "Expenses" ||
                         C.HeaderText.ToString() == "Document number" || C.HeaderText.ToString() == "Corresponding account" || C.HeaderText.ToString() == "Corresponding till" || C.HeaderText.ToString() == "Corresponding Operation ID"
-                            || C.HeaderText.ToString() == "Corresponding cash till" || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till" )
+                            || C.HeaderText.ToString() == "Corresponding cash till" || C.HeaderText.ToString() == "Exchange account" || C.HeaderText.ToString() == "Exchange cash till"
+                        // Bound to "Outcomeusd", which this screen's query does not select
+                        // at all, so the column has always drawn empty.
+                        || C.HeaderText.ToString() == "Transfer(USD)")
                     {
                         C.IsHidden = true;
                         Originally_HiddenColumns.Add(C.HeaderText.ToString());
@@ -458,11 +472,11 @@ namespace Financial_WPF_App.Views
 
             if (Account_Type == "Project")
             {
-                if (TillType_Name.ToLower() == "syr")
+                if (IsLocalTill(TillType_Name))
                 {
                     if (Category == "Micro Projects")
                     {
-                        All_Label.Content = "All(SYR):";
+                        All_Label.Content = "All(" + TillType_Name + "):";
                         USD_StatsPanel.Visibility = Visibility.Visible;
                         Exchange_Label.Visibility = Visibility.Collapsed;
                         Exchange_textBlock.Visibility = Visibility.Collapsed;
@@ -479,7 +493,7 @@ namespace Financial_WPF_App.Views
                     }
                     else if (Category == "Budget")
                     {
-                        All_Label.Content = "All(SYR):";
+                        All_Label.Content = "All(" + TillType_Name + "):";
                         USD_StatsPanel.Visibility = Visibility.Visible;
                         Exchange_Label.Visibility = Visibility.Collapsed;
                         Exchange_textBlock.Visibility = Visibility.Collapsed;
@@ -552,7 +566,7 @@ namespace Financial_WPF_App.Views
 
                // Outcome_Label1.Visibility = Outcome_textBlock1.Visibility =
               //  Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility = Visibility.Collapsed;
-                if (TillType_Name.ToLower() != "syr")
+                if (!IsLocalTill(TillType_Name))
                 {
                     //myExpander.Visibility = Visibility.Collapsed;
                     //myExpander.Width = 0;
@@ -588,7 +602,7 @@ namespace Financial_WPF_App.Views
               //  Returned_Label1.Visibility = Returned_textBlock1.Visibility = Returned_Border1.Visibility =
                 //Exchange_Label1.Visibility = Exchange_textBlock1.Visibility = Exchange_Border1.Visibility = Visibility.Collapsed;
 
-                if (TillType_Name.ToLower() == "syr")
+                if (IsLocalTill(TillType_Name))
                 {
                     foreach (var C in myDataGrid.Columns)
                         if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Transfer(USD)" || 
@@ -631,16 +645,16 @@ namespace Financial_WPF_App.Views
                 }
             }
 
-            if (Account_Type == "Project" && TillType_Name.ToLower() == "syr")
+            if (Account_Type == "Project" && IsLocalTill(TillType_Name))
             {
                
                     var colIncome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Income");
                     if (colIncome != null)
-                        colIncome.HeaderText = "Income(SYR)";
+                        colIncome.HeaderText = "Income(" + TillType_Name + ")";
 
                     var colOutcome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Expand");
                     if (colOutcome != null)
-                        colOutcome.HeaderText = "Expenses(SYR)";
+                        colOutcome.HeaderText = "Expenses(" + TillType_Name + ")";
                 foreach (var C in myDataGrid.Columns)
                     if (C.HeaderText.ToString() == "Transfer" || C.HeaderText.ToString() == "Transfer(USD)")
                     {
@@ -877,11 +891,26 @@ namespace Financial_WPF_App.Views
             {
                 if (sum_dt != null && sum_dt.Rows.Count > 0)
                 {
-                    Income_textBlock.Text = sum_dt.Rows[0].Field<double>(0).ToString("N2");
+                    // A pay till holds both local currencies at once, so its local boxes read
+                    // the common-unit totals (SumIBase / SumOBase, the last two columns) -
+                    // SumI would be adding old lira to new. Every other till is unaffected.
+                    bool pay = IsPayTill() && sum_dt.Columns.Count > 16;
+
+                    // Columns 11-16 are the pay-till figures, appended after the rest so
+                    // nothing that reads this row by position moved.
+                    if (pay)
+                    {
+                        PayIncomeUnified_textBlock.Text = sum_dt.Rows[0].Field<double>(11).ToString("N2");
+                        PayTransferUnified_textBlock.Text = sum_dt.Rows[0].Field<double>(12).ToString("N2");
+                        PayIncomeCurrent_textBlock.Text = sum_dt.Rows[0].Field<double>(15).ToString("N2");
+                        PayTransferCurrent_textBlock.Text = sum_dt.Rows[0].Field<double>(16).ToString("N2");
+                    }
+
+                    Income_textBlock.Text = sum_dt.Rows[0].Field<double>(pay ? 13 : 0).ToString("N2");
                     Income_textBlockusd.Text = sum_dt.Rows[0].Field<double>(1).ToString("N2");
                     //Outcome_textBlock.Text = sum_dt.Rows[0].Field<double>(1).ToString("N2");
                     // Returned_textBlock.Text = sum_dt.Rows[0].Field<double>(2).ToString("N2");
-                    Transfered_textBlock.Text =sum_dt.Rows[0].Field<double>(2).ToString("N2");
+                    Transfered_textBlock.Text = sum_dt.Rows[0].Field<double>(pay ? 14 : 2).ToString("N2");
                     Exchange_textBlock.Text = sum_dt.Rows[0].Field<double>(4).ToString("N2");
                     Exchpand_textBlock.Text = sum_dt.Rows[0].Field<double>(5).ToString("N2");
                     Exchpand_textBlockusd.Text = sum_dt.Rows[0].Field<double>(6).ToString("N2");
@@ -943,7 +972,7 @@ namespace Financial_WPF_App.Views
 
             if (Account_Type == "Project" || Account_Type == "Exchange" || Account_Type == "Personal")
             {
-                if (TillType_Name.ToLower() == "syr")
+                if (IsLocalTill(TillType_Name))
                 {
                     //if (cash_dt != null && cash_dt.Rows.Count > 0)
                     //{
@@ -1038,7 +1067,7 @@ namespace Financial_WPF_App.Views
             }
 
             // غير SYR → عدّ عادي
-            if (!TillType_Name.Equals("syr", StringComparison.OrdinalIgnoreCase))
+            if (!ShowsLocalAndUsd())
             {
                 All_textBlock.Text = myDataGrid.View.Records.Count().ToString("N0");
                 return;
@@ -1839,12 +1868,27 @@ namespace Financial_WPF_App.Views
             ConfigureSelectedStatisticsPanel();
             SelectedStatisticsCountTextBlock.Text = selectedRows.Count.ToString("N0");
 
-            if (string.Equals(TillType_Name, "syr", StringComparison.OrdinalIgnoreCase))
+            if (ShowsLocalAndUsd())
             {
-                SelectedIncomeSyrTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsSyrRow), "Income").ToString("N2");
-                SelectedExpensesSyrTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsSyrRow), "Expand").ToString("N2");
-                SelectedIncomeUsdTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsUsdRow), "Income").ToString("N2");
-                SelectedExpensesUsdTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsUsdRow), "Expand").ToString("N2");
+                if (IsPayTill())
+                {
+                    // A pay till holds both local currencies, so each has its own figure,
+                    // read from the columns the grid shows for it (zero outside its currency).
+                    SelectedIncomeSyrTextBlock.Text = SumSelectedColumn(selectedRows, "Incomelegacy").ToString("N2");
+                    SelectedIncomeCurrentTextBlock.Text = SumSelectedColumn(selectedRows, "Incomecurrent").ToString("N2");
+                    SelectedTransferTextBlock.Text = SumSelectedColumn(selectedRows, "Outcomelegacy").ToString("N2");
+                    SelectedTransferCurrentTextBlock.Text = SumSelectedColumn(selectedRows, "Outcomecurrent").ToString("N2");
+                }
+                else
+                {
+                    SelectedIncomeSyrTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsSyrRow), "Income").ToString("N2");
+                    SelectedExpensesSyrTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsSyrRow), "Expand").ToString("N2");
+                }
+
+                // Was "Income", which is zero on a USD row by construction, so these two
+                // boxes always read 0.00.
+                SelectedIncomeUsdTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsUsdRow), "Incomeusd").ToString("N2");
+                SelectedExpensesUsdTextBlock.Text = SumSelectedColumn(selectedRows.Where(IsUsdRow), "Expandusd").ToString("N2");
             }
             else
             {
@@ -1913,6 +1957,92 @@ namespace Financial_WPF_App.Views
             return value is bool ? (bool)value : Convert.ToInt32(value) == 1;
         }
 
+        /// <summary>
+        /// Is this till in a local currency? Was a name match against "syr", which made a
+        /// newly added local currency behave like a foreign one on this screen. The
+        /// payments container is excluded; the code branches on it separately.
+        /// </summary>
+        private static bool IsLocalTill(string tillType)
+        {
+            return Helper.CurrencyService.IsLocalCurrency(tillType, false);
+        }
+
+        /// <summary>
+        /// The payments container. Not a currency: it holds amounts in whichever currency
+        /// the beneficiary is paid in, so it needs the local/USD split a local till gets.
+        /// </summary>
+        private bool IsPayTill()
+        {
+            return string.Equals(TillType_Name, "pay", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Does this screen show local and USD amounts side by side? A local till does,
+        /// and so does the payments container - which used to fall through to the
+        /// foreign-currency path and leave its USD boxes reading zero.
+        /// </summary>
+        private bool ShowsLocalAndUsd()
+        {
+            return IsLocalTill(TillType_Name) || IsPayTill();
+        }
+
+        /// <summary>
+        /// A pay till holds both local currencies, and adding old lira to new in one column
+        /// is meaningless. So the existing Income and Transfer columns are narrowed to the
+        /// old currency (and renamed), and a twin for the current currency is added next to
+        /// each. The twins copy their formatting and alignment from the column beside them,
+        /// so they cannot drift from the rest of the grid.
+        /// </summary>
+        private void ConfigurePayCurrencyColumns()
+        {
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+            if (string.IsNullOrWhiteSpace(newName)) newName = "New";
+
+            AddCurrentCurrencyTwin("Income", "Incomelegacy", "Income(" + oldName + ")", "Incomecurrent", "Income(" + newName + ")");
+            AddCurrentCurrencyTwin("Outcome", "Outcomelegacy", "Transfer(" + oldName + ")", "Outcomecurrent", "Transfer(" + newName + ")");
+        }
+
+        private void AddCurrentCurrencyTwin(string originalMapping, string legacyMapping, string legacyHeader,
+                                            string currentMapping, string currentHeader)
+        {
+            GridNumericColumn original = myDataGrid.Columns.OfType<GridNumericColumn>()
+                .FirstOrDefault(c => c.MappingName == originalMapping);
+            if (original == null) return;
+
+            original.MappingName = legacyMapping;
+            original.HeaderText = legacyHeader;
+
+            if (myDataGrid.Columns.Any(c => c.MappingName == currentMapping)) return;
+
+            GridNumericColumn twin = new GridNumericColumn
+            {
+                MappingName = currentMapping,
+                HeaderText = currentHeader,
+                NumberDecimalDigits = original.NumberDecimalDigits,
+                NumberDecimalSeparator = original.NumberDecimalSeparator,
+                NumberGroupSizes = original.NumberGroupSizes,
+                NumberGroupSeparator = original.NumberGroupSeparator,
+                TextAlignment = original.TextAlignment,
+                HorizontalHeaderContentAlignment = original.HorizontalHeaderContentAlignment,
+                Width = original.Width,
+                ColumnSizer = original.ColumnSizer,
+                MinimumWidth = original.MinimumWidth,
+                AllowEditing = original.AllowEditing,
+                AllowFiltering = original.AllowFiltering,
+                AllowSorting = original.AllowSorting,
+                AllowGrouping = original.AllowGrouping,
+            };
+
+            // Only when the original sets one itself. Assigning null here is not "inherit":
+            // it overrides the grid's HeaderStyle/CellStyle with nothing, and the column
+            // then draws with the default look - pale, thin header - next to its neighbours.
+            if (original.HeaderStyle != null) twin.HeaderStyle = original.HeaderStyle;
+            if (original.CellStyle != null) twin.CellStyle = original.CellStyle;
+
+            myDataGrid.Columns.Insert(myDataGrid.Columns.IndexOf(original) + 1, twin);
+        }
+
         private static bool IsSyrRow(DataRowView row)
         {
             return !IsUsdRow(row);
@@ -1941,15 +2071,33 @@ namespace Financial_WPF_App.Views
 
         private void ConfigureSelectedStatisticsPanel()
         {
-            bool isSyr = string.Equals(TillType_Name, "syr", StringComparison.OrdinalIgnoreCase);
+            bool isPay = IsPayTill();
+            bool splits = ShowsLocalAndUsd();
             bool isUsd = string.Equals(TillType_Name, "usd", StringComparison.OrdinalIgnoreCase);
 
-            SelectedIncomePrimaryLabel.Content = isSyr ? "Income(SYR):" : "Income:";
-            SelectedExpensesSyrPanel.Visibility = isSyr ? Visibility.Visible : Visibility.Collapsed;
-            SelectedIncomeUsdPanel.Visibility = isSyr ? Visibility.Visible : Visibility.Collapsed;
-            SelectedExpensesUsdPanel.Visibility = isSyr ? Visibility.Visible : Visibility.Collapsed;
-            SelectedExchangePanel.Visibility = isSyr ? Visibility.Collapsed : Visibility.Visible;
-            SelectedTransferPanel.Visibility = isUsd ? Visibility.Visible : Visibility.Collapsed;
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+            if (string.IsNullOrWhiteSpace(newName)) newName = "New";
+
+            // A pay till shows each local currency on its own, named after the currency; a
+            // single-currency till names its own.
+            string localName = isPay ? oldName : TillType_Name;
+
+            SelectedIncomePrimaryLabel.Content = splits ? "Income(" + localName + "):" : "Income:";
+            SelectedExpensesPrimaryLabel.Content = splits ? "Expenses(" + localName + "):" : "Expenses:";
+
+            SelectedIncomeCurrentLabel.Content = "Income(" + newName + "):";
+            SelectedTransferLabel.Content = isPay ? "Transfer(" + oldName + "):" : "Transfer:";
+            SelectedTransferCurrentLabel.Content = "Transfer(" + newName + "):";
+            SelectedIncomeCurrentPanel.Visibility = isPay ? Visibility.Visible : Visibility.Collapsed;
+            SelectedTransferCurrentPanel.Visibility = isPay ? Visibility.Visible : Visibility.Collapsed;
+
+            // Expenses are hidden in the grid of a pay till, so do not offer a total for them.
+            SelectedExpensesSyrPanel.Visibility = splits && !isPay ? Visibility.Visible : Visibility.Collapsed;
+            SelectedExpensesUsdPanel.Visibility = splits && !isPay ? Visibility.Visible : Visibility.Collapsed;
+            SelectedIncomeUsdPanel.Visibility = splits ? Visibility.Visible : Visibility.Collapsed;
+            SelectedExchangePanel.Visibility = splits ? Visibility.Collapsed : Visibility.Visible;
+            SelectedTransferPanel.Visibility = isUsd || isPay ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ResetSelectedStatistics()
@@ -1961,6 +2109,8 @@ namespace Financial_WPF_App.Views
             SelectedExpensesUsdTextBlock.Text = "0.00";
             SelectedExchangeTextBlock.Text = "0.00";
             SelectedTransferTextBlock.Text = "0.00";
+            SelectedIncomeCurrentTextBlock.Text = "0.00";
+            SelectedTransferCurrentTextBlock.Text = "0.00";
             SelectedValueTextBlock.Text = "0.00";
         }
 

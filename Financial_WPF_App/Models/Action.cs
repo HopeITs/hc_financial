@@ -58,6 +58,18 @@ namespace Financial_WPF_App.Models
                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
                THEN action.Amount  ELSE 0 END) AS 'Expandusd',
 
+                /* Display-only columns that span both local currencies: the old lira
+                   divided by its base_divisor, so one figure can stand for the two of
+                   them. Nothing stored is converted. */
+                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I'
+                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action.Amount", "currency_type") + @" ELSE 0 END) AS 'IncomeBase',
+                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O'
+                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action.Amount", "currency_type") + @" ELSE 0 END) AS 'OutcomeBase',
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @" AND actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Incomelegacy',
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @" AND actiontype.shortname = 'O' THEN action.Amount ELSE 0 END) AS 'Outcomelegacy',
+                (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Incomecurrent',
+                (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O' THEN action.Amount ELSE 0 END) AS 'Outcomecurrent',
+
 
                 (SELECT account.ID FROM action oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',
                 (SELECT account.Name FROM action oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
@@ -222,6 +234,18 @@ namespace Financial_WPF_App.Models
                 (SELECT account.Name FROM action_not_approved oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange'  AND oaction.ObserveAcion_ID = action_not_approved.`ID` GROUP BY account.ID) AS 'ExchangeAcc_Name',
 
                 donor.id as 'Donor_ID', donor.name as 'Donor',
+                /* Display-only columns that span both local currencies: the old lira
+                   divided by its base_divisor, so one figure can stand for the two of
+                   them. Nothing stored is converted. */
+                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I'
+                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action_not_approved.Amount", "currency_type") + @" ELSE 0 END) AS 'IncomeBase',
+                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O'
+                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action_not_approved.Amount", "currency_type") + @" ELSE 0 END) AS 'OutcomeBase',
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @" AND actiontype.shortname = 'I' THEN action_not_approved.Amount ELSE 0 END) AS 'Incomelegacy',
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @" AND actiontype.shortname = 'O' THEN action_not_approved.Amount ELSE 0 END) AS 'Outcomelegacy',
+                (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I' THEN action_not_approved.Amount ELSE 0 END) AS 'Incomecurrent',
+                (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O' THEN action_not_approved.Amount ELSE 0 END) AS 'Outcomecurrent',
+
                 action_not_approved.`MicroProject_ID` ,
 
                 (select CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) from beneficiary JOIN account on beneficiary.Account_ID = account.ID
@@ -414,6 +438,18 @@ namespace Financial_WPF_App.Models
 
                 donor.id as 'Donor_ID', donor.name as 'Donor',
                 action_deleted.`MicroProject_ID` ,
+                /* Display-only columns that span both local currencies: the old lira
+                   divided by its base_divisor, so one figure can stand for the two of
+                   them. Nothing stored is converted. */
+                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I'
+                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action_deleted.Amount", "currency_type") + @" ELSE 0 END) AS 'IncomeBase',
+                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O'
+                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action_deleted.Amount", "currency_type") + @" ELSE 0 END) AS 'OutcomeBase',
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @" AND actiontype.shortname = 'I' THEN action_deleted.Amount ELSE 0 END) AS 'Incomelegacy',
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @" AND actiontype.shortname = 'O' THEN action_deleted.Amount ELSE 0 END) AS 'Outcomelegacy',
+                (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I' THEN action_deleted.Amount ELSE 0 END) AS 'Incomecurrent',
+                (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O' THEN action_deleted.Amount ELSE 0 END) AS 'Outcomecurrent',
+
 
                 (select CONCAT(`FirstName`,' ',`FatherName`, ' ',`LastName`) from beneficiary JOIN account on beneficiary.Account_ID = account.ID
                 where beneficiary.MicroProject_ID = action_deleted.MicroProject_ID AND account.SubProject_ID = subproject.ID) as 'Name',
@@ -636,16 +672,21 @@ namespace Financial_WPF_App.Models
                 sub_condition += " and action.ActionDate = @ActionDate ";
             }
 
+            // "a USD amount inside a local till". The payments container counts here: it
+            // holds amounts in whichever currency the beneficiary is paid in, so with it
+            // excluded SumIU/SumEU were always zero for a pay till and SumI/SumE swept the
+            // dollars in with the lira. The two forms differ for no other till type.
+            string localTill = Helper.CurrencyService.LocalCurrencySql("tilltypes", true);
             string query = @"SELECT  
                                (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID
                                 LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id"
-                                + sub_condition + " and actiontype.shortname like 'I' AND NOT (tilltypes.Name = 'SYR' AND IFNULL(currency_type.Name, '') = 'USD')) as 'SumI' " +
-                            ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I'AND tilltypes.Name = 'SYR'AND currency_type.Name = 'USD') AS 'SumIU'"+
+                                + sub_condition + " and actiontype.shortname like 'I' AND NOT (" + localTill + " AND IFNULL(currency_type.Name, '') = 'USD')) as 'SumI' " +
+                            ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I'AND " + localTill + @" AND currency_type.Name = 'USD') AS 'SumIU'"+
                             ", (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'O') as 'SumO' " +
                             ", (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'R') as 'SumR' " +
                             ", (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'Ex') as 'SumEx' " +
-                            ", (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID  LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + " and actiontype.shortname like 'E'  AND NOT (tilltypes.Name = 'SYR' AND IFNULL(currency_type.Name, '') = 'USD')) as 'SumE' " +
-                            ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'E' AND tilltypes.Name = 'SYR' AND currency_type.Name = 'USD' ) AS 'SumEU'"+
+                            ", (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID  LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + " and actiontype.shortname like 'E'  AND NOT (" + localTill + " AND IFNULL(currency_type.Name, '') = 'USD')) as 'SumE' " +
+                            ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'E' AND " + localTill + @" AND currency_type.Name = 'USD' ) AS 'SumEU'"+
 
                             ",( (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'I')" +
                             " - (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'O')" +
@@ -658,15 +699,26 @@ namespace Financial_WPF_App.Models
                             " - (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'Ex')" +
                             " - (SELECT IFNULL(sum(`Amount`),0) FROM action left join actiontype on action.atype_id = actiontype.id" + sub_condition + " and actiontype.shortname like 'O')) as 'Net'" +
 
-                            ",( (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'I' AND tilltypes.Name = 'SYR' AND currency_type.Name = 'USD') - (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + " AND actiontype.shortname = 'E' AND tilltypes.Name = 'SYR' AND currency_type.Name = 'USD') ) AS 'CashNetUSD'" +
+                            ",( (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'I' AND " + localTill + @" AND currency_type.Name = 'USD') - (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + " AND actiontype.shortname = 'E' AND " + localTill + @" AND currency_type.Name = 'USD') ) AS 'CashNetUSD'" +
 
-                            ",( (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'I' AND tilltypes.Name = 'SYR' AND currency_type.Name = 'USD') - (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + " AND actiontype.shortname = 'E' AND tilltypes.Name = 'SYR' AND currency_type.Name = 'USD') ) AS 'NetUSD'" +
+                            ",( (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'I' AND " + localTill + @" AND currency_type.Name = 'USD') - (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + " AND actiontype.shortname = 'E' AND " + localTill + @" AND currency_type.Name = 'USD') ) AS 'NetUSD'" +
+
 
 
                             " FROM till ";
 
             string condition = " where 1 ";
             if (Till_IDs != "" && Till_IDs != "-1")
+                            // Appended LAST on purpose: Till_Window reads this row by column
+                            // index, so anything inserted above would shift every box.
+                            // "All the local money, in the current currency's unit" - the only
+                            // honest single figure for a till holding both local currencies.
+                            ", (SELECT IFNULL(sum(" + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action.Amount", "currency_type") + @"), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I' AND " + Helper.CurrencyService.LocalAmountSql("currency_type") + @") AS 'SumIBase'" +
+                            ", (SELECT IFNULL(sum(" + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action.Amount", "currency_type") + @"), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'O' AND " + Helper.CurrencyService.LocalAmountSql("currency_type") + @") AS 'SumOBase'" +
+                            ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I' AND " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @") AS 'SumILegacy'" +
+                            ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'O' AND " + Helper.CurrencyService.LegacyAmountSql("currency_type") + @") AS 'SumOLegacy'" +
+                            ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I' AND " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @") AS 'SumICurrent'" +
+                            ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'O' AND " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type") + @") AS 'SumOCurrent'" +
             {
                 condition += " and till.ID in (" + Till_IDs + ")";
             }

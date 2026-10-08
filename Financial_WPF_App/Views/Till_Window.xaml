@@ -76,6 +76,30 @@
                         <TextBlock x:Name="Transfered_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
                     </Border>
                 </StackPanel>
+                <StackPanel x:Name="PayIncomeCurrent_Panel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Label x:Name="PayIncomeCurrent_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayIncomeCurrent_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="PayTransferCurrent_Panel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Label x:Name="PayTransferCurrent_Label" Content="Transfered:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTransferCurrent_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="PayIncomeUnified_Panel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Label x:Name="PayIncomeUnified_Label" Content="Total Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayIncomeUnified_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="PayTransferUnified_Panel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Label x:Name="PayTransferUnified_Label" Content="Total Transfered:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTransferUnified_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                    </Border>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Label x:Name="Net_lable" Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border x:Name="Net_Border" Style="{StaticResource BorderStackPanelStyle}" >
@@ -785,8 +809,14 @@ Margin="1,1,0,0" Grid.Row="1">
                         <TextBlock x:Name="SelectedIncomeSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
                     </Border>
                 </StackPanel>
+                <StackPanel x:Name="SelectedIncomeCurrentPanel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Label x:Name="SelectedIncomeCurrentLabel" Content="Income(New):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedIncomeCurrentTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
                 <StackPanel x:Name="SelectedExpensesSyrPanel" Orientation="Horizontal">
-                    <Label Content="Expenses(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Label x:Name="SelectedExpensesPrimaryLabel" Content="Expenses(SYR):" Style="{DynamicResource statistic_lableStyle}" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="SelectedExpensesSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
                     </Border>
@@ -810,9 +840,15 @@ Margin="1,1,0,0" Grid.Row="1">
                     </Border>
                 </StackPanel>
                 <StackPanel x:Name="SelectedTransferPanel" Orientation="Horizontal" Visibility="Collapsed">
-                    <Label Content="Transfer:" Style="{DynamicResource statistic_lableStyle}" />
+                    <Label x:Name="SelectedTransferLabel" Content="Transfer:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="SelectedTransferTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
+                    </Border>
+                </StackPanel>
+                <StackPanel x:Name="SelectedTransferCurrentPanel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Label x:Name="SelectedTransferCurrentLabel" Content="Transfer(New):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="SelectedTransferCurrentTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
