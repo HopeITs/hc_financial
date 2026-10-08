@@ -274,7 +274,7 @@ namespace Financial_WPF_App.Helper
                     MarkRowError(e.Row, "Returned amount", "Enter either Payment amount or Returned amount, not both or neither.");
                 }
 
-                if (currencyText != "USD" && currencyText != "SYR")
+                if (!string.Equals(currencyText, "USD", StringComparison.OrdinalIgnoreCase) && !Helper.CurrencyService.IsLocalCurrency(currencyText, false))
                 {
                     MarkRowError(e.Row, "Currency", "Currency must be USD or SYR.");
                 }

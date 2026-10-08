@@ -74,7 +74,7 @@ namespace Financial_WPF_App.Models
                             FROM all_avgrates 
                             LEFT JOIN tilltypes f_tilltypes ON all_avgrates.FromTill = f_tilltypes.ID
                             LEFT JOIN tilltypes t_tilltypes ON all_avgrates.ToTill = t_tilltypes.ID
-                            WHERE LOWER(t_tilltypes.Name) = 'syr';";
+                            WHERE " + Helper.CurrencyService.LocalCurrencySql("t_tilltypes", false) + @";";
 
 
             DataTable dt = new DataTable();

@@ -136,7 +136,7 @@ namespace Financial_WPF_App.Views
 
         private void Fill_comboBoxs()
         {
-            TillType_dt = t.Select_Account_TillTypes(Account_ID, "SYR");
+            TillType_dt = t.Select_Account_ForeignTillTypes(Account_ID);
             if (TillType_dt != null && TillType_dt.Rows.Count > 0)
             {
                 TillType_comboBox.ItemsSource = TillType_dt.DefaultView;

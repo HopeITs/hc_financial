@@ -913,7 +913,7 @@ namespace Financial_WPF_App
                             string TillType_Name = t_dt.Rows[i].Field<string>("Type");
                             //privileges
                             bool addtill = false;
-                            if (TillType_Name.ToLower() == "syr" && Syr_privileges)
+                            if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false) && Syr_privileges)
                             {
                                 if (Syr_privileges)
                                     addtill = true;

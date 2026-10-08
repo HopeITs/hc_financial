@@ -345,7 +345,7 @@ namespace Financial_WPF_App.Views
                 {
                     if (Category == "Budget")
                     {
-                        if (To_comboBox.Text.ToLower() == "syr")
+                        if (Helper.CurrencyService.IsLocalCurrency(To_comboBox.Text, false))
                         {
                             System.Data.DataRow[] row = null;
                             if (Account_Budgets_dt != null && Account_Budgets_dt.Rows.Count > 0)

@@ -194,7 +194,7 @@ namespace Financial_WPF_App.Views
                             {
                                 string TillType_Name = uniqueNames.Rows[i].Field<string>("Type");
                                 bool addtill = false;
-                                if (TillType_Name.ToLower() == "syr" && BudgetAccounts_Syr_privileges)
+                                if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false) && BudgetAccounts_Syr_privileges)
                                 {
                                     if (BudgetAccounts_Syr_privileges)
                                         addtill = true;
@@ -277,7 +277,7 @@ namespace Financial_WPF_App.Views
                                 string TillType_Name = uniqueNames.Rows[i].Field<string>("Type");
                                 bool addtill = false;
                                 bool addPaytill = false;
-                                if (TillType_Name.ToLower() == "syr" && MicroAccounts_Syr_privileges)
+                                if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false) && MicroAccounts_Syr_privileges)
                                 {
                                     if (MicroAccounts_Syr_privileges)
                                         addtill = true;
@@ -393,7 +393,7 @@ namespace Financial_WPF_App.Views
                             {
                                 string TillType_Name = uniqueNames.Rows[i].Field<string>("Type");
                                 bool addtill = false;
-                                if (TillType_Name.ToLower() == "syr" && ExchangeTills_Syr_privileges)
+                                if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false) && ExchangeTills_Syr_privileges)
                                 {
                                     if (ExchangeTills_Syr_privileges)
                                         addtill = true;
@@ -478,7 +478,7 @@ namespace Financial_WPF_App.Views
                             {
                                 string TillType_Name = uniqueNames.Rows[i].Field<string>("Type");
                                 bool addtill = false;
-                                if (TillType_Name.ToLower() == "syr" && PersonalAccounts_Syr_privileges)
+                                if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false) && PersonalAccounts_Syr_privileges)
                                 {
                                     if (PersonalAccounts_Syr_privileges)
                                         addtill = true;

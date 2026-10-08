@@ -1,4 +1,4 @@
-using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Models;
 using System;
 using System.Data;
 using System.Windows;
@@ -66,7 +66,7 @@ namespace Financial_WPF_App.Helper
                 bool personalUsesTillCurrency = string.Equals(context.AccountType, "Personal", StringComparison.OrdinalIgnoreCase);
                 bool currencyRequired = context.RequireExpenseCurrencySelection ||
                     (!personalUsesTillCurrency &&
-                     !AddActionSaveHelpers.IsExpenseFromSyrTill(insertedValue, context.TillType));
+                     !AddActionSaveHelpers.IsExpenseFromLocalTill(insertedValue, context.TillType));
                 if (currencyRequired && op.SelectedCurrencyId <= 0)
                 {
                     MessageBox.Show("Please make sure to select the currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
@@ -212,7 +212,7 @@ namespace Financial_WPF_App.Helper
                 // the pair-based required rule (USD→SYR is optional but may still be offered).
                 bool projectSyrExpense = insertedValue == "E" && context.AccountType == "Project" &&
                     !string.IsNullOrEmpty(context.TillType) &&
-                    context.TillType.Equals("syr", StringComparison.OrdinalIgnoreCase);
+                    CurrencyService.IsLocalCurrency(context.TillType, false);
                 bool projectExchangeOriginAvgRate = insertedValue == "Ex" &&
                     context.AccountType == "Project" &&
                     AddActionSaveHelpers.IsProjectExchangeOriginAvgRateRequired(
@@ -348,9 +348,8 @@ namespace Financial_WPF_App.Helper
                 ? -1
                 : AddActionSaveHelpers.GetCurrencyTilltypeIdForAddActionSave(insertedValue, context.TillType, selectedCurrencyId);
             bool isSpecialCase = insertedValue == "E" &&
-                                 !string.IsNullOrEmpty(context.TillType) &&
-                                 context.TillType.ToLower() == "syr" &&
-                                 selectedCurrencyId == AddActionSaveContext.UsdCurrencyTilltypeId;
+                                 CurrencyService.IsLocalCurrency(context.TillType, false) &&
+                                 selectedCurrencyId == CurrencyService.GetCurrencyId("USD");
 
             int savedActionId;
             if (isSpecialCase)
@@ -397,9 +396,8 @@ namespace Financial_WPF_App.Helper
             int employeeSalaryId, bool withExAcc, bool withExchangeRate, double rate, int selectedCurrencyId)
         {
             bool isUsdExpenseEdit = insertedValue == "E" &&
-                                    !string.IsNullOrEmpty(context.TillType) &&
-                                    context.TillType.ToLower() == "syr" &&
-                                    selectedCurrencyId == AddActionSaveContext.UsdCurrencyTilltypeId;
+                                    CurrencyService.IsLocalCurrency(context.TillType, false) &&
+                                    selectedCurrencyId == CurrencyService.GetCurrencyId("USD");
 
             if (context.ApprovedAction)
             {

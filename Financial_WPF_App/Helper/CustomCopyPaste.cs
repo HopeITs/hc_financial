@@ -19,6 +19,38 @@ namespace Financial_WPF_App.Helper
         private const int UsdCurrencyTilltypeId = 2;
 
         public event EventHandler PasteCompleted;
+
+        /// <summary>
+        /// Is this till in a local currency? Was a name match against "syr", which made a
+        /// newly added local currency behave like a foreign one when pasting rows.
+        /// </summary>
+        private static bool IsLocalTill(string tillType)
+        {
+            return CurrencyService.IsLocalCurrency(tillType, false);
+        }
+
+        /// <summary>
+        /// Currencies a user may type in the Currency column: any local one, or USD.
+        /// The accepted set used to be the literal pair SYR/USD, so a newly added local
+        /// currency was rejected as invalid on paste.
+        /// </summary>
+        private static bool IsAcceptedPasteCurrency(string currency)
+        {
+            return IsLocalTill(currency)
+                || string.Equals(currency, "USD", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>The accepted names, for the error message, so it never goes stale.</summary>
+        private static string AcceptedPasteCurrencies()
+        {
+            var names = CurrencyService.All()
+                .Where(c => IsAcceptedPasteCurrency(c.Name))
+                .Select(c => c.Name)
+                .ToList();
+            names.Add("USD");
+            return string.Join(" or ", names.Distinct());
+        }
+
         private DataTable _all_Original_AvgRate_dt, _all_AvgRate_dt, _all_b_dt, _all_t_dt, _all_ExAcc_dt, _all_Accounts_dt, _all_Lines_dt, _all_budgets_dt, _all_cashAccounts_dt, _all_Donors_dt, _all_Employee_dt, _all_Tills_dt, _currency_dt;
         public int TotalPastedRows { get; private set; } = 0;
         public int TotalErrorRows { get; private set; } = 0;
@@ -499,10 +531,10 @@ namespace Financial_WPF_App.Helper
             else if (e.Column.ColumnName == "Currency")
             {
                 string currency = (e.ProposedValue?.ToString() ?? string.Empty).Trim().ToUpperInvariant();
-                if (currency != "SYR" && currency != "USD")
+                if (!IsAcceptedPasteCurrency(currency))
                 {
                     Login.MultiAction_AnyError = true;
-                    e.Row.SetColumnError(e.Column.ColumnName, "Currency must be USD or SYR.");
+                    e.Row.SetColumnError(e.Column.ColumnName, "Currency must be " + AcceptedPasteCurrencies() + ".");
                     e.Row.RowError = "There are errors in this row.";
                     _currency_tilltype_id = -1;
                     isUsdExpenseFromSyr = false;
@@ -512,7 +544,7 @@ namespace Financial_WPF_App.Helper
                 else if (string.Equals(_Account_Type, "Personal", StringComparison.OrdinalIgnoreCase) &&
                          _inserted_value == "E" &&
                          !string.IsNullOrEmpty(_Till_Type) &&
-                         _Till_Type.Equals("syr", StringComparison.OrdinalIgnoreCase) &&
+                         IsLocalTill(_Till_Type) &&
                          currency == "USD")
                 {
                     Login.MultiAction_AnyError = true;
@@ -532,7 +564,7 @@ namespace Financial_WPF_App.Helper
 
                     if (_currency_tilltype_id != -1)
                     {
-                        if (_Till_Type.ToLower() == "syr" &&
+                        if (IsLocalTill(_Till_Type) &&
                          _currency_tilltype_id == UsdCurrencyTilltypeId &&
                         _inserted_value == "E")
                         {
@@ -546,7 +578,7 @@ namespace Financial_WPF_App.Helper
                     else
                     {
                         Login.MultiAction_AnyError = true;
-                        e.Row.SetColumnError(e.Column.ColumnName, "Currency must be USD or SYR.");
+                        e.Row.SetColumnError(e.Column.ColumnName, "Currency must be " + AcceptedPasteCurrencies() + ".");
                         e.Row.RowError = "There are errors in this row.";
                         isUsdExpenseFromSyr = false;
                     }
@@ -662,7 +694,7 @@ namespace Financial_WPF_App.Helper
                     if (_t_dt.Rows.Count > 0)
                         _ObserveTill_ID = _t_dt.AsEnumerable()
                           .Where(row => row.Field<string>("Type")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true &&
-                            row.Field<string>("Type")?.ToLower().Equals("syr") == true)
+                            IsLocalTill(row.Field<string>("Type")))
                           .Select(row => row.Field<int>("ID"))
                           .DefaultIfEmpty(-1)
                           .FirstOrDefault();
@@ -760,7 +792,7 @@ namespace Financial_WPF_App.Helper
 
                 if (_Accounts_dt.Rows.Count > 0)
                 {
-                    if (_Till_Type.ToLower() == "syr")
+                    if (IsLocalTill(_Till_Type))
                     {
                         _ObserveTill_ID = _Accounts_dt.AsEnumerable()
                                 .Where(row => row.Field<string>("Type")?.ToLower().Trim().Equals(e.ProposedValue.ToString().ToLower().Trim()) == true)
@@ -868,7 +900,7 @@ namespace Financial_WPF_App.Helper
                 }
                 else
                 {
-                    if (e.Row["Corresponding till"].ToString().ToLower().Trim() != "syr")
+                    if (!IsLocalTill(e.Row["Corresponding till"].ToString()))
                     {
                         exists = true;
 
@@ -948,7 +980,7 @@ namespace Financial_WPF_App.Helper
                 }
                 else
                 {
-                    if (_Till_Type.ToLower() != "syr" && e.Row["Corresponding till"].ToString().ToLower().Trim() != "syr")
+                    if (!IsLocalTill(_Till_Type) && !IsLocalTill(e.Row["Corresponding till"].ToString()))
                     {
                         exists = true;
                         e.ProposedValue = "";
@@ -1004,7 +1036,7 @@ namespace Financial_WPF_App.Helper
 
                 if (e.ProposedValue.ToString().IsNullOrWhiteSpace())
                 {
-                    if (_Account_Type != "Project" || _Till_Type.ToLower() != "syr")
+                    if (_Account_Type != "Project" || !IsLocalTill(_Till_Type))
                         exists = true;
                 }
                 else
@@ -1430,7 +1462,7 @@ namespace Financial_WPF_App.Helper
 
             // فحص دقيق لمنع التداخل العشوائي بين عمليات الـ Exchange العادية والـ Expense المخصصة للـ SYR
             bool isUsdExpenseFromSyr = _inserted_value == "E" &&
-                                       _Till_Type.ToLower() == "syr" &&
+                                       IsLocalTill(_Till_Type) &&
                                        _currency_tilltype_id == 2 &&
                                        !_WithExAcc;
 

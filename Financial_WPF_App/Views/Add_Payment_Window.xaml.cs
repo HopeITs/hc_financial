@@ -433,17 +433,13 @@ namespace Financial_WPF_App.Views
                   
                     string currencyName = rows[0]["Currency_Name"].ToString().ToLower().Trim();
 
-                    if (currencyName.Contains("syr"))
+                    // Was a substring match mapped to hardcoded ids 4 and 2. Nothing
+                    // guarantees those ids in another database, and a beneficiary in a
+                    // newly added local currency fell through to the error below, so no
+                    // instalment could be entered for them at all.
+                    currency_id = Helper.CurrencyService.GetCurrencyId(currencyName);
+                    if (currency_id <= 0)
                     {
-                        currency_id = 4; 
-                    }
-                    else if (currencyName.Contains("usd"))
-                    {
-                        currency_id = 2; 
-                    }
-                    else
-                    {
-                       
                         MessageBox.Show("Unknown currency type: " + rows[0]["Currency_Name"].ToString(), "Error");
                         return;
                     }

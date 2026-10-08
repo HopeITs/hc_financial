@@ -244,7 +244,7 @@ namespace Financial_WPF_App.Helper
             else if (e.Column.ColumnName == "Currency")
             {
                 string currency = (e.ProposedValue?.ToString() ?? string.Empty).Trim().ToUpperInvariant();
-                if (currency != "SYR" && currency != "USD")
+                if (!Helper.CurrencyService.IsLocalCurrency(currency, false) && !string.Equals(currency, "USD", StringComparison.OrdinalIgnoreCase))
                 {
                     Login.MultiBeneficiary_AnyError = true;
                     e.Row.SetColumnError(e.Column.ColumnName, "Currency must be USD or SYR.");

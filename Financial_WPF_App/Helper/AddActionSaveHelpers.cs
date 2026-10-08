@@ -1,4 +1,4 @@
-using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Models;
 using System;
 using System.Data;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace Financial_WPF_App.Helper
                 return false;
 
             // EUR to USD is the only foreign-currency pair that does not expose Origin Avg Rate.
-            return source != "EUR" || destination == "SYR";
+            return source != "EUR" || CurrencyService.IsLocalCurrency(destination, false);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Financial_WPF_App.Helper
             string source = (sourceTill ?? string.Empty).Trim().ToUpperInvariant();
             string destination = (correspondingTill ?? string.Empty).Trim().ToUpperInvariant();
 
-            if (source == "USD" && destination == "SYR")
+            if (source == "USD" && CurrencyService.IsLocalCurrency(destination, false))
                 return false;
 
             return IsProjectExchangeOriginAvgRateOffered(source, destination);
@@ -64,7 +64,7 @@ namespace Financial_WPF_App.Helper
             string source = (sourceTill ?? string.Empty).Trim().ToUpperInvariant();
             string destination = (correspondingTill ?? string.Empty).Trim().ToUpperInvariant();
 
-            if (source == "USD" && destination == "SYR")
+            if (source == "USD" && CurrencyService.IsLocalCurrency(destination, false))
             {
                 rateFromTill = "EUR";
                 rateToTill = "USD";
@@ -96,22 +96,32 @@ namespace Financial_WPF_App.Helper
             return Convert.ToInt32(row["Till_ID"]);
         }
 
+        /// <summary>
+        /// The currency to stamp on an expense when the user picked none.
+        ///
+        /// This used to return a fixed id meaning the old local currency. On a till in a
+        /// different local currency that saves the row against the wrong currency, with
+        /// no warning - an amount off by a factor of a hundred, found weeks later as a
+        /// balance that will not reconcile. It now resolves the till's own currency.
+        /// </summary>
         public static int GetCurrencyTilltypeIdForAddActionSave(string actionType, string tillType, int selectedCurrencyId)
         {
-            if (IsExpenseFromSyrTill(actionType, tillType))
+            if (IsExpenseFromLocalTill(actionType, tillType))
             {
                 if (selectedCurrencyId <= 0)
-                    return AddActionSaveContext.SyrCurrencyTilltypeId;
+                    return CurrencyService.GetCurrencyId(tillType);
             }
 
             return selectedCurrencyId;
         }
 
-        public static bool IsExpenseFromSyrTill(string actionType, string tillType)
+        /// <summary>
+        /// An expense recorded against a local-currency till. Was a name match against
+        /// "syr", which made a newly added local currency behave like a foreign one.
+        /// </summary>
+        public static bool IsExpenseFromLocalTill(string actionType, string tillType)
         {
-            return actionType == "E" &&
-                   !string.IsNullOrEmpty(tillType) &&
-                   tillType.Equals("syr", StringComparison.OrdinalIgnoreCase);
+            return actionType == "E" && CurrencyService.IsLocalCurrency(tillType, false);
         }
 
         public static string GetObserveTillType(DataTable correspondingTills, int destinationTillId)

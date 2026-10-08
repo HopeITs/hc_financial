@@ -191,7 +191,7 @@ namespace Financial_WPF_App.Views
         {
             if (Account_Type == "Project")
             {
-                if (TillType_Name.ToLower() == "syr")
+                if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false))
                 {
                     if (Category == "Micro Projects")
                     {
@@ -241,7 +241,7 @@ namespace Financial_WPF_App.Views
 
             if (Account_Type == "Exchange")
             {
-                if (TillType_Name.ToLower() != "syr")
+                if (!Helper.CurrencyService.IsLocalCurrency(TillType_Name, false))
                 {
 
                 }
@@ -260,7 +260,7 @@ namespace Financial_WPF_App.Views
 
             if (Account_Type == "Personal")
             {
-                if (TillType_Name.ToLower() == "syr")
+                if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false))
                 {
                     foreach (var C in myDataGrid.Columns)
                         if (C.HeaderText.ToString() == "Adv. Payment" || C.HeaderText.ToString() == "Returned" || C.HeaderText.ToString() == "Exchange" ||

@@ -149,6 +149,41 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        /// <summary>
+        /// The account's tills in a foreign currency. Budgets are set in USD or EUR, never
+        /// in local money, so the local ones are left out.
+        ///
+        /// This replaces a call that passed "SYR" as the single name to exclude. That
+        /// excluded the old local currency only, so a newly added one would have started
+        /// appearing in the budget currency list, which is not what the exclusion was for.
+        /// </summary>
+        public DataTable Select_Account_ForeignTillTypes(int Account_ID)
+        {
+            string query = @"SELECT tilltypes.ID, tilltypes.Name
+                             FROM `till`
+                             LEFT JOIN tilltypes ON till.type_id = tilltypes.id
+                             LEFT JOIN account ON till.account_id = account.id
+                             WHERE NOT " + Helper.CurrencyService.LocalCurrencySql("tilltypes", true) + @"
+                               AND till.Account_ID = @Account_ID;";
+
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.Parameters.AddWithValue("@Account_ID", Account_ID);
+
+                sc.CommandTimeout = 120;
+                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
+                sc.Parameters.AddWithValue("@t", 600);
+                sc.Connection = Login.MyConn;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
         public DataTable Select_All_TillTypes()
         {
             //check user from database
@@ -156,7 +191,11 @@ namespace Financial_WPF_App.Models
             string condition = " where 1 ";
 
 
-            condition += " and LOWER(tilltypes.Name) NOT IN ('syr','pay');";
+            // Excludes the local currencies and the payments container, so the core
+            // types cannot be renamed or deleted from the till-types screen. This named
+            // 'syr' and 'pay' directly, which left a newly added local currency
+            // unprotected while the old one was safe.
+            condition += " and NOT " + Helper.CurrencyService.LocalCurrencySql("tilltypes", true) + ";";
 
 
             query += condition;

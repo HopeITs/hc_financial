@@ -1,4 +1,4 @@
-using Financial_WPF_App.Models;
+﻿using Financial_WPF_App.Models;
 using System;
 using System.Data;
 
@@ -6,8 +6,10 @@ namespace Financial_WPF_App.Helper
 {
     public class AddActionSaveContext
     {
-        public const int UsdCurrencyTilltypeId = 2;
-        public const int SyrCurrencyTilltypeId = 4;
+        // The currency ids that used to sit here as constants are gone. They assumed the
+        // tilltypes rows carry the same ids in every database, which nothing enforces,
+        // and they made a newly added local currency impossible to express. Ask
+        // CurrencyService for a currency by name instead.
 
         public int ActionId { get; set; } = -1;
         public bool ApprovedAction { get; set; }

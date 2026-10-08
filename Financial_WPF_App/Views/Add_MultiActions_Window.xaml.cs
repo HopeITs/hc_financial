@@ -223,6 +223,17 @@ namespace Financial_WPF_App.Views
 
         }
 
+        /// <summary>
+        /// Is this till in a local currency? Was a name match against "syr", which made a
+        /// newly added local currency behave like a foreign one on this screen. The
+        /// payments container is excluded - it holds local money but is not something a
+        /// transaction is recorded against here.
+        /// </summary>
+        private static bool IsLocalTill(string tillType)
+        {
+            return Helper.CurrencyService.IsLocalCurrency(tillType, false);
+        }
+
         private void Apply_Color_Theme()
         {
 
@@ -382,7 +393,7 @@ namespace Financial_WPF_App.Views
 
                         PersonalAccounts_filterExpression = string.Join(" OR ", User_PersonalAccounts.Select(id => "Account_ID = " + id));
                         PersonalAccounts_filterExpression = "(" + PersonalAccounts_filterExpression + ")";
-                        PersonalAccounts_filterExpression += " AND Name = 'SYR'";
+                        PersonalAccounts_filterExpression += " AND " + Helper.CurrencyService.LocalCurrencyNamesFilter("Name", false);
 
                         if (filterExpression == "")
                         {
@@ -417,7 +428,7 @@ namespace Financial_WPF_App.Views
 
                         Accounts_filterExpression = string.Join(" OR ", User_Accounts.Select(id => "Account_ID = " + id));
                         Accounts_filterExpression = "(" + Accounts_filterExpression + ")";
-                        Accounts_filterExpression += " AND Name = 'SYR'";
+                        Accounts_filterExpression += " AND " + Helper.CurrencyService.LocalCurrencyNamesFilter("Name", false);
 
 
                         filterExpression = "(" + Accounts_filterExpression + ")";
@@ -432,7 +443,7 @@ namespace Financial_WPF_App.Views
 
                         PersonalAccounts_filterExpression = string.Join(" OR ", User_PersonalAccounts.Select(id => "Account_ID = " + id));
                         PersonalAccounts_filterExpression = "(" + PersonalAccounts_filterExpression + ")";
-                        PersonalAccounts_filterExpression += " AND Name = 'SYR'";
+                        PersonalAccounts_filterExpression += " AND " + Helper.CurrencyService.LocalCurrencyNamesFilter("Name", false);
 
                         if (filterExpression == "")
                         {
@@ -469,7 +480,7 @@ namespace Financial_WPF_App.Views
 
                         Fiscalbonds_filterExpression = string.Join(" OR ", User_Fiscalbonds.Select(id => "Fiscalbond_ID = " + id));
                         Fiscalbonds_filterExpression = "(" + Fiscalbonds_filterExpression + ")";
-                        Fiscalbonds_filterExpression += " AND Name = 'SYR'";
+                        Fiscalbonds_filterExpression += " AND " + Helper.CurrencyService.LocalCurrencyNamesFilter("Name", false);
 
 
                         filterExpression = "(" + Fiscalbonds_filterExpression + ")";
@@ -513,7 +524,7 @@ namespace Financial_WPF_App.Views
             {
                 if (Account_Type == "Project")
                 {
-                    if (TillType.ToLower() == "syr")
+                    if (IsLocalTill(TillType))
                     {
                         Income_privileges = Outcome_privileges = Returned_privileges = Exchange_privileges = Expand_privileges = Move_privileges = true;
                     }
@@ -524,7 +535,7 @@ namespace Financial_WPF_App.Views
                 }
                 else if (Account_Type == "Personal")
                 {
-                    if (TillType.ToLower() == "syr")
+                    if (IsLocalTill(TillType))
                     {
                         Income_privileges = Outcome_privileges = Returned_privileges = Exchange_privileges = Expand_privileges = Move_privileges = true;
                     }
@@ -538,14 +549,14 @@ namespace Financial_WPF_App.Views
             {
                 if (Account_Type == "Project")
                 {
-                    if (TillType.ToLower() == "syr")
+                    if (IsLocalTill(TillType))
                     {
                         Income_privileges = Outcome_privileges = Returned_privileges = Exchange_privileges = Expand_privileges = Move_privileges = true;
                     }
                 }
                 else if (Account_Type == "Personal")
                 {
-                    if (TillType.ToLower() == "syr")
+                    if (IsLocalTill(TillType))
                     {
                         Income_privileges = Outcome_privileges = Returned_privileges = Exchange_privileges = Expand_privileges = Move_privileges = true;
                     }
@@ -561,7 +572,7 @@ namespace Financial_WPF_App.Views
             }
             else if (Settings.Default.Role == "Employee")
             {
-                if (TillType.ToLower() == "syr")
+                if (IsLocalTill(TillType))
                 {
                     Income_privileges = Outcome_privileges = Returned_privileges = Expand_privileges = true;
                 }
@@ -587,7 +598,7 @@ namespace Financial_WPF_App.Views
 
             if (Account_Type == "Project" && TillType != null)
             {
-                if (TillType.ToLower() == "syr")
+                if (IsLocalTill(TillType))
                 {
                     valuesToRemove.Add("Type_ComboBox_Income_Item");
 
@@ -1009,7 +1020,7 @@ namespace Financial_WPF_App.Views
                     {
                         if (Category == "Micro Projects")
                         {
-                            if (TillType.ToLower() == "syr")
+                            if (IsLocalTill(TillType))
                             {
                                 if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
@@ -1088,7 +1099,7 @@ namespace Financial_WPF_App.Views
                         }
                         else if (Category == "Budget")
                         {
-                            if (TillType.ToLower() == "syr")
+                            if (IsLocalTill(TillType))
                             {
                                 if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                                 {
@@ -1176,7 +1187,7 @@ namespace Financial_WPF_App.Views
                     }
                     else if (Account_Type == "Exchange" && TillType != null)
                     {
-                        if (TillType.ToLower() == "syr")
+                        if (IsLocalTill(TillType))
                         {
                             if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {
@@ -1237,7 +1248,7 @@ namespace Financial_WPF_App.Views
                     }
                     else if (Account_Type == "Personal" && TillType != null)
                     {
-                        if (TillType.ToLower() == "syr")
+                        if (IsLocalTill(TillType))
                         {
                             if (Type_comboBox.SelectedValue.ToString() == "Type_ComboBox_Income_Item")
                             {

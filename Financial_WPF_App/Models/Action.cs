@@ -205,16 +205,16 @@ namespace Financial_WPF_App.Models
 
                 action_not_approved.`ID` as 'ID' , action_not_approved.`ObserveAcion_ID`,
                 actiontype.`Name` as 'AType', action_not_approved.`Amount`, action_not_approved.`IsApproved`, approved_byuser.`Username` as 'approved_by', action_not_approved.`Approved_at`, created_byuser.`Username` as 'created_by', created_byuser.`ID` as 'created_byuser_ID', edited_byuser.username as 'edited_by',
-                (CASE   WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                (CASE   WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @"
                 AND actiontype.shortname = 'I' THEN action_not_approved.Amount  ELSE 0 END) AS 'Income',
-                (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action_not_approved.Amount
+                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action_not_approved.Amount
                 ELSE 0 END) AS 'Incomeusd',
                 (CASE WHEN actiontype.shortname = 'O' THEN action_not_approved.Amount ELSE 0 END) AS 'Outcome',
                 (CASE WHEN actiontype.shortname = 'R' THEN action_not_approved.Amount ELSE 0 END) AS 'Returned',
                 (CASE WHEN actiontype.shortname = 'Ex' THEN action_not_approved.Amount ELSE 0 END) AS 'Exchange',
-                (CASE  WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                (CASE  WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @"
                 AND actiontype.shortname = 'E' THEN action_not_approved.Amount ELSE 0 END) AS 'Expand',
-               (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
+               (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
                THEN action_not_approved.Amount  ELSE 0 END) AS 'Expandusd',
 
 
@@ -397,16 +397,16 @@ namespace Financial_WPF_App.Models
                 created_byuser.`Username` as 'created_by', created_byuser.`ID` as 'created_byuser_ID',
                 edited_byuser.username as 'edited_by',
                 deleted_byuser.username as 'deleted_by', action_deleted.`deleted_at` as 'deleted_at',
-                (CASE   WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                (CASE   WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @"
                 AND actiontype.shortname = 'I' THEN action_deleted.Amount  ELSE 0 END) AS 'Income',
-                (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action_deleted.Amount
+                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD' AND actiontype.shortname = 'I' THEN action_deleted.Amount
                 ELSE 0 END) AS 'Incomeusd',
                 (CASE WHEN actiontype.shortname = 'O' THEN action_deleted.Amount ELSE 0 END) AS 'Outcome',
                 (CASE WHEN actiontype.shortname = 'R' THEN action_deleted.Amount ELSE 0 END) AS 'Returned',
                 (CASE WHEN actiontype.shortname = 'Ex' THEN action_deleted.Amount ELSE 0 END) AS 'Exchange',
-                (CASE  WHEN (currency_type.Name = 'SYR' OR currency_type.Name IS NULL OR currency_type.Name = '')
+                (CASE  WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @"
                 AND actiontype.shortname = 'E' THEN action_deleted.Amount ELSE 0 END) AS 'Expand',
-                (CASE WHEN tilltypes.Name = 'SYR' AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
+                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
                 THEN action_deleted.Amount  ELSE 0 END) AS 'Expandusd',
 
                 (SELECT account.ID FROM action_deleted oaction LEFT JOIN till ON oaction.Till_ID = till.ID LEFT JOIN account ON till.Account_ID = account.ID LEFT JOIN accounttype oaccounttype on oaccounttype.id = account.Accounttype_id WHERE oaccounttype.name = 'Exchange' and accounttype.name <> 'Exchange' AND oaction.ObserveAcion_ID = action_deleted.`ID` GROUP BY account.ID) AS 'ExchangeAcc_ID',

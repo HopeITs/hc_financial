@@ -111,10 +111,18 @@ namespace Financial_WPF_App.Models
 
                         query += " INSERT INTO subproject_donor (SubProject_ID,Donor_ID) VALUES (@SUB_ID,(select ID from donor where Name like @donor" + i + "));";
 
-                        if (WithPaymentAccount)
+                        // A subproject's payment accounts are created in the CURRENT local currency,
+            // not the one named in code. The old value was 'SYR', so every new payment
+            // account would have kept being created in a superseded currency.
+            //
+            // Needs the matching row in `amounttype`, which is a separate table from
+            // `tilltypes` - Section 3b of the Phase 1 script adds it. Without that row the
+            // subquery yields NULL and the account is created with no amount type at all,
+            // silently, because the column accepts NULL.
+            if (WithPaymentAccount)
                         {
                             query += " INSERT INTO account(Name, ProjectNumber, BeginDate, EndDate, TotalAmount, AmountType_ID, IsClosed, SubProject_ID, Accounttype_id)" +
-                                        " VALUES (CONCAT(@donor" + i + ",' Payments'), '' , @beginDate , @endDate, 0, (SELECT ID FROM amounttype WHERE LOWER(amounttype.NAME) = LOWER('SYR')), 0, @SUB_ID,'1');";
+                                        " VALUES (CONCAT(@donor" + i + ",' Payments'), '' , @beginDate , @endDate, 0, (SELECT ID FROM amounttype WHERE LOWER(amounttype.NAME) = LOWER('" + Helper.CurrencyService.GetCurrentLocalCurrencyName() + "')), 0, @SUB_ID,'1');";
 
                             query += " SET @Acc_ID" + i + " = Last_Insert_ID();";
 
@@ -234,7 +242,7 @@ namespace Financial_WPF_App.Models
                         if (WithPaymentAccount)
                         {
                             query += " INSERT INTO account (Name, ProjectNumber, BeginDate, EndDate, TotalAmount, AmountType_ID, IsClosed, SubProject_ID, Accounttype_id)" +
-                                        " VALUES (CONCAT(@Adddonor" + i + ",' Payments'), '' , @beginDate , @endDate, 0, (SELECT ID FROM amounttype WHERE LOWER(amounttype.NAME) = LOWER('SYR')), 0, @ID, '1');";
+                                        " VALUES (CONCAT(@Adddonor" + i + ",' Payments'), '' , @beginDate , @endDate, 0, (SELECT ID FROM amounttype WHERE LOWER(amounttype.NAME) = LOWER('" + Helper.CurrencyService.GetCurrentLocalCurrencyName() + "')), 0, @ID, '1');";
 
                             query += " SET @Acc_ID" + i + " = Last_Insert_ID();";
 

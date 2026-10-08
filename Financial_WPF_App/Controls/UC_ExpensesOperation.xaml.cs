@@ -57,7 +57,7 @@ namespace Financial_WPF_App.Controls
             var selectedRow = currency_comboBox.SelectedItem as DataRowView;
             string selectedCurrency = selectedRow == null ? string.Empty : Convert.ToString(selectedRow["Name"]);
             bool hasCurrency = selectedRow != null;
-            bool isSyr = string.Equals(selectedCurrency, "SYR", StringComparison.OrdinalIgnoreCase);
+            bool isSyr = Helper.CurrencyService.IsLocalCurrency(selectedCurrency, false);
             SetExpenseInputsEnabled(hasCurrency);
             SetOriginAverageRateEnabled(isSyr);
             CurrencyChanged?.Invoke(this, EventArgs.Empty);
