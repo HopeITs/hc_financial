@@ -105,13 +105,13 @@ namespace Financial_WPF_App.Views
 
         private void Show_Hide()
         {
-            if (TillType_Name.ToLower() == "syr")
+            if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false))
             {
                 Exchange_Label.Visibility = Exchange_Border.Visibility = Exchpand_Label.Visibility = Exchpand_Border.Visibility = Net_lable.Visibility = Net_Border.Visibility =
                 Exchange_Label1.Visibility = Exchange_Border1.Visibility = Exchpand_Label1.Visibility = Exchpand_Border1.Visibility = Net_lable1.Visibility = Net_Border1.Visibility = Visibility.Collapsed;
                 
-                Income_Label.Content = "Income(SYR):";
-                Income_Label1.Content = "Income(SYR):";
+                Income_Label.Content = "Income(" + TillType_Name + "):";
+                Income_Label1.Content = "Income(" + TillType_Name + "):";
                 foreach (var C in myDataGrid.Columns)
                     if (C.HeaderText.ToString() == "Exchange" || C.HeaderText.ToString() == "Expenses" || C.HeaderText.ToString() == "Transfer"
                         || C.HeaderText.ToString() == "Balance" || C.HeaderText.ToString() == "Original Avg Rate group" || C.HeaderText.ToString() == "Original Avg Rate amount"
@@ -122,7 +122,7 @@ namespace Financial_WPF_App.Views
                     }
                 var colIncome = myDataGrid.Columns.FirstOrDefault(c => c.MappingName == "Income");
                 if (colIncome != null)
-                    colIncome.HeaderText = "Income(SYR)";
+                    colIncome.HeaderText = "Income(" + TillType_Name + ")";
 
             }
             if (TillType_Name.ToLower() == "eur" || TillType_Name.ToLower() == "usd")

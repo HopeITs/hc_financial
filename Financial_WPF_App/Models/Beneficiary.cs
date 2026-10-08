@@ -56,7 +56,7 @@ namespace Financial_WPF_App.Models
                                 + ", account_donor.Donor_ID as 'Donor_ID'"
                                 + ", tilltypes.Name as 'Currency_Name'"
                                 + ", beneficiary.ExchangeRate as 'ExchangeRate'"
-                                + ", IFNULL(Round(CASE WHEN tilltypes.Name = 'SYR' THEN Amount / ExchangeRate WHEN tilltypes.Name = 'USD' THEN Amount * ExchangeRate END,2),0) AS 'CorrespondingLoan'"
+                                + ", IFNULL(Round(CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + " THEN Amount / ExchangeRate WHEN tilltypes.Name = 'USD' THEN Amount * ExchangeRate END,2),0) AS 'CorrespondingLoan'"
 
                                 + " FROM `beneficiary` left join `account` on account.ID = beneficiary.Account_ID"
                                 + " LEFT JOIN account_donor ON account_donor.account_ID = account.ID"

@@ -1106,15 +1106,17 @@ END AS `USD_Value`,
         /// </summary>
         public DataTable Select_Revenue_Exchange_Report(int TillType_ID, string TillType_Name, string FromDate = "", string ToDate = "")
         {
+            string localTill = Helper.CurrencyService.LocalCurrencySql("tilltypes", false);
+            string localAmount = Helper.CurrencyService.LocalAmountSql("Currency_Tilltype");
             string query = @"SELECT 
                         city.Name AS `City_Name`,
                         project.Name AS `Project_Name`,
                         subproject.Name AS `Subproject_Name`,
                         account.Name as `Account_Name`,
                         action.ActionDate, DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'ActionMonth', DATE_FORMAT(action.ActionDate, ""%Y"") as 'ActionYear',
-                        (CASE WHEN (Currency_Tilltype.Name = 'SYR' OR Currency_Tilltype.Name IS NULL OR Currency_Tilltype.Name = '')
+                        (CASE WHEN " + localAmount + @"
                         AND actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Income', 
-                        (CASE WHEN tilltypes.Name = 'SYR' AND Currency_Tilltype.Name = 'USD' AND actiontype.shortname = 'I' THEN action.Amount
+                        (CASE WHEN " + localTill + @" AND Currency_Tilltype.Name = 'USD' AND actiontype.shortname = 'I' THEN action.Amount
                         ELSE 0 END) AS 'Incomeusd',
                         (CASE WHEN actiontype.shortname = 'O'  THEN action.Amount ELSE 0 END) AS 'Outcome',
                         (CASE WHEN actiontype.shortname = 'Ex' THEN action.Amount ELSE 0 END) AS 'Exchange',
@@ -1156,7 +1158,7 @@ END AS `USD_Value`,
                         LEFT JOIN category ON project.Category_ID = category.ID
                         LEFT JOIN city ON subproject.City_ID = city.ID";
 
-            if (TillType_Name.ToLower() == "syr")
+            if (Helper.CurrencyService.IsLocalCurrency(TillType_Name, false))
             {
                 query += " where actiontype.shortname IN ('I') AND LOWER(accounttype.name) = 'project' AND tilltypes.ID = @TillType_ID";
             }

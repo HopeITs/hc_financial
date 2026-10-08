@@ -208,9 +208,9 @@ namespace Financial_WPF_App
 
                 Currency_comboBox.SelectedValue = Convert.ToInt32(dt.Rows[0]["Currency"]);
 
-                if (Currency_comboBox.Text.ToString() == "SYR")
+                if (Helper.CurrencyService.IsLocalCurrency(Currency_comboBox.Text, false))
                     correspondingLoan_label.Content = "Loan Amount (USD):";
-                else if (Currency_comboBox.Text.ToString() == "USD") correspondingLoan_label.Content = "Loan Amount (SYR):";
+                else if (Currency_comboBox.Text.ToString() == "USD") correspondingLoan_label.Content = "Loan Amount (Local):";
 
                 Currency_comboBox.IsEnabled = false;
                 SubProject_clear_btn.IsEnabled = false;
@@ -358,7 +358,7 @@ namespace Financial_WPF_App
                 {
                     if (Original_ExchangeRate != rate.ToString() || Original_Amount != amount.ToString())
                     {
-                        if (Currency_comboBox.Text == "SYR")
+                        if (Helper.CurrencyService.IsLocalCurrency(Currency_comboBox.Text, false))
                         {
                             correspondingLoan = amount / rate;
                         }
@@ -367,12 +367,15 @@ namespace Financial_WPF_App
                             correspondingLoan = amount * rate;
                         }
                     }
-                    if (!(correspondingLoan_label.Content.ToString().Contains("USD") || correspondingLoan_label.Content.ToString().Contains("SYR")))
+                    // The label names the currency the loan is shown in once, on its first fill.
+                    // A USD loan's equivalent is in the local currency (which one is not known
+                    // here - the rate was typed in whichever the user works in), so it says Local.
+                    if (!correspondingLoan_label.Content.ToString().Contains("("))
                     {
-                        if (Currency_comboBox.Text == "SYR")
+                        if (Helper.CurrencyService.IsLocalCurrency(Currency_comboBox.Text, false))
                             correspondingLoan_label.Content += " (USD):";
                         if (Currency_comboBox.Text == "USD")
-                            correspondingLoan_label.Content += " (SYR):";
+                            correspondingLoan_label.Content += " (Local):";
                     }
                     correspondingLoan_txtBox.Text = Login.ConvertToDouble(correspondingLoan.ToString());
 
@@ -418,7 +421,7 @@ namespace Financial_WPF_App
                     {
                         if (Original_ExchangeRate != rate.ToString() || Original_Amount != amount.ToString())
                         {
-                            if (Currency_comboBox.Text == "SYR")
+                            if (Helper.CurrencyService.IsLocalCurrency(Currency_comboBox.Text, false))
                             {
                                 correspondingLoan = amount / rate;
                             }
