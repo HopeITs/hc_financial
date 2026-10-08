@@ -34,117 +34,98 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0">
-                    <WrapPanel  Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="All(SYR):" Style="{DynamicResource statistic_lableStyle}" Width="70" Margin="10,0,13,0"/>
+                <!-- Payment totals: a band per currency, laid out like the till screen's (label, then a
+                     white chip sized to its value - a zero stays small). A line never wraps: the code
+                     in Payments_Window (FitPayStats) measures the widest line and scales all three by
+                     the same factor when the window is narrower than it, so they shrink together and
+                     stay on one line each. Value TextBlocks keep the exact app style; the window theme
+                     colours them by finding that style. -->
+                <StackPanel x:Name="PayStatsHost" Grid.Row="0">
+                    <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
+                        <StackPanel x:Name="PayStatsRow1" Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Label x:Name="AllLocal_Label" Content="All(SYR):" MinWidth="104" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                                <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
                             </Border>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="Amount_textBlock" Text="0.00" 
-                    Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Amount_textBlock_SizeChanged" />
+                                <TextBlock x:Name="Amount_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="ToPayAmount_textBlock"
-                        Text="0.00"
-                        Style="{DynamicResource statistic_textBlockStyle}" 
-                        OverridesDefaultStyle="True" />
+                                <TextBlock x:Name="ToPayAmount_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="PaidAmount_textBlock"
-                    Text="0.00"
-                    Style="{DynamicResource statistic_textBlockStyle}" 
-                    OverridesDefaultStyle="True" />
+                                <TextBlock x:Name="PaidAmount_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Amount returned:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="ReturnedAmount_textBlock"
-Text="0.00"
-Style="{DynamicResource statistic_textBlockStyle}" 
-OverridesDefaultStyle="True" />
+                                <TextBlock x:Name="ReturnedAmount_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
-                            <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
-                                <TextBlock x:Name="RemainingAmount_textBlock"
-                        Text="0.00"
-                        Style="{DynamicResource statistic_textBlockStyle}" 
-                        OverridesDefaultStyle="True" />
-                            </Border>
-                        </StackPanel>
-
-                    </WrapPanel>
-                </Border>
-                <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1">
-                    <WrapPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal">
-                            <Label Width="81" Content="All(USD):" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="Allusd_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
+                                <TextBlock x:Name="RemainingAmount_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                    </Border>
+                    <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
+                        <StackPanel x:Name="PayStatsRow2" Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Label x:Name="AllCurrent_Label" Content="All(New):" MinWidth="104" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="Allcur_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
+                            </Border>
                             <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="Amountusd_textBlock" Text="0.00" 
-                    Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Amount_textBlock_SizeChanged" />
+                                <TextBlock x:Name="Amountcur_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="ToPayAmountusd_textBlock"
-                        Text="0.00"
-                        Style="{DynamicResource statistic_textBlockStyle}" 
-                        OverridesDefaultStyle="True" />
+                                <TextBlock x:Name="ToPayAmountcur_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="PaidAmountusd_textBlock"
-                    Text="0.00"
-                    Style="{DynamicResource statistic_textBlockStyle}" 
-                    OverridesDefaultStyle="True" />
+                                <TextBlock x:Name="PaidAmountcur_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Amount returned:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="ReturnedAmountusd_textBlock"
-                                    Text="0.00"
-                                    Style="{DynamicResource statistic_textBlockStyle}" 
-                                    OverridesDefaultStyle="True" />
+                                <TextBlock x:Name="ReturnedAmountcur_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
                             <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
-                            <Border Style="{StaticResource BorderStackPanelStyle}" Height="29" >
-                                <TextBlock x:Name="RemainingAmountusd_textBlock"
-                        Text="0.00"
-                        Style="{DynamicResource statistic_textBlockStyle}" 
-                        OverridesDefaultStyle="True" />
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="RemainingAmountcur_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
                             </Border>
                         </StackPanel>
-                    </WrapPanel>
-                </Border>
+                    </Border>
+                    <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
+                        <StackPanel x:Name="PayStatsRow3" Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Label x:Name="AllUsd_Label" Content="All(USD):" MinWidth="104" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="Allusd_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
+                            </Border>
+                            <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="Amountusd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                            </Border>
+                            <Label Content="Amount owed:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ToPayAmountusd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                            </Border>
+                            <Label Content="Amount paid:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="PaidAmountusd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                            </Border>
+                            <Label Content="Amount returned:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="ReturnedAmountusd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                            </Border>
+                            <Label Content="Remaining amount:" Style="{DynamicResource statistic_lableStyle}"/>
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="RemainingAmountusd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
                 <Grid Grid.Row="2" Margin="0,5,0,5">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -365,7 +346,12 @@ OverridesDefaultStyle="True" />
 
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
-                            <syncfusion:GridNumericColumn  HeaderText="Payment amount(SYR)" Width="200"  MappingName="Incomesyr"
+                            <syncfusion:GridNumericColumn  x:Name="PaymentSyr_Column" HeaderText="Payment amount(SYR)" Width="200"  MappingName="Incomesyr"
+                    NumberDecimalDigits="2"
+                    NumberDecimalSeparator="."
+                    NumberGroupSizes="3"
+                    NumberGroupSeparator=","/>
+                            <syncfusion:GridNumericColumn  x:Name="PaymentCurrent_Column" HeaderText="Payment amount(New)" Width="200"  MappingName="Incomecurrent"
                     NumberDecimalDigits="2"
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
@@ -375,11 +361,16 @@ NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"
 NumberGroupSeparator=","/>
-                            <syncfusion:GridNumericColumn  HeaderText="Returned amount(SYR)" Width="200"  MappingName="Outcomesyr"
+                            <syncfusion:GridNumericColumn  x:Name="ReturnedSyr_Column" HeaderText="Returned amount(SYR)" Width="200"  MappingName="Outcomesyr"
 NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"
 NumberGroupSeparator=","/>
+                            <syncfusion:GridNumericColumn  x:Name="ReturnedCurrent_Column" HeaderText="Returned amount(New)" Width="200"  MappingName="Outcomecurrent"
+                    NumberDecimalDigits="2"
+                    NumberDecimalSeparator="."
+                    NumberGroupSizes="3"
+                    NumberGroupSeparator=","/>
                             <syncfusion:GridNumericColumn  HeaderText="Returned amount(USD)" Width="200" MappingName="Outcomeusd"
 NumberDecimalDigits="2"
 NumberDecimalSeparator="."
@@ -530,15 +521,27 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Payment Amount(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                            <Label x:Name="SelectedPaymentSyr_Label" Content="Payment Amount(SYR):" Style="{DynamicResource statistic_lableStyle}" />
                             <Border Style="{StaticResource BorderStackPanelStyle}">
                                 <TextBlock x:Name="SelectedPaymentAmountSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Returned Amount(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                            <Label x:Name="SelectedReturnedSyr_Label" Content="Returned Amount(SYR):" Style="{DynamicResource statistic_lableStyle}" />
                             <Border Style="{StaticResource BorderStackPanelStyle}">
                                 <TextBlock x:Name="SelectedReturnedAmountSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="SelectedPaymentCurrent_Label" Content="Payment Amount(New):" Style="{DynamicResource statistic_lableStyle}" />
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="SelectedPaymentAmountCurrentTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="SelectedReturnedCurrent_Label" Content="Returned Amount(New):" Style="{DynamicResource statistic_lableStyle}" />
+                            <Border Style="{StaticResource BorderStackPanelStyle}">
+                                <TextBlock x:Name="SelectedReturnedAmountCurrentTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">

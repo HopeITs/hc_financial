@@ -22,6 +22,8 @@ namespace Financial_WPF_App.Views
         public Payments_Window(Main_Window_2 main_Window, string SubProject_ID)
         {
             InitializeComponent();
+            NameLocalCurrencyColumns();
+            PayStatsHost.LayoutUpdated += (sender, args) => FitPayStats();
             //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             this.main_Window = main_Window;
             if (SubProject_ID != "")
@@ -170,36 +172,26 @@ namespace Financial_WPF_App.Views
                 }
 
 
-                Amount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amountsyr)", string.Empty).ToString());
-                ToPayAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amountsyr)", string.Empty).ToString());
-                PaidAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamount)", string.Empty).ToString());
-                ReturnedAmount_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(returnedamount)", string.Empty).ToString());
+                // One row of figures per currency. Each reads that currency's own columns:
+                // the old lira row used the all-currency paid/returned sums, which pulled
+                // the dollar and new-lira beneficiaries' payments into it.
+                Amount_textBlock.Text = SumText(b_dt, "Amountsyr");
+                ToPayAmount_textBlock.Text = SumText(b_dt, "ToReturn_Amountsyr");
+                PaidAmount_textBlock.Text = SumText(b_dt, "paidamountsyr");
+                ReturnedAmount_textBlock.Text = SumText(b_dt, "returnedamountsyr");
+                RemainingAmount_textBlock.Text = Remaining(ToPayAmount_textBlock.Text, PaidAmount_textBlock.Text);
 
-                Amountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(Amountusd)", string.Empty).ToString());
-                ToPayAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(ToReturn_Amountusd)", string.Empty).ToString());
-                PaidAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(paidamountusd)", string.Empty).ToString());
-                ReturnedAmountusd_textBlock.Text = Login.ConvertToDouble(b_dt.Compute("Sum(returnedamountusd)", string.Empty).ToString());
+                Amountcur_textBlock.Text = SumText(b_dt, "Amountcurrent");
+                ToPayAmountcur_textBlock.Text = SumText(b_dt, "ToReturn_Amountcurrent");
+                PaidAmountcur_textBlock.Text = SumText(b_dt, "paidamountcurrent");
+                ReturnedAmountcur_textBlock.Text = SumText(b_dt, "returnedamountcurrent");
+                RemainingAmountcur_textBlock.Text = Remaining(ToPayAmountcur_textBlock.Text, PaidAmountcur_textBlock.Text);
 
-                if (PaidAmount_textBlock.Text == "")
-                {
-                    PaidAmount_textBlock.Text = "0.00";
-                }
-                if (ReturnedAmount_textBlock.Text == "")
-                {
-                    ReturnedAmount_textBlock.Text = "0.00";
-                }
-                if (PaidAmountusd_textBlock.Text == "")
-                {
-                    PaidAmountusd_textBlock.Text = "0.00";
-                }
-                if (ReturnedAmountusd_textBlock.Text == "")
-                {
-                    ReturnedAmountusd_textBlock.Text = "0.00";
-                }
-
-
-                RemainingAmount_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmount_textBlock.Text) - double.Parse(PaidAmount_textBlock.Text)).ToString());
-                RemainingAmountusd_textBlock.Text = Login.ConvertToDouble((double.Parse(ToPayAmountusd_textBlock.Text) - double.Parse(PaidAmountusd_textBlock.Text)).ToString());
+                Amountusd_textBlock.Text = SumText(b_dt, "Amountusd");
+                ToPayAmountusd_textBlock.Text = SumText(b_dt, "ToReturn_Amountusd");
+                PaidAmountusd_textBlock.Text = SumText(b_dt, "paidamountusd");
+                ReturnedAmountusd_textBlock.Text = SumText(b_dt, "returnedamountusd");
+                RemainingAmountusd_textBlock.Text = Remaining(ToPayAmountusd_textBlock.Text, PaidAmountusd_textBlock.Text);
             }
         }
         private void Set_privileges()
@@ -817,6 +809,76 @@ namespace Financial_WPF_App.Views
         }
 
 
+        private double _payStatsScale = 1.0;
+
+        /// <summary>
+        /// Keeps each currency line of the totals on ONE line however narrow the window is.
+        /// The widest line's natural width (the sum of its children, which are measured
+        /// without a width limit, unlike the line itself whose reported size is clipped to
+        /// what it was offered) is compared with the room there is, and all three lines are
+        /// scaled by the same factor - so they shrink together, never grow past their normal
+        /// size, and never wrap.
+        /// </summary>
+        private void FitPayStats()
+        {
+            StackPanel[] lines = { PayStatsRow1, PayStatsRow2, PayStatsRow3 };
+
+            double natural = 0;
+            foreach (StackPanel line in lines)
+            {
+                double width = 0;
+                foreach (UIElement child in line.Children)
+                    width += child.DesiredSize.Width;
+                natural = Math.Max(natural, width);
+            }
+
+            // Room = the host's width less the band's right padding.
+            double room = PayStatsHost.ActualWidth - 12;
+            if (natural <= 0 || room <= 0)
+                return;
+
+            double scale = Math.Min(1.0, room / natural);
+            if (Math.Abs(scale - _payStatsScale) < 0.002)
+                return;
+
+            _payStatsScale = scale;
+            foreach (StackPanel line in lines)
+                line.LayoutTransform = new ScaleTransform(scale, scale);
+        }
+
+        private static string SumText(DataTable table, string column)
+        {
+            string text = Login.ConvertToDouble(table.Compute("Sum(" + column + ")", string.Empty).ToString());
+            return string.IsNullOrEmpty(text) ? "0.00" : text;
+        }
+
+        private static string Remaining(string owed, string paid)
+        {
+            return Login.ConvertToDouble((double.Parse(owed) - double.Parse(paid)).ToString());
+        }
+
+        /// <summary>
+        /// Titles the per-currency columns and totals with the currencies' real names, so
+        /// they follow a rename (SYR to SYP) instead of being typed into the layout.
+        /// </summary>
+        private void NameLocalCurrencyColumns()
+        {
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+            if (string.IsNullOrWhiteSpace(newName)) newName = "New";
+
+            AllLocal_Label.Content = "All(" + oldName + "):";
+            AllCurrent_Label.Content = "All(" + newName + "):";
+            PaymentSyr_Column.HeaderText = "Payment amount(" + oldName + ")";
+            PaymentCurrent_Column.HeaderText = "Payment amount(" + newName + ")";
+            ReturnedSyr_Column.HeaderText = "Returned amount(" + oldName + ")";
+            ReturnedCurrent_Column.HeaderText = "Returned amount(" + newName + ")";
+            SelectedPaymentSyr_Label.Content = "Payment Amount(" + oldName + "):";
+            SelectedPaymentCurrent_Label.Content = "Payment Amount(" + newName + "):";
+            SelectedReturnedSyr_Label.Content = "Returned Amount(" + oldName + "):";
+            SelectedReturnedCurrent_Label.Content = "Returned Amount(" + newName + "):";
+        }
+
         private void UpdateAllCounters()
         {
             if (myDataGrid.View == null)
@@ -828,6 +890,7 @@ namespace Financial_WPF_App.Views
 
             int allUSD = 0;
             int allSYR = 0;
+            int allCurrent = 0;
 
             foreach (var record in myDataGrid.View.Records)
             {
@@ -837,6 +900,10 @@ namespace Financial_WPF_App.Views
 
                     if (string.Equals(currency, "USD", StringComparison.OrdinalIgnoreCase))
                         allUSD++;
+                    else if (!string.IsNullOrEmpty(currency)
+                             && Helper.CurrencyService.IsLocalCurrency(currency, false)
+                             && !Helper.CurrencyService.IsLegacyLocalCurrency(currency))
+                        allCurrent++;
                     else
                         allSYR++;
                 }
@@ -844,6 +911,7 @@ namespace Financial_WPF_App.Views
 
             Allusd_textBlock.Text = allUSD.ToString("N0");
             All_textBlock.Text = allSYR.ToString("N0");
+            Allcur_textBlock.Text = allCurrent.ToString("N0");
         }
 
         private void myDataGrid_FilterChanged(object sender, GridFilterEventArgs e)
@@ -877,6 +945,8 @@ namespace Financial_WPF_App.Views
             SelectedStatisticsCountTextBlock.Text = selectedRows.Count.ToString("N0");
             SelectedPaymentAmountSyrTextBlock.Text = SumSelectedColumn(selectedRows, "Incomesyr").ToString("N2");
             SelectedReturnedAmountSyrTextBlock.Text = SumSelectedColumn(selectedRows, "Outcomesyr").ToString("N2");
+            SelectedPaymentAmountCurrentTextBlock.Text = SumSelectedColumn(selectedRows, "Incomecurrent").ToString("N2");
+            SelectedReturnedAmountCurrentTextBlock.Text = SumSelectedColumn(selectedRows, "Outcomecurrent").ToString("N2");
             SelectedPaymentAmountUsdTextBlock.Text = SumSelectedColumn(selectedRows, "Incomeusd").ToString("N2");
             SelectedReturnedAmountUsdTextBlock.Text = SumSelectedColumn(selectedRows, "Outcomeusd").ToString("N2");
             SelectedStatisticsPanel.Visibility = Visibility.Visible;

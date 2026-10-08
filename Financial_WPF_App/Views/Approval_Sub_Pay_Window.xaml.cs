@@ -21,6 +21,7 @@ namespace Financial_WPF_App.Views
         public Approval_Sub_Pay_Window(string SubProject_ID, Approval_Window approval_Window, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            NameLocalCurrencyColumns();
             this.main_Window = main_Window;
             this.approval_Window = approval_Window;
             this.SubProject_ID = SubProject_ID;
@@ -756,6 +757,22 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+        /// <summary>
+        /// Titles the per-currency columns with the currencies' real names, so they follow a
+        /// rename (SYR to SYP) instead of being typed into the layout.
+        /// </summary>
+        private void NameLocalCurrencyColumns()
+        {
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+            if (string.IsNullOrWhiteSpace(newName)) newName = "New";
+
+            PaymentSyr_Column.HeaderText = "Payment amount(" + oldName + ")";
+            PaymentCurrent_Column.HeaderText = "Payment amount(" + newName + ")";
+            ReturnedSyr_Column.HeaderText = "Returned amount(" + oldName + ")";
+            ReturnedCurrent_Column.HeaderText = "Returned amount(" + newName + ")";
+        }
+
         private void All_textBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (Selected_textBlock.ActualWidth > All_textBlock.ActualWidth)
