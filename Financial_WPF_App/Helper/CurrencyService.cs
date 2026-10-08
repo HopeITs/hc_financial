@@ -76,6 +76,19 @@ namespace Financial_WPF_App.Helper
 
         private static bool _schemaSupportsMultipleLocalCurrencies;
 
+        private static bool _cashBalancesHasCurrentCurrency;
+
+        /// <summary>
+        /// True once the cash_balances view carries the current local currency's columns
+        /// (Account_I_New and friends, added by the P2 script). Asked of the database rather
+        /// than assumed, so a screen can offer those columns only when they exist and the
+        /// program still runs against a database where the view has not been updated yet.
+        /// </summary>
+        public static bool CashBalancesHasCurrentCurrency
+        {
+            get { EnsureLoaded(); return _cashBalancesHasCurrentCurrency; }
+        }
+
         /// <summary>
         /// True when the database carries the currency properties, false while the
         /// program is still running against the old schema. Exposed so a screen can tell
@@ -170,6 +183,35 @@ namespace Financial_WPF_App.Helper
         {
             CurrencyInfo c = Find(tillTypeId);
             return c == null ? string.Empty : c.Name;
+        }
+
+        /// <summary>
+        /// The local currency in use now - the one that is not superseded and is not the
+        /// payments container. Returns an empty string if there is no such currency.
+        ///
+        /// Used where something new has to be created in "the" local currency without
+        /// naming it in code: a new account's amount type, for instance.
+        /// </summary>
+        public static string GetCurrentLocalCurrencyName()
+        {
+            EnsureLoaded();
+
+            foreach (CurrencyInfo c in _byId.Values)
+            {
+                if (!c.IsLocal || c.IsLegacy) continue;
+                if (string.Equals(c.Name, PaymentsContainerName, StringComparison.OrdinalIgnoreCase)) continue;
+                return c.Name;
+            }
+            return string.Empty;
+        }
+
+        /// <summary>The old local currency's name, or "SYR" when none is flagged.</summary>
+        public static string GetLegacyLocalCurrencyName()
+        {
+            EnsureLoaded();
+            foreach (CurrencyInfo c in _byId.Values)
+                if (c.IsLocal && c.IsLegacy) return c.Name;
+            return LegacyLocalCurrencyName;
         }
 
         /// <summary>Every currency the database knows about.</summary>
@@ -332,6 +374,65 @@ namespace Financial_WPF_App.Helper
             return "(" + amountColumn + " / NULLIF(" + tillTypesAlias + ".base_divisor, 0))";
         }
 
+        /// <summary>
+        /// SQL condition: this action is in the OLD local currency. A row with no currency
+        /// recorded predates the new currency, so it counts as old.
+        /// </summary>
+        public static string LegacyAmountSql(string currencyAlias)
+        {
+            EnsureLoaded();
+            string old = _schemaSupportsMultipleLocalCurrencies
+                ? "(" + currencyAlias + ".is_local_currency = 1 AND " + currencyAlias + ".base_divisor <> 1)"
+                : currencyAlias + ".Name = 'SYR'";
+            return "(" + old + " OR " + currencyAlias + ".Name IS NULL OR " + currencyAlias + ".Name = '')";
+        }
+
+        /// <summary>
+        /// SQL condition: this action is in the CURRENT local currency (the one whose
+        /// base_divisor is 1). On the old schema there is none, so it matches nothing.
+        /// </summary>
+        public static string CurrentLocalAmountSql(string currencyAlias)
+        {
+            EnsureLoaded();
+            if (!_schemaSupportsMultipleLocalCurrencies) return "1 = 0";
+            return "(" + currencyAlias + ".is_local_currency = 1 AND " + currencyAlias + ".base_divisor = 1 AND LOWER(" + currencyAlias + ".Name) <> 'pay')";
+        }
+
+        /// <summary>
+        /// The divisor of the old local currency, for the rows that do not say which
+        /// currency they are in. Falls back to 1, so an unresolved legacy currency
+        /// leaves amounts alone rather than scaling them by a guess.
+        /// </summary>
+        public static decimal LegacyBaseDivisor
+        {
+            get
+            {
+                EnsureLoaded();
+                foreach (CurrencyInfo c in _byId.Values)
+                    if (c.IsLegacy) return c.BaseDivisor == 0m ? 1m : c.BaseDivisor;
+                return 1m;
+            }
+        }
+
+        /// <summary>
+        /// Same as ScaleToBaseUnitSql, but reads the divisor off the ACTION's currency
+        /// rather than the till's - which is what the screens showing both local
+        /// currencies side by side need. A row whose currency is unknown is older than
+        /// the new currency by definition, so it is scaled as the old lira.
+        /// DISPLAY ONLY: nothing stored changes.
+        /// </summary>
+        public static string ScaleLocalToBaseUnitSql(string amountColumn, string currencyAlias)
+        {
+            EnsureLoaded();
+            if (!SchemaSupportsMultipleLocalCurrencies)
+                return amountColumn;
+
+            string divisor = "COALESCE(" + currencyAlias + ".base_divisor, "
+                           + LegacyBaseDivisor.ToString(System.Globalization.CultureInfo.InvariantCulture) + ")";
+
+            return "(" + amountColumn + " / NULLIF(" + divisor + ", 0))";
+        }
+
         // ------------------------------------------------------------------
         //  Lookup
         // ------------------------------------------------------------------
@@ -411,6 +512,7 @@ namespace Financial_WPF_App.Helper
                 }
 
                 _schemaSupportsMultipleLocalCurrencies = hasColumns;
+                _cashBalancesHasCurrentCurrency = hasColumns && DetectCashBalancesColumns();
                 _byId = byId;
                 _byName = byName;
             }
@@ -431,6 +533,18 @@ namespace Financial_WPF_App.Helper
 
             if (dt.Rows.Count == 0) return false;
             return Convert.ToInt32(dt.Rows[0]["n"]) == 2;
+        }
+
+        private static bool DetectCashBalancesColumns()
+        {
+            DataTable dt = RunQuery(
+                @"SELECT COUNT(*) AS n FROM information_schema.COLUMNS
+                  WHERE TABLE_SCHEMA = DATABASE()
+                    AND TABLE_NAME = 'cash_balances'
+                    AND COLUMN_NAME IN ('Account_I_New','Account_E_New','Account_Net_New');");
+
+            if (dt.Rows.Count == 0) return false;
+            return Convert.ToInt32(dt.Rows[0]["n"]) == 3;
         }
 
         private static DataTable RunQuery(string query)
