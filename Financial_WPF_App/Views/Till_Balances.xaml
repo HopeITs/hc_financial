@@ -51,6 +51,21 @@ Margin="1,1,0,0" Grid.Row="2" Loaded="TillCash_DataGrid_Loaded">
                                NumberDecimalSeparator="."
                                NumberGroupSizes="3"
                                NumberGroupSeparator=","/>
+                    <syncfusion:GridNumericColumn  x:Name="IncomeNew_DataGridColumn" HeaderText="Income(New)"  MappingName="Income_New" TextAlignment="Left" IsHidden="True"
+                               NumberDecimalDigits="2"
+                               NumberDecimalSeparator="."
+                               NumberGroupSizes="3"
+                               NumberGroupSeparator=","/>
+                    <syncfusion:GridNumericColumn  x:Name="ExpenseNew_DataGridColumn" HeaderText="Expenses(New)"  MappingName="Expenses_New" TextAlignment="Left" IsHidden="True"
+                               NumberDecimalDigits="2"
+                               NumberDecimalSeparator="."
+                               NumberGroupSizes="3"
+                               NumberGroupSeparator=","/>
+                    <syncfusion:GridNumericColumn  x:Name="DifferenceNew_DataGridColumn" HeaderText="Difference(New)"  MappingName="Difference_New" TextAlignment="Left" IsHidden="True"
+                               NumberDecimalDigits="2"
+                               NumberDecimalSeparator="."
+                               NumberGroupSizes="3"
+                               NumberGroupSeparator=","/>
                     <syncfusion:GridNumericColumn  x:Name="IncomeUSD_DataGridColumn" HeaderText="Income(USD)"  MappingName="Income_USD" TextAlignment="Left"
                                NumberDecimalDigits="2"
                                NumberDecimalSeparator="."
@@ -82,6 +97,18 @@ Margin="1,1,0,0" Grid.Row="2" Loaded="TillCash_DataGrid_Loaded">
                             <syncfusion:GridSummaryColumn Name="Total_Dif"                                                      
                                 Format="'{Sum:N2}'"
                                 MappingName="Difference_SYR"
+                                SummaryType="DoubleAggregate" />
+                            <syncfusion:GridSummaryColumn Name="Total_I_New"
+                                Format="'{Sum:N2}'"
+                                MappingName="Income_New"
+                                SummaryType="DoubleAggregate" />
+                            <syncfusion:GridSummaryColumn Name="Total_E_New"
+                                Format="'{Sum:N2}'"
+                                MappingName="Expenses_New"
+                                SummaryType="DoubleAggregate" />
+                            <syncfusion:GridSummaryColumn Name="Total_Dif_New"
+                                Format="'{Sum:N2}'"
+                                MappingName="Difference_New"
                                 SummaryType="DoubleAggregate" />
                             <syncfusion:GridSummaryColumn Name="Total_I_USD"                                                      
                                 Format="'{Sum:N2}'"

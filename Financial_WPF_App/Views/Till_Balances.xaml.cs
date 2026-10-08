@@ -21,6 +21,7 @@ namespace Financial_WPF_App.Views
         public Till_Balances(int Account_ID, string Account_Type, string Category)
         {
             InitializeComponent();
+            NameCurrencyColumns();
             this.Account_ID = Account_ID;
             this.Account_Type = Account_Type;
             this.Category = Category;
@@ -36,6 +37,7 @@ namespace Financial_WPF_App.Views
         public Till_Balances(int SubProject_ID)
         {
             InitializeComponent();
+            NameCurrencyColumns();
             this.SubProject_ID = SubProject_ID;
             if (Onload())
             {
@@ -55,6 +57,29 @@ namespace Financial_WPF_App.Views
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
 
+
+        /// <summary>
+        /// Titles the per-currency columns with the currencies' real names, and shows the
+        /// current-currency trio only when the database can supply it (cash_balances has the
+        /// columns added by the P2 script). Until then the screen is exactly what it was.
+        /// </summary>
+        private void NameCurrencyColumns()
+        {
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+            if (string.IsNullOrWhiteSpace(newName)) newName = "New";
+
+            IncomeSYR_DataGridColumn.HeaderText = "Income(" + oldName + ")";
+            ExpenseSYR_DataGridColumn.HeaderText = "Expenses(" + oldName + ")";
+            DifferenceSYR_DataGridColumn.HeaderText = "Difference(" + oldName + ")";
+
+            IncomeNew_DataGridColumn.HeaderText = "Income(" + newName + ")";
+            ExpenseNew_DataGridColumn.HeaderText = "Expenses(" + newName + ")";
+            DifferenceNew_DataGridColumn.HeaderText = "Difference(" + newName + ")";
+
+            bool show = Helper.CurrencyService.CashBalancesHasCurrentCurrency;
+            IncomeNew_DataGridColumn.IsHidden = ExpenseNew_DataGridColumn.IsHidden = DifferenceNew_DataGridColumn.IsHidden = !show;
+        }
 
         private void Cash_DataGrid_Loaded(object sender, RoutedEventArgs e)
         {

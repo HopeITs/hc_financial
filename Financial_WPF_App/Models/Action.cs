@@ -182,6 +182,11 @@ namespace Financial_WPF_App.Models
 
             string query = "SELECT cash_balances.CashAccount_Name AS 'Account', cash_balances.Account_I AS 'Income_SYR' , cash_balances.Account_E AS 'Expenses_SYR' , cash_balances.Account_Net AS 'Difference_SYR'" +
                 ", cash_balances.Account_I_USD AS 'Income_USD',cash_balances.Account_E_USD AS 'Expenses_USD',cash_balances.Account_Net_USD AS 'Difference_USD' " +
+                // The current local currency's figures, once the view has them (P2 script).
+                // Appended after the rest so the columns already read keep their place.
+                (Helper.CurrencyService.CashBalancesHasCurrentCurrency
+                    ? ", cash_balances.Account_I_New AS 'Income_New', cash_balances.Account_E_New AS 'Expenses_New', cash_balances.Account_Net_New AS 'Difference_New' "
+                    : " ") +
                 " FROM cash_balances WHERE cash_balances.Account_id = @Account_ID;";
 
             DataSet ds = new DataSet();
