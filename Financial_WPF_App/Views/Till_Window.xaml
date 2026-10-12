@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Title="Till_Window" Width="1280" Height="620" FontSize="18" WindowStartupLocation="CenterScreen">
     <Window.Resources></Window.Resources>
-    <Grid>
+    <Grid Grid.IsSharedSizeScope="True">
         <Grid.ContextMenu>
             <ContextMenu x:Name="cm">
                 <MenuItem Header="Refresh Till" Click = "Refresh_Click" >
@@ -127,7 +127,12 @@
         <Border x:Name="MainStatsBorder" Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0" Padding="0,5,50,5">
             <WrapPanel  Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" x:Name="All_Label" />
+                    <!-- the band titles share one width (as wide as the longer of "All(SYPNEW):" / "All(USD):"),
+                         so no title is cut off and both bands' counts stay in one column -->
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="TillBandTitle"/></Grid.ColumnDefinitions>
+                        <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" MinWidth="73" x:Name="All_Label" />
+                    </Grid>
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
                     </Border>
@@ -185,7 +190,12 @@
         <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="1" Padding="0,5,50,5"   x:Name="USD_StatsPanel" Visibility="Collapsed">
             <WrapPanel  Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="All(USD):" Style="{DynamicResource statistic_lableStyle}" Width="73" />
+                    <!-- the band titles share one width (as wide as the longer of "All(SYPNEW):" / "All(USD):"),
+                         so no title is cut off and both bands' counts stay in one column -->
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="TillBandTitle"/></Grid.ColumnDefinitions>
+                        <Label Content="All(USD):" Style="{DynamicResource statistic_lableStyle}" MinWidth="73" />
+                    </Grid>
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="All_textBlockusd" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"  />
                     </Border>
