@@ -144,7 +144,7 @@ namespace Financial_WPF_App.Models
                     " JOIN accounttype ON account.Accounttype_id = accounttype.id where user_id = @userID and accounttype.Name = 'Personal')";
 
                 fiscalbonds_Condition = " and tree_view.AccountID in (SELECT account_id from user_accounts join account on user_accounts.account_id = account.id" +
-                    " JOIN accounttype ON account.Accounttype_id = accounttype.id where user_id = @userID and accounttype.Name = 'project') AND LOWER(FiscalbondType) = 'syr'";
+                    " JOIN accounttype ON account.Accounttype_id = accounttype.id where user_id = @userID and accounttype.Name = 'project') AND " + Helper.CurrencyService.LocalCurrencyNamesFilter("FiscalbondType", false);
             }
             else if (role == "donor")
             {
