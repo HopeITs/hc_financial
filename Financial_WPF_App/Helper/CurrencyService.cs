@@ -77,6 +77,17 @@ namespace Financial_WPF_App.Helper
         private static bool _schemaSupportsMultipleLocalCurrencies;
 
         private static bool _cashBalancesHasCurrentCurrency;
+        private static bool _hasRoleCurrencyLimits;
+
+        /// <summary>
+        /// True once the role_currency_limit table exists (P3 script): approval limits are then
+        /// set per role AND per currency. Asked of the database, so the program runs before P3.
+        /// </summary>
+        public static bool HasRoleCurrencyLimits
+        {
+            get { EnsureLoaded(); return _hasRoleCurrencyLimits; }
+        }
+
 
         /// <summary>
         /// True once the cash_balances view carries the current local currency's columns
@@ -513,9 +524,70 @@ namespace Financial_WPF_App.Helper
 
                 _schemaSupportsMultipleLocalCurrencies = hasColumns;
                 _cashBalancesHasCurrentCurrency = hasColumns && DetectCashBalancesColumns();
+                _hasRoleCurrencyLimits = DetectRoleCurrencyLimits();
                 _byId = byId;
                 _byName = byName;
             }
+        }
+
+        /// <summary>
+        /// SQL expression: an amount as it compares against an approval limit. The limits in
+        /// role.Approval_Limit were set in the old lira, so a local amount is expressed in that
+        /// unit first - 10,000 new lira is 1,000,000 old and must not pass under a 1,000,000
+        /// limit as if it were small. Old lira, rows with no currency and foreign currencies
+        /// are compared as they always were.
+        /// </summary>
+        public static string ApprovalAmountSql(string amountColumn, string currencyAlias)
+        {
+            EnsureLoaded();
+            if (!_schemaSupportsMultipleLocalCurrencies)
+                return amountColumn;
+
+            string legacy = LegacyBaseDivisor.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            return "(CASE WHEN " + currencyAlias + ".is_local_currency = 1 AND LOWER(" + currencyAlias + ".Name) <> 'pay'"
+                 + " THEN " + amountColumn + " * " + legacy + " / NULLIF(" + currencyAlias + ".base_divisor, 0)"
+                 + " ELSE " + amountColumn + " END)";
+        }
+
+        /// <summary>The old local currency's id, or 0 when none is flagged.</summary>
+        public static int LegacyCurrencyId
+        {
+            get
+            {
+                EnsureLoaded();
+                foreach (CurrencyInfo c in _byId.Values)
+                    if (c.IsLocal && c.IsLegacy) return c.Id;
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// SQL condition: may a user in this role approve this amount? Once per-currency limits
+        /// exist (role_currency_limit, P3) the amount is compared with the role's limit IN THE
+        /// ACTION'S CURRENCY, and a currency with no limit set is NOT approvable by that role -
+        /// an empty limit means "not allowed", never "no limit". Before P3 the old rule applies:
+        /// the single role limit, with a local amount expressed in old lira first.
+        /// A row with no currency recorded is taken as old lira.
+        /// </summary>
+        public static string ApprovalLimitConditionSql(string amountColumn, string currencyAlias, string roleName)
+        {
+            EnsureLoaded();
+            string role = (roleName ?? "").Replace("'", "''");
+            string singleLimit = "(select role.Approval_Limit from role where role.Name = '" + role + "')";
+            string oldRule = ApprovalAmountSql(amountColumn, currencyAlias) + " <= " + singleLimit;
+
+            if (!_hasRoleCurrencyLimits)
+                return oldRule;
+
+            int legacyId = LegacyCurrencyId;
+            string currencyId = legacyId > 0
+                ? "COALESCE(" + currencyAlias + ".ID, " + legacyId + ")"
+                : currencyAlias + ".ID";
+
+            string perCurrency = "(SELECT l.Approval_Limit FROM role_currency_limit l JOIN role r ON r.ID = l.Role_ID"
+                               + " WHERE r.Name = '" + role + "' AND l.TillType_ID = " + currencyId + ")";
+
+            return "(" + perCurrency + " IS NOT NULL AND " + amountColumn + " <= " + perCurrency + ")";
         }
 
         /// <summary>Which local currencies actually hold data in some part of the books.</summary>
@@ -614,6 +686,14 @@ namespace Financial_WPF_App.Helper
 
             if (dt.Rows.Count == 0) return false;
             return Convert.ToInt32(dt.Rows[0]["n"]) == 2;
+        }
+
+        private static bool DetectRoleCurrencyLimits()
+        {
+            DataTable dt = RunQuery(
+                @"SELECT COUNT(*) AS n FROM information_schema.TABLES
+                  WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'role_currency_limit';");
+            return dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0]["n"]) == 1;
         }
 
         private static bool DetectCashBalancesColumns()

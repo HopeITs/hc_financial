@@ -75,6 +75,35 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        /// <summary>The currencies an approval limit can be set in (everything but the pay container).</summary>
+        public DataTable Get_LimitCurrencies()
+        {
+            return Run(@"SELECT ID, Name FROM tilltypes WHERE LOWER(Name) <> 'pay'
+                         ORDER BY (is_local_currency = 1) DESC, base_divisor DESC, ID;");
+        }
+
+        /// <summary>The per-currency approval limits (P3), one row per role and currency set.</summary>
+        public DataTable Get_RoleCurrencyLimits()
+        {
+            return Run("SELECT Role_ID, TillType_ID, Approval_Limit FROM role_currency_limit;");
+        }
+
+        private static DataTable Run(string query)
+        {
+            DataTable dt = new DataTable();
+            if (Login.BuildConnection())
+            {
+                MySqlCommand sc = new MySqlCommand();
+                sc.CommandTimeout = 120;
+                sc.CommandText = query;
+                sc.Connection = Login.MyConn;
+                MySqlDataAdapter da = new MySqlDataAdapter(sc);
+                da.Fill(dt);
+                Login.CloseAndClearConnection();
+            }
+            return dt;
+        }
+
         public DataTable Get_UserRoles()
         {
             string query = @"select * from `role` ORDER BY `role`.`ID` ASC;";

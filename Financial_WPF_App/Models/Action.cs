@@ -329,7 +329,7 @@ namespace Financial_WPF_App.Models
                 condition += " and (edited_byuser.ID <> " + Properties.Settings.Default.User_ID + " or edited_byuser.ID is null) and created_byuser.`ID` <> " + Properties.Settings.Default.User_ID;
 
                 if (Properties.Settings.Default.Role != "Head Office")
-                    condition += " and action_not_approved.`Amount` <= (select role.Approval_Limit from role where role.Name = '" + Properties.Settings.Default.Role + "')";
+                    condition += " and " + Helper.CurrencyService.ApprovalLimitConditionSql("action_not_approved.`Amount`", "currency_type", Properties.Settings.Default.Role);
             }
 
             condition += BuildPeriodCondition("action_not_approved.ActionDate", Periods, Till_IDs);
@@ -519,7 +519,7 @@ namespace Financial_WPF_App.Models
                 condition += " and (edited_byuser.ID <> " + Properties.Settings.Default.User_ID + " or edited_byuser.ID is null) and created_byuser.`ID` <> " + Properties.Settings.Default.User_ID + " and deleted_by <> " + Properties.Settings.Default.User_ID + "";
 
                 if (Properties.Settings.Default.Role != "Head Office")
-                    condition += " and action_deleted.`Amount` <= (select role.Approval_Limit from role where role.Name = '" + Properties.Settings.Default.Role + "')";
+                    condition += " and " + Helper.CurrencyService.ApprovalLimitConditionSql("action_deleted.`Amount`", "currency_type", Properties.Settings.Default.Role);
             }
 
             // Optional range. Both empty reads everything, as before. Compared against the
