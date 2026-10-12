@@ -21,6 +21,7 @@ namespace Financial_WPF_App.Views
         public Till_Window(int Account_ID, bool IsAdminAccount, string Account_Name, string Account_Type, string Category, int SubProject_ID, int Till_ID, string TillType_Name, Account_Window account_Window, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            SelectedStatisticsPanel.LayoutUpdated += SelectedStatisticsPanel_LayoutUpdated;
             TillNotifier.RefreshTill += OnTillRefresh;
             //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             AsFiscalBond = false;
@@ -41,6 +42,7 @@ namespace Financial_WPF_App.Views
         public Till_Window(int FiscalBond_ID, string FiscalBond_Name, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            SelectedStatisticsPanel.LayoutUpdated += SelectedStatisticsPanel_LayoutUpdated;
             TillNotifier.RefreshTill += OnTillRefresh;
             //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             AsFiscalBond = true;
@@ -431,21 +433,36 @@ namespace Financial_WPF_App.Views
                 // Transfer columns are swapped for one pair per currency.
                 ConfigurePayCurrencyColumns();
 
-                // A count of rows, not an amount, and it never was in one currency.
-                All_Label.Content = "All(Local):";
-                USD_StatsPanel.Visibility = Visibility.Visible;
+                // A pay till shows a line per currency (SYR, SYPNEW, USD) instead of the two bands
+                // every other till has, laid out like the payments screen's totals.
+                MainStatsBorder.Visibility = Visibility.Collapsed;
+                USD_StatsPanel.Visibility = Visibility.Collapsed;
+                PayTillStatsHost.Visibility = Visibility.Visible;
+                // Show_Hide can run again on a refresh; subscribe once, not once per run.
+                PayTillStatsHost.LayoutUpdated -= PayTillStatsHost_LayoutUpdated;
+                PayTillStatsHost.LayoutUpdated += PayTillStatsHost_LayoutUpdated;
 
                 string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
                 string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
-            if (string.IsNullOrWhiteSpace(newName)) newName = "New";
-                Income_Label.Content = "Income(" + oldName + "):";
-                Transfered_Label.Content = "Transfered(" + oldName + "):";
-                PayIncomeCurrent_Label.Content = "Income(" + newName + "):";
-                PayTransferCurrent_Label.Content = "Transfered(" + newName + "):";
-                PayIncomeUnified_Label.Content = "Total Income(" + newName + "):";
-                PayTransferUnified_Label.Content = "Total Transfered(" + newName + "):";
-                PayIncomeCurrent_Panel.Visibility = PayTransferCurrent_Panel.Visibility =
-                PayIncomeUnified_Panel.Visibility = PayTransferUnified_Panel.Visibility = Visibility.Visible;
+                if (string.IsNullOrWhiteSpace(newName)) newName = "New";
+                PayTillLegacy_Label.Content = "All(" + oldName + "):";
+                PayTillCurrent_Label.Content = "All(" + newName + "):";
+
+                // Show only the currencies this account holds anything in: an account opened
+                // after the old currency was retired gets one set, not two with one always
+                // empty. Asked of the whole account (not of what is loaded) so filtering does
+                // not move columns. Hidden rather than removed: the Show/Hide menu still lists
+                // the columns.
+                _payScope = Helper.CurrencyService.GetLocalDataScope(Account_ID.ToString(), "");
+                foreach (var col in myDataGrid.Columns)
+                {
+                    if (col.MappingName == "Incomelegacy" || col.MappingName == "Outcomelegacy")
+                        col.IsHidden = !_payScope.ShowLegacy;
+                    else if (col.MappingName == "Incomecurrent" || col.MappingName == "Outcomecurrent")
+                        col.IsHidden = !_payScope.ShowCurrent;
+                }
+                ((FrameworkElement)PayTillRow1.Parent).Visibility = _payScope.ShowLegacy ? Visibility.Visible : Visibility.Collapsed;
+                ((FrameworkElement)PayTillRow2.Parent).Visibility = _payScope.ShowCurrent ? Visibility.Visible : Visibility.Collapsed;
 
                 Exchange_Label.Visibility = Visibility.Collapsed;
                 Exchange_textBlock.Visibility = Visibility.Collapsed;
@@ -894,23 +911,33 @@ namespace Financial_WPF_App.Views
                     // A pay till holds both local currencies at once, so its local boxes read
                     // the common-unit totals (SumIBase / SumOBase, the last two columns) -
                     // SumI would be adding old lira to new. Every other till is unaffected.
-                    bool pay = IsPayTill() && sum_dt.Columns.Count > 16;
-
-                    // Columns 11-16 are the pay-till figures, appended after the rest so
-                    // nothing that reads this row by position moved.
+                    // A pay till reads its own per-currency columns (11-21, appended after the rest so
+                    // nothing that reads this row by position moved); every other till is unchanged.
+                    bool pay = IsPayTill() && sum_dt.Columns.Count > 21;
                     if (pay)
                     {
-                        PayIncomeUnified_textBlock.Text = sum_dt.Rows[0].Field<double>(11).ToString("N2");
-                        PayTransferUnified_textBlock.Text = sum_dt.Rows[0].Field<double>(12).ToString("N2");
-                        PayIncomeCurrent_textBlock.Text = sum_dt.Rows[0].Field<double>(15).ToString("N2");
-                        PayTransferCurrent_textBlock.Text = sum_dt.Rows[0].Field<double>(16).ToString("N2");
+                        System.Data.DataRow r = sum_dt.Rows[0];
+                        PayTillIncomeLegacy_textBlock.Text = r.Field<double>(13).ToString("N2");
+                        PayTillTransferLegacy_textBlock.Text = r.Field<double>(14).ToString("N2");
+                        PayTillNetLegacy_textBlock.Text = r.Field<double>(17).ToString("N2");
+                        PayTillCashLegacy_textBlock.Text = r.Field<double>(19).ToString("N2");
+
+                        PayTillIncomeCurrent_textBlock.Text = r.Field<double>(15).ToString("N2");
+                        PayTillTransferCurrent_textBlock.Text = r.Field<double>(16).ToString("N2");
+                        PayTillNetCurrent_textBlock.Text = r.Field<double>(18).ToString("N2");
+                        PayTillCashCurrent_textBlock.Text = r.Field<double>(20).ToString("N2");
+
+                        PayTillIncomeUsd_textBlock.Text = r.Field<double>(1).ToString("N2");
+                        PayTillTransferUsd_textBlock.Text = r.Field<double>(21).ToString("N2");
+                        PayTillNetUsd_textBlock.Text = r.Field<double>(10).ToString("N2");
+                        PayTillCashUsd_textBlock.Text = r.Field<double>(9).ToString("N2");
                     }
 
-                    Income_textBlock.Text = sum_dt.Rows[0].Field<double>(pay ? 13 : 0).ToString("N2");
+                    Income_textBlock.Text = sum_dt.Rows[0].Field<double>(0).ToString("N2");
                     Income_textBlockusd.Text = sum_dt.Rows[0].Field<double>(1).ToString("N2");
                     //Outcome_textBlock.Text = sum_dt.Rows[0].Field<double>(1).ToString("N2");
                     // Returned_textBlock.Text = sum_dt.Rows[0].Field<double>(2).ToString("N2");
-                    Transfered_textBlock.Text = sum_dt.Rows[0].Field<double>(pay ? 14 : 2).ToString("N2");
+                    Transfered_textBlock.Text = sum_dt.Rows[0].Field<double>(2).ToString("N2");
                     Exchange_textBlock.Text = sum_dt.Rows[0].Field<double>(4).ToString("N2");
                     Exchpand_textBlock.Text = sum_dt.Rows[0].Field<double>(5).ToString("N2");
                     Exchpand_textBlockusd.Text = sum_dt.Rows[0].Field<double>(6).ToString("N2");
@@ -1091,6 +1118,113 @@ namespace Financial_WPF_App.Views
 
             All_textBlockusd.Text = allUSD.ToString("N0");
             All_textBlock.Text = allSYR.ToString("N0");
+
+            if (IsPayTill())
+            {
+                int oldLira = 0, newLira = 0;
+                foreach (var record in myDataGrid.View.Records)
+                {
+                    DataRowView rv = record.Data as DataRowView;
+                    if (rv == null) continue;
+                    string cur = rv["Currency"]?.ToString();
+                    if (string.Equals(cur, "USD", StringComparison.OrdinalIgnoreCase)) continue;
+                    if (!string.IsNullOrEmpty(cur) && Helper.CurrencyService.IsLocalCurrency(cur, false)
+                        && !Helper.CurrencyService.IsLegacyLocalCurrency(cur))
+                        newLira++;
+                    else
+                        oldLira++;
+                }
+                PayTillCountLegacy_textBlock.Text = oldLira.ToString("N0");
+                PayTillCountCurrent_textBlock.Text = newLira.ToString("N0");
+                PayTillCountUsd_textBlock.Text = allUSD.ToString("N0");
+            }
+        }
+
+
+        private double _selectedScale = 1.0;
+
+        /// <summary>
+        /// Keeps the "selected rows" bar on ONE line however narrow the window is, scaling it
+        /// down to the room there is (never above its normal size) - the same idea as the totals
+        /// bar above the grid. The width is the sum of the visible children (measured without a
+        /// limit; the line's own reported size is clipped to what it was offered).
+        /// On a pay till it scales against the same reference width as the totals bar, so the two
+        /// shrink together; on any other till it scales only by its own width.
+        /// </summary>
+        private void FitSelectedStats()
+        {
+            double natural = 0;
+            foreach (UIElement child in SelectedStatsLine.Children)
+                natural += child.DesiredSize.Width;
+
+            // the bar's right padding is 50
+            double room = SelectedStatisticsPanel.ActualWidth - 50;
+            if (natural <= 0 || room <= 0)
+                return;
+
+            double basis = IsPayTill() ? Math.Max(natural, PayStatsReferenceWidth) : natural;
+            double scale = Math.Min(1.0, room / basis);
+            if (Math.Abs(scale - _selectedScale) < 0.002)
+                return;
+
+            _selectedScale = scale;
+            SelectedStatsLine.LayoutTransform = new ScaleTransform(scale, scale);
+        }
+
+        private void SelectedStatisticsPanel_LayoutUpdated(object sender, EventArgs e)
+        {
+            FitSelectedStats();
+        }
+
+        private double _payTillScale = 1.0;
+
+        // The widest line of the payments screen with 11-digit loan figures, in pixels.
+        private const double PayStatsReferenceWidth = 1380;
+
+        private void PayTillStatsHost_LayoutUpdated(object sender, EventArgs e)
+        {
+            FitPayTillStats();
+        }
+
+        /// <summary>
+        /// Keeps each currency line of a pay till's statistics on ONE line at any window width:
+        /// the widest line's natural width (the sum of its children, measured without a width
+        /// limit - the line's own reported size is clipped to what it was offered) against the
+        /// room there is, and all three lines scaled by the same factor, never past normal size.
+        /// </summary>
+        private void FitPayTillStats()
+        {
+            StackPanel[] lines = { PayTillRow1, PayTillRow2, PayTillRow3 };
+
+            double natural = 0;
+            foreach (StackPanel line in lines)
+            {
+                if (((FrameworkElement)line.Parent).Visibility != Visibility.Visible)
+                    continue;
+
+                double width = 0;
+                foreach (UIElement child in line.Children)
+                    width += child.DesiredSize.Width;
+                natural = Math.Max(natural, width);
+            }
+
+            double room = PayTillStatsHost.ActualWidth - 12;
+            if (natural <= 0 || room <= 0)
+                return;
+
+
+            // Scaled against a reference width shared with the other pay statistics screen, not only
+            // against this screen's own natural width: the payments screen (big loan figures) and
+            // the pay till (fewer, shorter ones) must shrink identically as the window narrows,
+            // or the same window width would leave them at different sizes. A line that is wider
+            // than the reference still scales by its own width so it never clips.
+            double scale = Math.Min(1.0, room / Math.Max(natural, PayStatsReferenceWidth));
+            if (Math.Abs(scale - _payTillScale) < 0.002)
+                return;
+
+            _payTillScale = scale;
+            foreach (StackPanel line in lines)
+                line.LayoutTransform = new ScaleTransform(scale, scale);
         }
 
 
@@ -1971,6 +2105,18 @@ namespace Financial_WPF_App.Views
         /// The payments container. Not a currency: it holds amounts in whichever currency
         /// the beneficiary is paid in, so it needs the local/USD split a local till gets.
         /// </summary>
+        // What the account holds in each local currency, asked once when a pay till opens.
+        private Helper.CurrencyService.LocalDataScope _payScope =
+            new Helper.CurrencyService.LocalDataScope { HasLegacy = true, HasCurrent = true };
+
+
+        private static void SetPanelVisibility(FrameworkElement inside, bool visible)
+        {
+            FrameworkElement panel = inside.Parent as FrameworkElement;
+            if (panel is Border) panel = panel.Parent as FrameworkElement;
+            if (panel != null) panel.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private bool IsPayTill()
         {
             return string.Equals(TillType_Name, "pay", StringComparison.OrdinalIgnoreCase);
@@ -2089,15 +2235,17 @@ namespace Financial_WPF_App.Views
             SelectedIncomeCurrentLabel.Content = "Income(" + newName + "):";
             SelectedTransferLabel.Content = isPay ? "Transfer(" + oldName + "):" : "Transfer:";
             SelectedTransferCurrentLabel.Content = "Transfer(" + newName + "):";
-            SelectedIncomeCurrentPanel.Visibility = isPay ? Visibility.Visible : Visibility.Collapsed;
-            SelectedTransferCurrentPanel.Visibility = isPay ? Visibility.Visible : Visibility.Collapsed;
+            SelectedIncomeCurrentPanel.Visibility = isPay && _payScope.ShowCurrent ? Visibility.Visible : Visibility.Collapsed;
+            SelectedTransferCurrentPanel.Visibility = isPay && _payScope.ShowCurrent ? Visibility.Visible : Visibility.Collapsed;
+            if (isPay)
+                SelectedIncomePrimaryPanel.Visibility = _payScope.ShowLegacy ? Visibility.Visible : Visibility.Collapsed;
 
             // Expenses are hidden in the grid of a pay till, so do not offer a total for them.
             SelectedExpensesSyrPanel.Visibility = splits && !isPay ? Visibility.Visible : Visibility.Collapsed;
             SelectedExpensesUsdPanel.Visibility = splits && !isPay ? Visibility.Visible : Visibility.Collapsed;
             SelectedIncomeUsdPanel.Visibility = splits ? Visibility.Visible : Visibility.Collapsed;
             SelectedExchangePanel.Visibility = splits ? Visibility.Collapsed : Visibility.Visible;
-            SelectedTransferPanel.Visibility = isUsd || isPay ? Visibility.Visible : Visibility.Collapsed;
+            SelectedTransferPanel.Visibility = isUsd || (isPay && _payScope.ShowLegacy) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ResetSelectedStatistics()

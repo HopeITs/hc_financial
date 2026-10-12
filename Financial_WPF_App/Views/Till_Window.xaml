@@ -32,7 +32,99 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Border Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0" Padding="0,5,50,5">
+        <!-- Pay till statistics: a band per currency, laid out like the payments screen's - label, then
+             white chips sized to their value. Shown instead of the two bands above for a pay till
+             only; the code scales the three lines together so none ever wraps. -->
+        <StackPanel x:Name="PayTillStatsHost" Grid.Row="0" Grid.IsSharedSizeScope="True" Visibility="Collapsed">
+            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
+                <StackPanel x:Name="PayTillRow1" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <!-- every row's title shares one column, as wide as the longest title shown,
+                         so the count chips line up and the longest title still touches its chip -->
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="RowTitle"/></Grid.ColumnDefinitions>
+                        <Label x:Name="PayTillLegacy_Label" Content="All(SYR):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                    </Grid>
+                    <Border Style="{StaticResource BorderStackPanelStyle}" MinWidth="46">
+                        <TextBlock x:Name="PayTillCountLegacy_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" TextAlignment="Center" HorizontalAlignment="Stretch"/>
+                    </Border>
+                    <Label Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillIncomeLegacy_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Transfered:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillTransferLegacy_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillNetLegacy_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillCashLegacy_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
+                <StackPanel x:Name="PayTillRow2" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <!-- every row's title shares one column, as wide as the longest title shown,
+                         so the count chips line up and the longest title still touches its chip -->
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="RowTitle"/></Grid.ColumnDefinitions>
+                        <Label x:Name="PayTillCurrent_Label" Content="All(New):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                    </Grid>
+                    <Border Style="{StaticResource BorderStackPanelStyle}" MinWidth="46">
+                        <TextBlock x:Name="PayTillCountCurrent_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" TextAlignment="Center" HorizontalAlignment="Stretch"/>
+                    </Border>
+                    <Label Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillIncomeCurrent_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Transfered:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillTransferCurrent_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillNetCurrent_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillCashCurrent_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
+                <StackPanel x:Name="PayTillRow3" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <!-- every row's title shares one column, as wide as the longest title shown,
+                         so the count chips line up and the longest title still touches its chip -->
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="RowTitle"/></Grid.ColumnDefinitions>
+                        <Label x:Name="PayTillUsd_Label" Content="All(USD):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                    </Grid>
+                    <Border Style="{StaticResource BorderStackPanelStyle}" MinWidth="46">
+                        <TextBlock x:Name="PayTillCountUsd_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" TextAlignment="Center" HorizontalAlignment="Stretch"/>
+                    </Border>
+                    <Label Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillIncomeUsd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Transfered:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillTransferUsd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Account Balance:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillNetUsd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                    <Label Content="Cash Balance:" Style="{DynamicResource statistic_lableStyle}"/>
+                    <Border Style="{StaticResource BorderStackPanelStyle}">
+                        <TextBlock x:Name="PayTillCashUsd_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+        <Border x:Name="MainStatsBorder" Style="{StaticResource MainBorderWrapPanelStyle}" Grid.Row="0" Padding="0,5,50,5">
             <WrapPanel  Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="All:" Style="{DynamicResource statistic_lableStyle}" Width="73" x:Name="All_Label" />
@@ -74,30 +166,6 @@
                     <Label x:Name="Transfered_Label" Content="Transfered:" Style="{DynamicResource statistic_lableStyle}" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="Transfered_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" SizeChanged="Exchpand_textBlock_SizeChanged" />
-                    </Border>
-                </StackPanel>
-                <StackPanel x:Name="PayIncomeCurrent_Panel" Orientation="Horizontal" Visibility="Collapsed">
-                    <Label x:Name="PayIncomeCurrent_Label" Content="Income:" Style="{DynamicResource statistic_lableStyle}"/>
-                    <Border Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="PayIncomeCurrent_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
-                    </Border>
-                </StackPanel>
-                <StackPanel x:Name="PayTransferCurrent_Panel" Orientation="Horizontal" Visibility="Collapsed">
-                    <Label x:Name="PayTransferCurrent_Label" Content="Transfered:" Style="{DynamicResource statistic_lableStyle}"/>
-                    <Border Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="PayTransferCurrent_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
-                    </Border>
-                </StackPanel>
-                <StackPanel x:Name="PayIncomeUnified_Panel" Orientation="Horizontal" Visibility="Collapsed">
-                    <Label x:Name="PayIncomeUnified_Label" Content="Total Income:" Style="{DynamicResource statistic_lableStyle}"/>
-                    <Border Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="PayIncomeUnified_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
-                    </Border>
-                </StackPanel>
-                <StackPanel x:Name="PayTransferUnified_Panel" Orientation="Horizontal" Visibility="Collapsed">
-                    <Label x:Name="PayTransferUnified_Label" Content="Total Transfered:" Style="{DynamicResource statistic_lableStyle}"/>
-                    <Border Style="{StaticResource BorderStackPanelStyle}">
-                        <TextBlock x:Name="PayTransferUnified_textBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -796,7 +864,9 @@ Margin="1,1,0,0" Grid.Row="1">
                 Visibility="Collapsed"
                 Padding="0,5,50,5"
                 ClipToBounds="True">
-            <WrapPanel Orientation="Horizontal">
+            <!-- One line that never wraps: the code (FitSelectedStats) scales it down to the room there is,
+                 the same idea as the totals bar above it. -->
+                    <StackPanel x:Name="SelectedStatsLine" Orientation="Horizontal" HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
@@ -857,7 +927,7 @@ Margin="1,1,0,0" Grid.Row="1">
                         <TextBlock x:Name="SelectedValueTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
                     </Border>
                 </StackPanel>
-            </WrapPanel>
+            </StackPanel>
         </Border>
     </Grid>
 </Window>
