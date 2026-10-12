@@ -40,12 +40,17 @@
                      the same factor when the window is narrower than it, so they shrink together and
                      stay on one line each. Value TextBlocks keep the exact app style; the window theme
                      colours them by finding that style. -->
-                <StackPanel x:Name="PayStatsHost" Grid.Row="0">
+                <StackPanel x:Name="PayStatsHost" Grid.Row="0" Grid.IsSharedSizeScope="True">
                     <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
                         <StackPanel x:Name="PayStatsRow1" Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Label x:Name="AllLocal_Label" Content="All(SYR):" MinWidth="104" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
-                            <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
+                            <!-- every row's title shares one column, as wide as the longest title shown,
+                                 so the count chips line up and the longest title still touches its chip -->
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="RowTitle"/></Grid.ColumnDefinitions>
+                                <Label x:Name="AllLocal_Label" Content="All(SYR):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                            </Grid>
+                            <Border Style="{StaticResource BorderStackPanelStyle}" MinWidth="46">
+                                <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" TextAlignment="Center" HorizontalAlignment="Stretch"/>
                             </Border>
                             <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
@@ -71,9 +76,14 @@
                     </Border>
                     <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
                         <StackPanel x:Name="PayStatsRow2" Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Label x:Name="AllCurrent_Label" Content="All(New):" MinWidth="104" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
-                            <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="Allcur_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
+                            <!-- every row's title shares one column, as wide as the longest title shown,
+                                 so the count chips line up and the longest title still touches its chip -->
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="RowTitle"/></Grid.ColumnDefinitions>
+                                <Label x:Name="AllCurrent_Label" Content="All(New):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                            </Grid>
+                            <Border Style="{StaticResource BorderStackPanelStyle}" MinWidth="46">
+                                <TextBlock x:Name="Allcur_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" TextAlignment="Center" HorizontalAlignment="Stretch"/>
                             </Border>
                             <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
@@ -99,9 +109,14 @@
                     </Border>
                     <Border Style="{StaticResource MainBorderWrapPanelStyle}" Padding="0,5,12,5">
                         <StackPanel x:Name="PayStatsRow3" Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Label x:Name="AllUsd_Label" Content="All(USD):" MinWidth="104" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
-                            <Border Style="{StaticResource BorderStackPanelStyle}">
-                                <TextBlock x:Name="Allusd_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" SizeChanged="All_textBlock_SizeChanged"/>
+                            <!-- every row's title shares one column, as wide as the longest title shown,
+                                 so the count chips line up and the longest title still touches its chip -->
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="RowTitle"/></Grid.ColumnDefinitions>
+                                <Label x:Name="AllUsd_Label" Content="All(USD):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                            </Grid>
+                            <Border Style="{StaticResource BorderStackPanelStyle}" MinWidth="46">
+                                <TextBlock x:Name="Allusd_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" TextAlignment="Center" HorizontalAlignment="Stretch"/>
                             </Border>
                             <Label Content="Loan amount:" Style="{DynamicResource statistic_lableStyle}"/>
                             <Border Style="{StaticResource BorderStackPanelStyle}">
@@ -513,7 +528,9 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
                         Visibility="Collapsed"
                         Padding="0,5,50,5"
                         ClipToBounds="True">
-                    <WrapPanel Orientation="Horizontal">
+                    <!-- One line that never wraps: the code (FitSelectedStats) scales it down to the room there is,
+                 the same idea as the totals bar above it. -->
+                    <StackPanel x:Name="SelectedStatsLine" Orientation="Horizontal" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Selected:" Style="{DynamicResource statistic_lableStyle}" Width="73" />
                             <Border Style="{StaticResource BorderStackPanelStyle}">
@@ -556,7 +573,7 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
                                 <TextBlock x:Name="SelectedReturnedAmountUsdTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
                             </Border>
                         </StackPanel>
-                    </WrapPanel>
+                    </StackPanel>
                 </Border>
             </Grid>
         </Grid>

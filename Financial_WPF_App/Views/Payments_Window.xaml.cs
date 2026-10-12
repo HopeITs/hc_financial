@@ -24,10 +24,13 @@ namespace Financial_WPF_App.Views
             InitializeComponent();
             NameLocalCurrencyColumns();
             PayStatsHost.LayoutUpdated += (sender, args) => FitPayStats();
+            SelectedStatisticsPanel.LayoutUpdated += SelectedStatisticsPanel_LayoutUpdated;
             //Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
             this.main_Window = main_Window;
             if (SubProject_ID != "")
                 this.SubProject_ID = Int32.Parse(SubProject_ID);
+
+            ShowOnlyCurrenciesInUse(SubProject_ID);
 
             if (OnLoad())
             {
@@ -809,7 +812,45 @@ namespace Financial_WPF_App.Views
         }
 
 
+
+        private double _selectedScale = 1.0;
+
+        /// <summary>
+        /// Keeps the "selected rows" bar on ONE line however narrow the window is, scaling it
+        /// down to the room there is (never above its normal size) - the same idea as the totals
+        /// bar above the grid. The width is the sum of the visible children (measured without a
+        /// limit; the line's own reported size is clipped to what it was offered).
+        /// Scaled against the same reference width as the totals bar, so the two shrink together.
+        /// </summary>
+        private void FitSelectedStats()
+        {
+            double natural = 0;
+            foreach (UIElement child in SelectedStatsLine.Children)
+                natural += child.DesiredSize.Width;
+
+            // the bar's right padding is 50
+            double room = SelectedStatisticsPanel.ActualWidth - 50;
+            if (natural <= 0 || room <= 0)
+                return;
+
+            double basis = Math.Max(natural, PayStatsReferenceWidth);
+            double scale = Math.Min(1.0, room / basis);
+            if (Math.Abs(scale - _selectedScale) < 0.002)
+                return;
+
+            _selectedScale = scale;
+            SelectedStatsLine.LayoutTransform = new ScaleTransform(scale, scale);
+        }
+
+        private void SelectedStatisticsPanel_LayoutUpdated(object sender, EventArgs e)
+        {
+            FitSelectedStats();
+        }
+
         private double _payStatsScale = 1.0;
+
+        // The widest line of the payments screen with 11-digit loan figures, in pixels.
+        private const double PayStatsReferenceWidth = 1380;
 
         /// <summary>
         /// Keeps each currency line of the totals on ONE line however narrow the window is.
@@ -826,6 +867,9 @@ namespace Financial_WPF_App.Views
             double natural = 0;
             foreach (StackPanel line in lines)
             {
+                if (((FrameworkElement)line.Parent).Visibility != Visibility.Visible)
+                    continue;
+
                 double width = 0;
                 foreach (UIElement child in line.Children)
                     width += child.DesiredSize.Width;
@@ -837,7 +881,13 @@ namespace Financial_WPF_App.Views
             if (natural <= 0 || room <= 0)
                 return;
 
-            double scale = Math.Min(1.0, room / natural);
+
+            // Scaled against a reference width shared with the other pay statistics screen, not only
+            // against this screen's own natural width: the payments screen (big loan figures) and
+            // the pay till (fewer, shorter ones) must shrink identically as the window narrows,
+            // or the same window width would leave them at different sizes. A line that is wider
+            // than the reference still scales by its own width so it never clips.
+            double scale = Math.Min(1.0, room / Math.Max(natural, PayStatsReferenceWidth));
             if (Math.Abs(scale - _payStatsScale) < 0.002)
                 return;
 
@@ -861,6 +911,38 @@ namespace Financial_WPF_App.Views
         /// Titles the per-currency columns and totals with the currencies' real names, so
         /// they follow a rename (SYR to SYP) instead of being typed into the layout.
         /// </summary>
+
+        private static void SetPanelVisible(FrameworkElement inside, bool visible)
+        {
+            // The label / value sit in a Border inside the StackPanel (or a band) being shown or hidden.
+            FrameworkElement panel = inside.Parent as FrameworkElement;
+            if (panel is Border) panel = panel.Parent as FrameworkElement;
+            if (panel != null) panel.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Shows the old / current currency's columns, totals line and selected-rows boxes only
+        /// where the project holds anything in that currency. Asked once, of the whole project
+        /// (not of what is loaded), so filtering never makes columns appear and disappear.
+        /// Hidden, not removed: a column can still be shown from the grid's menu.
+        /// </summary>
+        private void ShowOnlyCurrenciesInUse(string subProjectIds)
+        {
+            Helper.CurrencyService.LocalDataScope scope = Helper.CurrencyService.GetLocalDataScope("", subProjectIds ?? "");
+
+            PaymentSyr_Column.IsHidden = ReturnedSyr_Column.IsHidden = !scope.ShowLegacy;
+            PaymentCurrent_Column.IsHidden = ReturnedCurrent_Column.IsHidden = !scope.ShowCurrent;
+
+            // each currency's totals line is a band of its own
+            ((FrameworkElement)PayStatsRow1.Parent).Visibility = scope.ShowLegacy ? Visibility.Visible : Visibility.Collapsed;
+            ((FrameworkElement)PayStatsRow2.Parent).Visibility = scope.ShowCurrent ? Visibility.Visible : Visibility.Collapsed;
+
+            SetPanelVisible(SelectedPaymentSyr_Label, scope.ShowLegacy);
+            SetPanelVisible(SelectedReturnedSyr_Label, scope.ShowLegacy);
+            SetPanelVisible(SelectedPaymentCurrent_Label, scope.ShowCurrent);
+            SetPanelVisible(SelectedReturnedCurrent_Label, scope.ShowCurrent);
+        }
+
         private void NameLocalCurrencyColumns()
         {
             string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
