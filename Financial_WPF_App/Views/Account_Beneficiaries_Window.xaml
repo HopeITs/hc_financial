@@ -380,7 +380,7 @@
 
                             <Label Grid.Row="0" Grid.ColumnSpan="3" Style="{DynamicResource NoteStyle}" FontSize="14" FontFamily="Rubik" FontWeight="Medium" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"
                              HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
-                             Content="SYR" Foreground="{StaticResource HopeRed}"
+                             x:Name="LocalTotals_Title_lbl" Content="SYR" Foreground="{StaticResource HopeRed}"
                              Margin="1,0,1,0" VerticalAlignment="Stretch" />
                            
 

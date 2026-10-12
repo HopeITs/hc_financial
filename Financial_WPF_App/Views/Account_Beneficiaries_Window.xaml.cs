@@ -1,4 +1,4 @@
-using Financial_WPF_App.Helper;
+﻿using Financial_WPF_App.Helper;
 using Financial_WPF_App.Models;
 using Financial_WPF_App.Properties;
 using Syncfusion.Data.Extensions;
@@ -20,6 +20,8 @@ namespace Financial_WPF_App.Views
         public Account_Beneficiaries_Window(int Account_ID, int SubProject_ID, Main_Window_2 main_Window)
         {
             InitializeComponent();
+            // the panel holds the old currency's totals; name it from the currency table
+            LocalTotals_Title_lbl.Content = Helper.CurrencyService.GetLegacyLocalCurrencyName();
 
             Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 
