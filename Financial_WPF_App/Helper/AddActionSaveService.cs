@@ -362,7 +362,7 @@ namespace Financial_WPF_App.Helper
                     return result;
                 }
 
-                savedActionId = context.ActionModel.Insert(context.TillId, "syr", usdTillId, "usd", donorId, -1, true, false, false, "E",
+                savedActionId = context.ActionModel.Insert(context.TillId, context.TillType, usdTillId, "usd", donorId, -1, true, false, false, "E",
                     amount, rate, actionDate, notes, eNotes, isReceipt, receiptNum, employeeSalaryId, originalRateId,
                     microProjectId, budgetLineId, -1, cashAccountId, observeCashAccountId, exchangeCashId, -1,
                     context.SourceFormName, currencyTilltypeId);

@@ -1457,6 +1457,8 @@ namespace Financial_WPF_App.Helper
             Login.MultiAction_sc.Parameters.AddWithValue("@Till_ID" + k, _Till_ID);
             Login.MultiAction_sc.Parameters.AddWithValue("@Till_Type" + k, _Till_Type);
             Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTill_Type" + k, _ObserveTill_Type);
+            Login.MultiAction_sc.Parameters.AddWithValue("@TillIsLocal" + k, Helper.CurrencyService.IsLocalCurrency(_Till_Type, false) ? 1 : 0);
+            Login.MultiAction_sc.Parameters.AddWithValue("@ObserveTillIsLocal" + k, Helper.CurrencyService.IsLocalCurrency(_ObserveTill_Type, false) ? 1 : 0);
             Login.MultiAction_sc.Parameters.AddWithValue("@FromExchangeTill_ID" + k, _FromExchangeTill_ID);
             Login.MultiAction_sc.Parameters.AddWithValue("@ToExchangeTill_ID" + k, _ToExchangeTill_ID);
 
@@ -1660,13 +1662,13 @@ namespace Financial_WPF_App.Helper
 
                     temp_query += @" INSERT INTO `action_not_approved`(`Till_ID`,`ObserveTill_ID`, `ObserveAcion_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
                             , `Note`,`E_Note`, `IsReceipt`, `ReceiptNote`, `Employee_Salary_ID`, `CashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES(@From_id" + k + ", @Till_ID" + k + ", @Action_ID" + k + ", (select id from actiontype where shortname = 'I'), @Amount" + k + " ,@rate" + k + ", @ActionDate" + k + ", @Note" + k + ",@E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ", @Employee_Salary_ID" + k + ", (case when LOWER(@Till_Type" + k + ") = 'syr' then @Exchange_Cash_ID" + k + " else null end), @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '0'); ";
+                            VALUES(@From_id" + k + ", @Till_ID" + k + ", @Action_ID" + k + ", (select id from actiontype where shortname = 'I'), @Amount" + k + " ,@rate" + k + ", @ActionDate" + k + ", @Note" + k + ",@E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ", @Employee_Salary_ID" + k + ", (case when @TillIsLocal" + k + " = 1 then @Exchange_Cash_ID" + k + " else null end), @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '0'); ";
 
                     temp_query += " SET @FromExTill_Acc_ID" + k + " = Last_Insert_ID();";
 
                     temp_query += @" INSERT INTO `action_not_approved`(`Till_ID`,`ObserveTill_ID`, `ObserveAcion_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
                             , `Note`,`E_Note`, `IsReceipt`, `ReceiptNote`,`Employee_Salary_ID`, `CashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES(@To_id" + k + ", @Till_ID" + k + ", @Action_ID" + k + ", (select id from actiontype where shortname = 'E'), @ConvertedAmount" + k + " ,@rate" + k + ", @ActionDate" + k + ", @Note" + k + ", @E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ", @Employee_Salary_ID" + k + ", (case when LOWER(@ObserveTill_Type" + k + ") = 'syr' then @Exchange_Cash_ID" + k + " else null end), @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '0'); ";
+                            VALUES(@To_id" + k + ", @Till_ID" + k + ", @Action_ID" + k + ", (select id from actiontype where shortname = 'E'), @ConvertedAmount" + k + " ,@rate" + k + ", @ActionDate" + k + ", @Note" + k + ", @E_Note" + k + ", @IsReceipt" + k + ", @ReceiptNote" + k + ", @Employee_Salary_ID" + k + ", (case when @ObserveTillIsLocal" + k + " = 1 then @Exchange_Cash_ID" + k + " else null end), @Donor_ID" + k + ", @Todaydate" + k + ", @Uesr_ID" + k + ", '0'); ";
 
                     temp_query += " SET @ToExTill_Acc_ID" + k + " = Last_Insert_ID();";
                     temp_query += "SET @Action_ID = @Action_ID" + k + " +4;";

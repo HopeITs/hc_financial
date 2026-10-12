@@ -1218,6 +1218,8 @@ END AS `USD_Value`,
 
                 sc.Parameters.AddWithValue("@Till_ID", Till_ID);
                 sc.Parameters.AddWithValue("@Till_Type", Till_Type);
+                // "is this till local?" decided here, not by comparing its name with 'syr' in SQL
+                sc.Parameters.AddWithValue("@TillIsLocal", Helper.CurrencyService.IsLocalCurrency(Till_Type, false) ? 1 : 0);
                 if (ObserveTill_ID == -1)
                 {
                     sc.Parameters.AddWithValue("@ObserveTill_ID", DBNull.Value);
@@ -1227,6 +1229,7 @@ END AS `USD_Value`,
                     sc.Parameters.AddWithValue("@ObserveTill_ID", ObserveTill_ID);
                 }
                 sc.Parameters.AddWithValue("@ObserveTill_Type", ObserveTill_Type);
+                sc.Parameters.AddWithValue("@ObserveTillIsLocal", Helper.CurrencyService.IsLocalCurrency(ObserveTill_Type, false) ? 1 : 0);
 
                 if (Donor_ID == -1)
                 {
@@ -1381,7 +1384,7 @@ END AS `USD_Value`,
                             VALUES (@Action_ID, @Till_ID ,@ObserveTill_ID, (select id from actiontype where shortname = @AType), @Currency_tilltype_id, @Amount, @rate, @ActionDate, @Note,@E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, @Rate_ID, 
                             @MicroProject_ID, @BudgetLine_ID, @IncomeType_ID, @CashAccount_ID, @ObserveCashAccount_ID, @Exchange_Cash_ID, @Donor_ID, @Todaydate, @Uesr_ID, '1');";
 
-                bool isUsdExpenseFromSyr = AType == "E" && Till_Type.ToLower() == "syr" && Currency_tilltype_id == 2 && !WithExAcc;
+                bool isUsdExpenseFromSyr = AType == "E" && Helper.CurrencyService.IsLocalCurrency(Till_Type, false) && Currency_tilltype_id == Helper.CurrencyService.GetCurrencyId("USD") && !WithExAcc;
 
                 if (WithObserveAcion_ID && !isUsdExpenseFromSyr)
                 {
@@ -1402,13 +1405,13 @@ END AS `USD_Value`,
 
                         query += @" INSERT INTO `action_not_approved`(`Till_ID`,`ObserveTill_ID`, `ObserveAcion_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
                             , `Note`,`E_Note`, `IsReceipt`,`Employee_Salary_ID`, `ReceiptNote`, `CashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES(@From_id, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'I'), @Amount ,@rate, @ActionDate, @Note,@E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, (case when LOWER(@Till_Type) = 'syr' then @Exchange_Cash_ID else null end), @Donor_ID, @Todaydate, @Uesr_ID, '0'); ";
+                            VALUES(@From_id, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'I'), @Amount ,@rate, @ActionDate, @Note,@E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, (case when @TillIsLocal = 1 then @Exchange_Cash_ID else null end), @Donor_ID, @Todaydate, @Uesr_ID, '0'); ";
 
                         query += " SET @FromExTill_Acc_ID = Last_Insert_ID();";
 
                         query += @" INSERT INTO `action_not_approved`(`Till_ID`,`ObserveTill_ID`, `ObserveAcion_ID`, `AType_ID`, `Amount`, `rate`, `ActionDate`
                             , `Note`,`E_Note`, `IsReceipt`,`Employee_Salary_ID`, `ReceiptNote`, `CashAccount_ID`, `Donor_ID`, `created_at`, `User_ID`, `SourceAction`)  
-                            VALUES(@To_id, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'E'), @ConvertedAmount ,@rate, @ActionDate, @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, (case when LOWER(@ObserveTill_Type) = 'syr' then @Exchange_Cash_ID else null end), @Donor_ID, @Todaydate, @Uesr_ID, '0'); ";
+                            VALUES(@To_id, @Till_ID, @Action_ID, (select id from actiontype where shortname = 'E'), @ConvertedAmount ,@rate, @ActionDate, @Note, @E_Note, @IsReceipt, @Employee_Salary_ID, @ReceiptNote, (case when @ObserveTillIsLocal = 1 then @Exchange_Cash_ID else null end), @Donor_ID, @Todaydate, @Uesr_ID, '0'); ";
 
                         query += " SET @ToExTill_Acc_ID = Last_Insert_ID();";
                     }
@@ -1616,6 +1619,8 @@ END AS `USD_Value`,
                     sc.Parameters.AddWithValue("@ConvertedAmount", Amount * rate);
 
                 sc.Parameters.AddWithValue("@Till_Type", Till_Type);
+                // "is this till local?" decided here, not by comparing its name with 'syr' in SQL
+                sc.Parameters.AddWithValue("@TillIsLocal", Helper.CurrencyService.IsLocalCurrency(Till_Type, false) ? 1 : 0);
 
                 if (ObserveTill_ID == -1)
                 {
@@ -1627,6 +1632,7 @@ END AS `USD_Value`,
                 }
 
                 sc.Parameters.AddWithValue("@ObserveTill_Type", ObserveTill_Type);
+                sc.Parameters.AddWithValue("@ObserveTillIsLocal", Helper.CurrencyService.IsLocalCurrency(ObserveTill_Type, false) ? 1 : 0);
 
                 if (Donor_ID == -1)
                 {
@@ -1759,7 +1765,7 @@ END AS `USD_Value`,
                     " ,`Donor_ID`= @Donor_ID" +
                     " ,`updated_at` = @Todaydate, `edited_by` = @Uesr_ID  WHERE ID = @Action_ID;";
 
-                bool isUsdExpenseFromSyr = AType == "E" && Till_Type.ToLower() == "syr" && Currency_tilltype_id == 2 && !WithExAcc;
+                bool isUsdExpenseFromSyr = AType == "E" && Helper.CurrencyService.IsLocalCurrency(Till_Type, false) && Currency_tilltype_id == Helper.CurrencyService.GetCurrencyId("USD") && !WithExAcc;
 
                 if (WithObserveAcion_ID && !isUsdExpenseFromSyr)
                 {
@@ -1781,11 +1787,11 @@ END AS `USD_Value`,
                     if (WithExAcc)
                     {
                         query += @" UPDATE action SET 
-                                Amount= @Amount,rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, Donor_ID = @Donor_ID, `CashAccount_ID`= (case when LOWER(@Till_Type) = 'syr' then @Exchange_Cash_ID else null end),
+                                Amount= @Amount,rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, Donor_ID = @Donor_ID, `CashAccount_ID`= (case when @TillIsLocal = 1 then @Exchange_Cash_ID else null end),
                                 updated_at= @Todaydate, `edited_by` = @Uesr_ID  WHERE action.ID = @FromExTill_Acc_ID;";
 
                         query += @" UPDATE action SET 
-                                Amount= @ConvertedAmount,rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, Donor_ID = @Donor_ID, `CashAccount_ID`= (case when LOWER(@ObserveTill_Type) = 'syr' then @Exchange_Cash_ID else null end),
+                                Amount= @ConvertedAmount,rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, Donor_ID = @Donor_ID, `CashAccount_ID`= (case when @ObserveTillIsLocal = 1 then @Exchange_Cash_ID else null end),
                                 updated_at= @Todaydate, `edited_by` = @Uesr_ID  WHERE action.ID = @ToExTill_Acc_ID;";
                     }
                 }
@@ -1900,6 +1906,8 @@ END AS `USD_Value`,
                     sc.Parameters.AddWithValue("@ConvertedAmount", Amount * rate);
 
                 sc.Parameters.AddWithValue("@Till_Type", Till_Type);
+                // "is this till local?" decided here, not by comparing its name with 'syr' in SQL
+                sc.Parameters.AddWithValue("@TillIsLocal", Helper.CurrencyService.IsLocalCurrency(Till_Type, false) ? 1 : 0);
 
                 if (ObserveTill_ID == -1)
                 {
@@ -1911,6 +1919,7 @@ END AS `USD_Value`,
                 }
 
                 sc.Parameters.AddWithValue("@ObserveTill_Type", ObserveTill_Type);
+                sc.Parameters.AddWithValue("@ObserveTillIsLocal", Helper.CurrencyService.IsLocalCurrency(ObserveTill_Type, false) ? 1 : 0);
 
                 if (Donor_ID == -1)
                 {
@@ -2043,7 +2052,7 @@ END AS `USD_Value`,
                     " ,`Donor_ID`= @Donor_ID" +
                     " ,`updated_at` = @Todaydate, `edited_by` = @Uesr_ID  WHERE ID = @Action_ID;";
 
-                bool isUsdExpenseFromSyr = AType == "E" && Till_Type.ToLower() == "syr" && Currency_tilltype_id == 2 && !WithExAcc;
+                bool isUsdExpenseFromSyr = AType == "E" && Helper.CurrencyService.IsLocalCurrency(Till_Type, false) && Currency_tilltype_id == Helper.CurrencyService.GetCurrencyId("USD") && !WithExAcc;
 
                 if (WithObserveAcion_ID && !isUsdExpenseFromSyr)
                 {
@@ -2065,11 +2074,11 @@ END AS `USD_Value`,
                     if (WithExAcc)
                     {
                         query += @" UPDATE action_not_approved SET 
-                                Amount= @Amount,rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, Donor_ID = @Donor_ID, `CashAccount_ID`= (case when LOWER(@Till_Type) = 'syr' then @Exchange_Cash_ID else null end),
+                                Amount= @Amount,rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, Donor_ID = @Donor_ID, `CashAccount_ID`= (case when @TillIsLocal = 1 then @Exchange_Cash_ID else null end),
                                 updated_at= @Todaydate, `edited_by` = @Uesr_ID  WHERE action_not_approved.ID = @FromExTill_Acc_ID;";
 
                         query += @" UPDATE action_not_approved SET 
-                                Amount= @ConvertedAmount,rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, Donor_ID = @Donor_ID, `CashAccount_ID`= (case when LOWER(@ObserveTill_Type) = 'syr' then @Exchange_Cash_ID else null end),
+                                Amount= @ConvertedAmount,rate = @rate, ActionDate= @ActionDate, Note= @Note, E_Note= @E_Note, Donor_ID = @Donor_ID, `CashAccount_ID`= (case when @ObserveTillIsLocal = 1 then @Exchange_Cash_ID else null end),
                                 updated_at= @Todaydate, `edited_by` = @Uesr_ID  WHERE action_not_approved.ID = @ToExTill_Acc_ID;";
                     }
                 }
