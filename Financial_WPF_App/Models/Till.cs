@@ -277,10 +277,16 @@ namespace Financial_WPF_App.Models
         /// </summary>
         public DataTable Select_Account_Missing_TillTypes(int Account_ID)
         {
+            // Two rules, once the database knows the currencies apart:
+            //  - a closed account cannot gain a till in the current local currency;
+            //  - no account can gain a till in the OLD local currency. Every account that holds
+            //    old lira already has its till; a new one in the retired currency would let new
+            //    entries be recorded in it.
             string closedAccountRule =
                 Helper.CurrencyService.SchemaSupportsMultipleLocalCurrencies
                     ? @" AND (account.IsClosed = 0
-                             OR NOT (tilltypes.is_local_currency = 1 AND tilltypes.base_divisor = 1))"
+                             OR NOT (tilltypes.is_local_currency = 1 AND tilltypes.base_divisor = 1))
+                         AND NOT (tilltypes.is_local_currency = 1 AND tilltypes.base_divisor <> 1)"
                     : string.Empty;
 
             string query = @"SELECT tilltypes.ID, tilltypes.Name FROM tilltypes LEFT JOIN

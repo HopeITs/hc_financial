@@ -2076,14 +2076,20 @@ namespace Financial_WPF_App
                     {
                         List<string> Auto_Tills = new List<string>();
 
+                        // A new account opens with the CURRENT local currency's till. It used to be
+                        // "syr" by name, which kept creating accounts in the retired currency. Falls
+                        // back to "syr" only while the database has no new currency yet.
+                        string localTill = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+                        if (string.IsNullOrWhiteSpace(localTill)) localTill = "syr";
+
                         if (AccType == "Project" || AccType == "Exchange")
                         {
-                            Auto_Tills.Add("syr");
+                            Auto_Tills.Add(localTill);
                             Auto_Tills.Add("usd");
                         }
                         else if (AccType == "Personal")
                         {
-                            Auto_Tills.Add("syr");
+                            Auto_Tills.Add(localTill);
                         }
 
                         Acc_ID = a.Insert(Name, ProjectNumber, beginDate, endDate, totalAmount, amountType_ID, City_ID, IsClosed, SubProject_ID, Add_donors, Auto_Tills, "Account_Window", AccType);
