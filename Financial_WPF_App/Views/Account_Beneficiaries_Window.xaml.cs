@@ -196,6 +196,7 @@ namespace Financial_WPF_App.Views
                 if (Account_ID != -1)
                 {
                     Fill_AccountView();
+                    ShowCurrencySections(Account_ID.ToString(), "", account_dt);
                     OnMainWindowStateChanged(_currentWindowState);
                     Search_StackPanel.Margin = new Thickness(0, 0, 35, 0);
                     myDataGrid.Margin = new Thickness(5, 5, 35, 5);
@@ -205,6 +206,7 @@ namespace Financial_WPF_App.Views
             else
             {
                 Fill_SubProjectView();
+                ShowCurrencySections("", SubProject_ID.ToString(), subproject_dt);
             }
 
                 myExpander.Visibility = Visibility.Visible;
@@ -413,6 +415,55 @@ namespace Financial_WPF_App.Views
                 if (subproject_dt.Rows[0]["Average micro project cost usd"] != DBNull.Value)
                     usd_avg_amounts_lbl.Content = ToReportDouble(subproject_dt.Rows[0]["Average micro project cost usd"]).ToString("N", new CultureInfo("en-US"));
             }
+        }
+
+        /// <summary>
+        /// Fills the current local currency's totals from the "... new" columns the summary
+        /// procedure returns once P2 is run, and shows each local currency's section only where
+        /// the account / project holds anything in it - an account opened after the old
+        /// currency was retired shows one section, not two with one always empty. Asked of the
+        /// whole scope, so the sections do not change with what is selected or filtered.
+        /// </summary>
+        private void ShowCurrencySections(string accountIds, string subprojectIds, DataTable totals)
+        {
+            Helper.CurrencyService.LocalDataScope scope = Helper.CurrencyService.GetLocalDataScope(accountIds, subprojectIds);
+            bool hasNewColumns = totals != null && totals.Columns.Contains("Total loans amount new");
+
+            string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
+            CurrentTotals_Title_lbl.Content = string.IsNullOrWhiteSpace(newName) ? "New" : newName;
+
+            if (hasNewColumns && totals.Rows.Count > 0)
+            {
+                System.Data.DataRow r = totals.Rows[0];
+                SetTotal(cur_sum_BAmounts_lbl, r, "Total loans amount new");
+                SetTotal(cur_sum_imports_lbl, r, "Total income new");
+                SetTotal(cur_sum_ReturnedAmounts_lbl, r, "Total returned amount new");
+                SetTotal(cur_sum_IAmounts_lbl, r, "Total action income new");
+                SetTotal(cur_sum_RAmounts_lbl, r, "Total invoices amount new");
+                SetTotal(cur_sum_NetAmounts_lbl, r, "Net account new");
+                SetTotal(cur_avg_amounts_lbl, r, "Average micro project cost new");
+            }
+
+            bool showLegacy = scope.ShowLegacy;
+            bool showCurrent = hasNewColumns && scope.ShowCurrent;
+            // before P2 the new currency cannot be shown, so the old section stays as it was
+            if (!hasNewColumns) showLegacy = true;
+
+            foreach (UIElement child in Totals_Grid.Children)
+            {
+                FrameworkElement e = child as FrameworkElement;
+                if (e == null) continue;
+                string tag = e.Tag as string;
+                if (tag == "LegacySection") e.Visibility = showLegacy ? Visibility.Visible : Visibility.Collapsed;
+                else if (tag == "CurrentSection") e.Visibility = showCurrent ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private static void SetTotal(Label target, System.Data.DataRow row, string column)
+        {
+            target.Content = row[column] == DBNull.Value
+                ? "0.00"
+                : ToReportDouble(row[column]).ToString("N", new CultureInfo("en-US"));
         }
 
         private static double ToReportDouble(object value)
