@@ -25,6 +25,7 @@ namespace Financial_WPF_App.Views
             this.main_Window = main_Window;
             this.approval_Window = approval_Window;
             this.SubProject_ID = SubProject_ID;
+            ShowOnlyCurrenciesInUse(SubProject_ID);
 
             //this.myDataGrid.CurrentCellValueChanged += datagrid_CurrentCellValueChanged;
             Onload();
@@ -761,6 +762,18 @@ namespace Financial_WPF_App.Views
         /// Titles the per-currency columns with the currencies' real names, so they follow a
         /// rename (SYR to SYP) instead of being typed into the layout.
         /// </summary>
+        /// <summary>
+        /// Shows the old / current currency's columns only where the project holds anything in
+        /// that currency (asked once, of the whole project, so filtering does not move columns).
+        /// Hidden, not removed: the user can still show a column from the grid's menu.
+        /// </summary>
+        private void ShowOnlyCurrenciesInUse(string subProjectIds)
+        {
+            Helper.CurrencyService.LocalDataScope scope = Helper.CurrencyService.GetLocalDataScope("", subProjectIds);
+            PaymentSyr_Column.IsHidden = ReturnedSyr_Column.IsHidden = !scope.ShowLegacy;
+            PaymentCurrent_Column.IsHidden = ReturnedCurrent_Column.IsHidden = !scope.ShowCurrent;
+        }
+
         private void NameLocalCurrencyColumns()
         {
             string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();

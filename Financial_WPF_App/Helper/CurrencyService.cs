@@ -518,6 +518,87 @@ namespace Financial_WPF_App.Helper
             }
         }
 
+        /// <summary>Which local currencies actually hold data in some part of the books.</summary>
+        public struct LocalDataScope
+        {
+            public bool HasLegacy;
+            public bool HasCurrent;
+
+            /// <summary>Show the old currency's columns: only where it has data.</summary>
+            public bool ShowLegacy { get { return HasLegacy; } }
+
+            /// <summary>
+            /// Show the current currency's columns: where it has data, and also where
+            /// nothing has any yet (a new, empty scope should offer the currency being used).
+            /// </summary>
+            public bool ShowCurrent { get { return HasCurrent || !HasLegacy; } }
+
+            /// <summary>An all-local total only means something when both currencies are present.</summary>
+            public bool ShowsBoth { get { return ShowLegacy && ShowCurrent; } }
+        }
+
+        private static bool IsIdList(string ids)
+        {
+            return !string.IsNullOrWhiteSpace(ids)
+                && System.Text.RegularExpressions.Regex.IsMatch(ids.Trim(), @"^\d+(\s*,\s*\d+)*$");
+        }
+
+        /// <summary>
+        /// Does this part of the books - the given accounts and/or sub-projects, or all of it
+        /// when both are empty - hold anything in the old local currency, and in the current
+        /// one? Looks at actions (approved and not), and at the beneficiaries' loan currency.
+        /// A screen asks once when it opens and shows only the columns that can have figures,
+        /// so a project opened after the old currency was retired shows one column, not two
+        /// with one of them always empty. Asked of the whole scope rather than of what is
+        /// loaded, so the columns do not appear and disappear as the user filters.
+        /// Where the database cannot tell (old schema, an unusable id list) both are shown.
+        /// </summary>
+        public static LocalDataScope GetLocalDataScope(string accountIds, string subprojectIds)
+        {
+            EnsureLoaded();
+
+            LocalDataScope both = new LocalDataScope { HasLegacy = true, HasCurrent = true };
+            if (!_schemaSupportsMultipleLocalCurrencies)
+                return new LocalDataScope { HasLegacy = true, HasCurrent = false };
+
+            bool hasAccounts = !string.IsNullOrWhiteSpace(accountIds);
+            bool hasSubs = !string.IsNullOrWhiteSpace(subprojectIds);
+            if ((hasAccounts && !IsIdList(accountIds)) || (hasSubs && !IsIdList(subprojectIds)))
+                return both;
+
+            string actionScope = " WHERE 1 = 1";
+            string benefScope = " WHERE 1 = 1";
+            if (hasAccounts)
+            {
+                actionScope += " AND t.Account_ID IN (" + accountIds.Trim() + ")";
+                benefScope += " AND b.Account_ID IN (" + accountIds.Trim() + ")";
+            }
+            if (hasSubs)
+            {
+                actionScope += " AND ac.SubProject_ID IN (" + subprojectIds.Trim() + ")";
+                benefScope += " AND ac.SubProject_ID IN (" + subprojectIds.Trim() + ")";
+            }
+
+            Func<string, string> exists = predicate =>
+                "(EXISTS (SELECT 1 FROM `action` a JOIN till t ON t.ID = a.Till_ID JOIN account ac ON ac.ID = t.Account_ID"
+                + " LEFT JOIN tilltypes ct ON ct.ID = a.currency_tilltype_id" + actionScope + " AND " + predicate + ")"
+                + " OR EXISTS (SELECT 1 FROM action_not_approved a JOIN till t ON t.ID = a.Till_ID JOIN account ac ON ac.ID = t.Account_ID"
+                + " LEFT JOIN tilltypes ct ON ct.ID = a.currency_tilltype_id" + actionScope + " AND " + predicate + ")"
+                + " OR EXISTS (SELECT 1 FROM beneficiary b JOIN account ac ON ac.ID = b.Account_ID"
+                + " LEFT JOIN tilltypes ct ON ct.ID = b.currency_tilltype_id" + benefScope + " AND " + predicate + "))";
+
+            DataTable dt = RunQuery("SELECT " + exists(LegacyAmountSql("ct")) + " AS has_legacy, "
+                                    + exists(CurrentLocalAmountSql("ct")) + " AS has_current;");
+            if (dt.Rows.Count == 0)
+                return both;
+
+            return new LocalDataScope
+            {
+                HasLegacy = Convert.ToInt32(dt.Rows[0]["has_legacy"]) != 0,
+                HasCurrent = Convert.ToInt32(dt.Rows[0]["has_current"]) != 0
+            };
+        }
+
         /// <summary>
         /// Are the two currency properties present? Checked once per cache load rather
         /// than assumed, so the same build runs against a database before or after the
