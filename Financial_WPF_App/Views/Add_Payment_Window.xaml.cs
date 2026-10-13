@@ -178,14 +178,46 @@ namespace Financial_WPF_App.Views
 
         }
 
+        private DataTable cashAccounts_all;
+
         private void Fill_ComboBoxses()
         {
-            DataTable cashAccounts_dt = Acc.Select_Cash_Account("", SubProject_ID.ToString());
+            cashAccounts_all = Acc.Select_Cash_Account("", SubProject_ID.ToString());
 
-            if (cashAccounts_dt != null && cashAccounts_dt.Rows.Count > 0)
+            if (cashAccounts_all != null && cashAccounts_all.Rows.Count > 0)
             {
-                CashAccount_comboBox.ItemsSource = cashAccounts_dt.DefaultView;
+                CashAccount_comboBox.ItemsSource = cashAccounts_all.DefaultView;
             }
+        }
+
+        /// <summary>
+        /// Offers only the cash tills that hold the beneficiary's currency. A cash till is a safe
+        /// counted in one currency's banknotes; a new-lira instalment booked to an old-lira cash
+        /// till shows in no cash-till reconciliation, so the list no longer offers that pairing.
+        /// A local currency gets only its own cash tills, even when there are none yet - the
+        /// payment then cannot be saved until one is created, which is the point. A dollar
+        /// instalment keeps the full list while the project has no dollar cash till, as before.
+        /// </summary>
+        private void ShowCashTillsFor(string currencyName)
+        {
+            if (cashAccounts_all == null)
+                return;
+
+            int currencyId = Helper.CurrencyService.GetCurrencyId(currencyName);
+            DataTable shown = cashAccounts_all;
+            if (currencyId > 0)
+            {
+                System.Data.DataRow[] rows = cashAccounts_all.AsEnumerable()
+                    .Where(r => r["currency_tilltype_id"] != DBNull.Value && Convert.ToInt32(r["currency_tilltype_id"]) == currencyId)
+                    .ToArray();
+                if (rows.Length > 0)
+                    shown = rows.CopyToDataTable();
+                else if (Helper.CurrencyService.IsLocalCurrency(currencyId, false))
+                    shown = cashAccounts_all.Clone();
+            }
+
+            CashAccount_comboBox.SelectedIndex = -1;
+            CashAccount_comboBox.ItemsSource = shown.DefaultView;
         }
 
         private void Fill_Action()
@@ -539,6 +571,7 @@ namespace Financial_WPF_App.Views
                 Approved_Action = false;
                 MircoProject_ID_autoSuggestionUserControl.autoTextBox.Text = BeneficiaryName_autoSuggestionUserControl.autoTextBox.Text = "";
                 payDataGrid.ItemsSource = null;
+                ShowCashTillsFor("");
             }
 
             Amount_txtBox.Clear();
@@ -568,6 +601,7 @@ namespace Financial_WPF_App.Views
             System.Data.DataRow[] rows = b_dt.Select("MicroProject_ID=" + MicroProject_ID);
             Beneficiary_ID = rows[0].Field<Int32>("ID");
             Currency_txtBox.Text = rows[0]["Currency_Name"].ToString();
+            ShowCashTillsFor(Currency_txtBox.Text);
 
             BeneficiaryName_autoSuggestionUserControl.autoTextBox.Text = rows[0].Field<string>("Name");
             BeneficiaryName_autoSuggestionUserControl.CloseAutoSuggestionBox();
