@@ -16,7 +16,15 @@ namespace Financial_WPF_App.Helper
 {
     public class CustomCopyPaste : GridCutCopyPaste
     {
-        private const int UsdCurrencyTilltypeId = 2;
+        /// <summary>
+        /// USD's id, read from the currency table. Was the literal 2, which is USD's id only in
+        /// the databases this was written against - the same check in Models/Action.cs already
+        /// asks CurrencyService.
+        /// </summary>
+        private static int UsdCurrencyTilltypeId
+        {
+            get { return CurrencyService.GetCurrencyId("USD"); }
+        }
 
         public event EventHandler PasteCompleted;
 
@@ -1479,7 +1487,7 @@ namespace Financial_WPF_App.Helper
             // فحص دقيق لمنع التداخل العشوائي بين عمليات الـ Exchange العادية والـ Expense المخصصة للـ SYR
             bool isUsdExpenseFromSyr = _inserted_value == "E" &&
                                        IsLocalTill(_Till_Type) &&
-                                       _currency_tilltype_id == 2 &&
+                                       _currency_tilltype_id == UsdCurrencyTilltypeId &&
                                        !_WithExAcc;
 
             if (_ObserveTill_ID == -1)
