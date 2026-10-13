@@ -174,6 +174,13 @@ namespace Financial_WPF_App
                                 string Query = "INSERT INTO log (form_name, title, affected_table, affected_id, details, additionaldetails, query, date, user) VALUES ('Login_Window2', 'LOGIN', '', '', '', '', '', DATE(NOW()), '" + Properties.Settings.Default.username + "');";
                                 Login.Execute_Query(Query);
 
+                                // The currency table is cached for the whole process, and a user can
+                                // log out and back in to the other database (online / offline). Read
+                                // it afresh from the database just logged into, now, rather than on
+                                // the first currency question somewhere inside a screen.
+                                Helper.CurrencyService.Refresh();
+                                await Task.Run(() => Helper.CurrencyService.All());
+
                                 Sb1Completed = true;
 
                                 this.DialogResult = true;
