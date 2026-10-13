@@ -166,6 +166,38 @@ namespace Financial_WPF_App.Helper
             return value == "SYP" ? "SYR" : value;
         }
 
+        /// <summary>
+        /// The same rule as the single payment window: a cash till is a safe counted in one
+        /// currency, so an instalment in a local currency must go to a cash till in that
+        /// currency (old and new lira never share one), and a dollar instalment to a dollar cash
+        /// till whenever the project has one. Returns the error to show, or null.
+        /// </summary>
+        private string CashTillCurrencyProblem(int cashAccountId, string currency)
+        {
+            if (cashAccountId == -1 || _CashAccounts_dt.Rows.Count == 0 || !_CashAccounts_dt.Columns.Contains("currency_tilltype_id"))
+                return null;
+
+            int currencyId = Helper.CurrencyService.GetCurrencyId(currency);
+            if (currencyId <= 0)
+                return null;
+
+            System.Data.DataRow cashTill = _CashAccounts_dt.AsEnumerable().FirstOrDefault(r => r.Field<int>("ID") == cashAccountId);
+            if (cashTill == null || cashTill["currency_tilltype_id"] == DBNull.Value)
+                return null;
+
+            int cashCurrencyId = Convert.ToInt32(cashTill["currency_tilltype_id"]);
+            if (cashCurrencyId == currencyId)
+                return null;
+
+            bool projectHasOne = _CashAccounts_dt.AsEnumerable().Any(r =>
+                r["currency_tilltype_id"] != DBNull.Value && Convert.ToInt32(r["currency_tilltype_id"]) == currencyId);
+            if (!Helper.CurrencyService.IsLocalCurrency(currencyId, false) && !projectHasOne)
+                return null;
+
+            return "This cash till holds " + Helper.CurrencyService.GetCurrencyName(cashCurrencyId) + "; a " + currency
+                 + " payment needs a " + currency + " cash till" + (projectHasOne ? "." : " (none is linked to this project yet).");
+        }
+
         private int GetBeneficiaryId(int microProjectId)
         {
             if (_Beneficiaries_dt.Rows.Count <= 0)
@@ -286,6 +318,10 @@ namespace Financial_WPF_App.Helper
                     {
                         MarkRowError(e.Row, "Currency", "Entered currency does not match beneficiary loan currency.");
                     }
+
+                    string cashTillProblem = CashTillCurrencyProblem(_CashAccount_ID, _Currency);
+                    if (cashTillProblem != null)
+                        MarkRowError(e.Row, "Cash till", cashTillProblem);
                 }
 
                 int beneficiaryId = GetBeneficiaryId(_MicroProject_ID);
