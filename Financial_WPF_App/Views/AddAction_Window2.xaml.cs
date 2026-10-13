@@ -584,7 +584,7 @@ namespace Financial_WPF_App.Views
             DataTable employees = IsBudgetProject ? GetEmployeesForSubproject() : null;
 
             _expensesControl.Configure(IsMicroProject,
-                GetCurrencyTypes()?.DefaultView,
+                GetExpenseCurrencyTypes()?.DefaultView,
                 IsBudgetProject ? GetBudgetLinesForAccount() : null,
                 null, null, beneficiaries, employees, ActionDate_datepicker.SelectedDate,
                 requireProjectFieldsWithoutCurrency: IsLocalTill(_tillType));
@@ -835,6 +835,28 @@ namespace Financial_WPF_App.Views
             if (_currencyTypes == null)
                 _currencyTypes = _till.Select_All_TillTypes_Currency();
             return _currencyTypes;
+        }
+
+        /// <summary>
+        /// The currencies an expense from this till may be recorded in: the till's own, or USD
+        /// (a dollar expense paid from a local till). The full list offered both local
+        /// currencies on either till, so an old-lira amount could be saved against a new-lira
+        /// till and taken off its balance as it stood - a hundred times off.
+        /// </summary>
+        private DataTable GetExpenseCurrencyTypes()
+        {
+            DataTable all = GetCurrencyTypes();
+            if (all == null || !IsLocalTill(_tillType))
+                return all;
+
+            int tillCurrencyId = Helper.CurrencyService.GetCurrencyId(_tillType);
+            if (tillCurrencyId <= 0)
+                return all;
+
+            DataRow[] rows = all.AsEnumerable().Where(r =>
+                Convert.ToInt32(r["ID"]) == tillCurrencyId ||
+                string.Equals(Convert.ToString(r["Name"]), "USD", StringComparison.OrdinalIgnoreCase)).ToArray();
+            return rows.Length == 0 ? all : rows.CopyToDataTable();
         }
 
         private DataTable GetAvailableAverageRates()
