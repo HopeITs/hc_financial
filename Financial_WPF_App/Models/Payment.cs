@@ -304,15 +304,15 @@ namespace Financial_WPF_App.Models
             string query = @"SELECT  subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName', currency_tilltype.Name as 'Currency',
                  action.`ID` as 'ID' ,action.`Till_ID`, actiontype.`Name` as 'AType',action.Amount as 'Income',
-                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("currency_tilltype", false) + @" AND NOT " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action.Amount
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_tilltype", "tilltypes") + @" THEN action.Amount
                 ELSE 0 END) AS 'Incomesyr',
-(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action.Amount
+(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype", "tilltypes") + @" THEN action.Amount
                 ELSE 0 END) AS 'Incomecurrent',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action.Amount
                 ELSE 0 END) AS 'Incomeusd',action.Returned_Amount as 'Outcome',
-                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("currency_tilltype", false) + @" AND NOT " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action.Returned_Amount
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_tilltype", "tilltypes") + @" THEN action.Returned_Amount
                 ELSE 0 END) AS 'Outcomesyr',
-(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action.Returned_Amount
+(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype", "tilltypes") + @" THEN action.Returned_Amount
                 ELSE 0 END) AS 'Outcomecurrent',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action.Returned_Amount
                 ELSE 0 END) AS 'Outcomeusd',
@@ -405,15 +405,15 @@ namespace Financial_WPF_App.Models
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
                  action_not_approved.`ID` as 'ID' ,action_not_approved.`Till_ID`, actiontype.`Name` as 'AType',
                 action_not_approved.Amount as 'Income',
-                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("currency_tilltype", false) + @" AND NOT " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action_not_approved.Amount
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_tilltype", "tilltypes") + @" THEN action_not_approved.Amount
                 ELSE 0 END) AS 'Incomesyr',
-(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action_not_approved.Amount
+(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype", "tilltypes") + @" THEN action_not_approved.Amount
                 ELSE 0 END) AS 'Incomecurrent',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_not_approved.Amount
                 ELSE 0 END) AS 'Incomeusd',action_not_approved.Returned_Amount as 'Outcome',
-                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("currency_tilltype", false) + @" AND NOT " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action_not_approved.Returned_Amount
+                (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_tilltype", "tilltypes") + @" THEN action_not_approved.Returned_Amount
                 ELSE 0 END) AS 'Outcomesyr',
-(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action_not_approved.Returned_Amount
+(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype", "tilltypes") + @" THEN action_not_approved.Returned_Amount
                 ELSE 0 END) AS 'Outcomecurrent',
                 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_not_approved.Returned_Amount
                 ELSE 0 END) AS 'Outcomeusd',
@@ -526,15 +526,15 @@ namespace Financial_WPF_App.Models
             string query = @"SELECT subproject.ID as 'SubProjectID', subproject.Name as 'SubProjectName',
                  account.ID as 'AccountID', account.Name as 'AccountName',currency_tilltype.Name as 'Currency',
                  action_deleted.`ID` as 'ID' ,action_deleted.`Till_ID`, actiontype.`Name` as 'AType',action_deleted.Amount as 'Income',
-(CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("currency_tilltype", false) + @" AND NOT " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action_deleted.Amount
+(CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_tilltype", "tilltypes") + @" THEN action_deleted.Amount
 ELSE 0 END) AS 'Incomesyr',
-(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action_deleted.Amount
+(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype", "tilltypes") + @" THEN action_deleted.Amount
 ELSE 0 END) AS 'Incomecurrent',
 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_deleted.Amount
 ELSE 0 END) AS 'Incomeusd',action_deleted.Returned_Amount as 'Outcome',
-(CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("currency_tilltype", false) + @" AND NOT " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action_deleted.Returned_Amount
+(CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_tilltype", "tilltypes") + @" THEN action_deleted.Returned_Amount
 ELSE 0 END) AS 'Outcomesyr',
-(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype") + @" THEN action_deleted.Returned_Amount
+(CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_tilltype", "tilltypes") + @" THEN action_deleted.Returned_Amount
 ELSE 0 END) AS 'Outcomecurrent',
 (CASE WHEN Lower(currency_tilltype.Name) = 'usd' THEN action_deleted.Returned_Amount
 ELSE 0 END) AS 'Outcomeusd',

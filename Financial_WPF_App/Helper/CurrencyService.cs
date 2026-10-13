@@ -409,6 +409,82 @@ namespace Financial_WPF_App.Helper
             return "(" + currencyAlias + ".is_local_currency = 1 AND " + currencyAlias + ".base_divisor = 1 AND LOWER(" + currencyAlias + ".Name) <> 'pay')";
         }
 
+        // ------------------------------------------------------------------
+        //  Which local currency an ACTION's amount is in
+        //
+        //  The action's currency column cannot be read on its own:
+        //   - on a local till it is right when filled (the till's currency, or USD for a
+        //     dollar expense paid from that till), and empty means the till's own currency
+        //     - exchanges and some entry screens leave it empty;
+        //   - on a USD / EUR till the amount is always in that till's currency, whatever the
+        //     column says (an exchange stamps its target currency there, often 'SYR');
+        //   - on the pay till it is always filled; an empty one predates the new currency.
+        //  So these take the till's currency alias as well. The one-argument forms above
+        //  remain for rows that have no till (a beneficiary's loan currency).
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// SQL condition: this action's amount is in the OLD local currency. Pass the alias of
+        /// the action's currency and of its till's type, e.g. LegacyAmountSql("currency_type", "tilltypes").
+        /// </summary>
+        public static string LegacyAmountSql(string currencyAlias, string tillTypeAlias)
+        {
+            EnsureLoaded();
+            string noCurrency = "(" + currencyAlias + ".Name IS NULL OR " + currencyAlias + ".Name = '')";
+            string tillIsLocal = LocalCurrencySql(tillTypeAlias, true);
+
+            if (!_schemaSupportsMultipleLocalCurrencies)
+                return NullSafe("(" + tillIsLocal + " AND (" + currencyAlias + ".Name = 'SYR' OR " + noCurrency + "))");
+
+            return NullSafe("(" + tillIsLocal + " AND ("
+                 + "(" + currencyAlias + ".is_local_currency = 1 AND " + currencyAlias + ".base_divisor <> 1)"
+                 + " OR (" + noCurrency + " AND (" + tillTypeAlias + ".base_divisor <> 1 OR LOWER(" + tillTypeAlias + ".Name) = 'pay'))))");
+        }
+
+        /// <summary>
+        /// A row with no currency makes the comparisons on the currency's columns NULL, and
+        /// NULL is not "false": NOT (condition) would drop the row from both sides. Collapsing
+        /// it to 0 keeps the condition a plain yes / no, so it can be negated safely.
+        /// </summary>
+        private static string NullSafe(string condition)
+        {
+            return "(COALESCE(" + condition + ", 0) = 1)";
+        }
+
+        /// <summary>
+        /// SQL condition: this action's amount is in the CURRENT local currency - recorded so,
+        /// or recorded with no currency on a till in that currency.
+        /// </summary>
+        public static string CurrentLocalAmountSql(string currencyAlias, string tillTypeAlias)
+        {
+            EnsureLoaded();
+            if (!_schemaSupportsMultipleLocalCurrencies) return "1 = 0";
+
+            string noCurrency = "(" + currencyAlias + ".Name IS NULL OR " + currencyAlias + ".Name = '')";
+            return NullSafe("(" + LocalCurrencySql(tillTypeAlias, true) + " AND ("
+                 + CurrentLocalAmountSql(currencyAlias)
+                 + " OR (" + noCurrency + " AND " + tillTypeAlias + ".base_divisor = 1 AND LOWER(" + tillTypeAlias + ".Name) <> 'pay')))");
+        }
+
+        /// <summary>
+        /// ScaleLocalToBaseUnitSql, with a row that records no currency scaled by its till's
+        /// currency rather than taken as old lira. DISPLAY ONLY: nothing stored changes.
+        /// </summary>
+        public static string ScaleLocalToBaseUnitSql(string amountColumn, string currencyAlias, string tillTypeAlias)
+        {
+            EnsureLoaded();
+            if (!SchemaSupportsMultipleLocalCurrencies)
+                return amountColumn;
+
+            string legacy = LegacyBaseDivisor.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string divisor = "(CASE WHEN " + currencyAlias + ".Name IS NULL OR " + currencyAlias + ".Name = ''"
+                           + " THEN (CASE WHEN LOWER(" + tillTypeAlias + ".Name) = 'pay' THEN " + legacy
+                           + " ELSE COALESCE(" + tillTypeAlias + ".base_divisor, " + legacy + ") END)"
+                           + " ELSE " + currencyAlias + ".base_divisor END)";
+
+            return "(" + amountColumn + " / NULLIF(" + divisor + ", 0))";
+        }
+
         /// <summary>
         /// The divisor of the old local currency, for the rows that do not say which
         /// currency they are in. Falls back to 1, so an unresolved legacy currency
@@ -651,16 +727,20 @@ namespace Financial_WPF_App.Helper
                 benefScope += " AND ac.SubProject_ID IN (" + subprojectIds.Trim() + ")";
             }
 
-            Func<string, string> exists = predicate =>
+            // An action's currency is read together with its till's (see LegacyAmountSql);
+            // a beneficiary has no till, so its loan currency is taken as recorded.
+            Func<string, string, string> exists = (actionPredicate, benefPredicate) =>
                 "(EXISTS (SELECT 1 FROM `action` a JOIN till t ON t.ID = a.Till_ID JOIN account ac ON ac.ID = t.Account_ID"
-                + " LEFT JOIN tilltypes ct ON ct.ID = a.currency_tilltype_id" + actionScope + " AND " + predicate + ")"
+                + " JOIN tilltypes tt ON tt.ID = t.Type_ID"
+                + " LEFT JOIN tilltypes ct ON ct.ID = a.currency_tilltype_id" + actionScope + " AND " + actionPredicate + ")"
                 + " OR EXISTS (SELECT 1 FROM action_not_approved a JOIN till t ON t.ID = a.Till_ID JOIN account ac ON ac.ID = t.Account_ID"
-                + " LEFT JOIN tilltypes ct ON ct.ID = a.currency_tilltype_id" + actionScope + " AND " + predicate + ")"
+                + " JOIN tilltypes tt ON tt.ID = t.Type_ID"
+                + " LEFT JOIN tilltypes ct ON ct.ID = a.currency_tilltype_id" + actionScope + " AND " + actionPredicate + ")"
                 + " OR EXISTS (SELECT 1 FROM beneficiary b JOIN account ac ON ac.ID = b.Account_ID"
-                + " LEFT JOIN tilltypes ct ON ct.ID = b.currency_tilltype_id" + benefScope + " AND " + predicate + "))";
+                + " LEFT JOIN tilltypes ct ON ct.ID = b.currency_tilltype_id" + benefScope + " AND " + benefPredicate + "))";
 
-            DataTable dt = RunQuery("SELECT " + exists(LegacyAmountSql("ct")) + " AS has_legacy, "
-                                    + exists(CurrentLocalAmountSql("ct")) + " AS has_current;");
+            DataTable dt = RunQuery("SELECT " + exists(LegacyAmountSql("ct", "tt"), LegacyAmountSql("ct")) + " AS has_legacy, "
+                                    + exists(CurrentLocalAmountSql("ct", "tt"), CurrentLocalAmountSql("ct")) + " AS has_current;");
             if (dt.Rows.Count == 0)
                 return both;
 
