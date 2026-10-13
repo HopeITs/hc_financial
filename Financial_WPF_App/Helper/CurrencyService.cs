@@ -607,22 +607,42 @@ namespace Financial_WPF_App.Helper
         }
 
         /// <summary>
-        /// SQL expression: an amount as it compares against an approval limit. The limits in
-        /// role.Approval_Limit were set in the old lira, so a local amount is expressed in that
-        /// unit first - 10,000 new lira is 1,000,000 old and must not pass under a 1,000,000
-        /// limit as if it were small. Old lira, rows with no currency and foreign currencies
-        /// are compared as they always were.
+        /// SQL expression: the id of the currency an action's amount is really in - the rule
+        /// described above LegacyAmountSql. On a USD / EUR till that is the till's currency,
+        /// whatever the currency column says (an exchange records its TARGET there: 8,000 USD
+        /// sold for lira is saved as 'SYR'). On a local till it is the recorded currency (USD for
+        /// a dollar expense paid from it), or the till's own when none is recorded. On the pay
+        /// till an empty one is the old currency.
         /// </summary>
-        public static string ApprovalAmountSql(string amountColumn, string currencyAlias)
+        public static string AmountCurrencyIdSql(string currencyAlias, string tillTypeAlias)
+        {
+            EnsureLoaded();
+            int legacyId = LegacyCurrencyId;
+            string payFallback = legacyId > 0 ? legacyId.ToString() : tillTypeAlias + ".ID";
+            return "(CASE WHEN LOWER(" + tillTypeAlias + ".Name) = 'pay' THEN COALESCE(" + currencyAlias + ".ID, " + payFallback + ")"
+                 + " WHEN " + LocalCurrencySql(tillTypeAlias, true) + " THEN COALESCE(" + currencyAlias + ".ID, " + tillTypeAlias + ".ID)"
+                 + " ELSE " + tillTypeAlias + ".ID END)";
+        }
+
+        /// <summary>
+        /// SQL expression: an amount as it compares against the single role limit used before
+        /// per-currency limits (P3). Those limits were set in the old lira, so a local amount is
+        /// expressed in that unit first - 10,000 new lira is 1,000,000 old and must not pass under
+        /// a 1,000,000 limit as if it were small. A foreign amount is compared as it always was.
+        /// The currency is the one the amount is really in (AmountCurrencyIdSql), so an empty
+        /// currency on a new-currency till is scaled as new lira, not taken as old.
+        /// </summary>
+        public static string ApprovalAmountSql(string amountColumn, string currencyAlias, string tillTypeAlias)
         {
             EnsureLoaded();
             if (!_schemaSupportsMultipleLocalCurrencies)
                 return amountColumn;
 
             string legacy = LegacyBaseDivisor.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            return "(CASE WHEN " + currencyAlias + ".is_local_currency = 1 AND LOWER(" + currencyAlias + ".Name) <> 'pay'"
-                 + " THEN " + amountColumn + " * " + legacy + " / NULLIF(" + currencyAlias + ".base_divisor, 0)"
-                 + " ELSE " + amountColumn + " END)";
+            string divisor = "(SELECT d.base_divisor FROM tilltypes d WHERE d.ID = " + AmountCurrencyIdSql(currencyAlias, tillTypeAlias)
+                           + " AND d.is_local_currency = 1 AND LOWER(d.Name) <> 'pay')";
+            return "(CASE WHEN " + divisor + " IS NULL THEN " + amountColumn
+                 + " ELSE " + amountColumn + " * " + legacy + " / NULLIF(" + divisor + ", 0) END)";
         }
 
         /// <summary>The old local currency's id, or 0 when none is flagged.</summary>
@@ -643,25 +663,21 @@ namespace Financial_WPF_App.Helper
         /// ACTION'S CURRENCY, and a currency with no limit set is NOT approvable by that role -
         /// an empty limit means "not allowed", never "no limit". Before P3 the old rule applies:
         /// the single role limit, with a local amount expressed in old lira first.
-        /// A row with no currency recorded is taken as old lira.
+        /// The amount's currency is read with its till's (AmountCurrencyIdSql): an exchange of
+        /// 8,000 USD is held to the USD limit, not to the lira limit its currency column names.
         /// </summary>
-        public static string ApprovalLimitConditionSql(string amountColumn, string currencyAlias, string roleName)
+        public static string ApprovalLimitConditionSql(string amountColumn, string currencyAlias, string tillTypeAlias, string roleName)
         {
             EnsureLoaded();
             string role = (roleName ?? "").Replace("'", "''");
             string singleLimit = "(select role.Approval_Limit from role where role.Name = '" + role + "')";
-            string oldRule = ApprovalAmountSql(amountColumn, currencyAlias) + " <= " + singleLimit;
+            string oldRule = ApprovalAmountSql(amountColumn, currencyAlias, tillTypeAlias) + " <= " + singleLimit;
 
             if (!_hasRoleCurrencyLimits)
                 return oldRule;
 
-            int legacyId = LegacyCurrencyId;
-            string currencyId = legacyId > 0
-                ? "COALESCE(" + currencyAlias + ".ID, " + legacyId + ")"
-                : currencyAlias + ".ID";
-
             string perCurrency = "(SELECT l.Approval_Limit FROM role_currency_limit l JOIN role r ON r.ID = l.Role_ID"
-                               + " WHERE r.Name = '" + role + "' AND l.TillType_ID = " + currencyId + ")";
+                               + " WHERE r.Name = '" + role + "' AND l.TillType_ID = " + AmountCurrencyIdSql(currencyAlias, tillTypeAlias) + ")";
 
             return "(" + perCurrency + " IS NOT NULL AND " + amountColumn + " <= " + perCurrency + ")";
         }

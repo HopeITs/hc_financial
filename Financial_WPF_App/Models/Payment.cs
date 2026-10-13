@@ -469,7 +469,7 @@ namespace Financial_WPF_App.Models
                 condition += " and (edited_byuser.ID <> " + Properties.Settings.Default.User_ID + " or edited_byuser.ID is null) and created_byuser.`ID` <> " + Properties.Settings.Default.User_ID;
 
                 if (Properties.Settings.Default.Role != "Head Office")
-                    condition += " and " + Helper.CurrencyService.ApprovalLimitConditionSql("action_not_approved.`Amount`", "currency_tilltype", Properties.Settings.Default.Role);
+                    condition += " and " + Helper.CurrencyService.ApprovalLimitConditionSql("action_not_approved.`Amount`", "currency_tilltype", "tilltypes", Properties.Settings.Default.Role);
             }
 
             if (Action_ID != -1)
@@ -592,7 +592,7 @@ action_deleted.`note` as 'Note',
                 condition += " and (edited_byuser.ID <> " + Properties.Settings.Default.User_ID + " or edited_byuser.ID is null) and created_byuser.`ID` <> " + Properties.Settings.Default.User_ID + " and deleted_by <> " + Properties.Settings.Default.User_ID + "";
 
                 if (Properties.Settings.Default.Role != "Head Office")
-                    condition += " and " + Helper.CurrencyService.ApprovalLimitConditionSql("action_deleted.`Amount`", "currency_tilltype", Properties.Settings.Default.Role);
+                    condition += " and " + Helper.CurrencyService.ApprovalLimitConditionSql("action_deleted.`Amount`", "currency_tilltype", "tilltypes", Properties.Settings.Default.Role);
             }
 
             condition += " order by action_deleted.id";
