@@ -539,6 +539,20 @@ namespace Financial_WPF_App.Helper
                     _currency_tilltype_id = -1;
                     isUsdExpenseFromSyr = false;
                 }
+                // An income or expense on a local till is in that till's currency, or USD - never
+                // the other local currency: old lira saved against a new-lira till would come off
+                // its balance as it stood, a hundred times off. (An exchange is left alone: its
+                // Currency column names the currency exchanged TO.)
+                else if ((_inserted_value == "E" || _inserted_value == "I") &&
+                         IsLocalTill(_Till_Type) && IsLocalTill(currency) &&
+                         !string.Equals(currency, _Till_Type, StringComparison.OrdinalIgnoreCase))
+                {
+                    Login.MultiAction_AnyError = true;
+                    e.Row.SetColumnError(e.Column.ColumnName, "A " + _Till_Type.ToUpperInvariant() + " till takes " + _Till_Type.ToUpperInvariant() + " or USD, not " + currency + ".");
+                    e.Row.RowError = "There are errors in this row.";
+                    _currency_tilltype_id = -1;
+                    isUsdExpenseFromSyr = false;
+                }
                 // Match Add Action 2: Personal Accounts do not allow choosing a foreign expense currency
                 // (currency ComboBox is disabled; USD-from-SYR Expense path must not run).
                 else if (string.Equals(_Account_Type, "Personal", StringComparison.OrdinalIgnoreCase) &&
