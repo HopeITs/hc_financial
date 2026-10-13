@@ -123,19 +123,39 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
+        /// <summary>
+        /// cash_balances has one set of book columns per currency - Account_I / _E / _Net for the
+        /// old lira, ..._USD, and ..._New for the current lira (P2). A cash till is counted in its
+        /// own currency's banknotes, so its books must be read from that currency's columns; this
+        /// used to read the old lira's for every cash till, so a new-lira (or dollar) cash till
+        /// was compared with figures in another currency. Pass the base name, e.g. "Account_Net";
+        /// the query must join the cash till's currency as `cash_currency`.
+        /// </summary>
+        private static string CashBooksColumn(string baseName)
+        {
+            string sql = "(CASE WHEN cash_currency.Name = 'USD' THEN cash_balances." + baseName + "_USD";
+            if (Helper.CurrencyService.CashBalancesHasCurrentCurrency)
+                sql += " WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("cash_currency") + " THEN cash_balances." + baseName + "_New";
+            return sql + " ELSE cash_balances." + baseName + " END)";
+        }
+
+        private const string CashCurrencyJoin =
+            " JOIN cashaccount cash_till ON cash_till.id = cash_balances.CashAccount_id"
+          + " LEFT JOIN tilltypes cash_currency ON cash_currency.ID = cash_till.currency_tilltype_id ";
+
         public DataSet Select_Cash_Report(int CashAccount_ID)
         {
             string query = "";
 
-            query = @"SELECT cash_balances.Account_id AS 'Account_ID', cash_balances.City_Name AS 'City', cash_balances.Subproject_Name AS 'Project', 
+            query = @"SELECT cash_balances.Account_id AS 'Account_ID', cash_balances.City_Name AS 'City', cash_balances.Subproject_Name AS 'Project',
                                 cash_balances.Account_Name AS 'Account', cash_balances.Account_Type as 'Account_Type', cash_balances.tilltype_Name as 'tilltype_Name', cash_balances.Subproject_ID as 'Subproject_ID', cash_balances.Category_Name as 'Category',
                                 Case when cash_balances.account_IsClosed  = 1 then 'Closed' when cash_balances.account_IsClosed  = 0 then 'Open' end as 'Status Account',
-                                cash_balances.Account_I AS 'Income', cash_balances.Account_E AS 'Outcome', cash_balances.Account_Net AS 'Difference'
-                                FROM cash_balances
+                                " + CashBooksColumn("Account_I") + @" AS 'Income', " + CashBooksColumn("Account_E") + @" AS 'Outcome', " + CashBooksColumn("Account_Net") + @" AS 'Difference'
+                                FROM cash_balances" + CashCurrencyJoin + @"
                                 WHERE cash_balances.CashAccount_id = @CashAccount_ID;
 
-                                SELECT cash_balances.CashAccount_Net, SUM(cash_balances.Account_Net) AS 'AllAccounts_Net', SUM(cash_balances.Account_Net) - cash_balances.CashAccount_Net AS 'Difference'
-                                FROM cash_balances
+                                SELECT cash_balances.CashAccount_Net, SUM(" + CashBooksColumn("Account_Net") + @") AS 'AllAccounts_Net', SUM(" + CashBooksColumn("Account_Net") + @") - cash_balances.CashAccount_Net AS 'Difference'
+                                FROM cash_balances" + CashCurrencyJoin + @"
                                 WHERE cash_balances.CashAccount_id = @CashAccount_ID
                                 GROUP BY cash_balances.CashAccount_id;";
 
@@ -1286,9 +1306,9 @@ namespace Financial_WPF_App.Models
             string query = @"CAll Cash_Flow(@CashAccount_ID);";
 
             query += @"SELECT cash_balances.CashAccount_I, cash_balances.CashAccount_E, cash_balances.CashAccount_Net,
-                        SUM(cash_balances.Account_Net) AS 'AllAccounts_Net',
-                        SUM(cash_balances.Account_Net) - cash_balances.CashAccount_Net AS 'Difference'
-                        FROM cash_balances
+                        SUM(" + CashBooksColumn("Account_Net") + @") AS 'AllAccounts_Net',
+                        SUM(" + CashBooksColumn("Account_Net") + @") - cash_balances.CashAccount_Net AS 'Difference'
+                        FROM cash_balances" + CashCurrencyJoin + @"
                         WHERE cash_balances.CashAccount_id = @CashAccount_ID
                         GROUP BY cash_balances.CashAccount_id;";
             DataSet ds = new DataSet();
