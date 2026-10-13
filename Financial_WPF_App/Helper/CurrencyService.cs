@@ -804,21 +804,23 @@ namespace Financial_WPF_App.Helper
             return Convert.ToInt32(dt.Rows[0]["n"]) == 3;
         }
 
+        /// <summary>
+        /// Runs on a connection of its own. It used Login.BuildConnection, which REPLACES the
+        /// shared Login.MyConn and then closes it - so a currency question asked while a caller
+        /// held Login.MyConn open (the first one inside a save, or the per-screen scope check)
+        /// would close that caller's connection under it. Pooling keeps this as cheap as before.
+        /// </summary>
         private static DataTable RunQuery(string query)
         {
             DataTable dt = new DataTable();
-            if (Login.BuildConnection())
+            using (MySqlConnection conn = new MySqlConnection(Login.ConnectionString))
+            using (MySqlCommand sc = new MySqlCommand("SET SESSION wait_timeout = @t;" + query, conn))
             {
-                MySqlCommand sc = new MySqlCommand();
-
                 sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
                 sc.Parameters.AddWithValue("@t", 600);
-                sc.Connection = Login.MyConn;
-
-                MySqlDataAdapter da = new MySqlDataAdapter(sc);
-                da.Fill(dt);
-                Login.CloseAndClearConnection();
+                conn.Open();
+                using (MySqlDataAdapter da = new MySqlDataAdapter(sc))
+                    da.Fill(dt);
             }
             return dt;
         }
