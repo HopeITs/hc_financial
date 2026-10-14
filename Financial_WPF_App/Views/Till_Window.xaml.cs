@@ -908,29 +908,28 @@ namespace Financial_WPF_App.Views
             {
                 if (sum_dt != null && sum_dt.Rows.Count > 0)
                 {
-                    // A pay till holds both local currencies at once, so its local boxes read
-                    // the common-unit totals (SumIBase / SumOBase, the last two columns) -
-                    // SumI would be adding old lira to new. Every other till is unaffected.
-                    // A pay till reads its own per-currency columns (11-21, appended after the rest so
-                    // nothing that reads this row by position moved); every other till is unchanged.
-                    bool pay = IsPayTill() && sum_dt.Columns.Count > 21;
+                    // A pay till holds both local currencies at once, so it shows a line per
+                    // currency, read from its own per-currency columns - by name, so a column
+                    // added to or removed from the sums query cannot shift a box. Every other
+                    // till is unchanged.
+                    bool pay = IsPayTill() && sum_dt.Columns.Contains("SumOUsd");
                     if (pay)
                     {
                         System.Data.DataRow r = sum_dt.Rows[0];
-                        PayTillIncomeLegacy_textBlock.Text = r.Field<double>(13).ToString("N2");
-                        PayTillTransferLegacy_textBlock.Text = r.Field<double>(14).ToString("N2");
-                        PayTillNetLegacy_textBlock.Text = r.Field<double>(17).ToString("N2");
-                        PayTillCashLegacy_textBlock.Text = r.Field<double>(19).ToString("N2");
+                        PayTillIncomeLegacy_textBlock.Text = r.Field<double>("SumILegacy").ToString("N2");
+                        PayTillTransferLegacy_textBlock.Text = r.Field<double>("SumOLegacy").ToString("N2");
+                        PayTillNetLegacy_textBlock.Text = r.Field<double>("NetLegacy").ToString("N2");
+                        PayTillCashLegacy_textBlock.Text = r.Field<double>("CashNetLegacy").ToString("N2");
 
-                        PayTillIncomeCurrent_textBlock.Text = r.Field<double>(15).ToString("N2");
-                        PayTillTransferCurrent_textBlock.Text = r.Field<double>(16).ToString("N2");
-                        PayTillNetCurrent_textBlock.Text = r.Field<double>(18).ToString("N2");
-                        PayTillCashCurrent_textBlock.Text = r.Field<double>(20).ToString("N2");
+                        PayTillIncomeCurrent_textBlock.Text = r.Field<double>("SumICurrent").ToString("N2");
+                        PayTillTransferCurrent_textBlock.Text = r.Field<double>("SumOCurrent").ToString("N2");
+                        PayTillNetCurrent_textBlock.Text = r.Field<double>("NetCurrent").ToString("N2");
+                        PayTillCashCurrent_textBlock.Text = r.Field<double>("CashNetCurrent").ToString("N2");
 
-                        PayTillIncomeUsd_textBlock.Text = r.Field<double>(1).ToString("N2");
-                        PayTillTransferUsd_textBlock.Text = r.Field<double>(21).ToString("N2");
-                        PayTillNetUsd_textBlock.Text = r.Field<double>(10).ToString("N2");
-                        PayTillCashUsd_textBlock.Text = r.Field<double>(9).ToString("N2");
+                        PayTillIncomeUsd_textBlock.Text = r.Field<double>("SumIU").ToString("N2");
+                        PayTillTransferUsd_textBlock.Text = r.Field<double>("SumOUsd").ToString("N2");
+                        PayTillNetUsd_textBlock.Text = r.Field<double>("NetUSD").ToString("N2");
+                        PayTillCashUsd_textBlock.Text = r.Field<double>("CashNetUSD").ToString("N2");
                     }
 
                     Income_textBlock.Text = sum_dt.Rows[0].Field<double>(0).ToString("N2");

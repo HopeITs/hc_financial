@@ -58,13 +58,6 @@ namespace Financial_WPF_App.Models
                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
                THEN action.Amount  ELSE 0 END) AS 'Expandusd',
 
-                /* Display-only columns that span both local currencies: the old lira
-                   divided by its base_divisor, so one figure can stand for the two of
-                   them. Nothing stored is converted. */
-                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I'
-                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action.Amount", "currency_type", "tilltypes") + @" ELSE 0 END) AS 'IncomeBase',
-                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O'
-                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action.Amount", "currency_type", "tilltypes") + @" ELSE 0 END) AS 'OutcomeBase',
                 (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Incomelegacy',
                 (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'O' THEN action.Amount ELSE 0 END) AS 'Outcomelegacy',
                 (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'I' THEN action.Amount ELSE 0 END) AS 'Incomecurrent',
@@ -234,13 +227,6 @@ namespace Financial_WPF_App.Models
                (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
                THEN action_not_approved.Amount  ELSE 0 END) AS 'Expandusd',
 
-                /* Display-only columns that span both local currencies: the old lira
-                   divided by its base_divisor, so one figure can stand for the two of
-                   them. Nothing stored is converted. */
-                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I'
-                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action_not_approved.Amount", "currency_type", "tilltypes") + @" ELSE 0 END) AS 'IncomeBase',
-                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O'
-                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action_not_approved.Amount", "currency_type", "tilltypes") + @" ELSE 0 END) AS 'OutcomeBase',
                 (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'I' THEN action_not_approved.Amount ELSE 0 END) AS 'Incomelegacy',
                 (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'O' THEN action_not_approved.Amount ELSE 0 END) AS 'Outcomelegacy',
                 (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'I' THEN action_not_approved.Amount ELSE 0 END) AS 'Incomecurrent',
@@ -438,13 +424,6 @@ namespace Financial_WPF_App.Models
                 (CASE WHEN " + Helper.CurrencyService.LocalCurrencySql("tilltypes", false) + @" AND currency_type.Name = 'USD'   AND actiontype.shortname = 'E'
                 THEN action_deleted.Amount  ELSE 0 END) AS 'Expandusd',
 
-                /* Display-only columns that span both local currencies: the old lira
-                   divided by its base_divisor, so one figure can stand for the two of
-                   them. Nothing stored is converted. */
-                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'I'
-                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action_deleted.Amount", "currency_type", "tilltypes") + @" ELSE 0 END) AS 'IncomeBase',
-                (CASE WHEN " + Helper.CurrencyService.LocalAmountSql("currency_type") + @" AND actiontype.shortname = 'O'
-                THEN " + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action_deleted.Amount", "currency_type", "tilltypes") + @" ELSE 0 END) AS 'OutcomeBase',
                 (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'I' THEN action_deleted.Amount ELSE 0 END) AS 'Incomelegacy',
                 (CASE WHEN " + Helper.CurrencyService.LegacyAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'O' THEN action_deleted.Amount ELSE 0 END) AS 'Outcomelegacy',
                 (CASE WHEN " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type", "tilltypes") + @" AND actiontype.shortname = 'I' THEN action_deleted.Amount ELSE 0 END) AS 'Incomecurrent',
@@ -709,12 +688,8 @@ namespace Financial_WPF_App.Models
                             ",( (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + @" AND actiontype.shortname = 'I' AND " + localTill + @" AND currency_type.Name = 'USD') - (SELECT IFNULL(sum(action.Amount),0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id " + sub_condition + " AND actiontype.shortname = 'E' AND " + localTill + @" AND currency_type.Name = 'USD') ) AS 'NetUSD'" +
 
 
-                            // Appended LAST on purpose: Till_Window reads this row by column
-                            // index, so anything inserted above would shift every box.
-                            // "All the local money, in the current currency's unit" - the only
-                            // honest single figure for a till holding both local currencies.
-                            ", (SELECT IFNULL(sum(" + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action.Amount", "currency_type", "tilltypes") + @"), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I' AND " + Helper.CurrencyService.LocalAmountSql("currency_type") + @") AS 'SumIBase'" +
-                            ", (SELECT IFNULL(sum(" + Helper.CurrencyService.ScaleLocalToBaseUnitSql("action.Amount", "currency_type", "tilltypes") + @"), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'O' AND " + Helper.CurrencyService.LocalAmountSql("currency_type") + @") AS 'SumOBase'" +
+                            // Appended after the original eleven, so nothing that reads those by
+                            // position moves. Till_Window reads the ones below by name.
                             ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I' AND " + Helper.CurrencyService.LegacyAmountSql("currency_type", "tilltypes") + @") AS 'SumILegacy'" +
                             ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'O' AND " + Helper.CurrencyService.LegacyAmountSql("currency_type", "tilltypes") + @") AS 'SumOLegacy'" +
                             ", (SELECT IFNULL(sum(action.Amount), 0) FROM action LEFT JOIN actiontype ON action.atype_id = actiontype.id LEFT JOIN till ON action.Till_ID = till.ID LEFT JOIN tilltypes tilltypes ON tilltypes.ID = till.Type_ID LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id" + sub_condition + @" AND actiontype.shortname = 'I' AND " + Helper.CurrencyService.CurrentLocalAmountSql("currency_type", "tilltypes") + @") AS 'SumICurrent'" +

@@ -467,25 +467,6 @@ namespace Financial_WPF_App.Helper
         }
 
         /// <summary>
-        /// ScaleLocalToBaseUnitSql, with a row that records no currency scaled by its till's
-        /// currency rather than taken as old lira. DISPLAY ONLY: nothing stored changes.
-        /// </summary>
-        public static string ScaleLocalToBaseUnitSql(string amountColumn, string currencyAlias, string tillTypeAlias)
-        {
-            EnsureLoaded();
-            if (!SchemaSupportsMultipleLocalCurrencies)
-                return amountColumn;
-
-            string legacy = LegacyBaseDivisor.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            string divisor = "(CASE WHEN " + currencyAlias + ".Name IS NULL OR " + currencyAlias + ".Name = ''"
-                           + " THEN (CASE WHEN LOWER(" + tillTypeAlias + ".Name) = 'pay' THEN " + legacy
-                           + " ELSE COALESCE(" + tillTypeAlias + ".base_divisor, " + legacy + ") END)"
-                           + " ELSE " + currencyAlias + ".base_divisor END)";
-
-            return "(" + amountColumn + " / NULLIF(" + divisor + ", 0))";
-        }
-
-        /// <summary>
         /// The divisor of the old local currency, for the rows that do not say which
         /// currency they are in. Falls back to 1, so an unresolved legacy currency
         /// leaves amounts alone rather than scaling them by a guess.
@@ -499,25 +480,6 @@ namespace Financial_WPF_App.Helper
                     if (c.IsLegacy) return c.BaseDivisor == 0m ? 1m : c.BaseDivisor;
                 return 1m;
             }
-        }
-
-        /// <summary>
-        /// Same as ScaleToBaseUnitSql, but reads the divisor off the ACTION's currency
-        /// rather than the till's - which is what the screens showing both local
-        /// currencies side by side need. A row whose currency is unknown is older than
-        /// the new currency by definition, so it is scaled as the old lira.
-        /// DISPLAY ONLY: nothing stored changes.
-        /// </summary>
-        public static string ScaleLocalToBaseUnitSql(string amountColumn, string currencyAlias)
-        {
-            EnsureLoaded();
-            if (!SchemaSupportsMultipleLocalCurrencies)
-                return amountColumn;
-
-            string divisor = "COALESCE(" + currencyAlias + ".base_divisor, "
-                           + LegacyBaseDivisor.ToString(System.Globalization.CultureInfo.InvariantCulture) + ")";
-
-            return "(" + amountColumn + " / NULLIF(" + divisor + ", 0))";
         }
 
         // ------------------------------------------------------------------
