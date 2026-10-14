@@ -160,10 +160,14 @@ namespace Financial_WPF_App.Helper
             return true;
         }
 
+        /// <summary>
+        /// The beneficiary's loan currency as the currency table names it, in capitals. This used
+        /// to turn "SYP" into "SYR" - but the name always comes from tilltypes, so it never read
+        /// "SYP"; and once the old lira is renamed SYP, the mapping would have rejected every row.
+        /// </summary>
         private string NormalizeBeneficiaryCurrency(string value)
         {
-            value = (value ?? "").Trim().ToUpperInvariant();
-            return value == "SYP" ? "SYR" : value;
+            return (value ?? "").Trim().ToUpperInvariant();
         }
 
         /// <summary>
