@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -115,7 +116,11 @@ namespace Financial_WPF_App.Views
             Syr_Balances_Window Syr_Balances_Window = new Syr_Balances_Window(main_Window);
             newTabItem = new TabItem
             {
-                Header = ("Syr Balances").ToUpper(),
+                // Named from the currency table: since P2 these balances cover every local
+                // currency, not only the one the title used to name.
+                Header = (string.Join(" / ", Helper.CurrencyService.All()
+                              .Where(c => Helper.CurrencyService.IsLocalCurrency(c.Name, false))
+                              .OrderByDescending(c => c.IsLegacy).Select(c => c.Name)) + " Balances").ToUpper(),
                 Name = "Syr_Balances_tab",
                 Style = this.FindResource("tabItemStyle") as Style,
                 FlowDirection = FlowDirection.LeftToRight
