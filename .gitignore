@@ -4,3 +4,5 @@ obj/
 tmp/
 output/
 .codex/
+# Visual Studio safe-save temp copies
+*~RF*.TMP
