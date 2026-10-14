@@ -80,8 +80,21 @@ namespace Financial_WPF_App.Models
         /// </summary>
         public DataTable Select_Fixed_Assets_Report(int TillType_ID, string FromDate = "", string ToDate = "")
         {
-            //check user from database
-            string query = @"SELECT 
+            // The local price used to be one column, "- Syr", holding whatever local currency
+            // the asset was bought in. Once assets are bought in the new lira that column - and
+            // the grid's Total under it - would add old and new lira together, a hundred times
+            // apart. Each local currency now has its own price and estimated-price columns,
+            // named from the currency table; the foreign-currency columns were already right
+            // (each purchase divided by its own rate). DISPLAY ONLY: nothing stored changes.
+            // used inside quoted column aliases, so a quote in a currency name must not end them
+            string legacyName = Helper.CurrencyService.GetLegacyLocalCurrencyName().Replace("'", "");
+            string currentName = Helper.CurrencyService.GetCurrentLocalCurrencyName().Replace("'", "");
+            string isLegacy = Helper.CurrencyService.LegacyAmountSql("currency_type", "till_type");
+            string isCurrent = Helper.CurrencyService.CurrentLocalAmountSql("currency_type", "till_type");
+            const string estimated = "(action.Amount - ((action.Amount/line.estimated_lifetime) * TIMESTAMPDIFF(MONTH, action.ActionDate, NOW())))";
+            bool hasCurrent = !string.IsNullOrWhiteSpace(currentName);
+
+            string query = @"SELECT
                                 city.Name AS 'City',
                                 project.Name AS 'Program',
                                 subproject.Name AS 'Project',
@@ -89,13 +102,17 @@ namespace Financial_WPF_App.Models
                                 action.ActionDate AS 'Entry Date',
                                 DATE_FORMAT(action.ActionDate, ""%c/%Y"") as 'Entry Month',
                                 DATE_FORMAT(action.ActionDate, ""%Y"") as 'Entry Year',
-                                action.Amount AS 'Purchase Price - Syr', 
+                                (CASE WHEN " + isLegacy + @" THEN action.Amount ELSE 0 END) AS 'Purchase Price - " + legacyName + @"', "
+                                + (hasCurrent ? "(CASE WHEN " + isCurrent + @" THEN action.Amount ELSE 0 END) AS 'Purchase Price - " + currentName + @"', " : "") + @"
                                 action.Amount / all_avgrates.Value AS 'Purchase Price - Foreign currency',
                                 line.estimated_lifetime AS 'Estimated lifetime - Months',
                                 TIMESTAMPDIFF(MONTH, action.ActionDate, NOW()) AS 'Current lifetime - Months',
-                                action.Amount - ((action.Amount/line.estimated_lifetime) * TIMESTAMPDIFF(MONTH, action.ActionDate, NOW())) AS 'Current Estimated Price - Syr',
+                                (CASE WHEN " + isLegacy + " THEN " + estimated + @" ELSE 0 END) AS 'Current Estimated Price - " + legacyName + @"', "
+                                + (hasCurrent ? "(CASE WHEN " + isCurrent + " THEN " + estimated + @" ELSE 0 END) AS 'Current Estimated Price - " + currentName + @"', " : "") + @"
                                 (action.Amount / all_avgrates.Value) - (((action.Amount / all_avgrates.Value)/line.estimated_lifetime) * TIMESTAMPDIFF(MONTH, action.ActionDate, NOW())) AS 'Current Estimated Price - Foreign currency'
                                 FROM action LEFT JOIN till ON till.ID = action.Till_ID
+                                LEFT JOIN tilltypes till_type ON till_type.ID = till.Type_ID
+                                LEFT JOIN tilltypes currency_type ON currency_type.ID = action.currency_tilltype_id
                                 LEFT JOIN budget_line on action.BudgetLine_ID = budget_line.ID
                                 LEFT JOIN line ON budget_line.Line_ID = line.ID
                                 LEFT JOIN linecategory on line.Category_ID = linecategory.ID
