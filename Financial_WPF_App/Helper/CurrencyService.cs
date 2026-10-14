@@ -225,6 +225,22 @@ namespace Financial_WPF_App.Helper
             return LegacyLocalCurrencyName;
         }
 
+        /// <summary>
+        /// "SYR, SYPNEW or USD" - the local currencies (not the pay container) and USD, read
+        /// from the currency table, for messages naming what a Currency field accepts. Those
+        /// messages said "USD or SYR" while also accepting the new lira.
+        /// </summary>
+        public static string LocalOrUsdNames()
+        {
+            EnsureLoaded();
+            var names = new List<string>();
+            foreach (CurrencyInfo c in _byId.Values)
+                if (IsLocalCurrency(c.Name, false)) names.Add(c.Name);
+            names.Add("USD");
+            if (names.Count == 1) return names[0];
+            return string.Join(", ", names.GetRange(0, names.Count - 1)) + " or " + names[names.Count - 1];
+        }
+
         /// <summary>Every currency the database knows about.</summary>
         public static IEnumerable<CurrencyInfo> All()
         {

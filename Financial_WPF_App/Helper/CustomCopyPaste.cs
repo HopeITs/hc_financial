@@ -570,7 +570,7 @@ namespace Financial_WPF_App.Helper
                          currency == "USD")
                 {
                     Login.MultiAction_AnyError = true;
-                    e.Row.SetColumnError(e.Column.ColumnName, "Personal accounts cannot create a USD expense from a SYR till.");
+                    e.Row.SetColumnError(e.Column.ColumnName, "Personal accounts cannot create a USD expense from a " + _Till_Type.ToUpperInvariant() + " till.");
                     e.Row.RowError = "There are errors in this row.";
                     _currency_tilltype_id = -1;
                     isUsdExpenseFromSyr = false;

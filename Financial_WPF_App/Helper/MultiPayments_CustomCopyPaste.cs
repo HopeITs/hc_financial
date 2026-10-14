@@ -308,7 +308,7 @@ namespace Financial_WPF_App.Helper
 
                 if (!string.Equals(currencyText, "USD", StringComparison.OrdinalIgnoreCase) && !Helper.CurrencyService.IsLocalCurrency(currencyText, false))
                 {
-                    MarkRowError(e.Row, "Currency", "Currency must be USD or SYR.");
+                    MarkRowError(e.Row, "Currency", "Currency must be " + Helper.CurrencyService.LocalOrUsdNames() + ".");
                 }
                 else
                 {

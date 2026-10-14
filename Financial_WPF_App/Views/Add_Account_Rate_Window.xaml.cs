@@ -355,7 +355,7 @@ namespace Financial_WPF_App.Views
 
                             if (row == null || row.Count() <= 0)
                             {
-                                MessageBox.Show("Exchange to SYR can only be made from the budget currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
+                                MessageBox.Show("Exchange to " + To_comboBox.Text + " can only be made from the budget currency.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None);
                                 return;
 
                             }
