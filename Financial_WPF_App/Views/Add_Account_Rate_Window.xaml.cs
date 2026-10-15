@@ -95,6 +95,12 @@ namespace Financial_WPF_App.Views
                     {
                         Account_Budgets_dt = b.Select(Account_ID);
                         From_help.Visibility = Visibility.Visible;
+                        // the rule covers every local currency, so name them from the currency
+                        // table rather than the "SYR" written in the layout
+                        From_help.ToolTip = "Exchange to " + string.Join(" or ", Helper.CurrencyService.All()
+                            .Where(c => Helper.CurrencyService.IsLocalCurrency(c.Name, false))
+                            .OrderByDescending(c => c.IsLegacy).Select(c => c.Name))
+                            + " can only be made from the budget currency.";
                     }
                 }
 
