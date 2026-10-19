@@ -6,6 +6,7 @@
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:uc ="clr-namespace:Financial_WPF_App.Controls"
              xmlns:helper="clr-namespace:Financial_WPF_App.helper"
+             xmlns:filterhl="clr-namespace:Financial_WPF_App.Helper"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:design="clr-namespace:Financial_WPF_App.Design"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -1353,6 +1354,8 @@
                 <Setter Property ="RowSelectionBrush" Value ="{DynamicResource RowSelectionColor}" />
                 <Setter Property ="ItemsSource" Value ="{Binding}" />
                 <Setter Property ="AllowFiltering" Value ="True" />
+                <!-- fills the header of a filtered column with the theme colour and lists the filter in its tooltip -->
+                <Setter Property ="filterhl:GridFilterHighlight.IsEnabled" Value ="True" />
                 <Setter Property ="ShowGroupDropArea" Value ="True" />
                 <Setter Property ="VerticalAlignment" Value ="Center" />
                 <Setter Property ="HorizontalAlignment" Value ="Center" />
