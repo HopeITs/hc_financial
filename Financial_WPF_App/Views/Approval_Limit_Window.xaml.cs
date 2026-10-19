@@ -1,4 +1,6 @@
 ﻿using Financial_WPF_App.Models;
+using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.UI.Xaml.Grid.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -246,6 +248,10 @@ namespace Financial_WPF_App.Views
                     if (!isDirty_list.Contains(Int32.Parse(row.Row["ID"].ToString())))
                         isDirty_list.Add(Int32.Parse(row.Row["ID"].ToString()));
                 }
+
+                int columnIndex = myDataGrid.ResolveToGridVisibleColumnIndex(e.RowColumnIndex.ColumnIndex);
+                if (columnIndex >= 0 && columnIndex < myDataGrid.Columns.Count)
+                    KeepLocalLimitsInStep(row.Row, myDataGrid.Columns[columnIndex].MappingName);
             }
             catch (Exception ex)
             {
@@ -258,6 +264,43 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
+        /// <summary>
+        /// The old and the new lira are the same money at a fixed ratio, so a role's limit in one
+        /// is its limit in the other: editing the old-lira limit sets the new-lira one to it
+        /// divided by the ratio (100), and editing the new-lira one sets the old-lira one to it
+        /// times the ratio. Emptying either empties both - "not allowed" in one lira and allowed
+        /// in the other would make no sense. The ratio comes from the currencies' base divisors,
+        /// not from a number written here. USD and EUR stay independent.
+        /// </summary>
+        private void KeepLocalLimitsInStep(System.Data.DataRow row, string editedColumn)
+        {
+            if (!Helper.CurrencyService.HasRoleCurrencyLimits || string.IsNullOrEmpty(editedColumn))
+                return;
+
+            int legacyId = Helper.CurrencyService.LegacyCurrencyId;
+            int currentId = Helper.CurrencyService.GetCurrencyId(Helper.CurrencyService.GetCurrentLocalCurrencyName());
+            if (legacyId <= 0 || currentId <= 0)
+                return;
+
+            string legacyCol = "L_" + legacyId, currentCol = "L_" + currentId;
+            if (!row.Table.Columns.Contains(legacyCol) || !row.Table.Columns.Contains(currentCol))
+                return;
+
+            // how many old lira make one new: 100 / 1
+            decimal ratio = Helper.CurrencyService.GetBaseDivisor(legacyId) / Helper.CurrencyService.GetBaseDivisor(currentId);
+            if (ratio <= 0)
+                return;
+
+            if (editedColumn == legacyCol)
+                row[currentCol] = row[legacyCol] == DBNull.Value
+                    ? (object)DBNull.Value
+                    : (double)Math.Round((decimal)Convert.ToDouble(row[legacyCol]) / ratio, 2);
+            else if (editedColumn == currentCol)
+                row[legacyCol] = row[currentCol] == DBNull.Value
+                    ? (object)DBNull.Value
+                    : (double)Math.Round((decimal)Convert.ToDouble(row[currentCol]) * ratio, 2);
+        }
+
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             try
