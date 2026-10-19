@@ -226,7 +226,23 @@ namespace Financial_WPF_App.Helper
         }
 
         /// <summary>
-        /// "SYR, SYPNEW or USD" - the local currencies (not the pay container) and USD, read
+        /// What to SHOW for a currency name. The old lira is stored as "SYR" but is shown to
+        /// users as "SYP". DISPLAY ONLY - never compare, query or store the result.
+        /// </summary>
+        public static string DisplayName(string currencyName)
+        {
+            if (string.Equals(currencyName, "SYR", StringComparison.OrdinalIgnoreCase)) return "SYP";
+            return currencyName;
+        }
+
+        /// <summary>The old local currency's name as shown to users ("SYP"). Display only.</summary>
+        public static string GetLegacyLocalCurrencyDisplayName()
+        {
+            return DisplayName(GetLegacyLocalCurrencyName());
+        }
+
+        /// <summary>
+        /// "SYP, SYPNEW or USD" - the local currencies (not the pay container) and USD, read
         /// from the currency table, for messages naming what a Currency field accepts. Those
         /// messages said "USD or SYR" while also accepting the new lira.
         /// </summary>
@@ -235,7 +251,7 @@ namespace Financial_WPF_App.Helper
             EnsureLoaded();
             var names = new List<string>();
             foreach (CurrencyInfo c in _byId.Values)
-                if (IsLocalCurrency(c.Name, false)) names.Add(c.Name);
+                if (IsLocalCurrency(c.Name, false)) names.Add(DisplayName(c.Name));
             names.Add("USD");
             if (names.Count == 1) return names[0];
             return string.Join(", ", names.GetRange(0, names.Count - 1)) + " or " + names[names.Count - 1];

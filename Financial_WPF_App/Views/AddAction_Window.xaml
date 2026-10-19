@@ -369,7 +369,7 @@
                         <TextBlock>
 Avg Rate only appears if it includes the operation date implicitly or if there is a remainder in it.
 <LineBreak /> 
-In case of having a budget, Avg Rate only appears from the selected budget currency to the local currency (Syr).
+In case of having a budget, Avg Rate only appears from the selected budget currency to the local currency (SYP).
                         </TextBlock>
                     </Button.ToolTip>
                 </Button>

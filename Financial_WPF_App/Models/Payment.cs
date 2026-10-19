@@ -620,8 +620,8 @@ action_deleted.`note` as 'Note',
 
         public DataTable Select_Cash_Payments(int SubProject_ID)
         {
-            string query = "SELECT cash_balances.CashAccount_id as 'CashAccount_id',cash_balances.Account_Name as 'Account', cash_balances.CashAccount_Name AS 'Cash till', cash_balances.Account_I AS 'Income(SYR)'," +
-                " cash_balances.Account_E AS 'Outcome(SYR)',cash_balances.Account_Net AS 'Difference(SYR)', cash_balances.Account_I_USD AS 'Income(USD)',cash_balances.Account_E_USD AS 'Outcome(USD)',cash_balances.Account_Net_USD AS 'Difference(USD)'" +
+            string query = "SELECT cash_balances.CashAccount_id as 'CashAccount_id',cash_balances.Account_Name as 'Account', cash_balances.CashAccount_Name AS 'Cash till', cash_balances.Account_I AS 'Income(SYP)'," +
+                " cash_balances.Account_E AS 'Outcome(SYP)',cash_balances.Account_Net AS 'Difference(SYP)', cash_balances.Account_I_USD AS 'Income(USD)',cash_balances.Account_E_USD AS 'Outcome(USD)',cash_balances.Account_Net_USD AS 'Difference(USD)'" +
                 (Helper.CurrencyService.CashBalancesHasCurrentCurrency
                     ? ", cash_balances.Account_I_New AS 'Income(" + Helper.CurrencyService.GetCurrentLocalCurrencyName() + ")', cash_balances.Account_E_New AS 'Outcome(" + Helper.CurrencyService.GetCurrentLocalCurrencyName() + ")', cash_balances.Account_Net_New AS 'Difference(" + Helper.CurrencyService.GetCurrentLocalCurrencyName() + ")'"
                     : "") +

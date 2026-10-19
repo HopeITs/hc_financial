@@ -776,7 +776,7 @@ namespace Financial_WPF_App.Views
 
         private void NameLocalCurrencyColumns()
         {
-            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyDisplayName();
             string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
             if (string.IsNullOrWhiteSpace(newName)) newName = "New";
 

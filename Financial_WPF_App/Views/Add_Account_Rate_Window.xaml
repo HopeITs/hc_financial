@@ -39,7 +39,7 @@
 
             <ComboBox Grid.Row="3" Grid.Column="1" Style="{DynamicResource FloatingComboboxStyle}" x:Name="From_comboBox" Width="175" DisplayMemberPath="Name" SelectedValuePath="ID" SelectionChanged="From_comboBox_SelectionChanged"
                   TabIndex="1" VerticalAlignment="Stretch" />
-            <Button Grid.Row="3" Grid.Column="2" Width="21" Height="25" x:Name="From_help" ToolTip="Exchange to SYR can only be made from the budget currency." ToolTipService.InitialShowDelay="100" BorderBrush="{x:Null}" Margin="6,0,0,0" HorizontalAlignment="Left">
+            <Button Grid.Row="3" Grid.Column="2" Width="21" Height="25" x:Name="From_help" ToolTip="Exchange to SYP can only be made from the budget currency." ToolTipService.InitialShowDelay="100" BorderBrush="{x:Null}" Margin="6,0,0,0" HorizontalAlignment="Left">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
                 </Button.Background>

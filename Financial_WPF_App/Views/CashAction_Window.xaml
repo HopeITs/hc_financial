@@ -50,7 +50,7 @@
 
                     <!--<Label Content="الصــــندوق: " Style="{DynamicResource title_lableStyle}" 
                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"   />
-                <Label Content="syr " Style="{DynamicResource title_lableStyle}" 
+                <Label Content="SYP " Style="{DynamicResource title_lableStyle}" 
                        x:Name="TillName_lable"
                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"   />-->
             

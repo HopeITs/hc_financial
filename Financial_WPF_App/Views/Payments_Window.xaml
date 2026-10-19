@@ -47,7 +47,7 @@
                                  so the count chips line up and the longest title still touches its chip -->
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="RowTitle"/></Grid.ColumnDefinitions>
-                                <Label x:Name="AllLocal_Label" Content="All(SYR):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                                <Label x:Name="AllLocal_Label" Content="All(SYP):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
                             </Grid>
                             <Border Style="{StaticResource BorderStackPanelStyle}" MinWidth="46">
                                 <TextBlock x:Name="All_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" TextAlignment="Center" HorizontalAlignment="Stretch"/>
@@ -361,7 +361,7 @@
 
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="ID" HeaderText="#" IsHidden="True"/>
-                            <syncfusion:GridNumericColumn  x:Name="PaymentSyr_Column" HeaderText="Payment amount(SYR)" Width="200"  MappingName="Incomesyr"
+                            <syncfusion:GridNumericColumn  x:Name="PaymentSyr_Column" HeaderText="Payment amount(SYP)" Width="200"  MappingName="Incomesyr"
                     NumberDecimalDigits="2"
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
@@ -376,7 +376,7 @@ NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"
 NumberGroupSeparator=","/>
-                            <syncfusion:GridNumericColumn  x:Name="ReturnedSyr_Column" HeaderText="Returned amount(SYR)" Width="200"  MappingName="Outcomesyr"
+                            <syncfusion:GridNumericColumn  x:Name="ReturnedSyr_Column" HeaderText="Returned amount(SYP)" Width="200"  MappingName="Outcomesyr"
 NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"
@@ -538,13 +538,13 @@ HorizontalContentAlignment="Center" Background="{StaticResource LightGray1}"
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label x:Name="SelectedPaymentSyr_Label" Content="Payment Amount(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                            <Label x:Name="SelectedPaymentSyr_Label" Content="Payment Amount(SYP):" Style="{DynamicResource statistic_lableStyle}" />
                             <Border Style="{StaticResource BorderStackPanelStyle}">
                                 <TextBlock x:Name="SelectedPaymentAmountSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
                             </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label x:Name="SelectedReturnedSyr_Label" Content="Returned Amount(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                            <Label x:Name="SelectedReturnedSyr_Label" Content="Returned Amount(SYP):" Style="{DynamicResource statistic_lableStyle}" />
                             <Border Style="{StaticResource BorderStackPanelStyle}">
                                 <TextBlock x:Name="SelectedReturnedAmountSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
                             </Border>

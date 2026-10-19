@@ -214,7 +214,7 @@ PopupAnimation="Fade">
 
                 <syncfusion:GridTextColumn x:Name="Subproject_DataGridColumn" MappingName="SubProjectName" HeaderText="Project"/>
                 <syncfusion:GridTextColumn x:Name="Account_DataGridColumn" MappingName="AccountName" HeaderText="Account"/>
-                <syncfusion:GridNumericColumn  x:Name="PaymentSyr_Column" HeaderText="Payment amount(SYR)" Width="200"  MappingName="Incomesyr"
+                <syncfusion:GridNumericColumn  x:Name="PaymentSyr_Column" HeaderText="Payment amount(SYP)" Width="200"  MappingName="Incomesyr"
                     NumberDecimalDigits="2"
                     NumberDecimalSeparator="."
                     NumberGroupSizes="3"
@@ -229,7 +229,7 @@ NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"
 NumberGroupSeparator=","/>
-                <syncfusion:GridNumericColumn  x:Name="ReturnedSyr_Column" HeaderText="Returned amount(SYR)" Width="200"  MappingName="Outcomesyr"
+                <syncfusion:GridNumericColumn  x:Name="ReturnedSyr_Column" HeaderText="Returned amount(SYP)" Width="200"  MappingName="Outcomesyr"
 NumberDecimalDigits="2"
 NumberDecimalSeparator="."
 NumberGroupSizes="3"

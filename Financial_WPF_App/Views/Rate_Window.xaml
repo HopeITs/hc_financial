@@ -184,7 +184,7 @@ PopupAnimation="Fade">
                         <StackPanel x:Name="Panel1"  Orientation="Horizontal">
                             <RadioButton x:Name="PerDonor_RadioButton" Content="Show Per Donor" IsChecked="False" Style="{DynamicResource RadioButtonStyle}" Checked="PerDonor_RadioButton_Checked" Tag="False" Margin="0,6,0,9"/>
                             <RadioButton x:Name="Total_RadioButton" Content="Show Total" IsChecked="True" Style="{DynamicResource RadioButtonStyle}" Checked="Total_RadioButton_Checked" Tag="False" Margin="0,6,0,9"/>
-                            <Button x:Name="From_help_Copy" Width="17" Height="17" BorderBrush="{x:Null}" ToolTip="The totals appear according to the donor only for the Rate from any currency to Syrian" ToolTipService.InitialShowDelay="100" Margin="1,-3,5,0">
+                            <Button x:Name="From_help_Copy" Width="17" Height="17" BorderBrush="{x:Null}" ToolTip="The totals appear according to the donor only for the Rate from any currency to SYP" ToolTipService.InitialShowDelay="100" Margin="1,-3,5,0">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/Images/Icons/help.png" Stretch="Uniform"/>
                                 </Button.Background>

@@ -43,7 +43,7 @@
             <Label Style="{DynamicResource statistic_lableStyle}" Content="End date:"  Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" />
             <DatePicker x:Name="endDate_datepicker" TabIndex="2"  Grid.Row="2" Grid.Column="3" Width="175" Height="30" />
             <Label x:Name="Exchange_Note_TextBox_Copy" Grid.Row="3" Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="Please note that the budget's currency is the only currency allowed to be " Foreground="{StaticResource HopeRed}"  HorizontalContentAlignment="Left" HorizontalAlignment="Center" Grid.ColumnSpan="4" VerticalAlignment="Bottom"/>
-            <Label x:Name="Exchange_Note_TextBox_Copy1" Grid.Row="4" Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="exchanged to Syrian pound." Foreground="{StaticResource HopeRed}"  HorizontalContentAlignment="Left" HorizontalAlignment="Center" Grid.ColumnSpan="4" VerticalAlignment="Top"/>
+            <Label x:Name="Exchange_Note_TextBox_Copy1" Grid.Row="4" Grid.Column="0"  Style="{DynamicResource statistic_lableStyle}" Content="exchanged to SYP." Foreground="{StaticResource HopeRed}"  HorizontalContentAlignment="Left" HorizontalAlignment="Center" Grid.ColumnSpan="4" VerticalAlignment="Top"/>
 
 
                 <Label Style="{DynamicResource statistic_lableStyle}" Content="Donor:"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Grid.Row="5" Grid.Column="0"/>

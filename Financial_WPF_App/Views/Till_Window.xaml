@@ -42,7 +42,7 @@
                          so the count chips line up and the longest title still touches its chip -->
                     <Grid>
                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="RowTitle"/></Grid.ColumnDefinitions>
-                        <Label x:Name="PayTillLegacy_Label" Content="All(SYR):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
+                        <Label x:Name="PayTillLegacy_Label" Content="All(SYP):" Margin="10,0,1,0" Style="{DynamicResource statistic_lableStyle}"/>
                     </Grid>
                     <Border Style="{StaticResource BorderStackPanelStyle}" MinWidth="46">
                         <TextBlock x:Name="PayTillCountLegacy_textBlock" Text="0" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" TextAlignment="Center" HorizontalAlignment="Stretch"/>
@@ -884,7 +884,7 @@ Margin="1,1,0,0" Grid.Row="1">
                     </Border>
                 </StackPanel>
                 <StackPanel x:Name="SelectedIncomePrimaryPanel" Orientation="Horizontal">
-                    <Label x:Name="SelectedIncomePrimaryLabel" Content="Income(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Label x:Name="SelectedIncomePrimaryLabel" Content="Income(SYP):" Style="{DynamicResource statistic_lableStyle}" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="SelectedIncomeSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" OverridesDefaultStyle="True" />
                     </Border>
@@ -896,7 +896,7 @@ Margin="1,1,0,0" Grid.Row="1">
                     </Border>
                 </StackPanel>
                 <StackPanel x:Name="SelectedExpensesSyrPanel" Orientation="Horizontal">
-                    <Label x:Name="SelectedExpensesPrimaryLabel" Content="Expenses(SYR):" Style="{DynamicResource statistic_lableStyle}" />
+                    <Label x:Name="SelectedExpensesPrimaryLabel" Content="Expenses(SYP):" Style="{DynamicResource statistic_lableStyle}" />
                     <Border Style="{StaticResource BorderStackPanelStyle}">
                         <TextBlock x:Name="SelectedExpensesSyrTextBlock" Text="0.00" Style="{DynamicResource statistic_textBlockStyle}" />
                     </Border>

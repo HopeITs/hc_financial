@@ -36,17 +36,17 @@ HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 Margin="1,1,0,0" Grid.Row="2" Loaded="TillCash_DataGrid_Loaded">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn  x:Name="Account_DataGridColumn" HeaderText="Account"  MappingName="Account"/>
-                    <syncfusion:GridNumericColumn  x:Name="IncomeSYR_DataGridColumn" HeaderText="Income(SYR)"  MappingName="Income_SYR" TextAlignment="Left"
+                    <syncfusion:GridNumericColumn  x:Name="IncomeSYR_DataGridColumn" HeaderText="Income(SYP)"  MappingName="Income_SYR" TextAlignment="Left"
                                NumberDecimalDigits="2"
                                NumberDecimalSeparator="."
                                NumberGroupSizes="3"
                                NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="ExpenseSYR_DataGridColumn" HeaderText="Expenses(SYR)"  MappingName="Expenses_SYR" TextAlignment="Left"
+                    <syncfusion:GridNumericColumn  x:Name="ExpenseSYR_DataGridColumn" HeaderText="Expenses(SYP)"  MappingName="Expenses_SYR" TextAlignment="Left"
                                NumberDecimalDigits="2"
                                NumberDecimalSeparator="."
                                NumberGroupSizes="3"
                                NumberGroupSeparator=","/>
-                    <syncfusion:GridNumericColumn  x:Name="DifferenceSYR_DataGridColumn" HeaderText="Difference(SYR)"  MappingName="Difference_SYR"  TextAlignment="Left"
+                    <syncfusion:GridNumericColumn  x:Name="DifferenceSYR_DataGridColumn" HeaderText="Difference(SYP)"  MappingName="Difference_SYR"  TextAlignment="Left"
                                NumberDecimalDigits="2"
                                NumberDecimalSeparator="."
                                NumberGroupSizes="3"

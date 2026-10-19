@@ -442,7 +442,7 @@ namespace Financial_WPF_App.Views
                 PayTillStatsHost.LayoutUpdated -= PayTillStatsHost_LayoutUpdated;
                 PayTillStatsHost.LayoutUpdated += PayTillStatsHost_LayoutUpdated;
 
-                string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+                string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyDisplayName();
                 string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
                 if (string.IsNullOrWhiteSpace(newName)) newName = "New";
                 PayTillLegacy_Label.Content = "All(" + oldName + "):";
@@ -2140,7 +2140,7 @@ namespace Financial_WPF_App.Views
         /// </summary>
         private void ConfigurePayCurrencyColumns()
         {
-            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyDisplayName();
             string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
             if (string.IsNullOrWhiteSpace(newName)) newName = "New";
 
@@ -2220,7 +2220,7 @@ namespace Financial_WPF_App.Views
             bool splits = ShowsLocalAndUsd();
             bool isUsd = string.Equals(TillType_Name, "usd", StringComparison.OrdinalIgnoreCase);
 
-            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            string oldName = Helper.CurrencyService.GetLegacyLocalCurrencyDisplayName();
             string newName = Helper.CurrencyService.GetCurrentLocalCurrencyName();
             if (string.IsNullOrWhiteSpace(newName)) newName = "New";
 

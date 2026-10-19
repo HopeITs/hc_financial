@@ -21,7 +21,7 @@ namespace Financial_WPF_App.Views
         {
             InitializeComponent();
             // the panel holds the old currency's totals; name it from the currency table
-            LocalTotals_Title_lbl.Content = Helper.CurrencyService.GetLegacyLocalCurrencyName();
+            LocalTotals_Title_lbl.Content = Helper.CurrencyService.GetLegacyLocalCurrencyDisplayName();
 
             Main_Window_2.WindowStateChanged += OnMainWindowStateChanged; // Subscribe to event
 

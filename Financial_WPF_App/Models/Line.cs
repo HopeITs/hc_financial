@@ -87,7 +87,7 @@ namespace Financial_WPF_App.Models
             // named from the currency table; the foreign-currency columns were already right
             // (each purchase divided by its own rate). DISPLAY ONLY: nothing stored changes.
             // used inside quoted column aliases, so a quote in a currency name must not end them
-            string legacyName = Helper.CurrencyService.GetLegacyLocalCurrencyName().Replace("'", "");
+            string legacyName = Helper.CurrencyService.GetLegacyLocalCurrencyDisplayName().Replace("'", "");
             string currentName = Helper.CurrencyService.GetCurrentLocalCurrencyName().Replace("'", "");
             string isLegacy = Helper.CurrencyService.LegacyAmountSql("currency_type", "till_type");
             string isCurrent = Helper.CurrencyService.CurrentLocalAmountSql("currency_type", "till_type");

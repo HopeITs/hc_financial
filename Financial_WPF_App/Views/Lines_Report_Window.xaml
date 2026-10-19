@@ -223,7 +223,7 @@ PopupAnimation="Fade">
                         <syncfusion:GridTextColumn x:Name="ActionMonth_DataGridColumn" MappingName="ActionMonth" HeaderText="Operation Month"/>
                         <syncfusion:GridTextColumn x:Name="ActionYear_DataGridColumn" MappingName="ActionYear" HeaderText="Operation Year"/>
                         <syncfusion:GridTextColumn x:Name="Currency_DataGridColumn" MappingName="Currency" HeaderText="Currency"/>
-                        <syncfusion:GridNumericColumn  x:Name="Expensesyr_DataGridColumn" HeaderText="Expense(SYR)"  MappingName="ExpenseSYR"
+                        <syncfusion:GridNumericColumn  x:Name="Expensesyr_DataGridColumn" HeaderText="Expense(SYP)"  MappingName="ExpenseSYR"
                 NumberDecimalDigits="2"
                 NumberDecimalSeparator="."
                 NumberGroupSizes="3"
