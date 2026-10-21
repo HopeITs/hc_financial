@@ -513,8 +513,9 @@ namespace Financial_WPF_App.Models
             var accParams = Account_IDs
             .Select((id, i) => $"@acc{i}")
             .ToArray();
-            query = @"SELECT action_attachments.id, action_attachments.action_id, action_attachments.attach_name
-                      FROM `action_attachments` 
+            query = @"SELECT action_attachments.id, action_attachments.action_id, action_attachments.attach_name,
+                             account.name as account_name, date(action.ActionDate) as action_date
+                      FROM `action_attachments`
                       LEFT JOIN action on action.ID = action_attachments.action_id
                       LEFT JOIN till on till.ID = action.Till_ID
                       LEFT JOIN account on account.ID = till.Account_ID where 1";

@@ -73,6 +73,7 @@ namespace Financial_WPF_App.Views
             AddAttachments_btn.Visibility = Visibility.Hidden;
             FilterPane11.Visibility = Visibility.Visible;
             Delete_DataGridColumn.IsHidden = true;
+            GroupBy_Panel.Visibility = Visibility.Visible;
             SelectedAccountIDs = new List<int>();
             if (OnLoad())
             {
@@ -134,6 +135,8 @@ namespace Financial_WPF_App.Views
                 Load_Data();
                 Fill_Comboboxes();
                 Apply_Color_Theme();
+                if (Theme_Color is SolidColorBrush accent)
+                    Resources["AccentBrush"] = accent;
                 Apply_DataGrid_Color_Theme();
                 to_Date = DateTime.Today;
                 from_Date = to_Date.AddMonths(-1);
@@ -374,7 +377,6 @@ namespace Financial_WPF_App.Views
                     int count = myDataGrid.View.Records.Count();
                     All_Label.Content = count.ToString("N0");
                     DownloadAttachments_btn.Visibility = Visibility.Visible;
-                    DownloadAttachments_btn.Width = 24;
                 }
                 else
                 {
@@ -404,7 +406,6 @@ namespace Financial_WPF_App.Views
                     int count = myDataGrid.View.Records.Count();
                     All_Label.Content = count.ToString("N0");
                     DownloadAttachments_btn.Visibility = Visibility.Visible;
-                    DownloadAttachments_btn.Width = 24;
                 }
                 else
                 {
@@ -563,7 +564,15 @@ namespace Financial_WPF_App.Views
             }
         }
 
-        private void DownloadSelected_Button_Click(object sender, RoutedEventArgs e)
+        private sealed class DownloadItem
+        {
+            public int Id;
+            public string Name;
+            public string OnlineName;
+            public string Folder;
+        }
+
+        private async void DownloadSelected_Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -578,54 +587,154 @@ namespace Financial_WPF_App.Views
                     return;
                 }
 
-                // 🔥 Ask folder ONCE
                 var folderDialog = new System.Windows.Forms.FolderBrowserDialog();
-                var res = folderDialog.ShowDialog();
-
-                if (res != System.Windows.Forms.DialogResult.OK ||
+                if (folderDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK ||
                     string.IsNullOrWhiteSpace(folderDialog.SelectedPath))
                     return;
 
-                string selectedPath = folderDialog.SelectedPath;
+                string rootName = AskFolderName("Attachments_" + DateTime.Today.ToString("yyyy-MM-dd"));
+                if (rootName == null)
+                    return;
 
+                string selectedPath = Path.Combine(folderDialog.SelectedPath, CleanFolderName(rootName));
+                bool isBulkMode = GroupBy_Panel.Visibility == Visibility.Visible;
+                bool groupByAccount = GroupByAccount_Radio.IsChecked == true;
+                bool hasAccountCols = attachments_dt.Columns.Contains("account_name") && attachments_dt.Columns.Contains("action_date");
+
+                var items = new List<DownloadItem>();
                 foreach (var dataRow in selectedRows)
                 {
-                    SaveFileName = dataRow["attach_name"].ToString();
-                    attachments_id = Convert.ToInt32(dataRow["id"]);
-
+                    string name = dataRow["attach_name"].ToString();
+                    string onlineName = null;
                     if (Action_ID != -1)
-                    {
-                        DownloadFileName = "Action_id_" + dataRow["action_id"].ToString() + "_" + SaveFileName;
-                    }
+                        onlineName = "Action_id_" + dataRow["action_id"].ToString() + "_" + name;
                     else if (Beneficiary_ID != -1)
+                        onlineName = "Beneficiary_id_" + Beneficiary_ID.ToString() + "_" + name;
+
+                    string folder = selectedPath;
+                    if (isBulkMode && hasAccountCols)
                     {
-                        DownloadFileName = "Beneficiary_id_" + Beneficiary_ID.ToString() + "_" + SaveFileName;
+                        string accountName = CleanFolderName(dataRow["account_name"]?.ToString() ?? "Unknown");
+                        string monthFolder = dataRow["action_date"] != DBNull.Value
+                            ? Convert.ToDateTime(dataRow["action_date"]).ToString("yyyy-MM")
+                            : "Unknown";
+                        folder = groupByAccount
+                            ? Path.Combine(selectedPath, accountName, monthFolder)
+                            : Path.Combine(selectedPath, monthFolder, accountName);
                     }
 
-                    if (d.file_Exist(DownloadFileName))
-                    {
-                        SaveDialog(selectedPath); // 🔥 pass same folder
-                    }
-                    else
-                    {
-                        d.DeleteAttachmentTfromDatabase(
-                            attachments_id,
-                            SaveFileName,
-                            Action_ID,
-                            Beneficiary_ID,
-                            Approved_Action,
-                            "Attachments"
-                        );
-                    }
+                    items.Add(new DownloadItem { Id = Convert.ToInt32(dataRow["id"]), Name = name, OnlineName = onlineName, Folder = folder });
                 }
 
-                MessageBox.Show("Files saved successfully.", "Confirmation");
+                DownloadAttachments_btn.IsEnabled = false;
+                GroupBy_Panel.IsEnabled = false;
+                circularProgressBar.Progress = 0;
+                Percentage_label.Content = "0 / " + items.Count;
+                circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Visible;
+
+                var missing = new List<DownloadItem>();
+                int done = 0;
+                var progress = new Progress<int>(n =>
+                {
+                    circularProgressBar.Progress = n * 100.0 / items.Count;
+                    Percentage_label.Content = n + " / " + items.Count;
+                });
+
+                await Task.Run(() =>
+                {
+                    foreach (var item in items)
+                    {
+                        if (!d.file_Exist(item.OnlineName))
+                        {
+                            missing.Add(item);
+                        }
+                        else
+                        {
+                            Directory.CreateDirectory(item.Folder);
+                            SaveFileTo(Login.OnlineRoot + "/" + item.OnlineName, item.Folder, item.Name);
+                        }
+                        ((IProgress<int>)progress).Report(++done);
+                    }
+                });
+
+                foreach (var item in missing)
+                    d.DeleteAttachmentTfromDatabase(item.Id, item.Name, Action_ID, Beneficiary_ID, Approved_Action, "Attachments");
+
+                circularProgressBar.Progress = 100;
+                await Task.Delay(500);
+                circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Collapsed;
+
+                MessageBox.Show("Saved " + (items.Count - missing.Count) + " file(s) to:" + Environment.NewLine + selectedPath +
+                    (missing.Count > 0 ? Environment.NewLine + missing.Count + " missing file(s) were removed from the list." : ""),
+                    "Confirmation");
                 Load_Data();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error");
             }
+            finally
+            {
+                DownloadAttachments_btn.IsEnabled = true;
+                GroupBy_Panel.IsEnabled = true;
+                circularProgressBar.Visibility = Percentage_label.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private string AskFolderName(string defaultName)
+        {
+            string result = null;
+            var box = new TextBox { Text = defaultName, Margin = new Thickness(0, 6, 0, 12), Padding = new Thickness(6, 4, 6, 4), FontSize = 13 };
+            var ok = new Button { Content = "Create & Download", IsDefault = true, Padding = new Thickness(16, 5, 16, 5), Margin = new Thickness(0, 0, 8, 0) };
+            var cancel = new Button { Content = "Cancel", IsCancel = true, Padding = new Thickness(16, 5, 16, 5) };
+            var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+            buttons.Children.Add(ok);
+            buttons.Children.Add(cancel);
+            var panel = new StackPanel { Margin = new Thickness(16) };
+            panel.Children.Add(new TextBlock { Text = "Folder that will hold all downloaded files:", FontSize = 12 });
+            panel.Children.Add(box);
+            panel.Children.Add(buttons);
+            var win = new Window
+            {
+                Title = "Download folder name",
+                Content = panel,
+                Width = 380,
+                SizeToContent = SizeToContent.Height,
+                ResizeMode = ResizeMode.NoResize,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = this,
+                ShowInTaskbar = false
+            };
+            ok.Click += (s, a) =>
+            {
+                if (string.IsNullOrWhiteSpace(box.Text)) return;
+                result = box.Text.Trim();
+                win.DialogResult = true;
+            };
+            win.Loaded += (s, a) => { box.Focus(); box.SelectAll(); };
+            win.ShowDialog();
+            return result;
+        }
+
+        private void SaveFileTo(string onlineFilePath, string folder, string fileName)
+        {
+            string fullPath = Path.Combine(folder, fileName);
+            string name = Path.GetFileNameWithoutExtension(fileName);
+            string ext = Path.GetExtension(fileName);
+            int counter = 1;
+            while (File.Exists(fullPath))
+            {
+                fullPath = Path.Combine(folder, $"{name}({counter}){ext}");
+                counter++;
+            }
+            d.CopyToLocal(onlineFilePath, fullPath);
+        }
+
+        private string CleanFolderName(string name)
+        {
+            foreach (char c in Path.GetInvalidFileNameChars())
+                name = name.Replace(c, '_');
+            return name;
         }
 
         private void SaveDialog(string selectedPath)

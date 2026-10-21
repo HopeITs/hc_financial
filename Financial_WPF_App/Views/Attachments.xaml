@@ -10,6 +10,36 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d" Tag="Attachments Window"
         Title="Attachments" Style="{StaticResource smallWindowPopupStyle}" Width="600" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <SolidColorBrush x:Key="AccentBrush" Color="#2A8C8C"/>
+
+        <Style x:Key="SegmentStyle" TargetType="RadioButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="#555555"/>
+            <Setter Property="Padding" Value="7,0"/>
+            <Setter Property="Height" Value="19"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="seg" Background="Transparent" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="seg" Property="Background" Value="#14000000"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="seg" Property="Background" Value="{DynamicResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid  Margin="5">
 
         <Grid>
@@ -17,6 +47,7 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition x:Name="FilterRow1" Height="Auto"/>
                 <RowDefinition x:Name="FilterRow2" Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="355*"/>
             </Grid.RowDefinitions>
@@ -88,32 +119,44 @@ VerticalAlignment="Stretch" SelectionChanged="City_comboBox_SelectionChanged" >
                     <Label x:Name="All_Label" FontSize="11"  Style="{DynamicResource statistic_lableStyle}" Content="0" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"  Height="40" HorizontalAlignment="Right">
-                    <syncfusion:SfLinearProgressBar x:Name="circularProgressBar" Width="166"
-                    Height="12" SegmentCount="20"
-                    TrackColor="{StaticResource LightGray1}"
-                    ProgressColor="{StaticResource GreenBlue}"/>
-                    <Label x:Name="Percentage_label" FontSize="11" Style="{DynamicResource statistic_lableStyle}" Content="0%" Margin="0,4,0,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" />
                     <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Add Attachments" ToolTipService.InitialShowDelay="100" Cursor="Hand"
 x:Name="AddAttachments_btn" TabIndex="15" Click="AddAttachments_btn_Click" VerticalAlignment="Stretch" Height="23" Width="24">
                         <Button.Background>
                             <ImageBrush ImageSource="/Images/Icons/add_attach.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
+                    <Border x:Name="GroupBy_Panel" Visibility="Collapsed" VerticalAlignment="Center" Margin="6,0,4,0"
+                            Background="#12000000" CornerRadius="4" Padding="1" ToolTip="Folder hierarchy inside the download folder">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="GroupByAccount_Radio" Style="{StaticResource SegmentStyle}" GroupName="GroupBy" Content="Account › Month" IsChecked="True"/>
+                            <RadioButton x:Name="GroupByMonth_Radio" Style="{StaticResource SegmentStyle}" GroupName="GroupBy" Content="Month › Account"/>
+                        </StackPanel>
+                    </Border>
                     <Button Style="{DynamicResource AddButtonStyle}" ToolTip="Download Selected Attachments" Visibility="Hidden" ToolTipService.InitialShowDelay="100" Cursor="Hand"
-x:Name="DownloadAttachments_btn" TabIndex="15" Click="DownloadSelected_Button_Click" VerticalAlignment="Stretch" Height="23" Width="5" Margin="5,0,1,0">
+x:Name="DownloadAttachments_btn" TabIndex="15" Click="DownloadSelected_Button_Click" VerticalAlignment="Stretch" Height="23" Width="24" Margin="5,0,1,0">
                         <Button.Background>
                             <ImageBrush ImageSource="/Images/Buttons/Download.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
                 </StackPanel>
             </DockPanel>
+            <Grid Grid.Row="4" Margin="5,0,5,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <syncfusion:SfLinearProgressBar x:Name="circularProgressBar" Height="10" SegmentCount="20" VerticalAlignment="Center"
+                    TrackColor="{StaticResource LightGray1}"
+                    ProgressColor="{StaticResource GreenBlue}"/>
+                <Label x:Name="Percentage_label" Grid.Column="1" FontSize="11" Style="{DynamicResource statistic_lableStyle}" Content="0%" Margin="6,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Right" MinWidth="50"/>
+            </Grid>
             <syncfusion:SfDataGrid x:Name="myDataGrid"                              
       Style="{DynamicResource SfDataGrid_body}"
       HeaderStyle="{DynamicResource SfDataGrid_header}"
       RowStyle="{DynamicResource SfDataGrid_RowStyle}"
       AlternatingRowStyle="{DynamicResource SfDataGrid_alternatingRowStyle}"      
       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-       Grid.Row="4" Margin="0,0,0,0" Loaded="myDataGrid_Loaded" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged">
+       Grid.Row="5" Margin="0,0,0,0" Loaded="myDataGrid_Loaded" CurrentCellValueChanged="myDataGrid_CurrentCellValueChanged">
 
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridCheckBoxColumn x:Name="Selected_DataGridColumn" HeaderText="Select" Width="50" MappingName="IsSelected" AllowEditing="True" AllowFiltering="False" AllowGrouping="False">
