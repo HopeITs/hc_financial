@@ -514,11 +514,15 @@ namespace Financial_WPF_App.Models
             .Select((id, i) => $"@acc{i}")
             .ToArray();
             query = @"SELECT action_attachments.id, action_attachments.action_id, action_attachments.attach_name,
+                             city.name as city_name, project.name as program_name, subproject.name as project_name,
                              account.name as account_name, date(action.ActionDate) as action_date
                       FROM `action_attachments`
                       LEFT JOIN action on action.ID = action_attachments.action_id
                       LEFT JOIN till on till.ID = action.Till_ID
-                      LEFT JOIN account on account.ID = till.Account_ID where 1";
+                      LEFT JOIN account on account.ID = till.Account_ID
+                      LEFT JOIN subproject on subproject.ID = account.SubProject_ID
+                      LEFT JOIN project on project.ID = subproject.Project_ID
+                      LEFT JOIN city on city.ID = subproject.city_id where 1";
 
             if (Account_IDs != null && Account_IDs.Count > 0)
             {
@@ -526,7 +530,7 @@ namespace Financial_WPF_App.Models
 
                 
             }
-            if (FromDate != "" && ToDate != "" && Action_ID == 0) {
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(ToDate) && Action_ID == 0) {
                 query += " AND date(action.ActionDate) BETWEEN @FromDate and @ToDate ";
             }
             if (Action_ID != 0)
@@ -596,33 +600,22 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable get_user_projects(int UserId, int CityId, string UserRole)
+        private DataTable RunScopedListQuery(string query, int userId, params KeyValuePair<string, List<int>>[] lists)
         {
-            string query = "";
-            if (UserRole != "Head Office" && UserRole != "Financial Manager")
-            {
-                query = @"SELECT DISTINCT sp.id, sp.name
-                            FROM subproject sp
-                            JOIN user_accounts ua ON ua.subproject_id = sp.id
-                            WHERE ua.user_id = @UserId
-                            AND sp.city_id = @CityId;";
-            }
-            else
-            {
-                query = @"SELECT DISTINCT sp.id, sp.name
-                  FROM subproject sp
-                  WHERE sp.city_id = @CityId";
-            }
-
-                DataTable dt = new DataTable();
+            DataTable dt = new DataTable();
             if (Login.BuildConnection())
             {
                 MySqlCommand sc = new MySqlCommand();
-
+                foreach (var list in lists)
+                {
+                    var names = list.Value.Select((id, i) => "@" + list.Key + i).ToArray();
+                    query = query.Replace("{" + list.Key + "}", string.Join(",", names));
+                    for (int i = 0; i < names.Length; i++)
+                        sc.Parameters.AddWithValue(names[i], list.Value[i]);
+                }
                 sc.CommandTimeout = 120;
                 sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                sc.Parameters.AddWithValue("@UserId", UserId);
-                sc.Parameters.AddWithValue("@CityId", CityId);
+                sc.Parameters.AddWithValue("@UserId", userId);
                 sc.Parameters.AddWithValue("@t", 600);
                 sc.Connection = Login.MyConn;
 
@@ -633,40 +626,61 @@ namespace Financial_WPF_App.Models
             return dt;
         }
 
-        public DataTable get_user_accounts(int UserId,int SubProjectId , string UserRole)
+        private static bool SeesAllAccounts(string userRole)
         {
-            string query = "";
-            if (UserRole != "Head Office" && UserRole != "Financial Manager")
-            {
-                query = @"SELECT DISTINCT a.id, a.name
-                            FROM account a
-                            JOIN user_accounts ua ON ua.account_id = a.id
-                            WHERE ua.user_id = @UserId
-                            AND ua.subproject_id = @SubProjectId;";
-            }
-            else {
-                query = @"SELECT DISTINCT a.id, a.name
-                  FROM account a
-                  WHERE a.subproject_id = @SubProjectId;";
-            }
+            return userRole == "Head Office" || userRole == "Financial Manager";
+        }
 
-                DataTable dt = new DataTable();
-            if (Login.BuildConnection())
-            {
-                MySqlCommand sc = new MySqlCommand();
+        public DataTable get_user_programs(int UserId, List<int> CityIds, string UserRole)
+        {
+            if (CityIds == null || CityIds.Count == 0) return new DataTable();
+            string query = SeesAllAccounts(UserRole)
+                ? @"SELECT DISTINCT p.id, p.name
+                      FROM subproject sp
+                      JOIN project p ON p.ID = sp.Project_ID
+                     WHERE sp.city_id IN ({city})
+                     ORDER BY p.name;"
+                : @"SELECT DISTINCT p.id, p.name
+                      FROM subproject sp
+                      JOIN project p ON p.ID = sp.Project_ID
+                      JOIN user_accounts ua ON ua.subproject_id = sp.id
+                     WHERE ua.user_id = @UserId AND sp.city_id IN ({city})
+                     ORDER BY p.name;";
+            return RunScopedListQuery(query, UserId, new KeyValuePair<string, List<int>>("city", CityIds));
+        }
 
-                sc.CommandTimeout = 120;
-                sc.CommandText = "SET SESSION wait_timeout = @t;" + query;
-                sc.Parameters.AddWithValue("@UserId", UserId);
-                sc.Parameters.AddWithValue("@SubProjectId", SubProjectId);
-                sc.Parameters.AddWithValue("@t", 600);
-                sc.Connection = Login.MyConn;
+        public DataTable get_user_projects(int UserId, List<int> CityIds, List<int> ProgramIds, string UserRole)
+        {
+            if (CityIds == null || CityIds.Count == 0 || ProgramIds == null || ProgramIds.Count == 0) return new DataTable();
+            string query = SeesAllAccounts(UserRole)
+                ? @"SELECT DISTINCT sp.id, sp.name
+                      FROM subproject sp
+                     WHERE sp.city_id IN ({city}) AND sp.Project_ID IN ({prog})
+                     ORDER BY sp.name;"
+                : @"SELECT DISTINCT sp.id, sp.name
+                      FROM subproject sp
+                      JOIN user_accounts ua ON ua.subproject_id = sp.id
+                     WHERE ua.user_id = @UserId AND sp.city_id IN ({city}) AND sp.Project_ID IN ({prog})
+                     ORDER BY sp.name;";
+            return RunScopedListQuery(query, UserId,
+                new KeyValuePair<string, List<int>>("city", CityIds),
+                new KeyValuePair<string, List<int>>("prog", ProgramIds));
+        }
 
-                MySqlDataAdapter da = new MySqlDataAdapter(sc);
-                da.Fill(dt);
-                Login.CloseAndClearConnection();
-            }
-            return dt;
+        public DataTable get_user_accounts(int UserId, List<int> SubProjectIds, string UserRole)
+        {
+            if (SubProjectIds == null || SubProjectIds.Count == 0) return new DataTable();
+            string query = SeesAllAccounts(UserRole)
+                ? @"SELECT DISTINCT a.id, a.name
+                      FROM account a
+                     WHERE a.subproject_id IN ({sub})
+                     ORDER BY a.name;"
+                : @"SELECT DISTINCT a.id, a.name
+                      FROM account a
+                      JOIN user_accounts ua ON ua.account_id = a.id
+                     WHERE ua.user_id = @UserId AND ua.subproject_id IN ({sub})
+                     ORDER BY a.name;";
+            return RunScopedListQuery(query, UserId, new KeyValuePair<string, List<int>>("sub", SubProjectIds));
         }
 
         public DataTable Select_Accounts_By_Subproject_And_TillType(

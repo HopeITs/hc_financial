@@ -5,6 +5,7 @@ using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.RowFilter;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -112,19 +113,8 @@ namespace Financial_WPF_App.Views
         string HeaderStyle_Name = "SfDataGrid_header";
         string TableSummaryRowStyle_Name = "GreenBlue_TableSummaryRowStyle";
         string GroupSummaryRowStyle = "GreenBlue_GroupSummaryRowStyle";
-        List<Local_Account> objAccountList;
-        List<Local_Account> FilteredAccountList;
-        List<Local_Account> Original_AccountList;
         List<int> SelectedAccountIDs;
 
-        private class Local_Account
-        {
-            public int AccID { set; get; }
-
-            public string AccName { set; get; }
-
-            public Boolean Acc_Check_Status { set; get; }
-        }
         private bool OnLoad()
         {
             try
@@ -239,100 +229,150 @@ namespace Financial_WPF_App.Views
 
         private void Fill_Comboboxes()
         {
+            filters = new[] { cityFilter, programFilter, projectFilter, accountFilter };
+            cityFilter.Box = City_comboBox;
+            cityFilter.Required = true;
+            programFilter.Box = Program_comboBox;
+            projectFilter.Box = Subproject_comboBox;
+            accountFilter.Box = Account_comboBox;
+
             LoadUserCities();
         }
 
-        public void LoadUserCities()
+        private class FilterItem : INotifyPropertyChanged
         {
-            DataTable dt = a.get_user_cities(userId, userRole);
-
-            City_comboBox.ItemsSource = dt.DefaultView;
-            City_comboBox.DisplayMemberPath = "name";
-            City_comboBox.SelectedValuePath = "id";
-
-            City_comboBox.SelectedIndex = -1;
-        }
-
-        public void LoadUserProjects(int city_id)
-        {
-            DataTable dt = a.get_user_projects(userId, city_id, userRole);
-
-            Subproject_comboBox.ItemsSource = dt.DefaultView;
-            Subproject_comboBox.DisplayMemberPath = "name";
-            Subproject_comboBox.SelectedValuePath = "id";
-
-            Subproject_comboBox.SelectedIndex = -1;
-        }
-
-        public void LoadUserAccounts(int subproject_id)
-        {
-            DataTable dt = a.get_user_accounts(userId, subproject_id, userRole);
-            List<string> AllAccount_ID = new List<string>();
-            Original_AccountList = new List<Local_Account>();
-            objAccountList = new List<Local_Account>();
-
-            if (dt != null && dt.Rows.Count > 0)
+            private bool isChecked;
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public bool IsAll { get; set; }
+            public bool IsChecked
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                get { return isChecked; }
+                set
                 {
-                    Local_Account obj = new Local_Account();
-                    obj.AccID = dt.Rows[i].Field<int>(0);
-                    obj.AccName = dt.Rows[i].Field<string>(1);
-                    objAccountList.Add(obj);
+                    if (isChecked == value) return;
+                    isChecked = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
                 }
-                Account_comboBox.ItemsSource = objAccountList;
-                int count = objAccountList.Count(item => item.Acc_Check_Status == true);
-                Account_comboBox.Text = count.ToString() + " Selected";
+            }
+            public event PropertyChangedEventHandler PropertyChanged;
+        }
+
+        private class MultiFilter
+        {
+            public ComboBox Box;
+            public List<FilterItem> Items = new List<FilterItem>();
+            public bool Required;
+
+            public List<int> SelectedIds
+            {
+                get { return Items.Where(i => !i.IsAll && i.IsChecked).Select(i => i.Id).ToList(); }
+            }
+
+            // Nothing ticked means "no restriction at this level": every item in the list counts,
+            // except on the required (City) level where nothing ticked means nothing chosen yet.
+            public List<int> EffectiveIds
+            {
+                get
+                {
+                    var ids = SelectedIds;
+                    if (ids.Count > 0 || Required) return ids;
+                    return Items.Where(i => !i.IsAll).Select(i => i.Id).ToList();
+                }
+            }
+
+            public void Load(DataTable dt)
+            {
+                var previous = new HashSet<int>(SelectedIds);
+                Items = new List<FilterItem>();
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    Items.Add(new FilterItem { Id = -1, Name = "Select All", IsAll = true });
+                    foreach (System.Data.DataRow row in dt.Rows)
+                    {
+                        int id = Convert.ToInt32(row[0]);
+                        Items.Add(new FilterItem { Id = id, Name = Convert.ToString(row[1]), IsChecked = previous.Contains(id) });
+                    }
+                    SyncAll();
+                }
+                Box.ItemsSource = Items;
+                Box.IsEnabled = Items.Count > 0;
+                UpdateText();
+            }
+
+            public void SyncAll()
+            {
+                var all = Items.FirstOrDefault(i => i.IsAll);
+                if (all == null) return;
+                var real = Items.Where(i => !i.IsAll).ToList();
+                all.IsChecked = real.Count > 0 && real.All(i => i.IsChecked);
+            }
+
+            public void UpdateText()
+            {
+                int count = SelectedIds.Count;
+                int total = Items.Count(i => !i.IsAll);
+                if (total == 0) Box.Text = "";
+                else if (count == 0) Box.Text = Required ? "Select city..." : "All (" + total + ")";
+                else Box.Text = count == total ? "All (" + total + ")" : count + " Selected";
             }
         }
 
-        private void Account_Checkbox_Item_Clicked(object sender, RoutedEventArgs e)
+        private readonly MultiFilter cityFilter = new MultiFilter();
+        private readonly MultiFilter programFilter = new MultiFilter();
+        private readonly MultiFilter projectFilter = new MultiFilter();
+        private readonly MultiFilter accountFilter = new MultiFilter();
+        private MultiFilter[] filters;
+
+        public void LoadUserCities()
+        {
+            cityFilter.Load(a.get_user_cities(userId, userRole));
+            ReloadPrograms();
+        }
+
+        private void ReloadPrograms()
+        {
+            programFilter.Load(a.get_user_programs(userId, cityFilter.EffectiveIds, userRole));
+            ReloadProjects();
+        }
+
+        private void ReloadProjects()
+        {
+            projectFilter.Load(a.get_user_projects(userId, cityFilter.EffectiveIds, programFilter.EffectiveIds, userRole));
+            ReloadAccounts();
+        }
+
+        private void ReloadAccounts()
+        {
+            accountFilter.Load(a.get_user_accounts(userId, projectFilter.EffectiveIds, userRole));
+            SelectedAccountIDs = accountFilter.EffectiveIds;
+        }
+
+        private void Filter_Item_Clicked(object sender, RoutedEventArgs e)
         {
             try
             {
-                //FilteredAccountList = new List<Local_Account>();
-                //    if (objAccountList != null && objAccountList.Count > 0)
-                //    {
-                //        foreach (var account in objAccountList)
-                //        {
-                //            if (account.Acc_Check_Status == true)
-                //            FilteredAccountList.Add(account);
-                //        }
-                //    }
+                var item = (sender as CheckBox)?.DataContext as FilterItem;
+                var filter = filters.FirstOrDefault(f => f.Items.Contains(item));
+                if (filter == null) return;
 
-                //    if (FilteredAccountList != null && FilteredAccountList.Count > 0)
-                //    {
-                //        Account_comboBox.ItemsSource = null;
-                //    Account_comboBox.Text = "0 Selected";
-                //    Account_comboBox.ItemsSource = FilteredAccountList;
-                //        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
-                //    Account_comboBox.Text = count.ToString() + " Selected";
-                //    }
-                //    else
-                //    {
-                //    Account_comboBox.ItemsSource = null;
-                //    Account_comboBox.Text = "0 Selected";
-                //    Account_comboBox.ItemsSource = objAccountList;
-                //        int count = objAccountList.Count(item => item.Acc_Check_Status == true);
-                //    Account_comboBox.Text = count.ToString() + " Selected";
-                //    }
-
-
-
-                //int AccoutCount = objAccountList.Count(item => item.Acc_Check_Status == true);
-                //Account_comboBox.Text = AccoutCount.ToString() + " Selected";
-                if (objAccountList == null || objAccountList.Count == 0)
+                if (item.IsAll)
                 {
-                    Account_comboBox.Text = "0 Selected";
-                    return;
+                    foreach (var other in filter.Items)
+                        other.IsChecked = item.IsChecked;
                 }
+                else
+                {
+                    filter.SyncAll();
+                }
+                filter.UpdateText();
 
-                int selectedCount = objAccountList.Count(x => x.Acc_Check_Status);
-                SelectedAccountIDs = new List<int>();
-                Account_comboBox.Text = $"{selectedCount} Selected";
+                if (filter == cityFilter) ReloadPrograms();
+                else if (filter == programFilter) ReloadProjects();
+                else if (filter == projectFilter) ReloadAccounts();
+                else SelectedAccountIDs = accountFilter.EffectiveIds;
 
-                Account_comboBox.IsDropDownOpen = true;
-                SelectedAccountIDs = objAccountList.Where(x => x.Acc_Check_Status).Select(x => x.AccID).ToList();
+                filter.Box.IsDropDownOpen = true;
             }
             catch (Exception ex)
             {
@@ -340,8 +380,6 @@ namespace Financial_WPF_App.Views
                 { MessageBox.Show("please check your network and try again", "Error"); }
                 else if (ex.Message.Contains("host"))
                 { MessageBox.Show("please check the server or your network connection and try again", "Error"); }
-                else if (ex.Message.Contains("Duplicate entry"))
-                { MessageBox.Show("Error … There are duplicate values.", "Error", MessageBoxButton.OK, MessageBoxImage.None, MessageBoxResult.None); }
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
@@ -356,9 +394,15 @@ namespace Financial_WPF_App.Views
             if (ToDate_datepicker.SelectedDate != null && ToDate_datepicker.SelectedDate.ToString() != "")
                 ToDate = ((DateTime)ToDate_datepicker.SelectedDate).ToString("yyyy/MM/dd");
 
+            if (UseDate_check.IsChecked != true)
+                FromDate = ToDate = null;
+
+            bool bulkMode = GroupBy_Panel.Visibility == Visibility.Visible;
+            bool skipQuery = bulkMode && SelectedAccountIDs != null && SelectedAccountIDs.Count == 0;
+
             if (SelectedAccountIDs != null)
             {
-                attachments_dt = a.get_attachments(SelectedAccountIDs, Action_ID, Beneficiary_ID, FromDate, ToDate);
+                attachments_dt = skipQuery ? new DataTable() : a.get_attachments(SelectedAccountIDs, Action_ID, Beneficiary_ID, FromDate, ToDate);
 
                 if (attachments_dt != null && attachments_dt.Rows.Count > 0)
                 {
@@ -570,6 +614,15 @@ namespace Financial_WPF_App.Views
             public string Name;
             public string OnlineName;
             public string Folder;
+            public string City, Program, Project, Account, Month;
+        }
+
+        private string FolderPart(DataRowView row, string column)
+        {
+            if (!row.Row.Table.Columns.Contains(column) || row[column] == DBNull.Value)
+                return "Unknown";
+            string v = CleanFolderName(row[column].ToString().Trim());
+            return v.Length == 0 ? "Unknown" : v;
         }
 
         private async void DownloadSelected_Button_Click(object sender, RoutedEventArgs e)
@@ -611,19 +664,38 @@ namespace Financial_WPF_App.Views
                     else if (Beneficiary_ID != -1)
                         onlineName = "Beneficiary_id_" + Beneficiary_ID.ToString() + "_" + name;
 
-                    string folder = selectedPath;
+                    var item = new DownloadItem { Id = Convert.ToInt32(dataRow["id"]), Name = name, OnlineName = onlineName, Folder = selectedPath };
                     if (isBulkMode && hasAccountCols)
                     {
-                        string accountName = CleanFolderName(dataRow["account_name"]?.ToString() ?? "Unknown");
-                        string monthFolder = dataRow["action_date"] != DBNull.Value
+                        item.City = FolderPart(dataRow, "city_name");
+                        item.Program = FolderPart(dataRow, "program_name");
+                        item.Project = FolderPart(dataRow, "project_name");
+                        item.Account = FolderPart(dataRow, "account_name");
+                        item.Month = dataRow["action_date"] != DBNull.Value
                             ? Convert.ToDateTime(dataRow["action_date"]).ToString("yyyy-MM")
                             : "Unknown";
-                        folder = groupByAccount
-                            ? Path.Combine(selectedPath, accountName, monthFolder)
-                            : Path.Combine(selectedPath, monthFolder, accountName);
                     }
+                    items.Add(item);
+                }
 
-                    items.Add(new DownloadItem { Id = Convert.ToInt32(dataRow["id"]), Name = name, OnlineName = onlineName, Folder = folder });
+                if (isBulkMode && hasAccountCols)
+                {
+                    // A level is only added as a folder when the chosen files span more than one of it,
+                    // so a single-city download has no pointless City folder; two accounts sharing a name
+                    // in different projects/cities never land in the same folder.
+                    bool useCity = items.Select(i => i.City).Distinct().Count() > 1;
+                    bool useProgram = items.Select(i => i.Program).Distinct().Count() > 1;
+                    bool useProject = items.Select(i => i.Project).Distinct().Count() > 1;
+                    foreach (var item in items)
+                    {
+                        var parts = new List<string>();
+                        if (useCity) parts.Add(item.City);
+                        if (useProgram) parts.Add(item.Program);
+                        if (useProject) parts.Add(item.Project);
+                        parts.Add(item.Account);
+                        if (groupByAccount) parts.Add(item.Month); else parts.Insert(0, item.Month);
+                        item.Folder = Path.Combine(new[] { selectedPath }.Concat(parts).ToArray());
+                    }
                 }
 
                 DownloadAttachments_btn.IsEnabled = false;
@@ -1023,33 +1095,6 @@ namespace Financial_WPF_App.Views
                 else { MessageBox.Show(ex.Message, "Error"); }
             }
         }
-
-        private void City_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (City_comboBox.SelectedValue == null)
-                return;
-
-            int cityId = Convert.ToInt32(City_comboBox.SelectedValue);
-
-            LoadUserProjects(cityId); // your next method
-            Subproject_comboBox.SelectedIndex = -1;
-            Subproject_comboBox.IsEnabled = true;
-            Account_comboBox.ItemsSource = null;
-        }
-
-        private void Subproject_comboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (Subproject_comboBox.SelectedValue == null)
-                return;
-
-            int subprojectId = Convert.ToInt32(Subproject_comboBox.SelectedValue);
-
-            LoadUserAccounts(subprojectId); // your next method
-            Account_comboBox.SelectedIndex = -1;
-            Account_comboBox.IsEnabled = true;
-        }
-
-
 
         private void comboBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
